@@ -1,0 +1,445 @@
+# 规则种子证据核对清单
+
+- Generated at: `2026-05-18T01:17:38.921948Z`
+- Source: `D:\Winnsen_Structure_Agent_Studio\data\rule_seed_review_ledger.json`
+- Items: `8`
+
+这里只列 P0/P1 项。系统先自动做证据闭环；候选文件不代表规则已放行。
+
+## SEED-014-SHELF_PITCH P0 层板节距 `11 x 152.5mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `quantity_evidence_linked`
+- Required: DXF 展开尺寸 / BOM/装配数量 / 证据闭环记录
+- Action: 自动核对层板 DXF 高度、BOM 层板数量和总装阵列数量，闭环后进入层板节距规则。
+- Automation next: DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx` rows=6 quantitySum=60
+    - row 22: 箱体横层板L焊接 qty=5 token=层板
+    - row 23: 箱体横层板L qty=5 token=层板
+    - row 24: 箱体横层板加强筋 qty=20 token=层板
+    - row 25: 箱体横层板R焊接 qty=5 token=层板
+    - row 26: 箱体横层板R qty=5 token=层板
+    - row 27: 箱体横层板加强筋 qty=20 token=层板
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\箱体横层板L.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\箱体横层板L焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\箱体横层板R.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\箱体横层板R焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\箱体横层板加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\层板(控制安装).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\层板(控制安装2).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\层板(电源安装).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\控制柜上层板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\控制柜下层板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\电源箱层板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\箱体横层板L.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\层板(控制安装)展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\层板(控制安装2)展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\层板(电源安装)展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\箱体横层板L展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\箱体横层板加强筋展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\镜向箱体横层板L展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\2.钣金展开图\箱体横层板L展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\2.钣金展开图\箱体横层板R展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\2.钣金展开图\箱体横层板加强筋展开图.DXF`
+  - `BOM/XLS` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx` rows=6 quantitySum=60
+    - row 18: 箱体横层板L焊接 qty=5 token=层板
+    - row 19: 箱体横层板L qty=5 token=层板
+    - row 20: 箱体横层板加强筋 qty=20 token=层板
+    - row 21: 箱体横层板R焊接 qty=5 token=层板
+    - row 22: 箱体横层板R qty=5 token=层板
+    - row 23: 箱体横层板加强筋 qty=20 token=层板
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\箱体横层板L.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\箱体横层板L焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\箱体横层板R.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\箱体横层板R焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\箱体横层板加强筋.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\箱体横层板L展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\箱体横层板R展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\箱体横层板加强筋展开图[0.8].DXF`
+  - `BOM/XLS` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx`
+
+## SEED-006-DOOR_COLUMN_PITCH P0 柜门列距/阵列 `6 x 305mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `quantity_evidence_linked`
+- Required: DXF 展开尺寸 / BOM/装配数量 / 证据闭环记录
+- Action: 自动核对门框横隔板、门板宽高和门数量关系，闭环后再进入同尺寸补门数生成器。
+- Automation next: DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx` rows=24 quantitySum=79
+    - row 40: 门框焊接 qty=1 token=门框
+    - row 41: 门框 上 qty=1 token=门框
+    - row 42: 门框 下 qty=1 token=门框
+    - row 43: 门框 左 qty=1 token=门框
+    - row 44: 门框 右 qty=1 token=门框
+    - row 45: 门框 横隔板 qty=5 token=门框
+    - row 46: 门框 横隔板R qty=5 token=门框
+    - row 47: 门框 竖隔板L qty=1 token=门框
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门12╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门12╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门1╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门1╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门2╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门2╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门3╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门3╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门4╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门4╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门5╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门5╱12装配.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\中控门板展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板1╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板2╱12.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板3╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板4╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板5╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板6╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\后下门板展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\柜门加强筋2╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\柜门加强筋3╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\柜门加强筋4╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\柜门加强筋5╱12展开图.dxf`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx` rows=24 quantitySum=79
+    - row 36: 门框焊接 qty=1 token=门框
+    - row 37: 门框 上 qty=1 token=门框
+    - row 38: 门框 下 qty=1 token=门框
+    - row 39: 门框 左 qty=1 token=门框
+    - row 40: 门框 竖隔板L qty=1 token=门框
+    - row 41: 门框 右 qty=1 token=门框
+    - row 42: 门框 竖隔板R qty=1 token=门框
+    - row 43: 门框 横隔板 qty=5 token=门框
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门1╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门1╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门2╱12焊接(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门2╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门2╱12装配(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门2╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门3╱12焊接(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门3╱12焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门3╱12装配(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门3╱12装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门4╱12焊接(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门4╱12焊接.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板1╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板2╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板2╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板3╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板3╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板4╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板4╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板5╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板6╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\后下门板展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\柜门加强筋2╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\柜门加强筋3╱12展开图[0.8].DXF`
+
+## SEED-013-SERVICE_DOOR_CLEARANCE P1 应急维护门间隙 `0.5mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `quantity_evidence_linked`
+- Required: SolidWorks mate 角色绑定 / DXF/工程图间隙 / 证据闭环记录
+- Action: 自动分离应急维护门与普通门的间隙定义，避免误套到普通门。
+- Automation next: DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx` rows=5 quantitySum=5
+    - row 109: 应急维护门焊接 qty=1 token=应急维护门
+    - row 110: 应急维护门 qty=1 token=应急维护门
+    - row 112: 后下门板装配 qty=1 token=后下门板
+    - row 113: 后下门板焊接 qty=1 token=后下门板
+    - row 114: 后下门板 qty=1 token=后下门板
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\后下门板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\后下门板焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\后下门板装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\应急维护门.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\应急维护门展开图.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\应急维护门焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\应急维护门.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\应急维护门展开图.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\应急维护门焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\后下门模块\后下门板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\后下门模块\后下门板焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\1.工程图20190423\后下门模块\后下门板装配.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\后下门板展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\应急维护门展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\2.钣金展开图\后下门板展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\2.钣金展开图\应急维护门展开图.DXF`
+  - `BOM/XLS` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx` rows=5 quantitySum=5
+    - row 47: 后下门板装配 qty=1 token=后下门板
+    - row 48: 后下门板焊接 qty=1 token=后下门板
+    - row 49: 后下门板 qty=1 token=后下门板
+    - row 129: 应急维护门焊接 qty=1 token=应急维护门
+    - row 130: 应急维护门 qty=1 token=应急维护门
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板装配.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\应急维护门.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\应急维护门展开图.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\应急维护门焊接.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\后下门板展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\应急维护门展开图[0.8].DXF`
+  - `BOM/XLS` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx`
+
+## SEED-010-LEVELING_FOOT_OFFSET P1 调整脚高度/底部距离 `55mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `quantity_evidence_linked`
+- Required: 底座/调整脚工程图 / BOM 标准件 / 证据闭环记录
+- Action: 自动区分调整脚高度是装配状态、采购规格还是安装余量，不直接参与钣金展开。
+- Automation next: DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx` rows=5 quantitySum=9
+    - row 30: 底座焊接 qty=1 token=底座
+    - row 31: 底座底板 qty=1 token=底座
+    - row 32: 底座外框 qty=1 token=底座
+    - row 33: 底座加强筋 qty=2 token=底座
+    - row 132: 调整脚 M12X60(模型) qty=4 token=调整脚
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\底座加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\底座外框.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\底座底板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\底座焊接.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\底座加强筋展开图[1.2].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\底座外框展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\底座底板展开图[0.8].DXF`
+  - `BOM/XLS` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\16038-03-01 底座底板 展开图(0.8)(2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\16038-03-01 底座底板 展开图(0.8).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\16038-03-03 底座加强筋 展开图(2).DXF`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\底座加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\底座外框.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\底座底板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\底座焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\1.工程图-4门\底座加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\1.工程图-4门\底座外框.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\1.工程图-4门\底座底板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\1.工程图-4门\底座焊接.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-03-01 底座底板 展开图(0.8)钣金加工.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-03-02 底座外框 展开图(0.8)钣金加工.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-03-03 底座加强筋 展开图(2)钣金加工.DXF`
+  - `PDF drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\3.PDF-4门\16038-03 底座焊接 钣金加工.PDF`
+  - `PDF drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\3.PDF-4门\16038-03-01 底座底板 钣金加工.PDF`
+  - `PDF drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\3.PDF-4门\16038-03-02 底座外框 钣金加工.PDF`
+  - `PDF drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\3.PDF-4门\16038-03-03 底座加强筋 钣金加工.PDF`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\8门\1.工程图 8门\底座加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\8门\1.工程图 8门\底座外框.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\8门\1.工程图 8门\底座底板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\8门\1.工程图 8门\底座焊接.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\8门\2.展开图 8门\16038-03-01 底座底板 展开图(0.8)钣金加工.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\8门\2.展开图 8门\16038-03-02 底座外框 展开图(0.8)钣金加工.DXF`
+
+## SEED-003-DISTANCE_MATE P1 距离配合 `2mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `evidence_gap`
+- Required: SolidWorks mate 角色绑定 / 证据闭环记录
+- Action: 先做 距离配合 的来源证据闭环，再决定是否进入生成器。
+- Automation next: 未找到足够候选文件，需要扩大搜索词或补充资料。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)`
+  - No token-matched evidence files found.
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - No token-matched evidence files found.
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)`
+  - No token-matched evidence files found.
+
+## SEED-004-DISTANCE_MATE P1 距离配合 `55mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `evidence_gap`
+- Required: SolidWorks mate 角色绑定 / 证据闭环记录
+- Action: 先做 距离配合 的来源证据闭环，再决定是否进入生成器。
+- Automation next: 未找到足够候选文件，需要扩大搜索词或补充资料。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - No token-matched evidence files found.
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)`
+  - No token-matched evidence files found.
+
+## SEED-007-FRAME_GAP P1 门框局部间隙 `0.5mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `quantity_evidence_linked`
+- Required: SolidWorks mate 角色绑定 / DXF/工程图间隙 / 证据闭环记录
+- Action: 自动绑定距离配合两侧零件角色，再判断是否为可复用门缝/框缝规则。
+- Automation next: DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx` rows=18 quantitySum=38
+    - row 40: 门框焊接 qty=1 token=门框
+    - row 41: 门框 上 qty=1 token=门框
+    - row 42: 门框 下 qty=1 token=门框
+    - row 43: 门框 左 qty=1 token=门框
+    - row 44: 门框 右 qty=1 token=门框
+    - row 45: 门框 横隔板 qty=5 token=门框
+    - row 46: 门框 横隔板R qty=5 token=门框
+    - row 47: 门框 竖隔板L qty=1 token=门框
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板12╱12 门框加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板12╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板1╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板2╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板3╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板4╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板5╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板6╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋2.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋3.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋4.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\后下门板.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\中控门板展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板1╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板2╱12.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板3╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板4╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板5╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板6╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\后下门板展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 上展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 下展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 右展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 左展开图.dxf`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx` rows=18 quantitySum=38
+    - row 36: 门框焊接 qty=1 token=门框
+    - row 37: 门框 上 qty=1 token=门框
+    - row 38: 门框 下 qty=1 token=门框
+    - row 39: 门框 左 qty=1 token=门框
+    - row 40: 门框 竖隔板L qty=1 token=门框
+    - row 41: 门框 右 qty=1 token=门框
+    - row 42: 门框 竖隔板R qty=1 token=门框
+    - row 43: 门框 横隔板 qty=5 token=门框
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板1╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板2╱12(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板2╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板3╱12(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板3╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板4╱12(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板4╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板5╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板6╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板装配.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板1╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板2╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板2╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板3╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板3╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板4╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板4╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板5╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板6╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\后下门板展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\门框 上展开图[1.2].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\门框 下展开图[1.2].DXF`
+
+## SEED-008-FRAME_GAP P1 门框局部间隙 `2mm`
+
+- Gate: `blocked_pending_evidence_closure`
+- Evidence state: `quantity_evidence_linked`
+- Required: SolidWorks mate 角色绑定 / DXF/工程图间隙 / 证据闭环记录
+- Action: 自动绑定距离配合两侧零件角色，再判断是否为可复用门缝/框缝规则。
+- Automation next: DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。
+
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\3.BOM\16029 1917X1000X550标准柜BOM表.xlsx` rows=18 quantitySum=38
+    - row 40: 门框焊接 qty=1 token=门框
+    - row 41: 门框 上 qty=1 token=门框
+    - row 42: 门框 下 qty=1 token=门框
+    - row 43: 门框 左 qty=1 token=门框
+    - row 44: 门框 右 qty=1 token=门框
+    - row 45: 门框 横隔板 qty=5 token=门框
+    - row 46: 门框 横隔板R qty=5 token=门框
+    - row 47: 门框 竖隔板L qty=1 token=门框
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板12╱12 门框加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板12╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板1╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板2╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板3╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板4╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板5╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门板6╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋2.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋3.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋4.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\1.工程图\后下门板.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\中控门板展开图.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板1╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板2╱12.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板3╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板4╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板5╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板6╱12展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\后下门板展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 上展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 下展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 右展开图.dxf`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\门框 左展开图.dxf`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)`
+  - `BOM linked rows` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\3.BOM\16028 标准寄存柜BOM表.xlsx` rows=18 quantitySum=38
+    - row 36: 门框焊接 qty=1 token=门框
+    - row 37: 门框 上 qty=1 token=门框
+    - row 38: 门框 下 qty=1 token=门框
+    - row 39: 门框 左 qty=1 token=门框
+    - row 40: 门框 竖隔板L qty=1 token=门框
+    - row 41: 门框 右 qty=1 token=门框
+    - row 42: 门框 竖隔板R qty=1 token=门框
+    - row 43: 门框 横隔板 qty=5 token=门框
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板1╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板2╱12(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板2╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板3╱12(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板3╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板4╱12(视窗).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板4╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板5╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\储物柜门板6╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板焊接.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\1.工程图\后下门板装配.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板1╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板2╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板2╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板3╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板3╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板4╱12(视窗)展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板4╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板5╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\储物柜门板6╱12展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\后下门板展开图[0.8].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\门框 上展开图[1.2].DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16028 寄存柜(标准组合式 1917×1000×485)\2.钣金展开图\门框 下展开图[1.2].DXF`
+- Template root: `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\16038-01-04 门框 右 展开图(1.2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\16038-01-06 门框 横隔板R 展开图(1.2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\16038-27-01-01 储物柜门板12╱12 展开图(0.8).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\fromparent+ 门框 左 展开图(1.2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\fromparent+ 门框 竖隔板L 展开图(1.2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\fromparent+ 门框 竖隔板L2 展开图(1.2).DXF`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜(大)门框加强筋1.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜(大)门框加强筋2.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜(小)门框加强筋1.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜(小)门框加强筋2.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜门板(大).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜门板(小).SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜门板12╱12 门框加强筋.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜门板12╱12.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋2.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\储物柜门版12╱12门框加强筋3.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\后下门板.SLDDRW`
+  - `SolidWorks drawing` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\后下门板焊接.SLDDRW`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\门框 竖隔板L 展开图(1.2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\1.工程图\门框 竖隔板L2 展开图(1.2).DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-01-01 门框 上 展开图(1.2)钣金加工.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-01-02 门框 下 展开图(1.2)钣金加工.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-01-03 门框 左 展开图(1.2)钣金加工.DXF`
+  - `DXF` `C:\Users\Administrator\Desktop\参数化模板素材\16038 寄存柜XY(标准组合式 1917×1000×550)\16038 寄存柜XY(标准组合式 1917×1000×550)\4门\2.展开图-4门\16038-01-04 门框 右 展开图(1.2)钣金加工.DXF`

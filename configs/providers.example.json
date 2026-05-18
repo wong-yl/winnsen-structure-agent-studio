@@ -1,0 +1,25 @@
+{
+  "llm_providers": [
+    {
+      "name": "openai",
+      "enabled": false,
+      "base_url": "",
+      "api_key_env": "OPENAI_API_KEY",
+      "default_model": ""
+    },
+    {
+      "name": "mimo",
+      "enabled": false,
+      "base_url": "",
+      "api_key_env": "MIMO_API_KEY",
+      "default_model": ""
+    },
+    {
+      "name": "ollama",
+      "enabled": false,
+      "base_url": "http://localhost:11434",
+      "api_key_env": "",
+      "default_model": ""
+    }
+  ]
+}

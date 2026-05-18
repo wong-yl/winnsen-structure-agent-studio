@@ -1,0 +1,1194 @@
+{
+  "generatedAt": "2026-05-17T02:01:02.891841Z",
+  "sourceRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材",
+  "projectCount": 9,
+  "totals": {
+    "SLDASM": 559,
+    "SLDPRT": 1797,
+    "SLDDRW": 1607,
+    "DXF": 793,
+    "STEP": 9,
+    "STP": 1,
+    "XLSX": 28,
+    "PDF": 671,
+    "JPG": 2558
+  },
+  "projects": [
+    {
+      "name": "16028 寄存柜(标准组合式 1917×1000×485)",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+      "counts": {
+        "SLDASM": 41,
+        "SLDPRT": 109,
+        "SLDDRW": 116,
+        "DXF": 63,
+        "STEP": 0,
+        "STP": 0,
+        "XLSX": 1,
+        "PDF": 0,
+        "JPG": 301
+      },
+      "inferredDimensions": [
+        "1917x1000x485",
+        "1917x1000x550"
+      ],
+      "inferredDoorVariants": [
+        "12门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\标准寄存柜(总装配).SLDASM",
+          "relativePath": "1.工程图\\标准寄存柜(总装配).SLDASM",
+          "bytes": 3792750,
+          "updatedAt": "2026-03-17T01:51:39.756373Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\上盖焊接.SLDASM",
+          "relativePath": "1.工程图\\上盖焊接.SLDASM",
+          "bytes": 286570,
+          "updatedAt": "2025-07-15T00:33:23.428570Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "bytes": 118733,
+          "updatedAt": "2024-06-27T03:39:42.853022Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门1╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12装配.SLDASM",
+          "bytes": 133826,
+          "updatedAt": "2022-08-30T09:16:20.947823Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12焊接(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接(视窗).SLDASM",
+          "bytes": 155379,
+          "updatedAt": "2025-07-14T08:42:46.204091Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "bytes": 124184,
+          "updatedAt": "2024-06-27T03:39:40.700799Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12装配(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配(视窗).SLDASM",
+          "bytes": 206886,
+          "updatedAt": "2025-07-14T08:42:46.505269Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配.SLDASM",
+          "bytes": 139438,
+          "updatedAt": "2022-08-30T09:16:18.638625Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12焊接(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12焊接(视窗).SLDASM",
+          "bytes": 144823,
+          "updatedAt": "2024-06-27T03:39:29.830055Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12焊接.SLDASM",
+          "bytes": 124280,
+          "updatedAt": "2024-06-27T03:39:39.359411Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12装配(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12装配(视窗).SLDASM",
+          "bytes": 190000,
+          "updatedAt": "2022-08-30T09:16:10.712041Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12装配.SLDASM",
+          "bytes": 175413,
+          "updatedAt": "2024-03-23T08:16:11.808280Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+            "relativePath": "3.BOM\\16028 标准寄存柜BOM表.xlsx",
+            "bytes": 537942,
+            "updatedAt": "2019-03-12T03:39:16.047585Z"
+          }
+        ],
+        "dxfDirectories": [
+          "2.钣金展开图"
+        ],
+        "stepFiles": [],
+        "pdfDirectories": []
+      }
+    },
+    {
+      "name": "16028A 寄存柜(标准组合式带灯1917×1000×485) #",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #",
+      "counts": {
+        "SLDASM": 124,
+        "SLDPRT": 333,
+        "SLDDRW": 353,
+        "DXF": 109,
+        "STEP": 1,
+        "STP": 0,
+        "XLSX": 3,
+        "PDF": 73,
+        "JPG": 954
+      },
+      "inferredDimensions": [
+        "1917x1000x485",
+        "1917x1000x550"
+      ],
+      "inferredDoorVariants": [
+        "01门",
+        "02门",
+        "03门",
+        "04门",
+        "05门",
+        "06门",
+        "07门",
+        "08门",
+        "10门",
+        "12门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\标准寄存柜带灯(总装配).SLDASM",
+          "relativePath": "1.工程图\\标准寄存柜带灯(总装配).SLDASM",
+          "bytes": 3454452,
+          "updatedAt": "2025-11-25T01:07:48.300548Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\PO#25053782803A  16028 加灯12门透明\\1.工程图\\标准寄存柜带灯(总装配).SLDASM",
+          "relativePath": "PO#25053782803A  16028 加灯12门透明\\1.工程图\\标准寄存柜带灯(总装配).SLDASM",
+          "bytes": 3420556,
+          "updatedAt": "2025-12-30T07:36:56.245011Z",
+          "priority": 48
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\作废 加强筋加灯--这个方案不方便\\16028A 寄存柜(标准组合式 带灯1917×1000×485) #作废\\1.工程图\\标准寄存柜带灯(总装配).SLDASM",
+          "relativePath": "作废 加强筋加灯--这个方案不方便\\16028A 寄存柜(标准组合式 带灯1917×1000×485) #作废\\1.工程图\\标准寄存柜带灯(总装配).SLDASM",
+          "bytes": 4096251,
+          "updatedAt": "2025-11-22T05:42:32.998803Z",
+          "priority": 90
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\上盖焊接.SLDASM",
+          "relativePath": "1.工程图\\上盖焊接.SLDASM",
+          "bytes": 365213,
+          "updatedAt": "2025-11-25T00:19:45.741864Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "bytes": 125499,
+          "updatedAt": "2025-11-24T08:08:15.332543Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门1╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12装配.SLDASM",
+          "bytes": 160178,
+          "updatedAt": "2025-11-24T08:09:08.850666Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门2╱12焊接(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接(视窗).SLDASM",
+          "bytes": 183089,
+          "updatedAt": "2025-11-24T08:53:46.050944Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "bytes": 135086,
+          "updatedAt": "2025-11-24T08:14:43.195713Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门2╱12装配(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配(视窗).SLDASM",
+          "bytes": 237971,
+          "updatedAt": "2025-11-24T08:55:41.887703Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门2╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配.SLDASM",
+          "bytes": 166314,
+          "updatedAt": "2025-11-24T08:14:50.738580Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门3╱12焊接(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12焊接(视窗).SLDASM",
+          "bytes": 177207,
+          "updatedAt": "2025-11-24T09:01:44.880984Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\1.工程图\\储物柜门3╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12焊接.SLDASM",
+          "bytes": 132057,
+          "updatedAt": "2025-11-24T08:24:11.076863Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\PO#25053782803A  16028 加灯12门透明\\3.BOM\\16028A 12门带窗标准寄存柜带灯(总装配)BOM表.xlsx",
+            "relativePath": "PO#25053782803A  16028 加灯12门透明\\3.BOM\\16028A 12门带窗标准寄存柜带灯(总装配)BOM表.xlsx",
+            "bytes": 594037,
+            "updatedAt": "2025-11-25T01:31:44.850392Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\PO#25053782803A  16028 加灯12门透明\\3.BOM\\16028A 12门带窗标准寄存柜带灯机箱配件BOM表.xlsx",
+            "relativePath": "PO#25053782803A  16028 加灯12门透明\\3.BOM\\16028A 12门带窗标准寄存柜带灯机箱配件BOM表.xlsx",
+            "bytes": 166115,
+            "updatedAt": "2025-11-25T01:05:18.792494Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\作废 加强筋加灯--这个方案不方便\\16028A 寄存柜(标准组合式 带灯1917×1000×485) #作废\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+            "relativePath": "作废 加强筋加灯--这个方案不方便\\16028A 寄存柜(标准组合式 带灯1917×1000×485) #作废\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+            "bytes": 537942,
+            "updatedAt": "2019-03-12T03:39:16.047585Z"
+          }
+        ],
+        "dxfDirectories": [
+          "PO#25053782803A  16028 加灯12门透明\\2.展开图",
+          "作废 加强筋加灯--这个方案不方便\\16028A 寄存柜(标准组合式 带灯1917×1000×485) #作废\\2.钣金展开图"
+        ],
+        "stepFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028A 寄存柜(标准组合式带灯1917×1000×485) #\\PO#25053782803A  16028 加灯12门透明\\5.STEP\\标准寄存柜带灯(总装配).STEP",
+            "relativePath": "PO#25053782803A  16028 加灯12门透明\\5.STEP\\标准寄存柜带灯(总装配).STEP",
+            "bytes": 18760768,
+            "updatedAt": "2025-11-25T01:06:09.648774Z"
+          }
+        ],
+        "pdfDirectories": [
+          "PO#25053782803A  16028 加灯12门透明\\4.PDF"
+        ]
+      }
+    },
+    {
+      "name": "16029 寄存柜(标准组合式 1917×1000×550)",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+      "counts": {
+        "SLDASM": 149,
+        "SLDPRT": 499,
+        "SLDDRW": 342,
+        "DXF": 142,
+        "STEP": 1,
+        "STP": 0,
+        "XLSX": 4,
+        "PDF": 6,
+        "JPG": 238
+      },
+      "inferredDimensions": [
+        "1917x1000x550"
+      ],
+      "inferredDoorVariants": [
+        "4门",
+        "7门",
+        "8门",
+        "10门",
+        "11门",
+        "12门",
+        "14门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\标准寄存柜1917×1000×550(总装配).SLDASM",
+          "relativePath": "1.工程图\\标准寄存柜1917×1000×550(总装配).SLDASM",
+          "bytes": 3724637,
+          "updatedAt": "2025-01-17T07:38:23.576432Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\█订单配置\\20171107标准寄存柜(总装配)4门洗衣柜.SLDASM",
+          "relativePath": "10.备份\\1.工程图20190423\\█订单配置\\20171107标准寄存柜(总装配)4门洗衣柜.SLDASM",
+          "bytes": 2884608,
+          "updatedAt": "2017-11-07T00:59:21.064596Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\标准寄存柜(总装配).SLDASM",
+          "relativePath": "10.备份\\1.工程图20190423\\标准寄存柜(总装配).SLDASM",
+          "bytes": 4049774,
+          "updatedAt": "2019-02-16T07:18:38.068450Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\上盖焊接.SLDASM",
+          "relativePath": "1.工程图\\上盖焊接.SLDASM",
+          "bytes": 282984,
+          "updatedAt": "2022-09-23T08:14:51.436280Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门12╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门12╱12焊接.SLDASM",
+          "bytes": 168791,
+          "updatedAt": "2024-03-15T00:25:57.901136Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门12╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门12╱12装配.SLDASM",
+          "bytes": 194487,
+          "updatedAt": "2024-03-15T00:25:58.313774Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "bytes": 147935,
+          "updatedAt": "2024-12-13T03:37:32.475813Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门1╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12装配.SLDASM",
+          "bytes": 173645,
+          "updatedAt": "2024-12-13T03:37:32.732827Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "bytes": 160975,
+          "updatedAt": "2025-04-10T01:52:38.730716Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门2╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配.SLDASM",
+          "bytes": 192951,
+          "updatedAt": "2025-04-10T01:52:39.072196Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门3╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12焊接.SLDASM",
+          "bytes": 150688,
+          "updatedAt": "2024-12-13T03:37:31.476756Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门3╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门3╱12装配.SLDASM",
+          "bytes": 181451,
+          "updatedAt": "2024-12-13T03:37:31.704768Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+            "relativePath": "3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+            "bytes": 561776,
+            "updatedAt": "2019-04-24T07:09:49.451503Z"
+          }
+        ],
+        "dxfDirectories": [
+          "10.备份\\2.钣金展开图20190423",
+          "10.备份\\2.钣金展开图20190423\\箱体竖隔板",
+          "2.钣金展开图"
+        ],
+        "stepFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\云柜(参考)\\五代柜副柜组装图.STEP",
+            "relativePath": "10.备份\\1.工程图20190423\\云柜(参考)\\五代柜副柜组装图.STEP",
+            "bytes": 18085653,
+            "updatedAt": "2016-04-05T01:38:20.643947Z"
+          }
+        ],
+        "pdfDirectories": [
+          "8.产品尺寸图"
+        ]
+      }
+    },
+    {
+      "name": "16038 寄存柜XY(标准组合式 1917×1000×550)",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)",
+      "counts": {
+        "SLDASM": 107,
+        "SLDPRT": 402,
+        "SLDDRW": 403,
+        "DXF": 253,
+        "STEP": 3,
+        "STP": 0,
+        "XLSX": 8,
+        "PDF": 273,
+        "JPG": 249
+      },
+      "inferredDimensions": [
+        "1917x1000x550"
+      ],
+      "inferredDoorVariants": [
+        "4门",
+        "7门",
+        "8门",
+        "01门",
+        "02门",
+        "03门",
+        "04门",
+        "05门",
+        "06门",
+        "07门",
+        "08门",
+        "09门",
+        "10门",
+        "12门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\标准洗衣寄存柜(总装配).SLDASM",
+          "relativePath": "1.工程图\\标准洗衣寄存柜(总装配).SLDASM",
+          "bytes": 3867142,
+          "updatedAt": "2025-03-04T00:47:46.003181Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\1.工程图-4门\\标准洗衣寄存柜(总装配).SLDASM",
+          "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\1.工程图-4门\\标准洗衣寄存柜(总装配).SLDASM",
+          "bytes": 2568174,
+          "updatedAt": "2025-10-18T00:40:10.016520Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\1.工程图 8门\\标准洗衣寄存柜(总装配).SLDASM",
+          "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\1.工程图 8门\\标准洗衣寄存柜(总装配).SLDASM",
+          "bytes": 3067869,
+          "updatedAt": "2025-10-17T05:39:12.492384Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\9.备份\\1.工程图20211014\\标准洗衣寄存柜(总装配).SLDASM",
+          "relativePath": "9.备份\\1.工程图20211014\\标准洗衣寄存柜(总装配).SLDASM",
+          "bytes": 2471808,
+          "updatedAt": "2020-03-20T06:59:13.414750Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\9.备份\\1.工程图20211015\\标准洗衣寄存柜(总装配).SLDASM",
+          "relativePath": "9.备份\\1.工程图20211015\\标准洗衣寄存柜(总装配).SLDASM",
+          "bytes": 3204557,
+          "updatedAt": "2021-10-14T08:53:22.655205Z",
+          "priority": 30
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\4.BOM-4门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准4门EL04A-1总装配BOM表.xlsx",
+            "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\4.BOM-4门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准4门EL04A-1总装配BOM表.xlsx",
+            "bytes": 694658,
+            "updatedAt": "2025-10-18T01:10:04.502188Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\4.BOM-4门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准4门EL04A-1机箱配件BOM表.xlsx",
+            "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\4.BOM-4门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准4门EL04A-1机箱配件BOM表.xlsx",
+            "bytes": 182290,
+            "updatedAt": "2025-10-23T08:01:40.149316Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\5.bom-8门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准8门EL08A总装配BOM表.xlsx",
+            "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\5.bom-8门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准8门EL08A总装配BOM表.xlsx",
+            "bytes": 504430,
+            "updatedAt": "2025-10-18T01:01:02.060961Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\5.bom-8门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准8门EL08A机箱配件BOM表.xlsx",
+            "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\5.bom-8门\\16038 寄存柜XY(标准组合式 1917×1000×550)标准8门EL08A机箱配件BOM表.xlsx",
+            "bytes": 146729,
+            "updatedAt": "2025-10-23T08:07:23.278241Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\5.bom\\16038 7门洗衣柜 机械加工零件BOM.xlsx",
+            "relativePath": "5.bom\\16038 7门洗衣柜 机械加工零件BOM.xlsx",
+            "bytes": 348821,
+            "updatedAt": "2025-03-04T00:57:13.898711Z"
+          }
+        ],
+        "dxfDirectories": [
+          "16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门",
+          "16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\2.展开图 8门",
+          "2.钣金展开图",
+          "9.备份\\2.钣金展开图20211015"
+        ],
+        "stepFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\5.STP-4门\\标准洗衣寄存柜(总装配)-4门.STEP",
+            "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\5.STP-4门\\标准洗衣寄存柜(总装配)-4门.STEP",
+            "bytes": 12008373,
+            "updatedAt": "2025-10-18T00:37:28.310105Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\4.step -8门\\标准洗衣寄存柜(总装配)-8门.STEP",
+            "relativePath": "16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\4.step -8门\\标准洗衣寄存柜(总装配)-8门.STEP",
+            "bytes": 17607658,
+            "updatedAt": "2025-10-17T05:16:04.907185Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4.step 简化图\\标准洗衣寄存柜(总装配).STEP",
+            "relativePath": "4.step 简化图\\标准洗衣寄存柜(总装配).STEP",
+            "bytes": 22073074,
+            "updatedAt": "2025-03-03T07:57:18.111654Z"
+          }
+        ],
+        "pdfDirectories": [
+          "16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门",
+          "16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\3.PDF 8门",
+          "3.PDF图纸"
+        ]
+      }
+    },
+    {
+      "name": "23054 寄存柜控制主柜(1917×300×400)",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)",
+      "counts": {
+        "SLDASM": 21,
+        "SLDPRT": 83,
+        "SLDDRW": 70,
+        "DXF": 85,
+        "STEP": 0,
+        "STP": 0,
+        "XLSX": 5,
+        "PDF": 109,
+        "JPG": 82
+      },
+      "inferredDimensions": [
+        "1917x300x400"
+      ],
+      "inferredDoorVariants": [
+        "13门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\寄存柜控制主柜1917×300×400(总装配).SLDASM",
+          "relativePath": "Ⅰ.工程图\\寄存柜控制主柜1917×300×400(总装配).SLDASM",
+          "bytes": 18825163,
+          "updatedAt": "2024-07-03T01:24:13.441499Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\订单配置\\寄存柜控制主柜1917×300×400(PO#23293280001捷克).SLDASM",
+          "relativePath": "Ⅰ.工程图\\订单配置\\寄存柜控制主柜1917×300×400(PO#23293280001捷克).SLDASM",
+          "bytes": 15136231,
+          "updatedAt": "2024-02-04T06:25:44.633994Z",
+          "priority": 73
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\订单配置\\寄存柜控制主柜1917×300×400(PO#24433400501罗马尼亚).SLDASM",
+          "relativePath": "Ⅰ.工程图\\订单配置\\寄存柜控制主柜1917×300×400(PO#24433400501罗马尼亚).SLDASM",
+          "bytes": 15210640,
+          "updatedAt": "2024-07-03T02:37:44.314824Z",
+          "priority": 73
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\15.6寸触显(OTL15W-RPC03-UHDZ)装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\15.6寸触显(OTL15W-RPC03-UHDZ)装配.SLDASM",
+          "bytes": 220977,
+          "updatedAt": "2024-07-03T01:08:42.820785Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\TG2480打印机装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\TG2480打印机装配.SLDASM",
+          "bytes": 302562,
+          "updatedAt": "2024-07-02T02:06:23.985421Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 上 焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 上 焊接.SLDASM",
+          "bytes": 136330,
+          "updatedAt": "2024-07-03T00:45:20.857170Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 上 装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 上 装配.SLDASM",
+          "bytes": 150875,
+          "updatedAt": "2024-07-03T00:45:27.200044Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 下 焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 下 焊接.SLDASM",
+          "bytes": 154130,
+          "updatedAt": "2024-07-03T00:52:09.880266Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 下 装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 下 装配.SLDASM",
+          "bytes": 3753828,
+          "updatedAt": "2024-07-03T01:01:41.555205Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 下(2) 焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 下(2) 焊接.SLDASM",
+          "bytes": 130327,
+          "updatedAt": "2024-07-03T01:11:42.462226Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 下(2) 装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 下(2) 装配.SLDASM",
+          "bytes": 212121,
+          "updatedAt": "2024-07-03T01:11:50.207942Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅰ.工程图\\主控柜门 下(3) 焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控柜门 下(3) 焊接.SLDASM",
+          "bytes": 154404,
+          "updatedAt": "2024-07-03T01:19:30.485307Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\23054 寄存柜控制主柜1917×300×400(PO#24433400501罗马尼亚)BOM表.xlsx",
+            "relativePath": "23054 寄存柜控制主柜1917×300×400(PO#24433400501罗马尼亚)BOM表.xlsx",
+            "bytes": 291578,
+            "updatedAt": "2024-07-03T01:42:06.926956Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\23054 寄存柜控制主柜1917×300×400(PO#24433400501罗马尼亚)机箱配件BOM表.xlsx",
+            "relativePath": "23054 寄存柜控制主柜1917×300×400(PO#24433400501罗马尼亚)机箱配件BOM表.xlsx",
+            "bytes": 84852,
+            "updatedAt": "2024-07-03T01:48:07.985603Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅲ.BOM\\23054 寄存柜控制主柜1917×300×400(PO#23293280001捷克)机箱配件BOM表.xlsx",
+            "relativePath": "Ⅲ.BOM\\23054 寄存柜控制主柜1917×300×400(PO#23293280001捷克)机箱配件BOM表.xlsx",
+            "bytes": 212531,
+            "updatedAt": "2024-02-04T01:53:32.534031Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅲ.BOM\\23054 寄存柜控制主柜1917×300×400(总装配)BOM表.xlsx",
+            "relativePath": "Ⅲ.BOM\\23054 寄存柜控制主柜1917×300×400(总装配)BOM表.xlsx",
+            "bytes": 296553,
+            "updatedAt": "2023-10-08T06:35:47.568591Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\23054 寄存柜控制主柜(1917×300×400)\\Ⅲ.BOM\\23054 寄存柜控制主柜1917×300×400(总装配)机箱配件BOM表.xlsx",
+            "relativePath": "Ⅲ.BOM\\23054 寄存柜控制主柜1917×300×400(总装配)机箱配件BOM表.xlsx",
+            "bytes": 88972,
+            "updatedAt": "2023-10-08T06:39:52.417938Z"
+          }
+        ],
+        "dxfDirectories": [
+          "Ⅱ.钣金展开图",
+          "罗马尼亚钣金展开图"
+        ],
+        "stepFiles": [],
+        "pdfDirectories": [
+          "Ⅳ.PDF图纸",
+          "罗马尼亚PDF图纸"
+        ]
+      }
+    },
+    {
+      "name": "24030 寄存控制主柜6门(1917×482×550)",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)",
+      "counts": {
+        "SLDASM": 19,
+        "SLDPRT": 70,
+        "SLDDRW": 61,
+        "DXF": 39,
+        "STEP": 0,
+        "STP": 0,
+        "XLSX": 2,
+        "PDF": 61,
+        "JPG": 80
+      },
+      "inferredDimensions": [
+        "1917x482x550",
+        "1917x1000x550"
+      ],
+      "inferredDoorVariants": [
+        "6门",
+        "10门",
+        "11门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\寄存控制主柜6门(1917×482×550).SLDASM",
+          "relativePath": "Ⅰ.工程图\\寄存控制主柜6门(1917×482×550).SLDASM",
+          "bytes": 7529717,
+          "updatedAt": "2024-05-24T09:26:33.110579Z",
+          "priority": 55
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\15寸吉锐触摸显示器(OTL153-RPC03-HZN3) 装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\15寸吉锐触摸显示器(OTL153-RPC03-HZN3) 装配.SLDASM",
+          "bytes": 4632579,
+          "updatedAt": "2024-05-24T08:41:04.857452Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\中控门(4╱12摄像头)焊接.sldasm",
+          "relativePath": "Ⅰ.工程图\\中控门(4╱12摄像头)焊接.sldasm",
+          "bytes": 286746,
+          "updatedAt": "2024-05-24T08:39:51.566573Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\中控门(4╱12摄像头)装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\中控门(4╱12摄像头)装配.SLDASM",
+          "bytes": 5567356,
+          "updatedAt": "2024-05-24T08:44:01.823420Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\主控横层板焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主控横层板焊接.SLDASM",
+          "bytes": 116417,
+          "updatedAt": "2024-05-24T08:28:01.816900Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\主柜箱体焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\主柜箱体焊接.SLDASM",
+          "bytes": 544714,
+          "updatedAt": "2024-05-24T08:28:22.786936Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\储物柜门1╱12焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\储物柜门1╱12焊接.SLDASM",
+          "bytes": 126952,
+          "updatedAt": "2024-05-24T08:31:23.022991Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\储物柜门1╱12装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\储物柜门1╱12装配.SLDASM",
+          "bytes": 160443,
+          "updatedAt": "2024-05-24T08:31:32.312268Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\储物柜门2╱12焊接.SLDASM",
+          "relativePath": "Ⅰ.工程图\\储物柜门2╱12焊接.SLDASM",
+          "bytes": 137244,
+          "updatedAt": "2024-05-24T08:32:55.947435Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\储物柜门2╱12装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\储物柜门2╱12装配.SLDASM",
+          "bytes": 168848,
+          "updatedAt": "2024-05-24T08:33:01.972365Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\工控机箱(ITX 170×170).SLDASM",
+          "relativePath": "Ⅰ.工程图\\工控机箱(ITX 170×170).SLDASM",
+          "bytes": 314471,
+          "updatedAt": "2024-05-24T08:46:57.330346Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅰ.工程图\\开关模式电源 装配.SLDASM",
+          "relativePath": "Ⅰ.工程图\\开关模式电源 装配.SLDASM",
+          "bytes": 350637,
+          "updatedAt": "2024-05-24T08:48:31.640923Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅲ.BOM\\24030 寄存控制主柜6门(1917×482×550)BOM表.xlsx",
+            "relativePath": "Ⅲ.BOM\\24030 寄存控制主柜6门(1917×482×550)BOM表.xlsx",
+            "bytes": 419599,
+            "updatedAt": "2024-05-24T09:02:46.690470Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\24030 寄存控制主柜6门(1917×482×550)\\Ⅲ.BOM\\24030 寄存控制主柜6门(1917×482×550)机箱配件BOM表.xlsx",
+            "relativePath": "Ⅲ.BOM\\24030 寄存控制主柜6门(1917×482×550)机箱配件BOM表.xlsx",
+            "bytes": 111339,
+            "updatedAt": "2024-05-24T09:06:36.964949Z"
+          }
+        ],
+        "dxfDirectories": [
+          "Ⅱ.钣金展开图"
+        ],
+        "stepFiles": [],
+        "pdfDirectories": [
+          "Ⅳ.PDF图纸"
+        ]
+      }
+    },
+    {
+      "name": "25072 寄存柜控制主柜(1917×650×650)（不锈钢）",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）",
+      "counts": {
+        "SLDASM": 50,
+        "SLDPRT": 172,
+        "SLDDRW": 130,
+        "DXF": 54,
+        "STEP": 3,
+        "STP": 1,
+        "XLSX": 3,
+        "PDF": 77,
+        "JPG": 325
+      },
+      "inferredDimensions": [
+        "1917x605x485",
+        "1917x605x650",
+        "1917x650x650",
+        "1917x736x650",
+        "1917x1000x650"
+      ],
+      "inferredDoorVariants": [
+        "4门",
+        "5门",
+        "6门",
+        "9门",
+        "17门",
+        "21门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\寄存柜主柜1917×650×650(总装配).SLDASM",
+          "relativePath": "1.工程图，独立主柜\\寄存柜主柜1917×650×650(总装配).SLDASM",
+          "bytes": 11052342,
+          "updatedAt": "2026-03-02T09:01:29.242481Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\701A\\新西兰21门寄存柜总装配体.SLDASM",
+          "relativePath": "701A\\新西兰21门寄存柜总装配体.SLDASM",
+          "bytes": 1938108,
+          "updatedAt": "2026-02-27T00:08:30.844249Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\701B\\新西兰17门寄存柜总装配体.SLDASM",
+          "relativePath": "701B\\新西兰17门寄存柜总装配体.SLDASM",
+          "bytes": 1941623,
+          "updatedAt": "2026-02-27T00:14:29.925576Z",
+          "priority": 30
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\15寸吉锐触摸显示器(OTL153-RPC03-HZN3) 装配.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\15寸吉锐触摸显示器(OTL153-RPC03-HZN3) 装配.SLDASM",
+          "bytes": 4626303,
+          "updatedAt": "2025-10-13T07:25:15.438671Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\15寸吉锐触摸显示器装配.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\15寸吉锐触摸显示器装配.SLDASM",
+          "bytes": 168294,
+          "updatedAt": "2025-08-28T00:21:03.299165Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\19.5寸显示器(AOC 195LM00008)模块.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\19.5寸显示器(AOC 195LM00008)模块.SLDASM",
+          "bytes": 228220,
+          "updatedAt": "2025-08-21T01:19:10.715397Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\19寸三星显示器广告模块.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\19寸三星显示器广告模块.SLDASM",
+          "bytes": 276566,
+          "updatedAt": "2025-08-21T01:19:12.602779Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\21.5寸京东方触显组件.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\21.5寸京东方触显组件.SLDASM",
+          "bytes": 634647,
+          "updatedAt": "2026-03-02T08:57:49.257389Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\TG2480打印机模块\\TG2480打印机装配.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\TG2480打印机模块\\TG2480打印机装配.SLDASM",
+          "bytes": 133349,
+          "updatedAt": "2025-09-15T01:42:14.395836Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\中控A焊接.sldasm",
+          "relativePath": "1.工程图，独立主柜\\中控A焊接.sldasm",
+          "bytes": 405480,
+          "updatedAt": "2025-10-13T07:46:23.376677Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\中控B焊接.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\中控B焊接.SLDASM",
+          "bytes": 205207,
+          "updatedAt": "2025-08-21T01:19:07.630649Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\中控C焊接.SLDASM",
+          "relativePath": "1.工程图，独立主柜\\中控C焊接.SLDASM",
+          "bytes": 198925,
+          "updatedAt": "2025-08-26T07:31:30.599269Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\4.BOM\\25072 寄存柜控制主柜(1917×650×650)(不锈钢)总装配BOM.xlsx",
+            "relativePath": "4.BOM\\25072 寄存柜控制主柜(1917×650×650)(不锈钢)总装配BOM.xlsx",
+            "bytes": 1134417,
+            "updatedAt": "2025-08-29T08:40:37.678450Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\4.BOM\\25072 寄存柜控制主柜(1917×650×650)(不锈钢)机箱配件BOM.xlsx",
+            "relativePath": "4.BOM\\25072 寄存柜控制主柜(1917×650×650)(不锈钢)机箱配件BOM.xlsx",
+            "bytes": 240612,
+            "updatedAt": "2025-08-29T08:40:53.416080Z"
+          }
+        ],
+        "dxfDirectories": [
+          "2.展开图",
+          "2.展开图\\待定件，可能有改动",
+          "2.展开图\\待定件，可能有改动\\TG2480打印机模块",
+          "20250915 25070 5门寄存主柜 25072 寄存柜控制主柜修改件\\展开图"
+        ],
+        "stepFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\GB╱T 70.1-2008[内六角圆柱头螺钉M12×25].step",
+            "relativePath": "1.工程图，独立主柜\\GB╱T 70.1-2008[内六角圆柱头螺钉M12×25].step",
+            "bytes": 50873,
+            "updatedAt": "2021-03-16T02:38:31.482540Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\1.工程图，独立主柜\\JB╱ZQ 4763-2006[膨胀螺栓M12／20].step",
+            "relativePath": "1.工程图，独立主柜\\JB╱ZQ 4763-2006[膨胀螺栓M12／20].step",
+            "bytes": 176802,
+            "updatedAt": "2020-07-07T09:19:43.567157Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\5.STP\\寄存柜主柜1917×650×650(总装配).STEP",
+            "relativePath": "5.STP\\寄存柜主柜1917×650×650(总装配).STEP",
+            "bytes": 23864301,
+            "updatedAt": "2025-08-29T07:20:47.818688Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\25072 寄存柜控制主柜(1917×650×650)（不锈钢）\\MS-EP8300（ke3D）打印机\\MS-EP8300（ke3D）.stp",
+            "relativePath": "MS-EP8300（ke3D）打印机\\MS-EP8300（ke3D）.stp",
+            "bytes": 26619087,
+            "updatedAt": "2025-09-15T01:05:16.159738Z"
+          }
+        ],
+        "pdfDirectories": [
+          "20250915 25070 5门寄存主柜 25072 寄存柜控制主柜修改件\\PDF",
+          "3.PDF"
+        ]
+      }
+    },
+    {
+      "name": "26001 寄存柜(标准组合式 1917×736×350) #",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #",
+      "counts": {
+        "SLDASM": 48,
+        "SLDPRT": 129,
+        "SLDDRW": 132,
+        "DXF": 48,
+        "STEP": 1,
+        "STP": 0,
+        "XLSX": 2,
+        "PDF": 72,
+        "JPG": 329
+      },
+      "inferredDimensions": [
+        "1917x736x350",
+        "1917x736x550"
+      ],
+      "inferredDoorVariants": [
+        "01门",
+        "02门",
+        "03门",
+        "04门",
+        "05门",
+        "06门",
+        "07门",
+        "08门"
+      ],
+      "primaryAssemblyCandidates": [
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\寄存柜(1917×736×350).SLDASM",
+          "relativePath": "1.工程图\\寄存柜(1917×736×350).SLDASM",
+          "bytes": 3239804,
+          "updatedAt": "2026-01-13T06:51:08.774616Z",
+          "priority": 55
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\Harness_1-标准寄存柜(1917×736×350).SLDASM",
+          "relativePath": "1.工程图\\Harness_1-标准寄存柜(1917×736×350).SLDASM",
+          "bytes": 227251,
+          "updatedAt": "2026-01-07T06:39:47.291618Z",
+          "priority": 75
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\15.6寸触显(OTL15W-RPC03-UHDZ)装配.SLDASM",
+          "relativePath": "1.工程图\\15.6寸触显(OTL15W-RPC03-UHDZ)装配.SLDASM",
+          "bytes": 185791,
+          "updatedAt": "2025-12-15T02:37:57.561606Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\上盖焊接.SLDASM",
+          "relativePath": "1.工程图\\上盖焊接.SLDASM",
+          "bytes": 357847,
+          "updatedAt": "2026-01-10T01:48:25.704300Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12焊接.SLDASM",
+          "bytes": 119603,
+          "updatedAt": "2025-12-15T02:38:07.278514Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门1╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门1╱12装配.SLDASM",
+          "bytes": 159592,
+          "updatedAt": "2025-12-15T02:38:07.364349Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门2╱12焊接(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接(视窗).SLDASM",
+          "bytes": 177132,
+          "updatedAt": "2026-01-10T00:48:34.030567Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接.SLDASM",
+          "bytes": 119555,
+          "updatedAt": "2025-12-15T02:38:05.100945Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门2╱12焊接中控.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12焊接中控.SLDASM",
+          "bytes": 149784,
+          "updatedAt": "2026-01-10T00:59:06.111354Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门2╱12装配(视窗).SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配(视窗).SLDASM",
+          "bytes": 225971,
+          "updatedAt": "2026-01-10T03:58:02.120589Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门2╱12装配.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配.SLDASM",
+          "bytes": 161386,
+          "updatedAt": "2025-12-15T06:33:46.565103Z",
+          "priority": 100
+        },
+        {
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\1.工程图\\储物柜门2╱12装配中控.SLDASM",
+          "relativePath": "1.工程图\\储物柜门2╱12装配中控.SLDASM",
+          "bytes": 183172,
+          "updatedAt": "2026-01-10T00:59:09.909099Z",
+          "priority": 100
+        }
+      ],
+      "evidence": {
+        "bomFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\3.BOM\\26001 寄存柜(1917×736×350)BOM表.xlsx",
+            "relativePath": "3.BOM\\26001 寄存柜(1917×736×350)BOM表.xlsx",
+            "bytes": 512973,
+            "updatedAt": "2026-01-10T03:19:57.801474Z"
+          },
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\3.BOM\\26001 寄存柜(1917×736×350)机箱配件BOM表.xlsx",
+            "relativePath": "3.BOM\\26001 寄存柜(1917×736×350)机箱配件BOM表.xlsx",
+            "bytes": 141328,
+            "updatedAt": "2026-01-10T03:24:50.664175Z"
+          }
+        ],
+        "dxfDirectories": [
+          "2.钣金展开图"
+        ],
+        "stepFiles": [
+          {
+            "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26001 寄存柜(标准组合式 1917×736×350) #\\5.step简化图\\寄存柜(1917×736×350).STEP",
+            "relativePath": "5.step简化图\\寄存柜(1917×736×350).STEP",
+            "bytes": 16772623,
+            "updatedAt": "2026-01-10T03:08:17.250522Z"
+          }
+        ],
+        "pdfDirectories": [
+          "4.PDF图"
+        ]
+      }
+    },
+    {
+      "name": "26025 寄存控制主柜10门(1917×482×550)",
+      "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\26025 寄存控制主柜10门(1917×482×550)",
+      "counts": {
+        "SLDASM": 0,
+        "SLDPRT": 0,
+        "SLDDRW": 0,
+        "DXF": 0,
+        "STEP": 0,
+        "STP": 0,
+        "XLSX": 0,
+        "PDF": 0,
+        "JPG": 0
+      },
+      "inferredDimensions": [
+        "1917x482x550"
+      ],
+      "inferredDoorVariants": [
+        "10门"
+      ],
+      "primaryAssemblyCandidates": [],
+      "evidence": {
+        "bomFiles": [],
+        "dxfDirectories": [],
+        "stepFiles": [],
+        "pdfDirectories": []
+      }
+    }
+  ]
+}

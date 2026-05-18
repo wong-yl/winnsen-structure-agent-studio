@@ -1,0 +1,666 @@
+{
+  "generatedAt": "2026-05-18T01:22:44.627134Z",
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\rule_seed_evidence_checklist.json",
+  "itemCount": 6,
+  "items": [
+    {
+      "id": "SEED-014-SHELF_PITCH",
+      "priority": "P0",
+      "label": "层板节距",
+      "value": "11 x 152.5mm",
+      "evidenceState": "quantity_evidence_linked",
+      "formulaStatus": "quantity_formula_partial",
+      "formulaSummary": "BOM 支持每列 5 块横层板、推导 6 行门格；SolidWorks 的 11 个阵列实例还需要继续绑定特征角色。",
+      "generationGate": "blocked_pending_evidence_closure",
+      "templateFormulas": [
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "runId": "RULE-20260517023937-37D2A4",
+          "bomFile": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "bomName": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "status": "quantity_formula_partial",
+          "derived": {
+            "patternInstanceCount": 11,
+            "pitchMm": 152.5,
+            "shelfPanelsPerColumn": 5,
+            "inferredDoorRows": 6,
+            "totalShelfPanels": 10
+          },
+          "checks": [
+            {
+              "name": "shelf_panels_per_column_consistent",
+              "ok": true,
+              "actual": 5,
+              "expected": "L/R 横层板数量一致"
+            },
+            {
+              "name": "shelf_rows_inferred_from_panels",
+              "ok": true,
+              "actual": 6,
+              "expected": "横层板数量 + 1"
+            }
+          ],
+          "supportRows": [
+            {
+              "rowNumber": 22,
+              "name": "箱体横层板L焊接",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 23,
+              "name": "箱体横层板L",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 24,
+              "name": "箱体横层板加强筋",
+              "quantity": 20,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 25,
+              "name": "箱体横层板R焊接",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 26,
+              "name": "箱体横层板R",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 27,
+              "name": "箱体横层板加强筋",
+              "quantity": 20,
+              "matchedToken": "层板"
+            }
+          ],
+          "summary": "BOM 支持每列 5 块横层板、推导 6 行门格；SolidWorks 的 11 个阵列实例还需要继续绑定特征角色。"
+        },
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "runId": "RULE-20260517023937-F290B0",
+          "bomFile": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "bomName": "16028 标准寄存柜BOM表.xlsx",
+          "status": "quantity_formula_partial",
+          "derived": {
+            "patternInstanceCount": 11,
+            "pitchMm": 152.5,
+            "shelfPanelsPerColumn": 5,
+            "inferredDoorRows": 6,
+            "totalShelfPanels": 10
+          },
+          "checks": [
+            {
+              "name": "shelf_panels_per_column_consistent",
+              "ok": true,
+              "actual": 5,
+              "expected": "L/R 横层板数量一致"
+            },
+            {
+              "name": "shelf_rows_inferred_from_panels",
+              "ok": true,
+              "actual": 6,
+              "expected": "横层板数量 + 1"
+            }
+          ],
+          "supportRows": [
+            {
+              "rowNumber": 18,
+              "name": "箱体横层板L焊接",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 19,
+              "name": "箱体横层板L",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 20,
+              "name": "箱体横层板加强筋",
+              "quantity": 20,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 21,
+              "name": "箱体横层板R焊接",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 22,
+              "name": "箱体横层板R",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "rowNumber": 23,
+              "name": "箱体横层板加强筋",
+              "quantity": 20,
+              "matchedToken": "层板"
+            }
+          ],
+          "summary": "BOM 支持每列 5 块横层板、推导 6 行门格；SolidWorks 的 11 个阵列实例还需要继续绑定特征角色。"
+        }
+      ]
+    },
+    {
+      "id": "SEED-006-DOOR_COLUMN_PITCH",
+      "priority": "P0",
+      "label": "柜门列距/阵列",
+      "value": "6 x 305mm",
+      "evidenceState": "quantity_evidence_linked",
+      "formulaStatus": "formula_consistent_candidate",
+      "formulaSummary": "门框横隔板数量推导 6 行，BOM 门名分母推导 12 门；可形成 2 列 x 6 行的阵列公式候选。",
+      "generationGate": "blocked_pending_evidence_closure",
+      "templateFormulas": [
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "runId": "RULE-20260517023937-37D2A4",
+          "bomFile": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "bomName": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "status": "formula_consistent_candidate",
+          "derived": {
+            "patternInstanceCount": 6,
+            "pitchMm": 305.0,
+            "horizontalDividersPerColumn": 5,
+            "inferredDoorRows": 6,
+            "doorTotalFromBomName": 12,
+            "inferredColumns": 2
+          },
+          "checks": [
+            {
+              "name": "horizontal_dividers_infer_rows",
+              "ok": true,
+              "actual": 6,
+              "expected": "横隔板数量 + 1"
+            },
+            {
+              "name": "pattern_count_matches_inferred_rows",
+              "ok": true,
+              "actual": 6,
+              "expected": 6
+            },
+            {
+              "name": "door_total_divisible_by_rows",
+              "ok": true,
+              "actual": 2,
+              "expected": "总门数 / 行数 = 整数列"
+            }
+          ],
+          "supportRows": [
+            {
+              "rowNumber": 45,
+              "name": "门框 横隔板",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "rowNumber": 46,
+              "name": "门框 横隔板R",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "rowNumber": 50,
+              "name": "储物柜门1╱12装配",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "rowNumber": 51,
+              "name": "储物柜门1╱12焊接",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "rowNumber": 52,
+              "name": "储物柜门板1╱12",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "rowNumber": 59,
+              "name": "储物柜门2╱12装配",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            }
+          ],
+          "summary": "门框横隔板数量推导 6 行，BOM 门名分母推导 12 门；可形成 2 列 x 6 行的阵列公式候选。"
+        },
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "runId": "RULE-20260517023937-F290B0",
+          "bomFile": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "bomName": "16028 标准寄存柜BOM表.xlsx",
+          "status": "formula_consistent_candidate",
+          "derived": {
+            "patternInstanceCount": 6,
+            "pitchMm": 305.0,
+            "horizontalDividersPerColumn": 5,
+            "inferredDoorRows": 6,
+            "doorTotalFromBomName": 12,
+            "inferredColumns": 2
+          },
+          "checks": [
+            {
+              "name": "horizontal_dividers_infer_rows",
+              "ok": true,
+              "actual": 6,
+              "expected": "横隔板数量 + 1"
+            },
+            {
+              "name": "pattern_count_matches_inferred_rows",
+              "ok": true,
+              "actual": 6,
+              "expected": 6
+            },
+            {
+              "name": "door_total_divisible_by_rows",
+              "ok": true,
+              "actual": 2,
+              "expected": "总门数 / 行数 = 整数列"
+            }
+          ],
+          "supportRows": [
+            {
+              "rowNumber": 43,
+              "name": "门框 横隔板",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "rowNumber": 44,
+              "name": "门框 横隔板R",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "rowNumber": 70,
+              "name": "储物柜门1╱12装配",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "rowNumber": 71,
+              "name": "储物柜门1╱12焊接",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "rowNumber": 72,
+              "name": "储物柜门板1╱12",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "rowNumber": 79,
+              "name": "储物柜门2╱12装配",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            }
+          ],
+          "summary": "门框横隔板数量推导 6 行，BOM 门名分母推导 12 门；可形成 2 列 x 6 行的阵列公式候选。"
+        }
+      ]
+    },
+    {
+      "id": "STEP-ROLE-RULE-20260517023937-37D2A4-DOOR-LOCK",
+      "priority": "P0",
+      "label": "16029 标准寄存柜 1917x1000x550 门/锁角色数量",
+      "value": "门装配3; 锁?; 锁钩4",
+      "evidenceState": "step_role_evidence_linked",
+      "formulaStatus": "step_role_formula_candidate",
+      "formulaSummary": "STEP 角色证据自动抽到门装配 3 组、门板 3 个、其中 3 组未归入小门/高门分类、电控锁 待定 组、U 型锁钩 4 个、插销固定板 5 个；可作为 16029 标准寄存柜 1917x1000x550 的门/锁/分隔件规则候选。",
+      "generationGate": "blocked_pending_variant_formula_closure",
+      "templateFormulas": [
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图",
+          "runId": "RULE-20260517023937-37D2A4",
+          "bomFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_step_component_role_bindings.json",
+          "bomName": "RULE-20260517023937-37D2A4_step_component_role_bindings.json",
+          "status": "step_role_formula_candidate",
+          "derived": {
+            "smallDoorAssemblies": 0,
+            "tallDoorAssemblies": 0,
+            "doorAssemblyRows": 3,
+            "doorPanelRows": 3,
+            "doorWeldmentRows": 3,
+            "classifiedDoorAssemblies": 0,
+            "unclassifiedDoorAssemblies": 3,
+            "electricLockSets": null,
+            "lockHookCount": 4,
+            "latchPlateCount": 5,
+            "horizontalDividers": 10,
+            "verticalDividers": 2,
+            "shelfPanelObjects": 20,
+            "repeatedRoleGroups": 34
+          },
+          "checks": [
+            {
+              "name": "door_panel_rows_match_assembly_rows",
+              "ok": true,
+              "actual": 3,
+              "expected": 3
+            },
+            {
+              "name": "lock_hook_matches_electric_lock_sets",
+              "ok": false,
+              "actual": 4,
+              "expected": null
+            },
+            {
+              "name": "latch_plates_two_per_lock_hook",
+              "ok": false,
+              "actual": 5,
+              "expected": 8
+            },
+            {
+              "name": "frame_dividers_present",
+              "ok": true,
+              "actual": "10 horizontal / 2 vertical",
+              "expected": "frame divider evidence"
+            },
+            {
+              "name": "variant_formula_requires_more_templates",
+              "ok": false,
+              "actual": "doorAssemblies=3, classified=0, unclassified=3",
+              "expected": "bind same-family target door-count variants before generation"
+            }
+          ],
+          "supportRows": [],
+          "summary": "STEP 角色证据自动抽到门装配 3 组、门板 3 个、其中 3 组未归入小门/高门分类、电控锁 待定 组、U 型锁钩 4 个、插销固定板 5 个；可作为 16029 标准寄存柜 1917x1000x550 的门/锁/分隔件规则候选。"
+        }
+      ]
+    },
+    {
+      "id": "STEP-ROLE-RULE-20260517023937-F290B0-DOOR-LOCK",
+      "priority": "P0",
+      "label": "16028 标准寄存柜 1917x1000x485 门/锁角色数量",
+      "value": "门装配12; 锁?; 锁钩24",
+      "evidenceState": "step_role_evidence_linked",
+      "formulaStatus": "step_role_formula_candidate",
+      "formulaSummary": "STEP 角色证据自动抽到门装配 12 组、门板 12 个、其中 12 组未归入小门/高门分类、电控锁 待定 组、U 型锁钩 24 个、插销固定板 25 个；可作为 16028 标准寄存柜 1917x1000x485 的门/锁/分隔件规则候选。",
+      "generationGate": "blocked_pending_variant_formula_closure",
+      "templateFormulas": [
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图",
+          "runId": "RULE-20260517023937-F290B0",
+          "bomFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_step_component_role_bindings.json",
+          "bomName": "RULE-20260517023937-F290B0_step_component_role_bindings.json",
+          "status": "step_role_formula_candidate",
+          "derived": {
+            "smallDoorAssemblies": 0,
+            "tallDoorAssemblies": 0,
+            "doorAssemblyRows": 12,
+            "doorPanelRows": 12,
+            "doorWeldmentRows": 12,
+            "classifiedDoorAssemblies": 0,
+            "unclassifiedDoorAssemblies": 12,
+            "electricLockSets": null,
+            "lockHookCount": 24,
+            "latchPlateCount": 25,
+            "horizontalDividers": 10,
+            "verticalDividers": 2,
+            "shelfPanelObjects": 20,
+            "repeatedRoleGroups": 30
+          },
+          "checks": [
+            {
+              "name": "door_panel_rows_match_assembly_rows",
+              "ok": true,
+              "actual": 12,
+              "expected": 12
+            },
+            {
+              "name": "lock_hook_matches_electric_lock_sets",
+              "ok": false,
+              "actual": 24,
+              "expected": null
+            },
+            {
+              "name": "latch_plates_two_per_lock_hook",
+              "ok": false,
+              "actual": 25,
+              "expected": 48
+            },
+            {
+              "name": "frame_dividers_present",
+              "ok": true,
+              "actual": "10 horizontal / 2 vertical",
+              "expected": "frame divider evidence"
+            },
+            {
+              "name": "variant_formula_requires_more_templates",
+              "ok": false,
+              "actual": "doorAssemblies=12, classified=0, unclassified=12",
+              "expected": "bind same-family target door-count variants before generation"
+            }
+          ],
+          "supportRows": [],
+          "summary": "STEP 角色证据自动抽到门装配 12 组、门板 12 个、其中 12 组未归入小门/高门分类、电控锁 待定 组、U 型锁钩 24 个、插销固定板 25 个；可作为 16028 标准寄存柜 1917x1000x485 的门/锁/分隔件规则候选。"
+        }
+      ]
+    },
+    {
+      "id": "STEP-ROLE-RULE-20260517073616-E10EA1-DOOR-LOCK",
+      "priority": "P0",
+      "label": "16038 洗衣寄存柜同尺寸多门数 门/锁角色数量",
+      "value": "小门6+高门1; 锁7; 锁钩7",
+      "evidenceState": "step_role_evidence_linked",
+      "formulaStatus": "step_role_formula_candidate",
+      "formulaSummary": "STEP 角色证据自动抽到小门 6 组、高门 1 组、其中 1 组未归入小门/高门分类、电控锁 7 组、U 型锁钩 7 个、插销固定板 14 个；可作为 16038 洗衣寄存柜同尺寸多门数 的门/锁/分隔件规则候选。",
+      "generationGate": "blocked_pending_variant_formula_closure",
+      "templateFormulas": [
+        {
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图",
+          "runId": "RULE-20260517073616-E10EA1",
+          "bomFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_step_component_role_bindings.json",
+          "bomName": "RULE-20260517073616-E10EA1_step_component_role_bindings.json",
+          "status": "step_role_formula_candidate",
+          "derived": {
+            "smallDoorAssemblies": 6,
+            "tallDoorAssemblies": 1,
+            "doorAssemblyRows": 8,
+            "doorPanelRows": 8,
+            "doorWeldmentRows": 8,
+            "classifiedDoorAssemblies": 7,
+            "unclassifiedDoorAssemblies": 1,
+            "electricLockSets": 7,
+            "lockHookCount": 7,
+            "latchPlateCount": 14,
+            "horizontalDividers": 3,
+            "verticalDividers": 3,
+            "shelfPanelObjects": 13,
+            "repeatedRoleGroups": 46
+          },
+          "checks": [
+            {
+              "name": "small_door_panel_matches_assembly",
+              "ok": true,
+              "actual": 6,
+              "expected": 6
+            },
+            {
+              "name": "lock_hook_matches_electric_lock_sets",
+              "ok": true,
+              "actual": 7,
+              "expected": 7
+            },
+            {
+              "name": "latch_plates_two_per_lock_hook",
+              "ok": true,
+              "actual": 14,
+              "expected": 14
+            },
+            {
+              "name": "frame_dividers_present",
+              "ok": true,
+              "actual": "3 horizontal / 3 vertical",
+              "expected": "frame divider evidence"
+            },
+            {
+              "name": "variant_formula_requires_more_templates",
+              "ok": false,
+              "actual": "doorAssemblies=8, classified=7, unclassified=1",
+              "expected": "bind 4/7/8/12-door variants before generation"
+            }
+          ],
+          "supportRows": [],
+          "summary": "STEP 角色证据自动抽到小门 6 组、高门 1 组、其中 1 组未归入小门/高门分类、电控锁 7 组、U 型锁钩 7 个、插销固定板 14 个；可作为 16038 洗衣寄存柜同尺寸多门数 的门/锁/分隔件规则候选。"
+        }
+      ]
+    },
+    {
+      "id": "STEP-VARIANT-16038-4-7-8-12",
+      "priority": "P0",
+      "label": "16038 4/7/8/12 门变体公式",
+      "value": "4 / 7 / 8门总装 + 12/12单门模块",
+      "evidenceState": "variant_step_evidence_linked",
+      "formulaStatus": "variant_formula_candidate",
+      "formulaSummary": "16038 STEP 已闭环 4 / 7 / 8 门总装：doorTotal=小门装配+高门装配，锁钩数=门数，插销固定板=2×门数；12/12 单门模块已有门板/装配证据。",
+      "generationGate": "blocked_pending_generator_binding",
+      "templateFormulas": [
+        {
+          "templateRoot": "D:\\Winnsen_Structure_Agent_Studio\\workers\\variant_step_evidence\\16038",
+          "runId": "16038_variant_step_evidence",
+          "bomFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\variant_step_evidence\\16038",
+          "bomName": "16038 STEP variant role evidence",
+          "status": "variant_formula_candidate",
+          "derived": {
+            "closedFullAssemblyVariants": "4 / 7 / 8",
+            "doorTotalFormula": "smallDoorAssemblies + tallDoorAssemblies",
+            "lockHookFormula": "lockHookCount = doorTotal",
+            "latchPlateFormula": "latchPlateCount = 2 x doorTotal",
+            "module12DoorAssemblies": 1,
+            "module12DoorPanels": 1
+          },
+          "variantRows": [
+            {
+              "variant": "4door",
+              "expectedDoorCount": 4,
+              "roleEvidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\variant_step_evidence\\16038\\4door\\4door_step_component_role_bindings.json",
+              "smallDoorAssemblies": 0,
+              "tallDoorAssemblies": 4,
+              "doorTotal": 4,
+              "lockHookCount": 4,
+              "latchPlateCount": 8,
+              "lockFrameCount": 8,
+              "horizontalDividers": 0,
+              "verticalDividers": 3,
+              "shelfPanelObjects": 4,
+              "repeatedRoleGroups": 37
+            },
+            {
+              "variant": "7door_simplified",
+              "expectedDoorCount": 7,
+              "roleEvidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\variant_step_evidence\\16038\\7door_simplified\\7door_simplified_step_component_role_bindings.json",
+              "smallDoorAssemblies": 6,
+              "tallDoorAssemblies": 1,
+              "doorTotal": 7,
+              "lockHookCount": 7,
+              "latchPlateCount": 14,
+              "lockFrameCount": 16,
+              "horizontalDividers": 3,
+              "verticalDividers": 3,
+              "shelfPanelObjects": 13,
+              "repeatedRoleGroups": 48
+            },
+            {
+              "variant": "8door",
+              "expectedDoorCount": 8,
+              "roleEvidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\variant_step_evidence\\16038\\8door\\8door_step_component_role_bindings.json",
+              "smallDoorAssemblies": 8,
+              "tallDoorAssemblies": 0,
+              "doorTotal": 8,
+              "lockHookCount": 8,
+              "latchPlateCount": 16,
+              "lockFrameCount": 16,
+              "horizontalDividers": 4,
+              "verticalDividers": 3,
+              "shelfPanelObjects": 16,
+              "repeatedRoleGroups": 40
+            }
+          ],
+          "module12Evidence": {
+            "runId": "RULE-20260517073616-E10EA1",
+            "roleEvidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_step_component_role_bindings.json",
+            "module12Rows": 6,
+            "module12DoorAssemblies": 1,
+            "module12DoorPanels": 1,
+            "module12Reinforcements": 3
+          },
+          "checks": [
+            {
+              "name": "variant_door_total_matches_step",
+              "ok": true,
+              "actual": 4,
+              "expected": 4
+            },
+            {
+              "name": "variant_lock_hook_matches_door_total",
+              "ok": true,
+              "actual": 4,
+              "expected": 4
+            },
+            {
+              "name": "variant_latch_plates_two_per_door",
+              "ok": true,
+              "actual": 8,
+              "expected": 8
+            },
+            {
+              "name": "variant_door_total_matches_step",
+              "ok": true,
+              "actual": 7,
+              "expected": 7
+            },
+            {
+              "name": "variant_lock_hook_matches_door_total",
+              "ok": true,
+              "actual": 7,
+              "expected": 7
+            },
+            {
+              "name": "variant_latch_plates_two_per_door",
+              "ok": true,
+              "actual": 14,
+              "expected": 14
+            },
+            {
+              "name": "variant_door_total_matches_step",
+              "ok": true,
+              "actual": 8,
+              "expected": 8
+            },
+            {
+              "name": "variant_lock_hook_matches_door_total",
+              "ok": true,
+              "actual": 8,
+              "expected": 8
+            },
+            {
+              "name": "variant_latch_plates_two_per_door",
+              "ok": true,
+              "actual": 16,
+              "expected": 16
+            },
+            {
+              "name": "module_12door_evidence_available",
+              "ok": true,
+              "actual": "assembly=1, panel=1",
+              "expected": "12/12 door assembly and panel evidence"
+            }
+          ],
+          "supportRows": [],
+          "summary": "16038 STEP 已闭环 4 / 7 / 8 门总装：doorTotal=小门装配+高门装配，锁钩数=门数，插销固定板=2×门数；12/12 单门模块已有门板/装配证据。"
+        }
+      ]
+    }
+  ]
+}

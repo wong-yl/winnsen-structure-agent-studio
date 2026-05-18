@@ -1,0 +1,452 @@
+{
+  "generatedAt": "2026-05-18T01:17:36.981844Z",
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\rule_seed_candidates.json",
+  "itemCount": 14,
+  "items": [
+    {
+      "id": "SEED-014-SHELF_PITCH",
+      "ruleType": "shelf_pitch",
+      "label": "层板节距",
+      "value": "11 x 152.5mm",
+      "priority": "P0",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_seed",
+      "sourceCount": 2,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4",
+        "RULE-20260517023937-F290B0"
+      ],
+      "sources": [
+        "LocalLPattern dimension"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.json",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\rule_learning_summary.json"
+      ],
+      "requiredEvidence": [
+        "DXF 展开尺寸",
+        "BOM/装配数量",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动核对层板 DXF 高度、BOM 层板数量和总装阵列数量，闭环后进入层板节距规则。"
+    },
+    {
+      "id": "SEED-006-DOOR_COLUMN_PITCH",
+      "ruleType": "door_column_pitch",
+      "label": "柜门列距/阵列",
+      "value": "6 x 305mm",
+      "priority": "P0",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_seed",
+      "sourceCount": 2,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4",
+        "RULE-20260517023937-F290B0"
+      ],
+      "sources": [
+        "LocalLPattern dimension"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.json",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\rule_learning_summary.json"
+      ],
+      "requiredEvidence": [
+        "DXF 展开尺寸",
+        "BOM/装配数量",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动核对门框横隔板、门板宽高和门数量关系，闭环后再进入同尺寸补门数生成器。"
+    },
+    {
+      "id": "SEED-013-SERVICE_DOOR_CLEARANCE",
+      "ruleType": "service_door_clearance",
+      "label": "应急维护门间隙",
+      "value": "0.5mm",
+      "priority": "P1",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_seed",
+      "sourceCount": 2,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4",
+        "RULE-20260517023937-F290B0"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "DXF/工程图间隙",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动分离应急维护门与普通门的间隙定义，避免误套到普通门。"
+    },
+    {
+      "id": "SEED-010-LEVELING_FOOT_OFFSET",
+      "ruleType": "leveling_foot_offset",
+      "label": "调整脚高度/底部距离",
+      "value": "55mm",
+      "priority": "P1",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_seed",
+      "sourceCount": 2,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517023937-F290B0",
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "底座/调整脚工程图",
+        "BOM 标准件",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动区分调整脚高度是装配状态、采购规格还是安装余量，不直接参与钣金展开。"
+    },
+    {
+      "id": "SEED-003-DISTANCE_MATE",
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "value": "2mm",
+      "priority": "P1",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_strong_seed",
+      "sourceCount": 3,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4",
+        "RULE-20260517023937-F290B0",
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。"
+    },
+    {
+      "id": "SEED-004-DISTANCE_MATE",
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "value": "55mm",
+      "priority": "P1",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_seed",
+      "sourceCount": 2,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517023937-F290B0",
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。"
+    },
+    {
+      "id": "SEED-007-FRAME_GAP",
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "value": "0.5mm",
+      "priority": "P1",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_seed",
+      "sourceCount": 2,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4",
+        "RULE-20260517023937-F290B0"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "DXF/工程图间隙",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动绑定距离配合两侧零件角色，再判断是否为可复用门缝/框缝规则。"
+    },
+    {
+      "id": "SEED-008-FRAME_GAP",
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "value": "2mm",
+      "priority": "P1",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "cross_template_strong_seed",
+      "sourceCount": 3,
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4",
+        "RULE-20260517023937-F290B0",
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "DXF/工程图间隙",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动绑定距离配合两侧零件角色，再判断是否为可复用门缝/框缝规则。"
+    },
+    {
+      "id": "SEED-012-LOCAL_PATTERN",
+      "ruleType": "local_pattern",
+      "label": "局部阵列",
+      "value": "2 x 915mm",
+      "priority": "P2",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "single_template_seed",
+      "sourceCount": 1,
+      "matchedTemplates": [
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "LocalLPattern dimension"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\rule_learning_summary.json"
+      ],
+      "requiredEvidence": [
+        "DXF 展开尺寸",
+        "BOM/装配数量",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 局部阵列 的来源证据闭环，再决定是否进入生成器。"
+    },
+    {
+      "id": "SEED-009-HANGER_RAIL_SPACING",
+      "ruleType": "hanger_rail_spacing",
+      "label": "衣架钢管间距",
+      "value": "2 x 915mm",
+      "priority": "P2",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "single_template_seed",
+      "sourceCount": 1,
+      "matchedTemplates": [
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4"
+      ],
+      "sources": [
+        "LocalLPattern dimension"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.json"
+      ],
+      "requiredEvidence": [
+        "DXF 展开尺寸",
+        "BOM/装配数量",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动核对衣架钢管数量、安装孔位和左右仓关系，先作为附件布置规则。"
+    },
+    {
+      "id": "SEED-011-LEVELING_FOOT_OFFSET",
+      "ruleType": "leveling_foot_offset",
+      "label": "调整脚高度/底部距离",
+      "value": "60mm",
+      "priority": "P2",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "single_template_seed",
+      "sourceCount": 1,
+      "matchedTemplates": [
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "底座/调整脚工程图",
+        "BOM 标准件",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动区分调整脚高度是装配状态、采购规格还是安装余量，不直接参与钣金展开。"
+    },
+    {
+      "id": "SEED-001-DISTANCE_MATE",
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "value": "0.2mm",
+      "priority": "P2",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "single_template_seed",
+      "sourceCount": 1,
+      "matchedTemplates": [
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。"
+    },
+    {
+      "id": "SEED-002-DISTANCE_MATE",
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "value": "0.5mm",
+      "priority": "P2",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "single_template_seed",
+      "sourceCount": 1,
+      "matchedTemplates": [
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "runIds": [
+        "RULE-20260517073616-E10EA1"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。"
+    },
+    {
+      "id": "SEED-005-DISTANCE_MATE",
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "value": "60mm",
+      "priority": "P2",
+      "status": "needs_rule_calibration",
+      "generationGate": "blocked_pending_evidence_closure",
+      "calibrationMode": "automated_first",
+      "confidence": "single_template_seed",
+      "sourceCount": 1,
+      "matchedTemplates": [
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "runIds": [
+        "RULE-20260517023937-37D2A4"
+      ],
+      "sources": [
+        "distance mate"
+      ],
+      "evidenceFiles": [
+        "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。"
+    }
+  ]
+}

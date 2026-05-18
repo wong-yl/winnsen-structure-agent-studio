@@ -1,0 +1,57 @@
+# Dependencies and frontend build output
+apps/web/node_modules/
+apps/web/dist/
+apps/web/.vite/
+apps/web/.eslintcache
+
+# Python runtime artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local database and runtime state
+data/*.sqlite
+data/*.sqlite-*
+data/*.db
+data/*.db-*
+
+# Worker runtime outputs
+workers/generated_models/
+workers/generation_logs/
+workers/manual_runs/
+workers/probes/
+workers/rule_extractions/
+workers/service_logs/
+workers/validation_screenshots/
+workers/variant_step_evidence/
+workers/verification/
+workers/**/__pycache__/
+
+# Generated CAD and neutral geometry files
+*.SLDASM
+*.sldasm
+*.SLDPRT
+*.sldprt
+*.SLDDRW
+*.slddrw
+*.STEP
+*.step
+*.STP
+*.stp
+*.FCStd
+*.fcstd
+*.FCBak
+*.fcbak
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+~$*

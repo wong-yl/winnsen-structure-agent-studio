@@ -1,0 +1,5363 @@
+{
+  "generatedAt": "2026-05-18T01:17:38.921948Z",
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\rule_seed_review_ledger.json",
+  "itemCount": 8,
+  "items": [
+    {
+      "id": "SEED-014-SHELF_PITCH",
+      "priority": "P0",
+      "label": "层板节距",
+      "value": "11 x 152.5mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "requiredEvidence": [
+        "DXF 展开尺寸",
+        "BOM/装配数量",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动核对层板 DXF 高度、BOM 层板数量和总装阵列数量，闭环后进入层板节距规则。",
+      "evidenceCounts": {
+        "SolidWorks drawing": 17,
+        "DXF": 12,
+        "BOM/XLS": 2,
+        "BOM linked rows": 12
+      },
+      "evidenceState": "quantity_evidence_linked",
+      "automationNextAction": "DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "tokens": [
+            "层板",
+            "横层板",
+            "置物架"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\箱体横层板L.SLDDRW",
+              "name": "箱体横层板L.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\箱体横层板L焊接.SLDDRW",
+              "name": "箱体横层板L焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\箱体横层板R.SLDDRW",
+              "name": "箱体横层板R.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\箱体横层板R焊接.SLDDRW",
+              "name": "箱体横层板R焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\箱体横层板加强筋.SLDDRW",
+              "name": "箱体横层板加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\层板(控制安装).SLDDRW",
+              "name": "层板(控制安装).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\层板(控制安装2).SLDDRW",
+              "name": "层板(控制安装2).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\层板(电源安装).SLDDRW",
+              "name": "层板(电源安装).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\控制柜上层板.SLDDRW",
+              "name": "控制柜上层板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\控制柜下层板.SLDDRW",
+              "name": "控制柜下层板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\电源箱层板.SLDDRW",
+              "name": "电源箱层板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\箱体横层板L.SLDDRW",
+              "name": "箱体横层板L.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\层板(控制安装)展开图.DXF",
+              "name": "层板(控制安装)展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\层板(控制安装2)展开图.DXF",
+              "name": "层板(控制安装2)展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\层板(电源安装)展开图.DXF",
+              "name": "层板(电源安装)展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体横层板L展开图.dxf",
+              "name": "箱体横层板L展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体横层板加强筋展开图.dxf",
+              "name": "箱体横层板加强筋展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\镜向箱体横层板L展开图.dxf",
+              "name": "镜向箱体横层板L展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板L展开图.DXF",
+              "name": "箱体横层板L展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板R展开图.DXF",
+              "name": "箱体横层板R展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板加强筋展开图.DXF",
+              "name": "箱体横层板加强筋展开图.DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": "6"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": 6,
+              "numericQuantitySum": 60,
+              "numericQuantityCount": 6,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 22,
+                  "sort": "20",
+                  "code": "16029-05",
+                  "name": "箱体横层板L焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 23,
+                  "sort": "21",
+                  "code": "16029-05-01",
+                  "name": "箱体横层板L",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 24,
+                  "sort": "22",
+                  "code": "16029-05-02",
+                  "name": "箱体横层板加强筋",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 20,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 25,
+                  "sort": "23",
+                  "code": "16029-06",
+                  "name": "箱体横层板R焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 26,
+                  "sort": "24",
+                  "code": "16029-06-01",
+                  "name": "箱体横层板R",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 27,
+                  "sort": "25",
+                  "code": "16029-05-02",
+                  "name": "箱体横层板加强筋",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 20,
+                  "matchedToken": "层板"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "层板",
+            "横层板",
+            "置物架"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\箱体横层板L.SLDDRW",
+              "name": "箱体横层板L.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\箱体横层板L焊接.SLDDRW",
+              "name": "箱体横层板L焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\箱体横层板R.SLDDRW",
+              "name": "箱体横层板R.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\箱体横层板R焊接.SLDDRW",
+              "name": "箱体横层板R焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\箱体横层板加强筋.SLDDRW",
+              "name": "箱体横层板加强筋.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\箱体横层板L展开图[0.8].DXF",
+              "name": "箱体横层板L展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\箱体横层板R展开图.DXF",
+              "name": "箱体横层板R展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\箱体横层板加强筋展开图[0.8].DXF",
+              "name": "箱体横层板加强筋展开图[0.8].DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": "6"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": 6,
+              "numericQuantitySum": 60,
+              "numericQuantityCount": 6,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 18,
+                  "sort": "16",
+                  "code": "16028-06",
+                  "name": "箱体横层板L焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 19,
+                  "sort": "17",
+                  "code": "16028-06-01",
+                  "name": "箱体横层板L",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 20,
+                  "sort": "18",
+                  "code": "16028-05-02",
+                  "name": "箱体横层板加强筋",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 20,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 21,
+                  "sort": "19",
+                  "code": "16028-05",
+                  "name": "箱体横层板R焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 22,
+                  "sort": "20",
+                  "code": "16028-05-01",
+                  "name": "箱体横层板R",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 5,
+                  "matchedToken": "层板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 23,
+                  "sort": "21",
+                  "code": "16028-05-02",
+                  "name": "箱体横层板加强筋",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 20,
+                  "matchedToken": "层板"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "bomQuantityLinks": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "matchedRows": 6,
+          "numericQuantitySum": 60,
+          "numericQuantityCount": 6,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 22,
+              "sort": "20",
+              "code": "16029-05",
+              "name": "箱体横层板L焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 23,
+              "sort": "21",
+              "code": "16029-05-01",
+              "name": "箱体横层板L",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 24,
+              "sort": "22",
+              "code": "16029-05-02",
+              "name": "箱体横层板加强筋",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 20,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 25,
+              "sort": "23",
+              "code": "16029-06",
+              "name": "箱体横层板R焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 26,
+              "sort": "24",
+              "code": "16029-06-01",
+              "name": "箱体横层板R",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 27,
+              "sort": "25",
+              "code": "16029-05-02",
+              "name": "箱体横层板加强筋",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 20,
+              "matchedToken": "层板"
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "name": "16028 标准寄存柜BOM表.xlsx",
+          "matchedRows": 6,
+          "numericQuantitySum": 60,
+          "numericQuantityCount": 6,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 18,
+              "sort": "16",
+              "code": "16028-06",
+              "name": "箱体横层板L焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 19,
+              "sort": "17",
+              "code": "16028-06-01",
+              "name": "箱体横层板L",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 20,
+              "sort": "18",
+              "code": "16028-05-02",
+              "name": "箱体横层板加强筋",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 20,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 21,
+              "sort": "19",
+              "code": "16028-05",
+              "name": "箱体横层板R焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 22,
+              "sort": "20",
+              "code": "16028-05-01",
+              "name": "箱体横层板R",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 5,
+              "matchedToken": "层板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 23,
+              "sort": "21",
+              "code": "16028-05-02",
+              "name": "箱体横层板加强筋",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 20,
+              "matchedToken": "层板"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEED-006-DOOR_COLUMN_PITCH",
+      "priority": "P0",
+      "label": "柜门列距/阵列",
+      "value": "6 x 305mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "requiredEvidence": [
+        "DXF 展开尺寸",
+        "BOM/装配数量",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动核对门框横隔板、门板宽高和门数量关系，闭环后再进入同尺寸补门数生成器。",
+      "evidenceCounts": {
+        "SolidWorks drawing": 24,
+        "DXF": 24,
+        "BOM/XLS": 2,
+        "BOM linked rows": 48
+      },
+      "evidenceState": "quantity_evidence_linked",
+      "automationNextAction": "DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "tokens": [
+            "门板",
+            "柜门",
+            "储物柜门",
+            "门框",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门12╱12焊接.SLDDRW",
+              "name": "储物柜门12╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门12╱12装配.SLDDRW",
+              "name": "储物柜门12╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门1╱12焊接.SLDDRW",
+              "name": "储物柜门1╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门1╱12装配.SLDDRW",
+              "name": "储物柜门1╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门2╱12焊接.SLDDRW",
+              "name": "储物柜门2╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门2╱12装配.SLDDRW",
+              "name": "储物柜门2╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门3╱12焊接.SLDDRW",
+              "name": "储物柜门3╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门3╱12装配.SLDDRW",
+              "name": "储物柜门3╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门4╱12焊接.SLDDRW",
+              "name": "储物柜门4╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门4╱12装配.SLDDRW",
+              "name": "储物柜门4╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门5╱12焊接.SLDDRW",
+              "name": "储物柜门5╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门5╱12装配.SLDDRW",
+              "name": "储物柜门5╱12装配.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\中控门板展开图.DXF",
+              "name": "中控门板展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板1╱12展开图.dxf",
+              "name": "储物柜门板1╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板2╱12.dxf",
+              "name": "储物柜门板2╱12.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板3╱12展开图.dxf",
+              "name": "储物柜门板3╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板4╱12展开图.dxf",
+              "name": "储物柜门板4╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板5╱12展开图.dxf",
+              "name": "储物柜门板5╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板6╱12展开图.dxf",
+              "name": "储物柜门板6╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\后下门板展开图.dxf",
+              "name": "后下门板展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\柜门加强筋2╱12展开图.dxf",
+              "name": "柜门加强筋2╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\柜门加强筋3╱12展开图.dxf",
+              "name": "柜门加强筋3╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\柜门加强筋4╱12展开图.dxf",
+              "name": "柜门加强筋4╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\柜门加强筋5╱12展开图.dxf",
+              "name": "柜门加强筋5╱12展开图.dxf"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": "24"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": 24,
+              "numericQuantitySum": 79,
+              "numericQuantityCount": 24,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 40,
+                  "sort": "38",
+                  "code": "16029-10",
+                  "name": "门框焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 41,
+                  "sort": "39",
+                  "code": "16029-10-01",
+                  "name": "门框 上",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 42,
+                  "sort": "40",
+                  "code": "16029-10-02",
+                  "name": "门框 下",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 43,
+                  "sort": "41",
+                  "code": "16029-10-03",
+                  "name": "门框 左",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 44,
+                  "sort": "42",
+                  "code": "16029-10-04",
+                  "name": "门框 右",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 45,
+                  "sort": "43",
+                  "code": "16029-10-05",
+                  "name": "门框 横隔板",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 46,
+                  "sort": "44",
+                  "code": "16029-10-06",
+                  "name": "门框 横隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16029-10-07",
+                  "name": "门框 竖隔板L",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16029-10-08",
+                  "name": "门框 竖隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 50,
+                  "sort": "48",
+                  "code": "16029-11",
+                  "name": "储物柜门1╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 2,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 51,
+                  "sort": "49",
+                  "code": "16029-11-01",
+                  "name": "储物柜门1╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 2,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 52,
+                  "sort": "50",
+                  "code": "16029-11-01-01",
+                  "name": "储物柜门板1╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 59,
+                  "sort": "57",
+                  "code": "16029-12",
+                  "name": "储物柜门2╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 12,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 60,
+                  "sort": "58",
+                  "code": "16029-12-01",
+                  "name": "储物柜门2╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 12,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 61,
+                  "sort": "59",
+                  "code": "16029-12-01-01",
+                  "name": "储物柜门板2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 62,
+                  "sort": "60",
+                  "code": "16029-12-01-02",
+                  "name": "柜门加强筋2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 69,
+                  "sort": "67",
+                  "code": "16029-13",
+                  "name": "储物柜门3╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 70,
+                  "sort": "68",
+                  "code": "16029-13-01",
+                  "name": "储物柜门3╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 71,
+                  "sort": "69",
+                  "code": "16029-13-01-01",
+                  "name": "储物柜门板3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 72,
+                  "sort": "70",
+                  "code": "16029-13-01-02",
+                  "name": "柜门加强筋3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 79,
+                  "sort": "77",
+                  "code": "16029-14",
+                  "name": "储物柜门4╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 80,
+                  "sort": "78",
+                  "code": "16029-14-01",
+                  "name": "储物柜门4╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 81,
+                  "sort": "79",
+                  "code": "16029-14-01-01",
+                  "name": "储物柜门板4╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 82,
+                  "sort": "80",
+                  "code": "16029-14-01-02",
+                  "name": "柜门加强筋4╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "门板",
+            "柜门",
+            "储物柜门",
+            "门框",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门1╱12焊接.SLDDRW",
+              "name": "储物柜门1╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门1╱12装配.SLDDRW",
+              "name": "储物柜门1╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12焊接(视窗).SLDDRW",
+              "name": "储物柜门2╱12焊接(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12焊接.SLDDRW",
+              "name": "储物柜门2╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12装配(视窗).SLDDRW",
+              "name": "储物柜门2╱12装配(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门2╱12装配.SLDDRW",
+              "name": "储物柜门2╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12焊接(视窗).SLDDRW",
+              "name": "储物柜门3╱12焊接(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12焊接.SLDDRW",
+              "name": "储物柜门3╱12焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12装配(视窗).SLDDRW",
+              "name": "储物柜门3╱12装配(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门3╱12装配.SLDDRW",
+              "name": "储物柜门3╱12装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门4╱12焊接(视窗).SLDDRW",
+              "name": "储物柜门4╱12焊接(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门4╱12焊接.SLDDRW",
+              "name": "储物柜门4╱12焊接.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板1╱12展开图[0.8].DXF",
+              "name": "储物柜门板1╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板2╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板2╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板2╱12展开图[0.8].DXF",
+              "name": "储物柜门板2╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板3╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板3╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板3╱12展开图[0.8].DXF",
+              "name": "储物柜门板3╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板4╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板4╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板4╱12展开图[0.8].DXF",
+              "name": "储物柜门板4╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板5╱12展开图[0.8].DXF",
+              "name": "储物柜门板5╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板6╱12展开图[0.8].DXF",
+              "name": "储物柜门板6╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\后下门板展开图[0.8].DXF",
+              "name": "后下门板展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\柜门加强筋2╱12展开图[0.8].DXF",
+              "name": "柜门加强筋2╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\柜门加强筋3╱12展开图[0.8].DXF",
+              "name": "柜门加强筋3╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": "24"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": 24,
+              "numericQuantitySum": 79,
+              "numericQuantityCount": 24,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 36,
+                  "sort": "34",
+                  "code": "16028-10",
+                  "name": "门框焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 37,
+                  "sort": "35",
+                  "code": "16028-10-01",
+                  "name": "门框 上",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 38,
+                  "sort": "36",
+                  "code": "16028-10-02",
+                  "name": "门框 下",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 39,
+                  "sort": "37",
+                  "code": "16028-10-03",
+                  "name": "门框 左",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 40,
+                  "sort": "38",
+                  "code": "16028-10-04",
+                  "name": "门框 竖隔板L",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 41,
+                  "sort": "39",
+                  "code": "16028-10-05",
+                  "name": "门框 右",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 42,
+                  "sort": "40",
+                  "code": "16028-10-06",
+                  "name": "门框 竖隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 43,
+                  "sort": "41",
+                  "code": "16028-10-07",
+                  "name": "门框 横隔板",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 44,
+                  "sort": "42",
+                  "code": "16028-10-08",
+                  "name": "门框 横隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16028-21",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16028-21-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 49,
+                  "sort": "47",
+                  "code": "16028-21-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 70,
+                  "sort": "68",
+                  "code": "16028-11",
+                  "name": "储物柜门1╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 2,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 71,
+                  "sort": "69",
+                  "code": "16028-11-01",
+                  "name": "储物柜门1╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 2,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 72,
+                  "sort": "70",
+                  "code": "16028-11-01-01",
+                  "name": "储物柜门板1╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 79,
+                  "sort": "77",
+                  "code": "16028-12",
+                  "name": "储物柜门2╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 12,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 80,
+                  "sort": "78",
+                  "code": "16028-12-01",
+                  "name": "储物柜门2╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 12,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 81,
+                  "sort": "79",
+                  "code": "16028-12-01-01",
+                  "name": "储物柜门板2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 84,
+                  "sort": "82",
+                  "code": "16028-12-01-02",
+                  "name": "柜门加强筋2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 89,
+                  "sort": "87",
+                  "code": "16028-13",
+                  "name": "储物柜门3╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 90,
+                  "sort": "88",
+                  "code": "16028-13-01",
+                  "name": "储物柜门3╱12焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 91,
+                  "sort": "89",
+                  "code": "16028-13-01-01",
+                  "name": "储物柜门板3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 94,
+                  "sort": "92",
+                  "code": "16028-13-01-02",
+                  "name": "柜门加强筋3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 99,
+                  "sort": "97",
+                  "code": "16028-14",
+                  "name": "储物柜门4╱12装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "柜门"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "bomQuantityLinks": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "matchedRows": 24,
+          "numericQuantitySum": 79,
+          "numericQuantityCount": 24,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 40,
+              "sort": "38",
+              "code": "16029-10",
+              "name": "门框焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 41,
+              "sort": "39",
+              "code": "16029-10-01",
+              "name": "门框 上",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 42,
+              "sort": "40",
+              "code": "16029-10-02",
+              "name": "门框 下",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 43,
+              "sort": "41",
+              "code": "16029-10-03",
+              "name": "门框 左",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 44,
+              "sort": "42",
+              "code": "16029-10-04",
+              "name": "门框 右",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 45,
+              "sort": "43",
+              "code": "16029-10-05",
+              "name": "门框 横隔板",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 46,
+              "sort": "44",
+              "code": "16029-10-06",
+              "name": "门框 横隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16029-10-07",
+              "name": "门框 竖隔板L",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16029-10-08",
+              "name": "门框 竖隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 50,
+              "sort": "48",
+              "code": "16029-11",
+              "name": "储物柜门1╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 51,
+              "sort": "49",
+              "code": "16029-11-01",
+              "name": "储物柜门1╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 52,
+              "sort": "50",
+              "code": "16029-11-01-01",
+              "name": "储物柜门板1╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 59,
+              "sort": "57",
+              "code": "16029-12",
+              "name": "储物柜门2╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 60,
+              "sort": "58",
+              "code": "16029-12-01",
+              "name": "储物柜门2╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 61,
+              "sort": "59",
+              "code": "16029-12-01-01",
+              "name": "储物柜门板2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 62,
+              "sort": "60",
+              "code": "16029-12-01-02",
+              "name": "柜门加强筋2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 69,
+              "sort": "67",
+              "code": "16029-13",
+              "name": "储物柜门3╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 70,
+              "sort": "68",
+              "code": "16029-13-01",
+              "name": "储物柜门3╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 71,
+              "sort": "69",
+              "code": "16029-13-01-01",
+              "name": "储物柜门板3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 72,
+              "sort": "70",
+              "code": "16029-13-01-02",
+              "name": "柜门加强筋3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 79,
+              "sort": "77",
+              "code": "16029-14",
+              "name": "储物柜门4╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 80,
+              "sort": "78",
+              "code": "16029-14-01",
+              "name": "储物柜门4╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 81,
+              "sort": "79",
+              "code": "16029-14-01-01",
+              "name": "储物柜门板4╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 82,
+              "sort": "80",
+              "code": "16029-14-01-02",
+              "name": "柜门加强筋4╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "name": "16028 标准寄存柜BOM表.xlsx",
+          "matchedRows": 24,
+          "numericQuantitySum": 79,
+          "numericQuantityCount": 24,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 36,
+              "sort": "34",
+              "code": "16028-10",
+              "name": "门框焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 37,
+              "sort": "35",
+              "code": "16028-10-01",
+              "name": "门框 上",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 38,
+              "sort": "36",
+              "code": "16028-10-02",
+              "name": "门框 下",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 39,
+              "sort": "37",
+              "code": "16028-10-03",
+              "name": "门框 左",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 40,
+              "sort": "38",
+              "code": "16028-10-04",
+              "name": "门框 竖隔板L",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 41,
+              "sort": "39",
+              "code": "16028-10-05",
+              "name": "门框 右",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 42,
+              "sort": "40",
+              "code": "16028-10-06",
+              "name": "门框 竖隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 43,
+              "sort": "41",
+              "code": "16028-10-07",
+              "name": "门框 横隔板",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 44,
+              "sort": "42",
+              "code": "16028-10-08",
+              "name": "门框 横隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16028-21",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16028-21-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 49,
+              "sort": "47",
+              "code": "16028-21-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 70,
+              "sort": "68",
+              "code": "16028-11",
+              "name": "储物柜门1╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 71,
+              "sort": "69",
+              "code": "16028-11-01",
+              "name": "储物柜门1╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 2,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 72,
+              "sort": "70",
+              "code": "16028-11-01-01",
+              "name": "储物柜门板1╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 79,
+              "sort": "77",
+              "code": "16028-12",
+              "name": "储物柜门2╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 80,
+              "sort": "78",
+              "code": "16028-12-01",
+              "name": "储物柜门2╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 81,
+              "sort": "79",
+              "code": "16028-12-01-01",
+              "name": "储物柜门板2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 84,
+              "sort": "82",
+              "code": "16028-12-01-02",
+              "name": "柜门加强筋2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 89,
+              "sort": "87",
+              "code": "16028-13",
+              "name": "储物柜门3╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 90,
+              "sort": "88",
+              "code": "16028-13-01",
+              "name": "储物柜门3╱12焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 91,
+              "sort": "89",
+              "code": "16028-13-01-01",
+              "name": "储物柜门板3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 94,
+              "sort": "92",
+              "code": "16028-13-01-02",
+              "name": "柜门加强筋3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 99,
+              "sort": "97",
+              "code": "16028-14",
+              "name": "储物柜门4╱12装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "柜门"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEED-013-SERVICE_DOOR_CLEARANCE",
+      "priority": "P1",
+      "label": "应急维护门间隙",
+      "value": "0.5mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "DXF/工程图间隙",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动分离应急维护门与普通门的间隙定义，避免误套到普通门。",
+      "evidenceCounts": {
+        "SolidWorks drawing": 18,
+        "DXF": 6,
+        "BOM/XLS": 2,
+        "BOM linked rows": 10
+      },
+      "evidenceState": "quantity_evidence_linked",
+      "automationNextAction": "DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "tokens": [
+            "应急维护门",
+            "后下门板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\后下门板焊接.SLDDRW",
+              "name": "后下门板焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\后下门板装配.SLDDRW",
+              "name": "后下门板装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\应急维护门.SLDDRW",
+              "name": "应急维护门.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\应急维护门展开图.SLDDRW",
+              "name": "应急维护门展开图.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\应急维护门焊接.SLDDRW",
+              "name": "应急维护门焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\应急维护门.SLDDRW",
+              "name": "应急维护门.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\应急维护门展开图.SLDDRW",
+              "name": "应急维护门展开图.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\应急维护门焊接.SLDDRW",
+              "name": "应急维护门焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\后下门模块\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\后下门模块\\后下门板焊接.SLDDRW",
+              "name": "后下门板焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\1.工程图20190423\\后下门模块\\后下门板装配.SLDDRW",
+              "name": "后下门板装配.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\后下门板展开图.dxf",
+              "name": "后下门板展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\应急维护门展开图.dxf",
+              "name": "应急维护门展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\后下门板展开图.DXF",
+              "name": "后下门板展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\应急维护门展开图.DXF",
+              "name": "应急维护门展开图.DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": "5"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": 5,
+              "numericQuantitySum": 5,
+              "numericQuantityCount": 5,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 109,
+                  "sort": "107",
+                  "code": "16029-17",
+                  "name": "应急维护门焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "应急维护门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 110,
+                  "sort": "108",
+                  "code": "16029-17-01",
+                  "name": "应急维护门",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "应急维护门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 112,
+                  "sort": "110",
+                  "code": "16029-18",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "后下门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 113,
+                  "sort": "111",
+                  "code": "16029-18-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "后下门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 114,
+                  "sort": "112",
+                  "code": "16029-18-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "后下门板"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "应急维护门",
+            "后下门板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板焊接.SLDDRW",
+              "name": "后下门板焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板装配.SLDDRW",
+              "name": "后下门板装配.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\应急维护门.SLDDRW",
+              "name": "应急维护门.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\应急维护门展开图.SLDDRW",
+              "name": "应急维护门展开图.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\应急维护门焊接.SLDDRW",
+              "name": "应急维护门焊接.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\后下门板展开图[0.8].DXF",
+              "name": "后下门板展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\应急维护门展开图[0.8].DXF",
+              "name": "应急维护门展开图[0.8].DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": "5"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": 5,
+              "numericQuantitySum": 5,
+              "numericQuantityCount": 5,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16028-21",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "后下门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16028-21-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "后下门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 49,
+                  "sort": "47",
+                  "code": "16028-21-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "后下门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 129,
+                  "sort": "127",
+                  "code": "16028-17",
+                  "name": "应急维护门焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "应急维护门"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 130,
+                  "sort": "128",
+                  "code": "16028-17-01",
+                  "name": "应急维护门",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "应急维护门"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "bomQuantityLinks": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "matchedRows": 5,
+          "numericQuantitySum": 5,
+          "numericQuantityCount": 5,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 109,
+              "sort": "107",
+              "code": "16029-17",
+              "name": "应急维护门焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "应急维护门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 110,
+              "sort": "108",
+              "code": "16029-17-01",
+              "name": "应急维护门",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "应急维护门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 112,
+              "sort": "110",
+              "code": "16029-18",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "后下门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 113,
+              "sort": "111",
+              "code": "16029-18-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "后下门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 114,
+              "sort": "112",
+              "code": "16029-18-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "后下门板"
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "name": "16028 标准寄存柜BOM表.xlsx",
+          "matchedRows": 5,
+          "numericQuantitySum": 5,
+          "numericQuantityCount": 5,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16028-21",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "后下门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16028-21-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "后下门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 49,
+              "sort": "47",
+              "code": "16028-21-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "后下门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 129,
+              "sort": "127",
+              "code": "16028-17",
+              "name": "应急维护门焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "应急维护门"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 130,
+              "sort": "128",
+              "code": "16028-17-01",
+              "name": "应急维护门",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "应急维护门"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEED-010-LEVELING_FOOT_OFFSET",
+      "priority": "P1",
+      "label": "调整脚高度/底部距离",
+      "value": "55mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "requiredEvidence": [
+        "底座/调整脚工程图",
+        "BOM 标准件",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动区分调整脚高度是装配状态、采购规格还是安装余量，不直接参与钣金展开。",
+      "evidenceCounts": {
+        "SolidWorks drawing": 16,
+        "DXF": 15,
+        "BOM/XLS": 1,
+        "BOM linked rows": 5,
+        "PDF drawing": 12
+      },
+      "evidenceState": "quantity_evidence_linked",
+      "automationNextAction": "DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "调整脚",
+            "底座"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\底座加强筋.SLDDRW",
+              "name": "底座加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\底座外框.SLDDRW",
+              "name": "底座外框.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\底座底板.SLDDRW",
+              "name": "底座底板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\底座焊接.SLDDRW",
+              "name": "底座焊接.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\底座加强筋展开图[1.2].DXF",
+              "name": "底座加强筋展开图[1.2].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\底座外框展开图[0.8].DXF",
+              "name": "底座外框展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\底座底板展开图[0.8].DXF",
+              "name": "底座底板展开图[0.8].DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": "5"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": 5,
+              "numericQuantitySum": 9,
+              "numericQuantityCount": 5,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 30,
+                  "sort": "28",
+                  "code": "16028-08",
+                  "name": "底座焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "底座"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 31,
+                  "sort": "29",
+                  "code": "16028-08-01",
+                  "name": "底座底板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "底座"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 32,
+                  "sort": "30",
+                  "code": "16028-08-02",
+                  "name": "底座外框",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "底座"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 33,
+                  "sort": "31",
+                  "code": "16028-08-03",
+                  "name": "底座加强筋",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "底座"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 132,
+                  "sort": "130",
+                  "code": "",
+                  "name": "调整脚 M12X60(模型)",
+                  "material": "外购件",
+                  "spec": "",
+                  "quantity": 4,
+                  "matchedToken": "调整脚"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517073616-E10EA1",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)",
+          "tokens": [
+            "调整脚",
+            "底座"
+          ],
+          "files": [
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\16038-03-01 底座底板 展开图(0.8)(2).DXF",
+              "name": "16038-03-01 底座底板 展开图(0.8)(2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\16038-03-01 底座底板 展开图(0.8).DXF",
+              "name": "16038-03-01 底座底板 展开图(0.8).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\16038-03-03 底座加强筋 展开图(2).DXF",
+              "name": "16038-03-03 底座加强筋 展开图(2).DXF"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\底座加强筋.SLDDRW",
+              "name": "底座加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\底座外框.SLDDRW",
+              "name": "底座外框.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\底座底板.SLDDRW",
+              "name": "底座底板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\底座焊接.SLDDRW",
+              "name": "底座焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\1.工程图-4门\\底座加强筋.SLDDRW",
+              "name": "底座加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\1.工程图-4门\\底座外框.SLDDRW",
+              "name": "底座外框.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\1.工程图-4门\\底座底板.SLDDRW",
+              "name": "底座底板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\1.工程图-4门\\底座焊接.SLDDRW",
+              "name": "底座焊接.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-03-01 底座底板 展开图(0.8)钣金加工.DXF",
+              "name": "16038-03-01 底座底板 展开图(0.8)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-03-02 底座外框 展开图(0.8)钣金加工.DXF",
+              "name": "16038-03-02 底座外框 展开图(0.8)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-03-03 底座加强筋 展开图(2)钣金加工.DXF",
+              "name": "16038-03-03 底座加强筋 展开图(2)钣金加工.DXF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-03 底座焊接 钣金加工.PDF",
+              "name": "16038-03 底座焊接 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-03-01 底座底板 钣金加工.PDF",
+              "name": "16038-03-01 底座底板 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-03-02 底座外框 钣金加工.PDF",
+              "name": "16038-03-02 底座外框 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-03-03 底座加强筋 钣金加工.PDF",
+              "name": "16038-03-03 底座加强筋 钣金加工.PDF"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\1.工程图 8门\\底座加强筋.SLDDRW",
+              "name": "底座加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\1.工程图 8门\\底座外框.SLDDRW",
+              "name": "底座外框.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\1.工程图 8门\\底座底板.SLDDRW",
+              "name": "底座底板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\1.工程图 8门\\底座焊接.SLDDRW",
+              "name": "底座焊接.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\2.展开图 8门\\16038-03-01 底座底板 展开图(0.8)钣金加工.DXF",
+              "name": "16038-03-01 底座底板 展开图(0.8)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\2.展开图 8门\\16038-03-02 底座外框 展开图(0.8)钣金加工.DXF",
+              "name": "16038-03-02 底座外框 展开图(0.8)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\2.展开图 8门\\16038-03-03 底座加强筋 展开图(2)钣金加工.DXF",
+              "name": "16038-03-03 底座加强筋 展开图(2)钣金加工.DXF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\3.PDF 8门\\16038-03 底座焊接 钣金加工.PDF",
+              "name": "16038-03 底座焊接 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\3.PDF 8门\\16038-03-01 底座底板 钣金加工.PDF",
+              "name": "16038-03-01 底座底板 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\3.PDF 8门\\16038-03-02 底座外框 钣金加工.PDF",
+              "name": "16038-03-02 底座外框 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\8门\\3.PDF 8门\\16038-03-03 底座加强筋 钣金加工.PDF",
+              "name": "16038-03-03 底座加强筋 钣金加工.PDF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\2.钣金展开图\\16038-03-01 底座底板 展开图(0.8).DXF",
+              "name": "16038-03-01 底座底板 展开图(0.8).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\2.钣金展开图\\16038-03-02 底座外框 展开图(0.8).DXF",
+              "name": "16038-03-02 底座外框 展开图(0.8).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\2.钣金展开图\\16038-03-03 底座加强筋 展开图(2).DXF",
+              "name": "16038-03-03 底座加强筋 展开图(2).DXF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\3.PDF图纸\\16038-03 底座焊接 .PDF",
+              "name": "16038-03 底座焊接 .PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\3.PDF图纸\\16038-03 底座焊接.PDF",
+              "name": "16038-03 底座焊接.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\3.PDF图纸\\16038-03-01 底座底板 .PDF",
+              "name": "16038-03-01 底座底板 .PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\3.PDF图纸\\16038-03-01 底座底板.PDF",
+              "name": "16038-03-01 底座底板.PDF"
+            }
+          ],
+          "bomQuantityLinks": []
+        }
+      ],
+      "bomQuantityLinks": [
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "name": "16028 标准寄存柜BOM表.xlsx",
+          "matchedRows": 5,
+          "numericQuantitySum": 9,
+          "numericQuantityCount": 5,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 30,
+              "sort": "28",
+              "code": "16028-08",
+              "name": "底座焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "底座"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 31,
+              "sort": "29",
+              "code": "16028-08-01",
+              "name": "底座底板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "底座"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 32,
+              "sort": "30",
+              "code": "16028-08-02",
+              "name": "底座外框",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "底座"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 33,
+              "sort": "31",
+              "code": "16028-08-03",
+              "name": "底座加强筋",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "底座"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 132,
+              "sort": "130",
+              "code": "",
+              "name": "调整脚 M12X60(模型)",
+              "material": "外购件",
+              "spec": "",
+              "quantity": 4,
+              "matchedToken": "调整脚"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEED-003-DISTANCE_MATE",
+      "priority": "P1",
+      "label": "距离配合",
+      "value": "2mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。",
+      "evidenceCounts": {},
+      "evidenceState": "evidence_gap",
+      "automationNextAction": "未找到足够候选文件，需要扩大搜索词或补充资料。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "tokens": [
+            "距离配合"
+          ],
+          "files": [],
+          "bomQuantityLinks": []
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "距离配合"
+          ],
+          "files": [],
+          "bomQuantityLinks": []
+        },
+        {
+          "runId": "RULE-20260517073616-E10EA1",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)",
+          "tokens": [
+            "距离配合"
+          ],
+          "files": [],
+          "bomQuantityLinks": []
+        }
+      ],
+      "bomQuantityLinks": []
+    },
+    {
+      "id": "SEED-004-DISTANCE_MATE",
+      "priority": "P1",
+      "label": "距离配合",
+      "value": "55mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "先做 距离配合 的来源证据闭环，再决定是否进入生成器。",
+      "evidenceCounts": {},
+      "evidenceState": "evidence_gap",
+      "automationNextAction": "未找到足够候选文件，需要扩大搜索词或补充资料。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "距离配合"
+          ],
+          "files": [],
+          "bomQuantityLinks": []
+        },
+        {
+          "runId": "RULE-20260517073616-E10EA1",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)",
+          "tokens": [
+            "距离配合"
+          ],
+          "files": [],
+          "bomQuantityLinks": []
+        }
+      ],
+      "bomQuantityLinks": []
+    },
+    {
+      "id": "SEED-007-FRAME_GAP",
+      "priority": "P1",
+      "label": "门框局部间隙",
+      "value": "0.5mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "DXF/工程图间隙",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动绑定距离配合两侧零件角色，再判断是否为可复用门缝/框缝规则。",
+      "evidenceCounts": {
+        "SolidWorks drawing": 24,
+        "DXF": 24,
+        "BOM/XLS": 2,
+        "BOM linked rows": 36
+      },
+      "evidenceState": "quantity_evidence_linked",
+      "automationNextAction": "DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "tokens": [
+            "门框",
+            "门板",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板12╱12 门框加强筋.SLDDRW",
+              "name": "储物柜门板12╱12 门框加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板12╱12.SLDDRW",
+              "name": "储物柜门板12╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板1╱12.SLDDRW",
+              "name": "储物柜门板1╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板2╱12.SLDDRW",
+              "name": "储物柜门板2╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板3╱12.SLDDRW",
+              "name": "储物柜门板3╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板4╱12.SLDDRW",
+              "name": "储物柜门板4╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板5╱12.SLDDRW",
+              "name": "储物柜门板5╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板6╱12.SLDDRW",
+              "name": "储物柜门板6╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋2.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋2.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋3.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋3.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋4.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋4.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\中控门板展开图.DXF",
+              "name": "中控门板展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板1╱12展开图.dxf",
+              "name": "储物柜门板1╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板2╱12.dxf",
+              "name": "储物柜门板2╱12.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板3╱12展开图.dxf",
+              "name": "储物柜门板3╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板4╱12展开图.dxf",
+              "name": "储物柜门板4╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板5╱12展开图.dxf",
+              "name": "储物柜门板5╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板6╱12展开图.dxf",
+              "name": "储物柜门板6╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\后下门板展开图.dxf",
+              "name": "后下门板展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 上展开图.dxf",
+              "name": "门框 上展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 下展开图.dxf",
+              "name": "门框 下展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 右展开图.dxf",
+              "name": "门框 右展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 左展开图.dxf",
+              "name": "门框 左展开图.dxf"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": "18"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": 18,
+              "numericQuantitySum": 38,
+              "numericQuantityCount": 18,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 40,
+                  "sort": "38",
+                  "code": "16029-10",
+                  "name": "门框焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 41,
+                  "sort": "39",
+                  "code": "16029-10-01",
+                  "name": "门框 上",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 42,
+                  "sort": "40",
+                  "code": "16029-10-02",
+                  "name": "门框 下",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 43,
+                  "sort": "41",
+                  "code": "16029-10-03",
+                  "name": "门框 左",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 44,
+                  "sort": "42",
+                  "code": "16029-10-04",
+                  "name": "门框 右",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 45,
+                  "sort": "43",
+                  "code": "16029-10-05",
+                  "name": "门框 横隔板",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 46,
+                  "sort": "44",
+                  "code": "16029-10-06",
+                  "name": "门框 横隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16029-10-07",
+                  "name": "门框 竖隔板L",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16029-10-08",
+                  "name": "门框 竖隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 52,
+                  "sort": "50",
+                  "code": "16029-11-01-01",
+                  "name": "储物柜门板1╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 61,
+                  "sort": "59",
+                  "code": "16029-12-01-01",
+                  "name": "储物柜门板2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 71,
+                  "sort": "69",
+                  "code": "16029-13-01-01",
+                  "name": "储物柜门板3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 81,
+                  "sort": "79",
+                  "code": "16029-14-01-01",
+                  "name": "储物柜门板4╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 91,
+                  "sort": "89",
+                  "code": "16029-15-01-01",
+                  "name": "储物柜门板5╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 101,
+                  "sort": "99",
+                  "code": "16029-16-01-01",
+                  "name": "储物柜门板6╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 112,
+                  "sort": "110",
+                  "code": "16029-18",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 113,
+                  "sort": "111",
+                  "code": "16029-18-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 114,
+                  "sort": "112",
+                  "code": "16029-18-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "门框",
+            "门板",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板1╱12.SLDDRW",
+              "name": "储物柜门板1╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板2╱12(视窗).SLDDRW",
+              "name": "储物柜门板2╱12(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板2╱12.SLDDRW",
+              "name": "储物柜门板2╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板3╱12(视窗).SLDDRW",
+              "name": "储物柜门板3╱12(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板3╱12.SLDDRW",
+              "name": "储物柜门板3╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板4╱12(视窗).SLDDRW",
+              "name": "储物柜门板4╱12(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板4╱12.SLDDRW",
+              "name": "储物柜门板4╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板5╱12.SLDDRW",
+              "name": "储物柜门板5╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板6╱12.SLDDRW",
+              "name": "储物柜门板6╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板焊接.SLDDRW",
+              "name": "后下门板焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板装配.SLDDRW",
+              "name": "后下门板装配.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板1╱12展开图[0.8].DXF",
+              "name": "储物柜门板1╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板2╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板2╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板2╱12展开图[0.8].DXF",
+              "name": "储物柜门板2╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板3╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板3╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板3╱12展开图[0.8].DXF",
+              "name": "储物柜门板3╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板4╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板4╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板4╱12展开图[0.8].DXF",
+              "name": "储物柜门板4╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板5╱12展开图[0.8].DXF",
+              "name": "储物柜门板5╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板6╱12展开图[0.8].DXF",
+              "name": "储物柜门板6╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\后下门板展开图[0.8].DXF",
+              "name": "后下门板展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\门框 上展开图[1.2].DXF",
+              "name": "门框 上展开图[1.2].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\门框 下展开图[1.2].DXF",
+              "name": "门框 下展开图[1.2].DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": "18"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": 18,
+              "numericQuantitySum": 38,
+              "numericQuantityCount": 18,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 36,
+                  "sort": "34",
+                  "code": "16028-10",
+                  "name": "门框焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 37,
+                  "sort": "35",
+                  "code": "16028-10-01",
+                  "name": "门框 上",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 38,
+                  "sort": "36",
+                  "code": "16028-10-02",
+                  "name": "门框 下",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 39,
+                  "sort": "37",
+                  "code": "16028-10-03",
+                  "name": "门框 左",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 40,
+                  "sort": "38",
+                  "code": "16028-10-04",
+                  "name": "门框 竖隔板L",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 41,
+                  "sort": "39",
+                  "code": "16028-10-05",
+                  "name": "门框 右",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 42,
+                  "sort": "40",
+                  "code": "16028-10-06",
+                  "name": "门框 竖隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 43,
+                  "sort": "41",
+                  "code": "16028-10-07",
+                  "name": "门框 横隔板",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 44,
+                  "sort": "42",
+                  "code": "16028-10-08",
+                  "name": "门框 横隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16028-21",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16028-21-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 49,
+                  "sort": "47",
+                  "code": "16028-21-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 72,
+                  "sort": "70",
+                  "code": "16028-11-01-01",
+                  "name": "储物柜门板1╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 81,
+                  "sort": "79",
+                  "code": "16028-12-01-01",
+                  "name": "储物柜门板2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 91,
+                  "sort": "89",
+                  "code": "16028-13-01-01",
+                  "name": "储物柜门板3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 101,
+                  "sort": "99",
+                  "code": "",
+                  "name": "储物柜门板4╱12",
+                  "material": "",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 111,
+                  "sort": "109",
+                  "code": "16028-15-01-01",
+                  "name": "储物柜门板5╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 121,
+                  "sort": "119",
+                  "code": "16028-16-01-01",
+                  "name": "储物柜门板6╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "bomQuantityLinks": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "matchedRows": 18,
+          "numericQuantitySum": 38,
+          "numericQuantityCount": 18,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 40,
+              "sort": "38",
+              "code": "16029-10",
+              "name": "门框焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 41,
+              "sort": "39",
+              "code": "16029-10-01",
+              "name": "门框 上",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 42,
+              "sort": "40",
+              "code": "16029-10-02",
+              "name": "门框 下",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 43,
+              "sort": "41",
+              "code": "16029-10-03",
+              "name": "门框 左",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 44,
+              "sort": "42",
+              "code": "16029-10-04",
+              "name": "门框 右",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 45,
+              "sort": "43",
+              "code": "16029-10-05",
+              "name": "门框 横隔板",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 46,
+              "sort": "44",
+              "code": "16029-10-06",
+              "name": "门框 横隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16029-10-07",
+              "name": "门框 竖隔板L",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16029-10-08",
+              "name": "门框 竖隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 52,
+              "sort": "50",
+              "code": "16029-11-01-01",
+              "name": "储物柜门板1╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 61,
+              "sort": "59",
+              "code": "16029-12-01-01",
+              "name": "储物柜门板2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 71,
+              "sort": "69",
+              "code": "16029-13-01-01",
+              "name": "储物柜门板3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 81,
+              "sort": "79",
+              "code": "16029-14-01-01",
+              "name": "储物柜门板4╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 91,
+              "sort": "89",
+              "code": "16029-15-01-01",
+              "name": "储物柜门板5╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 101,
+              "sort": "99",
+              "code": "16029-16-01-01",
+              "name": "储物柜门板6╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 112,
+              "sort": "110",
+              "code": "16029-18",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 113,
+              "sort": "111",
+              "code": "16029-18-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 114,
+              "sort": "112",
+              "code": "16029-18-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "name": "16028 标准寄存柜BOM表.xlsx",
+          "matchedRows": 18,
+          "numericQuantitySum": 38,
+          "numericQuantityCount": 18,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 36,
+              "sort": "34",
+              "code": "16028-10",
+              "name": "门框焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 37,
+              "sort": "35",
+              "code": "16028-10-01",
+              "name": "门框 上",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 38,
+              "sort": "36",
+              "code": "16028-10-02",
+              "name": "门框 下",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 39,
+              "sort": "37",
+              "code": "16028-10-03",
+              "name": "门框 左",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 40,
+              "sort": "38",
+              "code": "16028-10-04",
+              "name": "门框 竖隔板L",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 41,
+              "sort": "39",
+              "code": "16028-10-05",
+              "name": "门框 右",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 42,
+              "sort": "40",
+              "code": "16028-10-06",
+              "name": "门框 竖隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 43,
+              "sort": "41",
+              "code": "16028-10-07",
+              "name": "门框 横隔板",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 44,
+              "sort": "42",
+              "code": "16028-10-08",
+              "name": "门框 横隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16028-21",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16028-21-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 49,
+              "sort": "47",
+              "code": "16028-21-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 72,
+              "sort": "70",
+              "code": "16028-11-01-01",
+              "name": "储物柜门板1╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 81,
+              "sort": "79",
+              "code": "16028-12-01-01",
+              "name": "储物柜门板2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 91,
+              "sort": "89",
+              "code": "16028-13-01-01",
+              "name": "储物柜门板3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 101,
+              "sort": "99",
+              "code": "",
+              "name": "储物柜门板4╱12",
+              "material": "",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 111,
+              "sort": "109",
+              "code": "16028-15-01-01",
+              "name": "储物柜门板5╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 121,
+              "sort": "119",
+              "code": "16028-16-01-01",
+              "name": "储物柜门板6╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEED-008-FRAME_GAP",
+      "priority": "P1",
+      "label": "门框局部间隙",
+      "value": "2mm",
+      "generationGate": "blocked_pending_evidence_closure",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ],
+      "requiredEvidence": [
+        "SolidWorks mate 角色绑定",
+        "DXF/工程图间隙",
+        "证据闭环记录"
+      ],
+      "recommendedAction": "自动绑定距离配合两侧零件角色，再判断是否为可复用门缝/框缝规则。",
+      "evidenceCounts": {
+        "SolidWorks drawing": 36,
+        "DXF": 36,
+        "BOM/XLS": 2,
+        "BOM linked rows": 36,
+        "PDF drawing": 12
+      },
+      "evidenceState": "quantity_evidence_linked",
+      "automationNextAction": "DXF、工程图和 BOM 行级数量已匹配，下一步核对阵列数、门数和 BOM 数量公式。",
+      "templateEvidence": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "tokens": [
+            "门框",
+            "门板",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板12╱12 门框加强筋.SLDDRW",
+              "name": "储物柜门板12╱12 门框加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板12╱12.SLDDRW",
+              "name": "储物柜门板12╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板1╱12.SLDDRW",
+              "name": "储物柜门板1╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板2╱12.SLDDRW",
+              "name": "储物柜门板2╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板3╱12.SLDDRW",
+              "name": "储物柜门板3╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板4╱12.SLDDRW",
+              "name": "储物柜门板4╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板5╱12.SLDDRW",
+              "name": "储物柜门板5╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板6╱12.SLDDRW",
+              "name": "储物柜门板6╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋2.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋2.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋3.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋3.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋4.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋4.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\中控门板展开图.DXF",
+              "name": "中控门板展开图.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板1╱12展开图.dxf",
+              "name": "储物柜门板1╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板2╱12.dxf",
+              "name": "储物柜门板2╱12.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板3╱12展开图.dxf",
+              "name": "储物柜门板3╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板4╱12展开图.dxf",
+              "name": "储物柜门板4╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板5╱12展开图.dxf",
+              "name": "储物柜门板5╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板6╱12展开图.dxf",
+              "name": "储物柜门板6╱12展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\后下门板展开图.dxf",
+              "name": "后下门板展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 上展开图.dxf",
+              "name": "门框 上展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 下展开图.dxf",
+              "name": "门框 下展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 右展开图.dxf",
+              "name": "门框 右展开图.dxf"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 左展开图.dxf",
+              "name": "门框 左展开图.dxf"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": "18"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+              "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+              "matchedRows": 18,
+              "numericQuantitySum": 38,
+              "numericQuantityCount": 18,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 40,
+                  "sort": "38",
+                  "code": "16029-10",
+                  "name": "门框焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 41,
+                  "sort": "39",
+                  "code": "16029-10-01",
+                  "name": "门框 上",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 42,
+                  "sort": "40",
+                  "code": "16029-10-02",
+                  "name": "门框 下",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 43,
+                  "sort": "41",
+                  "code": "16029-10-03",
+                  "name": "门框 左",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 44,
+                  "sort": "42",
+                  "code": "16029-10-04",
+                  "name": "门框 右",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 45,
+                  "sort": "43",
+                  "code": "16029-10-05",
+                  "name": "门框 横隔板",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 46,
+                  "sort": "44",
+                  "code": "16029-10-06",
+                  "name": "门框 横隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16029-10-07",
+                  "name": "门框 竖隔板L",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16029-10-08",
+                  "name": "门框 竖隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 52,
+                  "sort": "50",
+                  "code": "16029-11-01-01",
+                  "name": "储物柜门板1╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 61,
+                  "sort": "59",
+                  "code": "16029-12-01-01",
+                  "name": "储物柜门板2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 71,
+                  "sort": "69",
+                  "code": "16029-13-01-01",
+                  "name": "储物柜门板3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 81,
+                  "sort": "79",
+                  "code": "16029-14-01-01",
+                  "name": "储物柜门板4╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 91,
+                  "sort": "89",
+                  "code": "16029-15-01-01",
+                  "name": "储物柜门板5╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 101,
+                  "sort": "99",
+                  "code": "16029-16-01-01",
+                  "name": "储物柜门板6╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 112,
+                  "sort": "110",
+                  "code": "16029-18",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 113,
+                  "sort": "111",
+                  "code": "16029-18-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 114,
+                  "sort": "112",
+                  "code": "16029-18-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "tokens": [
+            "门框",
+            "门板",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板1╱12.SLDDRW",
+              "name": "储物柜门板1╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板2╱12(视窗).SLDDRW",
+              "name": "储物柜门板2╱12(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板2╱12.SLDDRW",
+              "name": "储物柜门板2╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板3╱12(视窗).SLDDRW",
+              "name": "储物柜门板3╱12(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板3╱12.SLDDRW",
+              "name": "储物柜门板3╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板4╱12(视窗).SLDDRW",
+              "name": "储物柜门板4╱12(视窗).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板4╱12.SLDDRW",
+              "name": "储物柜门板4╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板5╱12.SLDDRW",
+              "name": "储物柜门板5╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\储物柜门板6╱12.SLDDRW",
+              "name": "储物柜门板6╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板焊接.SLDDRW",
+              "name": "后下门板焊接.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\1.工程图\\后下门板装配.SLDDRW",
+              "name": "后下门板装配.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板1╱12展开图[0.8].DXF",
+              "name": "储物柜门板1╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板2╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板2╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板2╱12展开图[0.8].DXF",
+              "name": "储物柜门板2╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板3╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板3╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板3╱12展开图[0.8].DXF",
+              "name": "储物柜门板3╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板4╱12(视窗)展开图[0.8].DXF",
+              "name": "储物柜门板4╱12(视窗)展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板4╱12展开图[0.8].DXF",
+              "name": "储物柜门板4╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板5╱12展开图[0.8].DXF",
+              "name": "储物柜门板5╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\储物柜门板6╱12展开图[0.8].DXF",
+              "name": "储物柜门板6╱12展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\后下门板展开图[0.8].DXF",
+              "name": "后下门板展开图[0.8].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\门框 上展开图[1.2].DXF",
+              "name": "门框 上展开图[1.2].DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\2.钣金展开图\\门框 下展开图[1.2].DXF",
+              "name": "门框 下展开图[1.2].DXF"
+            },
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": "18"
+            }
+          ],
+          "bomQuantityLinks": [
+            {
+              "type": "BOM/XLS",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+              "name": "16028 标准寄存柜BOM表.xlsx",
+              "matchedRows": 18,
+              "numericQuantitySum": 38,
+              "numericQuantityCount": 18,
+              "rows": [
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 36,
+                  "sort": "34",
+                  "code": "16028-10",
+                  "name": "门框焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 37,
+                  "sort": "35",
+                  "code": "16028-10-01",
+                  "name": "门框 上",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 38,
+                  "sort": "36",
+                  "code": "16028-10-02",
+                  "name": "门框 下",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 39,
+                  "sort": "37",
+                  "code": "16028-10-03",
+                  "name": "门框 左",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 40,
+                  "sort": "38",
+                  "code": "16028-10-04",
+                  "name": "门框 竖隔板L",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 41,
+                  "sort": "39",
+                  "code": "16028-10-05",
+                  "name": "门框 右",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 42,
+                  "sort": "40",
+                  "code": "16028-10-06",
+                  "name": "门框 竖隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 1,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 43,
+                  "sort": "41",
+                  "code": "16028-10-07",
+                  "name": "门框 横隔板",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 44,
+                  "sort": "42",
+                  "code": "16028-10-08",
+                  "name": "门框 横隔板R",
+                  "material": "冷轧钢板",
+                  "spec": "T1.2mm",
+                  "quantity": 5,
+                  "matchedToken": "门框"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 47,
+                  "sort": "45",
+                  "code": "16028-21",
+                  "name": "后下门板装配",
+                  "material": "装配图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 48,
+                  "sort": "46",
+                  "code": "16028-21-01",
+                  "name": "后下门板焊接",
+                  "material": "焊接图",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 49,
+                  "sort": "47",
+                  "code": "16028-21-01-01",
+                  "name": "后下门板",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 72,
+                  "sort": "70",
+                  "code": "16028-11-01-01",
+                  "name": "储物柜门板1╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 2,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 81,
+                  "sort": "79",
+                  "code": "16028-12-01-01",
+                  "name": "储物柜门板2╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 12,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 91,
+                  "sort": "89",
+                  "code": "16028-13-01-01",
+                  "name": "储物柜门板3╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 101,
+                  "sort": "99",
+                  "code": "",
+                  "name": "储物柜门板4╱12",
+                  "material": "",
+                  "spec": "",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 111,
+                  "sort": "109",
+                  "code": "16028-15-01-01",
+                  "name": "储物柜门板5╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                },
+                {
+                  "sheet": "Sheet1",
+                  "rowNumber": 121,
+                  "sort": "119",
+                  "code": "16028-16-01-01",
+                  "name": "储物柜门板6╱12",
+                  "material": "冷轧钢板",
+                  "spec": "T0.8mm",
+                  "quantity": 1,
+                  "matchedToken": "门板"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517073616-E10EA1",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)",
+          "tokens": [
+            "门框",
+            "门板",
+            "横隔板"
+          ],
+          "files": [
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\16038-01-04 门框 右 展开图(1.2).DXF",
+              "name": "16038-01-04 门框 右 展开图(1.2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\16038-01-06 门框 横隔板R 展开图(1.2).DXF",
+              "name": "16038-01-06 门框 横隔板R 展开图(1.2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\16038-27-01-01 储物柜门板12╱12 展开图(0.8).DXF",
+              "name": "16038-27-01-01 储物柜门板12╱12 展开图(0.8).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\fromparent+ 门框 左 展开图(1.2).DXF",
+              "name": "fromparent+ 门框 左 展开图(1.2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\fromparent+ 门框 竖隔板L 展开图(1.2).DXF",
+              "name": "fromparent+ 门框 竖隔板L 展开图(1.2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\fromparent+ 门框 竖隔板L2 展开图(1.2).DXF",
+              "name": "fromparent+ 门框 竖隔板L2 展开图(1.2).DXF"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜(大)门框加强筋1.SLDDRW",
+              "name": "储物柜(大)门框加强筋1.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜(大)门框加强筋2.SLDDRW",
+              "name": "储物柜(大)门框加强筋2.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜(小)门框加强筋1.SLDDRW",
+              "name": "储物柜(小)门框加强筋1.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜(小)门框加强筋2.SLDDRW",
+              "name": "储物柜(小)门框加强筋2.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板(大).SLDDRW",
+              "name": "储物柜门板(大).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板(小).SLDDRW",
+              "name": "储物柜门板(小).SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板12╱12 门框加强筋.SLDDRW",
+              "name": "储物柜门板12╱12 门框加强筋.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜门板12╱12.SLDDRW",
+              "name": "储物柜门板12╱12.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋2.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋2.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\储物柜门版12╱12门框加强筋3.SLDDRW",
+              "name": "储物柜门版12╱12门框加强筋3.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\后下门板.SLDDRW",
+              "name": "后下门板.SLDDRW"
+            },
+            {
+              "type": "SolidWorks drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\后下门板焊接.SLDDRW",
+              "name": "后下门板焊接.SLDDRW"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\门框 竖隔板L 展开图(1.2).DXF",
+              "name": "门框 竖隔板L 展开图(1.2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\1.工程图\\门框 竖隔板L2 展开图(1.2).DXF",
+              "name": "门框 竖隔板L2 展开图(1.2).DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-01-01 门框 上 展开图(1.2)钣金加工.DXF",
+              "name": "16038-01-01 门框 上 展开图(1.2)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-01-02 门框 下 展开图(1.2)钣金加工.DXF",
+              "name": "16038-01-02 门框 下 展开图(1.2)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-01-03 门框 左 展开图(1.2)钣金加工.DXF",
+              "name": "16038-01-03 门框 左 展开图(1.2)钣金加工.DXF"
+            },
+            {
+              "type": "DXF",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\2.展开图-4门\\16038-01-04 门框 右 展开图(1.2)钣金加工.DXF",
+              "name": "16038-01-04 门框 右 展开图(1.2)钣金加工.DXF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01 门框焊接 钣金加工.PDF",
+              "name": "16038-01 门框焊接 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01-01 门框 上 钣金加工.PDF",
+              "name": "16038-01-01 门框 上 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01-02 门框 下 钣金加工.PDF",
+              "name": "16038-01-02 门框 下 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01-03 门框 左 钣金加工.PDF",
+              "name": "16038-01-03 门框 左 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01-04 门框 右 钣金加工.PDF",
+              "name": "16038-01-04 门框 右 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01-08 门框 竖隔板M 钣金加工.PDF",
+              "name": "16038-01-08 门框 竖隔板M 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-01-10 门框 竖隔板T 钣金加工.PDF",
+              "name": "16038-01-10 门框 竖隔板T 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-13 后下门板装配 .PDF",
+              "name": "16038-13 后下门板装配 .PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-13-01 后下门板焊接 钣金加工.PDF",
+              "name": "16038-13-01 后下门板焊接 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-13-01-01 后下门板 钣金加工.PDF",
+              "name": "16038-13-01-01 后下门板 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-21-01-01 储物柜门板(大) 钣金加工.PDF",
+              "name": "16038-21-01-01 储物柜门板(大) 钣金加工.PDF"
+            },
+            {
+              "type": "PDF drawing",
+              "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16038 寄存柜XY(标准组合式 1917×1000×550)\\16038 寄存柜XY(标准组合式 1917×1000×550)\\4门\\3.PDF-4门\\16038-21-01-02 储物柜(大)门框加强筋1 钣金加工.PDF",
+              "name": "16038-21-01-02 储物柜(大)门框加强筋1 钣金加工.PDF"
+            }
+          ],
+          "bomQuantityLinks": []
+        }
+      ],
+      "bomQuantityLinks": [
+        {
+          "runId": "RULE-20260517023937-37D2A4",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\3.BOM\\16029 1917X1000X550标准柜BOM表.xlsx",
+          "name": "16029 1917X1000X550标准柜BOM表.xlsx",
+          "matchedRows": 18,
+          "numericQuantitySum": 38,
+          "numericQuantityCount": 18,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 40,
+              "sort": "38",
+              "code": "16029-10",
+              "name": "门框焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 41,
+              "sort": "39",
+              "code": "16029-10-01",
+              "name": "门框 上",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 42,
+              "sort": "40",
+              "code": "16029-10-02",
+              "name": "门框 下",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 43,
+              "sort": "41",
+              "code": "16029-10-03",
+              "name": "门框 左",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 44,
+              "sort": "42",
+              "code": "16029-10-04",
+              "name": "门框 右",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 45,
+              "sort": "43",
+              "code": "16029-10-05",
+              "name": "门框 横隔板",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 46,
+              "sort": "44",
+              "code": "16029-10-06",
+              "name": "门框 横隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16029-10-07",
+              "name": "门框 竖隔板L",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16029-10-08",
+              "name": "门框 竖隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 52,
+              "sort": "50",
+              "code": "16029-11-01-01",
+              "name": "储物柜门板1╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 61,
+              "sort": "59",
+              "code": "16029-12-01-01",
+              "name": "储物柜门板2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 71,
+              "sort": "69",
+              "code": "16029-13-01-01",
+              "name": "储物柜门板3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 81,
+              "sort": "79",
+              "code": "16029-14-01-01",
+              "name": "储物柜门板4╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 91,
+              "sort": "89",
+              "code": "16029-15-01-01",
+              "name": "储物柜门板5╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 101,
+              "sort": "99",
+              "code": "16029-16-01-01",
+              "name": "储物柜门板6╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 112,
+              "sort": "110",
+              "code": "16029-18",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 113,
+              "sort": "111",
+              "code": "16029-18-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 114,
+              "sort": "112",
+              "code": "16029-18-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            }
+          ]
+        },
+        {
+          "runId": "RULE-20260517023937-F290B0",
+          "templateRoot": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)",
+          "type": "BOM/XLS",
+          "path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16028 寄存柜(标准组合式 1917×1000×485)\\3.BOM\\16028 标准寄存柜BOM表.xlsx",
+          "name": "16028 标准寄存柜BOM表.xlsx",
+          "matchedRows": 18,
+          "numericQuantitySum": 38,
+          "numericQuantityCount": 18,
+          "rows": [
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 36,
+              "sort": "34",
+              "code": "16028-10",
+              "name": "门框焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 37,
+              "sort": "35",
+              "code": "16028-10-01",
+              "name": "门框 上",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 38,
+              "sort": "36",
+              "code": "16028-10-02",
+              "name": "门框 下",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 39,
+              "sort": "37",
+              "code": "16028-10-03",
+              "name": "门框 左",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 40,
+              "sort": "38",
+              "code": "16028-10-04",
+              "name": "门框 竖隔板L",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 41,
+              "sort": "39",
+              "code": "16028-10-05",
+              "name": "门框 右",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 42,
+              "sort": "40",
+              "code": "16028-10-06",
+              "name": "门框 竖隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 1,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 43,
+              "sort": "41",
+              "code": "16028-10-07",
+              "name": "门框 横隔板",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 44,
+              "sort": "42",
+              "code": "16028-10-08",
+              "name": "门框 横隔板R",
+              "material": "冷轧钢板",
+              "spec": "T1.2mm",
+              "quantity": 5,
+              "matchedToken": "门框"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 47,
+              "sort": "45",
+              "code": "16028-21",
+              "name": "后下门板装配",
+              "material": "装配图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 48,
+              "sort": "46",
+              "code": "16028-21-01",
+              "name": "后下门板焊接",
+              "material": "焊接图",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 49,
+              "sort": "47",
+              "code": "16028-21-01-01",
+              "name": "后下门板",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 72,
+              "sort": "70",
+              "code": "16028-11-01-01",
+              "name": "储物柜门板1╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 2,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 81,
+              "sort": "79",
+              "code": "16028-12-01-01",
+              "name": "储物柜门板2╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 12,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 91,
+              "sort": "89",
+              "code": "16028-13-01-01",
+              "name": "储物柜门板3╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 101,
+              "sort": "99",
+              "code": "",
+              "name": "储物柜门板4╱12",
+              "material": "",
+              "spec": "",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 111,
+              "sort": "109",
+              "code": "16028-15-01-01",
+              "name": "储物柜门板5╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            },
+            {
+              "sheet": "Sheet1",
+              "rowNumber": 121,
+              "sort": "119",
+              "code": "16028-16-01-01",
+              "name": "储物柜门板6╱12",
+              "material": "冷轧钢板",
+              "spec": "T0.8mm",
+              "quantity": 1,
+              "matchedToken": "门板"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

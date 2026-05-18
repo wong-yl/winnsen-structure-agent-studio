@@ -1,0 +1,409 @@
+{
+  "generatedAt": "2026-05-18T01:17:36.911305Z",
+  "sourceDir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions",
+  "candidateCount": 24,
+  "candidates": [
+    {
+      "ruleType": "shelf_pitch",
+      "label": "层板节距",
+      "source": "LocalLPattern dimension",
+      "value": "11 x 152.5mm",
+      "numericValueMm": 152.5,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.json",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs DXF/BOM evidence closure before generation.",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "door_column_pitch",
+      "label": "柜门列距/阵列",
+      "source": "LocalLPattern dimension",
+      "value": "6 x 305mm",
+      "numericValueMm": 305.0,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.json",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs DXF/BOM evidence closure before generation.",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "hanger_rail_spacing",
+      "label": "衣架钢管间距",
+      "source": "LocalLPattern dimension",
+      "value": "2 x 915mm",
+      "numericValueMm": 915.0,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.json",
+      "confidence": "seed",
+      "blocker": "Needs DXF/BOM evidence closure before generation.",
+      "matchedTemplates": [
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "2mm",
+      "numericValueMm": 2.0,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "上盖焊接-1/上盖壳体右侧板-1; 储物柜门12╱12装配-1/储物柜门12╱12焊接-1/储物柜门板12╱12-1; 储物柜门1╱12装配-1/储物柜门1╱12焊接-1/储物柜门板1╱12-1; 储物柜门2╱12装配-2/储物柜门2╱12焊接-1/储物柜门板2╱12-1; 储物柜门3╱12装配-1/储物柜门3╱12焊接-1/储物柜门板3╱12-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "60mm",
+      "numericValueMm": 60.0,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+      "confidence": "seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "门框焊接-1/门框 下-1",
+      "matchedTemplates": [
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "source": "distance mate",
+      "value": "0.5mm",
+      "numericValueMm": 0.5,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "门框焊接-1/门框 下-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "source": "distance mate",
+      "value": "2mm",
+      "numericValueMm": 2.0,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "门框焊接-1/门框 上-1; 门框焊接-1/门框 下-1; 门框焊接-1/门框 横隔板-2; 门框焊接-1/门框 横隔板-6",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "leveling_foot_offset",
+      "label": "调整脚高度/底部距离",
+      "source": "distance mate",
+      "value": "60mm",
+      "numericValueMm": 60.0,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+      "confidence": "seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "调整脚 M12X60(模型)-1",
+      "matchedTemplates": [
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "service_door_clearance",
+      "label": "应急维护门间隙",
+      "source": "distance mate",
+      "value": "0.5mm",
+      "numericValueMm": 0.5,
+      "templateTitle": "16029 标准寄存柜 1917x1000x550",
+      "runId": "RULE-20260517023937-37D2A4",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\RULE-20260517023937-37D2A4_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "应急维护门焊接-1/应急维护门-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "shelf_pitch",
+      "label": "层板节距",
+      "source": "LocalLPattern dimension",
+      "value": "11 x 152.5mm",
+      "numericValueMm": 152.5,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\rule_learning_summary.json",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs DXF/BOM evidence closure before generation.",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "door_column_pitch",
+      "label": "柜门列距/阵列",
+      "source": "LocalLPattern dimension",
+      "value": "6 x 305mm",
+      "numericValueMm": 305.0,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\rule_learning_summary.json",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs DXF/BOM evidence closure before generation.",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "2mm",
+      "numericValueMm": 2.0,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "上盖焊接-1/上盖壳体右侧板-1; 储物柜门1╱12装配-1/储物柜门1╱12焊接-1/储物柜门板1╱12-1; 储物柜门2╱12装配(视窗)-1/储物柜门2╱12焊接(视窗)-1/储物柜门板2╱12(视窗)-1; 储物柜门2╱12装配-2/储物柜门2╱12焊接-1/储物柜门板2╱12-1; 储物柜门3╱12装配(视窗)-1/储物柜门3╱12焊接(视窗)-1/储物柜门板3╱12(视窗)-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "55mm",
+      "numericValueMm": 55.0,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "底座焊接-1/底座加强筋-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "source": "distance mate",
+      "value": "0.5mm",
+      "numericValueMm": 0.5,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "门框焊接-1/门框 下-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "source": "distance mate",
+      "value": "2mm",
+      "numericValueMm": 2.0,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "门框焊接-1/门框 上-1; 门框焊接-1/门框 下-1; 门框焊接-1/门框 横隔板-2; 门框焊接-1/门框 横隔板-6; 门框焊接-1/门框 横隔板R-2",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "leveling_foot_offset",
+      "label": "调整脚高度/底部距离",
+      "source": "distance mate",
+      "value": "55mm",
+      "numericValueMm": 55.0,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "调整脚 M12X60(模型)-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "service_door_clearance",
+      "label": "应急维护门间隙",
+      "source": "distance mate",
+      "value": "0.5mm",
+      "numericValueMm": 0.5,
+      "templateTitle": "16028 标准寄存柜 1917x1000x485",
+      "runId": "RULE-20260517023937-F290B0",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-F290B0\\RULE-20260517023937-F290B0_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "应急维护门焊接-1/应急维护门-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550"
+      ]
+    },
+    {
+      "ruleType": "local_pattern",
+      "label": "局部阵列",
+      "source": "LocalLPattern dimension",
+      "value": "2 x 915mm",
+      "numericValueMm": 915.0,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\rule_learning_summary.json",
+      "confidence": "seed",
+      "blocker": "Needs DXF/BOM evidence closure before generation.",
+      "matchedTemplates": [
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "0.2mm",
+      "numericValueMm": 0.2,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv",
+      "confidence": "seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "层板(置物架2)-1; 箱体左侧板焊接-1/箱体侧板加强筋2-1",
+      "matchedTemplates": [
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "0.5mm",
+      "numericValueMm": 0.5,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv",
+      "confidence": "seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "层板(置物架1)-2; 箱体右侧板焊接-1/箱体侧板加强筋1-1",
+      "matchedTemplates": [
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "2mm",
+      "numericValueMm": 2.0,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "上盖焊接-1/上盖壳体右侧板(镜向)-2; 储物柜门(小)装配-1/储物柜门(小)焊接-1/储物柜门板(小)-1; 储物柜门12╱12装配-1/储物柜门12╱12焊接-1/储物柜门板12╱12-1; 后下门板装配-1/后下门板焊接-1/后下门板-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "distance_mate",
+      "label": "距离配合",
+      "source": "distance mate",
+      "value": "55mm",
+      "numericValueMm": 55.0,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "底座焊接-1/底座加强筋-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "frame_gap",
+      "label": "门框局部间隙",
+      "source": "distance mate",
+      "value": "2mm",
+      "numericValueMm": 2.0,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "门框焊接-1/门框 上-1; 门框焊接-1/门框 下-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16029 标准寄存柜 1917x1000x550",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    },
+    {
+      "ruleType": "leveling_foot_offset",
+      "label": "调整脚高度/底部距离",
+      "source": "distance mate",
+      "value": "55mm",
+      "numericValueMm": 55.0,
+      "templateTitle": "16038 洗衣寄存柜同尺寸多门数",
+      "runId": "RULE-20260517073616-E10EA1",
+      "evidenceFile": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517073616-E10EA1\\RULE-20260517073616-E10EA1_sw_api_snapshot_mates.csv",
+      "confidence": "cross_template_seed",
+      "blocker": "Needs role binding and evidence closure before generation.",
+      "componentPreview": "调整脚 M12X60(模型)-1",
+      "matchedTemplates": [
+        "16028 标准寄存柜 1917x1000x485",
+        "16038 洗衣寄存柜同尺寸多门数"
+      ]
+    }
+  ]
+}
