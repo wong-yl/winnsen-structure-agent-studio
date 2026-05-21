@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T13:10:11+08:00",
+  "generated_at": "2026-05-21T14:37:01+08:00",
   "source_verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_verify.csv",
   "source_bbox_summary": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-16029-FIXED-MODULE-CANDIDATES-20260521\\candidate_bbox_summary.json",
   "target_modules": [
@@ -11,8 +11,10 @@
     "transform_backed_candidates": 9,
     "native_placeable_candidates": 9,
     "identity_transform_ready_candidates": 3,
+    "axis_aligned_matrix_ready_candidates": 9,
     "requires_rotation_or_full_matrix_candidates": 6,
     "recommended_first_enriched_model_candidates": 3,
+    "recommended_matrix_enriched_model_candidates": 9,
     "blocked_local_only_candidates": 3,
     "all_recommended_native_placeable": true
   },
@@ -55,10 +57,53 @@
       "local_bbox_match_max_error_mm": 0.0,
       "transform_bbox_match_ok": true,
       "translation_only_safe": true,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "translation_mm": {
+          "tx_mm": 0.0,
+          "ty_mm": 1751.5,
+          "tz_mm": -0.8
+        },
+        "predicted_bbox_mm": {
+          "x_min": -20.0,
+          "x_max": 20.0,
+          "y_min": 1731.5,
+          "y_max": 1751.5,
+          "z_min": -44.8,
+          "z_max": -0.8
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "signs": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": true,
+      "recommended_for_matrix_enriched_model": true,
       "placement_strategy": "identity_transform_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_maintenance_door_128_维护门锁孔_1"
@@ -101,10 +146,53 @@
       "local_bbox_match_max_error_mm": 0.0,
       "transform_bbox_match_ok": true,
       "translation_only_safe": true,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "translation_mm": {
+          "tx_mm": 0.0,
+          "ty_mm": 943.0,
+          "tz_mm": -16.0
+        },
+        "predicted_bbox_mm": {
+          "x_min": -34.0,
+          "x_max": 34.0,
+          "y_min": 21.3,
+          "y_max": 1855.5,
+          "z_min": -18.0,
+          "z_max": 0.0
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "signs": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": true,
+      "recommended_for_matrix_enriched_model": true,
       "placement_strategy": "identity_transform_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_maintenance_door_127_应急维护门_1"
@@ -147,11 +235,54 @@
       "local_bbox_match_max_error_mm": 61.0,
       "transform_bbox_match_ok": false,
       "translation_only_safe": false,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "translation_mm": {
+          "tx_mm": 0.0,
+          "ty_mm": 1795.0,
+          "tz_mm": -29.6
+        },
+        "predicted_bbox_mm": {
+          "x_min": -10.5,
+          "x_max": 10.5,
+          "y_min": 1743.5,
+          "y_max": 1865.5,
+          "z_min": -39.1,
+          "z_max": -20.1
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          2,
+          1
+        ],
+        "signs": [
+          1.0,
+          -1.0,
+          1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": false,
-      "placement_strategy": "requires_rotation_or_full_matrix",
+      "recommended_for_matrix_enriched_model": true,
+      "placement_strategy": "axis_aligned_matrix_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_latch_system_130_自动锁闭插销_索科斯D_3016Z_2_1"
     },
@@ -193,11 +324,54 @@
       "local_bbox_match_max_error_mm": 34.2,
       "transform_bbox_match_ok": false,
       "translation_only_safe": false,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "translation_mm": {
+          "tx_mm": 0.0,
+          "ty_mm": 1800.5,
+          "tz_mm": -20.1
+        },
+        "predicted_bbox_mm": {
+          "x_min": -45.0,
+          "x_max": 45.0,
+          "y_min": 1765.5,
+          "y_max": 1835.5,
+          "z_min": -31.3,
+          "z_max": -19.3
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          2,
+          1
+        ],
+        "signs": [
+          1.0,
+          1.0,
+          -1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": false,
-      "placement_strategy": "requires_rotation_or_full_matrix",
+      "recommended_for_matrix_enriched_model": true,
+      "placement_strategy": "axis_aligned_matrix_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_latch_system_129_按钮插销固定板_1"
     },
@@ -239,11 +413,54 @@
       "local_bbox_match_max_error_mm": 10.0,
       "transform_bbox_match_ok": false,
       "translation_only_safe": false,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "translation_mm": {
+          "tx_mm": 235.0,
+          "ty_mm": 1860.0,
+          "tz_mm": -279.5
+        },
+        "predicted_bbox_mm": {
+          "x_min": 65.0,
+          "x_max": 405.0,
+          "y_min": 1860.0,
+          "y_max": 1890.0,
+          "z_min": -449.5,
+          "z_max": -99.5
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "signs": [
+          -1.0,
+          1.0,
+          -1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": false,
-      "placement_strategy": "requires_rotation_or_full_matrix",
+      "recommended_for_matrix_enriched_model": true,
+      "placement_strategy": "axis_aligned_matrix_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_lock_system_131_电路板支架_1"
     },
@@ -285,10 +502,53 @@
       "local_bbox_match_max_error_mm": 0.0,
       "transform_bbox_match_ok": true,
       "translation_only_safe": true,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "translation_mm": {
+          "tx_mm": 295.0,
+          "ty_mm": 1872.6,
+          "tz_mm": -179.0
+        },
+        "predicted_bbox_mm": {
+          "x_min": 215.0,
+          "x_max": 375.0,
+          "y_min": 1871.0,
+          "y_max": 1885.6,
+          "z_min": -237.5,
+          "z_max": -120.5
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "signs": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": true,
+      "recommended_for_matrix_enriched_model": true,
       "placement_strategy": "identity_transform_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_lock_system_133_LK_4_6_V2_0_24口锁控板_1"
@@ -331,11 +591,54 @@
       "local_bbox_match_max_error_mm": 15.5,
       "transform_bbox_match_ok": false,
       "translation_only_safe": false,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          0.0,
+          0.0,
+          -1.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "translation_mm": {
+          "tx_mm": 293.5,
+          "ty_mm": 1871.0,
+          "tz_mm": -186.5
+        },
+        "predicted_bbox_mm": {
+          "x_min": 212.0,
+          "x_max": 375.0,
+          "y_min": 1871.0,
+          "y_max": 1888.1,
+          "z_min": -252.5,
+          "z_max": -120.5
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          2,
+          1,
+          0
+        ],
+        "signs": [
+          -1.0,
+          1.0,
+          1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": false,
-      "placement_strategy": "requires_rotation_or_full_matrix",
+      "recommended_for_matrix_enriched_model": true,
+      "placement_strategy": "axis_aligned_matrix_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_lock_system_135_M9_V1_1_1"
     },
@@ -377,11 +680,54 @@
       "local_bbox_match_max_error_mm": 78.0,
       "transform_bbox_match_ok": false,
       "translation_only_safe": false,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          0.0,
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "translation_mm": {
+          "tx_mm": 235.0,
+          "ty_mm": 1861.0,
+          "tz_mm": -372.0
+        },
+        "predicted_bbox_mm": {
+          "x_min": 108.5,
+          "x_max": 361.5,
+          "y_min": 1861.0,
+          "y_max": 1909.0,
+          "z_min": -420.5,
+          "z_max": -321.5
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          2,
+          1,
+          0
+        ],
+        "signs": [
+          1.0,
+          1.0,
+          -1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDASM",
       "can_place_native": true,
       "recommended_for_first_enriched_model": false,
-      "placement_strategy": "requires_rotation_or_full_matrix",
+      "recommended_for_matrix_enriched_model": true,
+      "placement_strategy": "axis_aligned_matrix_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_lock_system_134_开关模式电源_装配_1"
     },
@@ -423,11 +769,54 @@
       "local_bbox_match_max_error_mm": 5.0,
       "transform_bbox_match_ok": false,
       "translation_only_safe": false,
+      "axis_aligned_matrix_ready": true,
+      "axis_aligned_transform": {
+        "ok": true,
+        "matrix": [
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "translation_mm": {
+          "tx_mm": 151.75,
+          "ty_mm": 1861.0,
+          "tz_mm": -182.0
+        },
+        "predicted_bbox_mm": {
+          "x_min": 108.5,
+          "x_max": 195.0,
+          "y_min": 1861.0,
+          "y_max": 1886.5,
+          "z_min": -228.5,
+          "z_max": -130.5
+        },
+        "max_error_mm": 0.0,
+        "raw_transform_delta_mm": 0.0,
+        "length_error_mm": 0.0,
+        "determinant": 1.0,
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "signs": [
+          -1.0,
+          1.0,
+          -1.0
+        ]
+      },
       "native_exists": true,
       "native_file_type": "SLDPRT",
       "can_place_native": true,
       "recommended_for_first_enriched_model": false,
-      "placement_strategy": "requires_rotation_or_full_matrix",
+      "recommended_for_matrix_enriched_model": true,
+      "placement_strategy": "axis_aligned_matrix_ready",
       "evidence_level": "sw_api_transform",
       "source_item": "SW_API_lock_system_132_WIFI串口服务器_USR_WIFI232_610_1"
     }

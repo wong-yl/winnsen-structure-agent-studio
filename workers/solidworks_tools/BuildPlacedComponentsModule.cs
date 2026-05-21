@@ -115,6 +115,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     TxMm = Parse(cols[2]),
                     TyMm = Parse(cols[3]),
                     TzMm = Parse(cols[4]),
+                    Rotation = cols.Length >= 14 ? ParseRotation(cols, 5) : IdentityRotation(),
                 });
             }
             return rows;
@@ -170,11 +171,13 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
 
             Try(() => { comp.Name2 = p.Role; });
+            // TSV rotations are stored row-major as target = R * local + t.
+            // SolidWorks MathTransform.ArrayData expects the rotation terms transposed.
             MathTransform xf = math.CreateTransform(new double[]
             {
-                1.0, 0.0, 0.0,
-                0.0, 1.0, 0.0,
-                0.0, 0.0, 1.0,
+                p.Rotation[0], p.Rotation[3], p.Rotation[6],
+                p.Rotation[1], p.Rotation[4], p.Rotation[7],
+                p.Rotation[2], p.Rotation[5], p.Rotation[8],
                 p.TxMm / 1000.0, p.TyMm / 1000.0, p.TzMm / 1000.0,
                 1.0, 0.0, 0.0, 0.0
             }) as MathTransform;
@@ -204,6 +207,26 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         private static double Parse(string value)
         {
             return double.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        private static double[] ParseRotation(string[] cols, int offset)
+        {
+            var rotation = new double[9];
+            for (int i = 0; i < 9; i++)
+            {
+                rotation[i] = Parse(cols[offset + i]);
+            }
+            return rotation;
+        }
+
+        private static double[] IdentityRotation()
+        {
+            return new double[]
+            {
+                1.0, 0.0, 0.0,
+                0.0, 1.0, 0.0,
+                0.0, 0.0, 1.0
+            };
         }
 
         private static ISldWorks GetOrCreateSolidWorks()
@@ -241,6 +264,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public double TxMm;
             public double TyMm;
             public double TzMm;
+            public double[] Rotation;
         }
 
         private sealed class BuildResult

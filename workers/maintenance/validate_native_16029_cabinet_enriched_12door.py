@@ -11,7 +11,10 @@ from typing import Any
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_OUT_DIR = ROOT_DIR / "workers" / "generated_models" / "SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521"
 OUT_DIR = Path(os.getenv("STUDIO_16029_ENRICHED_12DOOR_DIR", DEFAULT_OUT_DIR))
-STEM = "native_16029_12door_cabinet_enriched_v1"
+MODE = os.getenv("STUDIO_16029_ENRICHED_12DOOR_MODE", "identity").strip().lower()
+MATRIX_MODE = MODE == "matrix"
+DEFAULT_STEM = "native_16029_12door_cabinet_enriched_v2" if MATRIX_MODE else "native_16029_12door_cabinet_enriched_v1"
+STEM = os.getenv("STUDIO_16029_ENRICHED_12DOOR_STEM", DEFAULT_STEM)
 
 CANDIDATE_JSON_PATH = ROOT_DIR / "data" / "solidworks_16029_fixed_module_candidate_map.json"
 RESULT_JSON_PATH = OUT_DIR / f"{STEM}_result.json"
@@ -19,12 +22,14 @@ BBOX_CSV_PATH = OUT_DIR / f"{STEM}_step_bbox.csv"
 ASSEMBLY_PATH = OUT_DIR / f"{STEM}.SLDASM"
 STEP_PATH = OUT_DIR / f"{STEM}.step"
 
-DATA_JSON_PATH = ROOT_DIR / "data" / "solidworks_16029_enriched_12door_validation.json"
-DATA_MD_PATH = ROOT_DIR / "data" / "solidworks_16029_enriched_12door_validation.md"
-DATA_CSV_PATH = ROOT_DIR / "data" / "solidworks_16029_enriched_12door_validation.csv"
-LOCAL_JSON_PATH = OUT_DIR / "enriched_12door_validation.json"
-LOCAL_MD_PATH = OUT_DIR / "enriched_12door_validation.md"
-LOCAL_CSV_PATH = OUT_DIR / "enriched_12door_validation.csv"
+DATA_PREFIX = "solidworks_16029_enriched_12door_matrix_validation" if MATRIX_MODE else "solidworks_16029_enriched_12door_validation"
+LOCAL_PREFIX = "enriched_12door_matrix_validation" if MATRIX_MODE else "enriched_12door_validation"
+DATA_JSON_PATH = ROOT_DIR / "data" / f"{DATA_PREFIX}.json"
+DATA_MD_PATH = ROOT_DIR / "data" / f"{DATA_PREFIX}.md"
+DATA_CSV_PATH = ROOT_DIR / "data" / f"{DATA_PREFIX}.csv"
+LOCAL_JSON_PATH = OUT_DIR / f"{LOCAL_PREFIX}.json"
+LOCAL_MD_PATH = OUT_DIR / f"{LOCAL_PREFIX}.md"
+LOCAL_CSV_PATH = OUT_DIR / f"{LOCAL_PREFIX}.csv"
 
 EXPECTED_CABINET_WIDTH_MM = 1000.0
 EXPECTED_CABINET_HEIGHT_TOP_MM = 1917.0
@@ -105,6 +110,29 @@ def union_bbox(rows: list[dict[str, Any]]) -> dict[str, float | None]:
     }
 
 
+def bbox_payload(row: dict[str, Any] | None) -> dict[str, float | None]:
+    if not row:
+        return {}
+    return {
+        "x_min": rounded(row.get("x_min")),
+        "x_max": rounded(row.get("x_max")),
+        "x_len": rounded(row.get("x_len")),
+        "y_min": rounded(row.get("y_min")),
+        "y_max": rounded(row.get("y_max")),
+        "y_len": rounded(row.get("y_len")),
+        "z_min": rounded(row.get("z_min")),
+        "z_max": rounded(row.get("z_max")),
+        "z_len": rounded(row.get("z_len")),
+    }
+
+
+def find_root_bbox_row(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+    for row in rows:
+        if row.get("type_id") == "App::Part" and str(row.get("label") or "") == STEM:
+            return row
+    return None
+
+
 def bbox_match_error(expected: dict[str, Any], row: dict[str, Any]) -> float | None:
     errors: list[float] = []
     for key in ("x_min", "x_max", "y_min", "y_max", "z_min", "z_max"):
@@ -153,8 +181,12 @@ def build_payload() -> dict[str, Any]:
     recommended = [
         item
         for item in candidate_map["candidates"]
-        if item.get("recommended_for_first_enriched_model") is True
-        and item.get("placement_strategy") == "identity_transform_ready"
+        if (
+            item.get("recommended_for_matrix_enriched_model") is True
+            if MATRIX_MODE
+            else item.get("recommended_for_first_enriched_model") is True
+            and item.get("placement_strategy") == "identity_transform_ready"
+        )
     ]
     result = load_json(RESULT_JSON_PATH) if RESULT_JSON_PATH.exists() else {}
     rows = load_bbox_rows(BBOX_CSV_PATH) if BBOX_CSV_PATH.exists() else []
@@ -180,7 +212,8 @@ def build_payload() -> dict[str, Any]:
     ]
     add_check(checks, "all_components_added", not failed_components, failed_components, "no failed component additions")
 
-    combined_bbox = union_bbox(rows)
+    root_bbox_row = find_root_bbox_row(rows)
+    combined_bbox = bbox_payload(root_bbox_row) or union_bbox(rows)
     add_check(
         checks,
         "cabinet_width_preserved",
@@ -227,11 +260,13 @@ def build_payload() -> dict[str, Any]:
         "generated_at": now_iso(),
         "ok": ok,
         "out_dir": str(OUT_DIR),
+        "mode": MODE,
         "assembly": str(ASSEMBLY_PATH),
         "step": str(STEP_PATH),
         "bbox_csv": str(BBOX_CSV_PATH),
         "recommended_candidate_count": len(recommended),
         "combined_bbox_mm": combined_bbox,
+        "combined_bbox_source": "root_app_part" if root_bbox_row else "union_valid_shapes",
         "candidate_matches": candidate_matches,
         "checks": checks,
     }
@@ -255,10 +290,12 @@ def write_outputs(payload: dict[str, Any]) -> None:
         "# 16029 Enriched 12-Door Validation",
         "",
         f"- Generated at: `{payload['generated_at']}`",
+        f"- Mode: `{payload['mode']}`",
         f"- Result: `{'PASS' if payload['ok'] else 'CHECK'}`",
         f"- Assembly: `{payload['assembly']}`",
         f"- STEP: `{payload['step']}`",
         f"- Recommended fixed modules placed: `{payload['recommended_candidate_count']}`",
+        f"- Combined bbox source: `{payload['combined_bbox_source']}`",
         f"- Combined bbox: `{payload['combined_bbox_mm']}`",
         "",
         "## Checks",

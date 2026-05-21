@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import math
+from itertools import permutations, product
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -185,6 +186,151 @@ def shifted_bbox(local_bbox: dict[str, float | None], transform: dict[str, float
     }
 
 
+def bbox_lengths(bbox: dict[str, float | None]) -> list[float] | None:
+    values: list[float] = []
+    for min_key, max_key in (("x_min", "x_max"), ("y_min", "y_max"), ("z_min", "z_max")):
+        min_value = bbox.get(min_key)
+        max_value = bbox.get(max_key)
+        if min_value is None or max_value is None:
+            return None
+        values.append(float(max_value) - float(min_value))
+    return values
+
+
+def bbox_center(bbox: dict[str, float | None]) -> list[float] | None:
+    values: list[float] = []
+    for min_key, max_key in (("x_min", "x_max"), ("y_min", "y_max"), ("z_min", "z_max")):
+        min_value = bbox.get(min_key)
+        max_value = bbox.get(max_key)
+        if min_value is None or max_value is None:
+            return None
+        values.append((float(min_value) + float(max_value)) / 2.0)
+    return values
+
+
+def matrix_vector_multiply(matrix: list[float], vector: list[float]) -> list[float]:
+    return [
+        matrix[0] * vector[0] + matrix[1] * vector[1] + matrix[2] * vector[2],
+        matrix[3] * vector[0] + matrix[4] * vector[1] + matrix[5] * vector[2],
+        matrix[6] * vector[0] + matrix[7] * vector[1] + matrix[8] * vector[2],
+    ]
+
+
+def transform_bbox_with_matrix(
+    local_bbox: dict[str, float | None],
+    matrix: list[float],
+    translation: list[float],
+) -> dict[str, float | None]:
+    mins = [local_bbox.get("x_min"), local_bbox.get("y_min"), local_bbox.get("z_min")]
+    maxs = [local_bbox.get("x_max"), local_bbox.get("y_max"), local_bbox.get("z_max")]
+    if any(value is None for value in mins + maxs):
+        return {}
+
+    points: list[list[float]] = []
+    for x in (float(mins[0]), float(maxs[0])):
+        for y in (float(mins[1]), float(maxs[1])):
+            for z in (float(mins[2]), float(maxs[2])):
+                rotated = matrix_vector_multiply(matrix, [x, y, z])
+                points.append([rotated[index] + translation[index] for index in range(3)])
+
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    zs = [point[2] for point in points]
+    return {
+        "x_min": rounded(min(xs)),
+        "x_max": rounded(max(xs)),
+        "y_min": rounded(min(ys)),
+        "y_max": rounded(max(ys)),
+        "z_min": rounded(min(zs)),
+        "z_max": rounded(max(zs)),
+    }
+
+
+def identity_matrix() -> list[float]:
+    return [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+    ]
+
+
+def determinant_3x3(matrix: list[float]) -> float:
+    return (
+        matrix[0] * ((matrix[4] * matrix[8]) - (matrix[5] * matrix[7]))
+        - matrix[1] * ((matrix[3] * matrix[8]) - (matrix[5] * matrix[6]))
+        + matrix[2] * ((matrix[3] * matrix[7]) - (matrix[4] * matrix[6]))
+    )
+
+
+def infer_axis_aligned_transform(
+    local_bbox: dict[str, float | None],
+    target_bbox: dict[str, float | None],
+    raw_transform: dict[str, float | None],
+) -> dict[str, Any]:
+    local_lengths = bbox_lengths(local_bbox)
+    target_lengths = bbox_lengths(target_bbox)
+    local_center = bbox_center(local_bbox)
+    target_center = bbox_center(target_bbox)
+    raw_translation = [raw_transform.get("tx_mm"), raw_transform.get("ty_mm"), raw_transform.get("tz_mm")]
+    if not local_lengths or not target_lengths or not local_center or not target_center:
+        return {"ok": False, "reason": "missing_bbox"}
+    if any(value is None for value in raw_translation):
+        return {"ok": False, "reason": "missing_transform"}
+
+    best: dict[str, Any] | None = None
+    for perm in permutations((0, 1, 2)):
+        length_error = max(abs(local_lengths[perm[index]] - target_lengths[index]) for index in range(3))
+        if length_error > 0.75:
+            continue
+        for signs in product((-1.0, 1.0), repeat=3):
+            matrix = [0.0] * 9
+            for target_axis, local_axis in enumerate(perm):
+                matrix[(target_axis * 3) + local_axis] = signs[target_axis]
+            determinant = determinant_3x3(matrix)
+            if determinant < 0.0:
+                continue
+            rotated_center = matrix_vector_multiply(matrix, local_center)
+            translation = [target_center[index] - rotated_center[index] for index in range(3)]
+            predicted_bbox = transform_bbox_with_matrix(local_bbox, matrix, translation)
+            max_error = bbox_error(target_bbox, predicted_bbox)
+            if max_error is None:
+                continue
+            translation_delta = max(
+                abs(translation[index] - float(raw_translation[index])) for index in range(3)
+            )
+            negative_sign_count = sum(1 for sign in signs if sign < 0)
+            permutation_distance = sum(1 for index, value in enumerate(perm) if index != value)
+            score = (max_error, translation_delta, negative_sign_count, permutation_distance, length_error)
+            if best is None or score < best["score"]:
+                best = {
+                    "ok": max_error <= 0.75,
+                    "score": score,
+                    "matrix": [rounded(value) for value in matrix],
+                    "translation_mm": {
+                        "tx_mm": rounded(translation[0]),
+                        "ty_mm": rounded(translation[1]),
+                        "tz_mm": rounded(translation[2]),
+                    },
+                    "predicted_bbox_mm": predicted_bbox,
+                    "max_error_mm": rounded(max_error),
+                    "raw_transform_delta_mm": rounded(translation_delta),
+                    "length_error_mm": rounded(length_error),
+                    "determinant": rounded(determinant),
+                    "permutation": list(perm),
+                    "signs": [rounded(value) for value in signs],
+                }
+    if best is None:
+        return {"ok": False, "reason": "no_axis_aligned_permutation"}
+    best.pop("score", None)
+    return best
+
+
 def add(left: float | None, right: float | None) -> float | None:
     if left is None or right is None:
         return None
@@ -222,13 +368,31 @@ def build_candidates(rows: list[dict[str, str]], bbox_summary: list[dict[str, An
         predicted_bbox = shifted_bbox(local_bbox, transform) if local_bbox else {}
         max_error = bbox_error(target_bbox, predicted_bbox) if predicted_bbox else None
         translation_only_safe = local_bbox != {} and max_error is not None and max_error <= 0.5
+        if translation_only_safe:
+            axis_transform = {
+                "ok": True,
+                "matrix": identity_matrix(),
+                "translation_mm": transform,
+                "predicted_bbox_mm": predicted_bbox,
+                "max_error_mm": max_error,
+                "raw_transform_delta_mm": 0.0,
+                "length_error_mm": 0.0,
+                "determinant": 1.0,
+                "permutation": [0, 1, 2],
+                "signs": [1.0, 1.0, 1.0],
+            }
+        else:
+            axis_transform = infer_axis_aligned_transform(local_bbox, target_bbox, transform) if local_bbox else {"ok": False, "reason": "missing_local_bbox"}
+        matrix_ready = bool(axis_transform.get("ok"))
         native_exists = component.exists()
         file_type = component.suffix.upper().lstrip(".")
         can_place_native = native_exists and file_type in {"SLDPRT", "SLDASM"}
         if translation_only_safe:
             placement_strategy = "identity_transform_ready"
+        elif matrix_ready:
+            placement_strategy = "axis_aligned_matrix_ready"
         elif local_bbox:
-            placement_strategy = "requires_rotation_or_full_matrix"
+            placement_strategy = "requires_full_transform_matrix"
         else:
             placement_strategy = "needs_local_bbox_evidence"
 
@@ -246,10 +410,13 @@ def build_candidates(rows: list[dict[str, str]], bbox_summary: list[dict[str, An
                 "local_bbox_match_max_error_mm": max_error,
                 "transform_bbox_match_ok": translation_only_safe,
                 "translation_only_safe": translation_only_safe,
+                "axis_aligned_matrix_ready": matrix_ready,
+                "axis_aligned_transform": axis_transform,
                 "native_exists": native_exists,
                 "native_file_type": file_type,
                 "can_place_native": can_place_native,
                 "recommended_for_first_enriched_model": role in RECOMMENDED_NATIVE_ROLES and can_place_native and translation_only_safe,
+                "recommended_for_matrix_enriched_model": can_place_native and matrix_ready,
                 "placement_strategy": placement_strategy,
                 "evidence_level": "sw_api_transform" if local_bbox else "sw_api_transform_without_local_bbox",
                 "source_item": row.get("item") or "",
@@ -297,10 +464,14 @@ def build_payload() -> dict[str, Any]:
             "transform_backed_candidates": len(candidates),
             "native_placeable_candidates": sum(1 for item in candidates if item["can_place_native"]),
             "identity_transform_ready_candidates": sum(1 for item in candidates if item["translation_only_safe"]),
+            "axis_aligned_matrix_ready_candidates": sum(1 for item in candidates if item["axis_aligned_matrix_ready"]),
             "requires_rotation_or_full_matrix_candidates": sum(
-                1 for item in candidates if item["placement_strategy"] == "requires_rotation_or_full_matrix"
+                1 for item in candidates if item["placement_strategy"] in {"axis_aligned_matrix_ready", "requires_full_transform_matrix"}
             ),
             "recommended_first_enriched_model_candidates": len(recommended),
+            "recommended_matrix_enriched_model_candidates": sum(
+                1 for item in candidates if item["recommended_for_matrix_enriched_model"]
+            ),
             "blocked_local_only_candidates": len(blocked),
             "all_recommended_native_placeable": all(item["can_place_native"] for item in recommended),
         },
@@ -338,9 +509,23 @@ def write_csv(payload: dict[str, Any]) -> None:
         "native_exists",
         "can_place_native",
         "recommended_for_first_enriched_model",
+        "recommended_for_matrix_enriched_model",
         "evidence_level",
         "local_bbox_match_max_error_mm",
         "placement_strategy",
+        "matrix_ready",
+        "matrix_tx_mm",
+        "matrix_ty_mm",
+        "matrix_tz_mm",
+        "r11",
+        "r12",
+        "r13",
+        "r21",
+        "r22",
+        "r23",
+        "r31",
+        "r32",
+        "r33",
     ]
     with DATA_CSV_PATH.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -366,9 +551,18 @@ def write_csv(payload: dict[str, Any]) -> None:
                     "native_exists": item["native_exists"],
                     "can_place_native": item["can_place_native"],
                     "recommended_for_first_enriched_model": item["recommended_for_first_enriched_model"],
+                    "recommended_for_matrix_enriched_model": item["recommended_for_matrix_enriched_model"],
                     "evidence_level": item["evidence_level"],
                     "local_bbox_match_max_error_mm": item["local_bbox_match_max_error_mm"],
                     "placement_strategy": item["placement_strategy"],
+                    "matrix_ready": item["axis_aligned_matrix_ready"],
+                    "matrix_tx_mm": item["axis_aligned_transform"].get("translation_mm", {}).get("tx_mm"),
+                    "matrix_ty_mm": item["axis_aligned_transform"].get("translation_mm", {}).get("ty_mm"),
+                    "matrix_tz_mm": item["axis_aligned_transform"].get("translation_mm", {}).get("tz_mm"),
+                    **{
+                        f"r{(index // 3) + 1}{(index % 3) + 1}": item["axis_aligned_transform"].get("matrix", [None] * 9)[index]
+                        for index in range(9)
+                    },
                 }
             )
 
@@ -383,8 +577,10 @@ def write_markdown(payload: dict[str, Any]) -> None:
         f"- Transform-backed candidates: `{summary['transform_backed_candidates']}`",
         f"- Native-placeable candidates: `{summary['native_placeable_candidates']}`",
         f"- Identity-transform-ready candidates: `{summary['identity_transform_ready_candidates']}`",
+        f"- Axis-aligned-matrix-ready candidates: `{summary['axis_aligned_matrix_ready_candidates']}`",
         f"- Requires rotation/full-matrix candidates: `{summary['requires_rotation_or_full_matrix_candidates']}`",
         f"- Recommended first enriched model candidates: `{summary['recommended_first_enriched_model_candidates']}`",
+        f"- Recommended matrix enriched model candidates: `{summary['recommended_matrix_enriched_model_candidates']}`",
         f"- Blocked local-only candidates: `{summary['blocked_local_only_candidates']}`",
         "",
         "## Recommended First Enriched 12-Door Model",
@@ -409,6 +605,29 @@ def write_markdown(payload: dict[str, Any]) -> None:
                 tz=transform["tz_mm"],
                 native="yes" if item["can_place_native"] else "no",
                 evidence=evidence,
+            )
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Recommended Matrix Enriched 12-Door Model",
+            "",
+            "| role | module | strategy | matrix bbox error mm | raw delta mm |",
+            "|---|---|---|---:|---:|",
+        ]
+    )
+    for item in payload["candidates"]:
+        if not item["recommended_for_matrix_enriched_model"]:
+            continue
+        axis = item["axis_aligned_transform"]
+        lines.append(
+            "| {role} | {module} | {strategy} | {error} | {delta} |".format(
+                role=item["role"],
+                module=item["module"],
+                strategy=item["placement_strategy"],
+                error=axis.get("max_error_mm"),
+                delta=axis.get("raw_transform_delta_mm"),
             )
         )
 

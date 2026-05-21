@@ -1,3 +1,7 @@
+param(
+  [switch]$UseMatrix
+)
+
 $ErrorActionPreference = 'Stop'
 
 $repo = 'D:\Winnsen_Structure_Agent_Studio'
@@ -16,11 +20,25 @@ function Format-Mm([double]$value) {
   return $value.ToString('0.###', [Globalization.CultureInfo]::InvariantCulture)
 }
 
-function Add-Placement([System.Collections.Generic.List[string]]$lines, [string]$role, [string]$path, [double]$tx, [double]$ty, [double]$tz) {
+function Add-Placement([System.Collections.Generic.List[string]]$lines, [string]$role, [string]$path, [double]$tx, [double]$ty, [double]$tz, [double[]]$rotation = $null) {
   if (-not (Test-Path -LiteralPath $path)) {
     throw "Missing source component: $path"
   }
-  $lines.Add(($role, $path, (Format-Mm $tx), (Format-Mm $ty), (Format-Mm $tz)) -join "`t")
+  $cells = [System.Collections.Generic.List[string]]::new()
+  $cells.Add($role)
+  $cells.Add($path)
+  $cells.Add((Format-Mm $tx))
+  $cells.Add((Format-Mm $ty))
+  $cells.Add((Format-Mm $tz))
+  if ($UseMatrix) {
+    if ($null -eq $rotation) {
+      $rotation = @(1, 0, 0, 0, 1, 0, 0, 0, 1)
+    }
+    foreach ($value in $rotation) {
+      $cells.Add((Format-Mm $value))
+    }
+  }
+  $lines.Add($cells -join "`t")
 }
 
 function Invoke-FreeCadBbox([string]$stepPath, [string]$jsonOut, [string]$csvOut) {
@@ -44,7 +62,7 @@ if (-not (Test-Path -LiteralPath $builder)) {
   throw "Builder not found: $builder"
 }
 
-$stem = 'native_16029_12door_cabinet_enriched_v1'
+$stem = $(if ($UseMatrix) { 'native_16029_12door_cabinet_enriched_v2' } else { 'native_16029_12door_cabinet_enriched_v1' })
 $skeleton = Join-Path $skeletonDir 'native_16029_12door_cabinet_skeleton_v2.SLDASM'
 $placements = Join-Path $outDir ($stem + '_placements.tsv')
 $asm = Join-Path $outDir ($stem + '.SLDASM')
@@ -58,21 +76,37 @@ if (-not (Test-Path -LiteralPath $skeleton)) {
 }
 
 $candidateMap = Get-Content -LiteralPath $candidateJson -Encoding UTF8 | ConvertFrom-Json
-$safeCandidates = @($candidateMap.candidates | Where-Object {
-  $_.recommended_for_first_enriched_model -eq $true -and
-  $_.placement_strategy -eq 'identity_transform_ready' -and
-  $_.can_place_native -eq $true
-})
+$safeCandidates = @(
+  if ($UseMatrix) {
+    $candidateMap.candidates | Where-Object {
+      $_.recommended_for_matrix_enriched_model -eq $true -and
+      $_.axis_aligned_matrix_ready -eq $true -and
+      $_.can_place_native -eq $true
+    }
+  } else {
+    $candidateMap.candidates | Where-Object {
+      $_.recommended_for_first_enriched_model -eq $true -and
+      $_.placement_strategy -eq 'identity_transform_ready' -and
+      $_.can_place_native -eq $true
+    }
+  }
+)
 if ($safeCandidates.Count -lt 1) {
-  throw "No identity-transform-ready candidates found in $candidateJson"
+  throw "No safe enriched candidates found in $candidateJson"
 }
 
 $lines = [System.Collections.Generic.List[string]]::new()
-$lines.Add("role`tpath`ttx_mm`tty_mm`ttz_mm")
+$lines.Add($(if ($UseMatrix) { "role`tpath`ttx_mm`tty_mm`ttz_mm`tr11`tr12`tr13`tr21`tr22`tr23`tr31`tr32`tr33" } else { "role`tpath`ttx_mm`tty_mm`ttz_mm" }))
 Add-Placement $lines 'cabinet_skeleton_12door_v2' $skeleton 0 0 0
 foreach ($candidate in $safeCandidates) {
-  $transform = $candidate.placement_transform_mm
-  Add-Placement $lines $candidate.role $candidate.component_path ([double]$transform.tx_mm) ([double]$transform.ty_mm) ([double]$transform.tz_mm)
+  if ($UseMatrix) {
+    $transform = $candidate.axis_aligned_transform.translation_mm
+    $rotation = @($candidate.axis_aligned_transform.matrix | ForEach-Object { [double]$_ })
+    Add-Placement $lines $candidate.role $candidate.component_path ([double]$transform.tx_mm) ([double]$transform.ty_mm) ([double]$transform.tz_mm) $rotation
+  } else {
+    $transform = $candidate.placement_transform_mm
+    Add-Placement $lines $candidate.role $candidate.component_path ([double]$transform.tx_mm) ([double]$transform.ty_mm) ([double]$transform.tz_mm)
+  }
 }
 [IO.File]::WriteAllLines($placements, $lines, [Text.UTF8Encoding]::new($false))
 
@@ -88,8 +122,12 @@ if ($LASTEXITCODE -ne 0) {
 
 Invoke-FreeCadBbox $step $bboxJson $bboxCsv
 
+$env:STUDIO_16029_ENRICHED_12DOOR_STEM = $stem
+$env:STUDIO_16029_ENRICHED_12DOOR_MODE = $(if ($UseMatrix) { 'matrix' } else { 'identity' })
 & python (Join-Path $repo 'workers\maintenance\validate_native_16029_cabinet_enriched_12door.py') | Out-Host
-if ($LASTEXITCODE -ne 0) {
+$validationExitCode = $LASTEXITCODE
+Remove-Item Env:\STUDIO_16029_ENRICHED_12DOOR_STEM,Env:\STUDIO_16029_ENRICHED_12DOOR_MODE -ErrorAction SilentlyContinue
+if ($validationExitCode -ne 0) {
   throw "Enriched 12-door validation failed"
 }
 
