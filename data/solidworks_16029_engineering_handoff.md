@@ -1,9 +1,9 @@
 # 16029 SolidWorks 工程交付索引
 
-- Generated at: `2026-05-21T14:31:44+08:00`
-- Status: `native_cabinet_skeleton_series_10_12_14_pass_plus_12door_enriched_fixed_modules_matrix_pass`
-- Current usable models: `10/12/14 native SolidWorks door panels`, `10/12/14 native door stiffeners`, `10/12/14 5-part door weld modules`, `10/12/14 ordinary door modules`, `10/12/14 door array modules`, `10/12/14 front frame modules`, `10/12/14 cabinet skeleton v2`, `12door enriched fixed-module matrix reference`
-- UI path: `可生成模型 -> 16029 标准寄存柜 -> 10/12门 -> 一键运行 SOLIDWORKS 2025`
+- Generated at: `2026-05-21T17:05:00+08:00`
+- Status: `native_cabinet_skeleton_series_10_12_14_pass_plus_10_12_14door_enriched_fixed_modules_matrix_pass`
+- Current usable models: `10/12/14 native SolidWorks door panels`, `10/12/14 native door stiffeners`, `10/12/14 5-part door weld modules`, `10/12/14 ordinary door modules`, `10/12/14 door array modules`, `10/12/14 front frame modules`, `10/12/14 cabinet skeleton v2`, `10/12/14door enriched fixed-module matrix reference`
+- UI path: `可生成模型 -> 16029 标准寄存柜 -> 10/12/14门 -> 一键运行 SOLIDWORKS 2025`
 - Baseline SLDASM: `D:\Winnsen_Structure_Agent_Studio\workers\manual_runs\BASELINE-16029-12DOOR-CLONE\BASELINE-16029-12DOOR-CLONE.SLDASM`
 - 10-door template source: `D:\机械结构工程师智能体\work\16029_练习副本_20260429\1.工程图\标准寄存柜1917×1000×550(总装配).SLDASM`
 - 10-door native save smoke: `D:\Winnsen_Structure_Agent_Studio\workers\manual_runs\QA-16029-10DOOR-FAST-CLONE-20260519073300\QA-16029-10DOOR-FAST-CLONE-20260519073300.SLDASM`
@@ -32,8 +32,12 @@
 | 整柜骨架 10/12/14 几何质量门 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_native_skeleton_geometry_gate.md |
 | 12门整柜增强固定模块样机 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\native_16029_12door_cabinet_enriched_v1.SLDASM |
 | 12门整柜增强样机校验 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_enriched_12door_validation.md |
+| 10门整柜增强矩阵样机 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-10DOOR-20260521\native_16029_10door_cabinet_enriched_v2.SLDASM |
+| 10门整柜增强矩阵样机校验 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_enriched_10door_matrix_validation.md |
 | 12门整柜增强矩阵样机 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\native_16029_12door_cabinet_enriched_v2.SLDASM |
 | 12门整柜增强矩阵样机校验 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_enriched_12door_matrix_validation.md |
+| 14门整柜增强矩阵样机 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-14DOOR-20260521\native_16029_14door_cabinet_enriched_v2.SLDASM |
+| 14门整柜增强矩阵样机校验 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_enriched_14door_matrix_validation.md |
 | 固定模块候选证据图谱 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_fixed_module_candidate_map.md |
 | SolidWorks 12门基线 | ready | D:\Winnsen_Structure_Agent_Studio\workers\manual_runs\BASELINE-16029-12DOOR-CLONE\BASELINE-16029-12DOOR-CLONE.SLDASM |
 | SolidWorks 10门练习副本 | ready | D:\机械结构工程师智能体\work\16029_练习副本_20260429\1.工程图\标准寄存柜1917×1000×550(总装配).SLDASM |
@@ -68,15 +72,16 @@
 - v2 几何质量门已通过：10/12/14 外形 bbox 均为 X=1000mm、Y 顶部=1917mm、Z 深度=550mm；左右门列 Y 对齐误差 0；门距、层板节距、前框横隔板节距均跟随对应门高 + 7mm 间隙。
 - 12 门增强固定模块样机已通过：在 12 门整柜骨架 v2 上加入维护门板、维护门锁孔、24 口锁控板，SolidWorks 保存成功，STEP 导出成功，FreeCAD bbox 校验 PASS。
 - 12 门增强矩阵样机已通过：维护门板、维护门锁孔、插销固定板、自动锁闭插销、电路板支架、24 口锁控板、M9 板、电源装配、WIFI 串口服务器共 9 个固定模块全部接入，9/9 bbox 与证据匹配，外形根 bbox 保持 X=1000mm、Y 顶部=1917mm、Z=550mm。
+- 10 门增强矩阵样机已通过：同一套 9 个固定模块接入 10 门整柜骨架 v2，SolidWorks 保存成功，STEP 导出成功，FreeCAD bbox 校验 PASS，外形根 bbox 保持 X=1000mm、Y 顶部=1917mm、Z=550mm。
+- 14 门增强矩阵样机已通过：同一套 9 个固定模块接入 14 门整柜骨架 v2，SolidWorks 保存成功，STEP 导出成功，FreeCAD bbox 校验 PASS，外形根 bbox 保持 X=1000mm、Y 顶部=1917mm、Z=550mm。
 - 固定模块候选证据图谱已把 9 个候选模块分级：3 个可由纯平移接入；6 个通过 axis-aligned rotation matrix 接入。矩阵写入已按 SolidWorks `MathTransform.ArrayData` 转置规则处理。
 - 当前仍未完成完整整柜生产交付；后下门、衣杆、线束和部分五金细节还未安全接入。
-- SolidWorks 入口只放开 `10` 门练习副本模板和 `12` 门标准基线模板。
+- SolidWorks 入口优先放开 `10/12/14` 门增强矩阵样机。
 - 其它门数不再走逐零件直装，避免继续生成错乱模型。
 - 未做 Pack-and-Go 前，工程师移动模型时必须保留源文件目录。
 
 ## 下一步
 
-- 把平台入口接到 `10/12/14 整柜骨架 v2`，让工程师能按门数打开 SolidWorks 样件。
-- 把 12 门增强矩阵样机作为下一轮工程复核样件，再决定是否推广到 10/14 门。
+- 把 10/12/14 增强矩阵样机作为下一轮工程复核样件，让工程师按门数打开 SolidWorks 样件。
 - 继续补齐后下门、衣杆、线束和部分五金；后下门与衣杆必须先拿到 transform-backed placement row，不从局部 bbox 猜位置。
 - 做工程交接包：SLDASM、STEP、规则摘要、验证 CSV、预览图和当前边界说明。

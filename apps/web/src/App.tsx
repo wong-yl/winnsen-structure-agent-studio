@@ -684,18 +684,16 @@ const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [10, 12, 14]
 const LOCKER_16029_SUPPORTED_RULE_COUNTS = Array.from(
   new Set([...LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS, ...LOCKER_16029_SUPPORTED_FREECAD_COUNTS]),
 )
-const LOCKER_16029_ENRICHED_12DOOR_REFERENCE = {
-  title: '12 门增强矩阵样机 v2',
-  outputDir:
-    'D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521',
-  assembly:
-    'D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v2.SLDASM',
-  step:
-    'D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v2.step',
-  validationReport: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_enriched_12door_matrix_validation.md',
-  validationData: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_enriched_12door_matrix_validation.csv',
+const LOCKER_16029_ENRICHED_REFERENCES = [10, 12, 14].map((doorCount) => ({
+  doorCount,
+  title: `${doorCount} 门增强矩阵样机 v2`,
+  outputDir: `D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-${doorCount}DOOR-20260521`,
+  assembly: `D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-${doorCount}DOOR-20260521\\native_16029_${doorCount}door_cabinet_enriched_v2.SLDASM`,
+  step: `D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-${doorCount}DOOR-20260521\\native_16029_${doorCount}door_cabinet_enriched_v2.step`,
+  validationReport: `D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_enriched_${doorCount}door_matrix_validation.md`,
+  validationData: `D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_enriched_${doorCount}door_matrix_validation.csv`,
   candidateMap: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_fixed_module_candidate_map.md',
-}
+}))
 const DRAWING_UPLOAD_ACCEPT = [
   '.dxf',
   '.dwg',
@@ -2497,7 +2495,7 @@ function CurrentSolidWorksGenerationPanel({
           <span>当前工程交接</span>
           <strong>16029 标准寄存柜整柜：{LOCKER_16029_OUTER_SIZE}</strong>
           <p>
-            12 门优先使用原生 SolidWorks 增强矩阵样机 v2；10/14 门保留整柜骨架 v2。下方 SolidWorks 大按钮开放{' '}
+            10/12/14 门优先使用原生 SolidWorks 增强矩阵样机 v2。下方 SolidWorks 大按钮开放{' '}
             {supportedDoorCounts} 门原生参考任务；FreeCAD 规则验证开放 {freeCadDoorCounts} 门。
           </p>
         </div>
@@ -4073,7 +4071,7 @@ function AgentConsolePage({
           <div className="detail-list">
             <DetailLine
               label="已验证范围"
-              value="16038: 4/7/8/12 门；16029 SolidWorks: 10/12/14 门原生整柜骨架；16029 单门板可做尺寸零件验证"
+              value="16038: 4/7/8/12 门；16029 SolidWorks: 10/12/14 门增强整柜样机；16029 单门板可做尺寸零件验证"
             />
             <DetailLine
               label="当前不开放"
@@ -4603,7 +4601,7 @@ function Locker16029QualityMatrixPanel({
   const rootLauncherByDoorCount = new Map(
     (handoffBundle?.root_launchers ?? []).map((launcher) => [launcher.door_count, launcher.solidworks_launcher]),
   )
-  const enrichedReference = LOCKER_16029_ENRICHED_12DOOR_REFERENCE
+  const enrichedReferences = LOCKER_16029_ENRICHED_REFERENCES
   const tone: StatusTone = !summary
     ? 'idle'
     : summary.fail_count || summary.missing_output_count
@@ -4636,77 +4634,79 @@ function Locker16029QualityMatrixPanel({
         </div>
       </div>
       <div className="engineer-handoff-direct enriched-reference-direct" aria-label="16029 当前推荐工程样机">
-        <article className="engineer-handoff-card handoff-ready enriched-reference-card">
-          <div className="engineer-handoff-top">
-            <div>
-              <span>当前推荐样机</span>
-              <strong>{enrichedReference.title}</strong>
+        {enrichedReferences.map((enrichedReference) => (
+          <article key={enrichedReference.doorCount} className="engineer-handoff-card handoff-ready enriched-reference-card">
+            <div className="engineer-handoff-top">
+              <div>
+                <span>当前推荐样机</span>
+                <strong>{enrichedReference.title}</strong>
+              </div>
+              <StatusPill tone="good">PASS</StatusPill>
             </div>
-            <StatusPill tone="good">PASS</StatusPill>
-          </div>
-          <div className="engineer-handoff-metrics">
-            <div>
-              <span>门数</span>
-              <strong>12 门</strong>
+            <div className="engineer-handoff-metrics">
+              <div>
+                <span>门数</span>
+                <strong>{enrichedReference.doorCount} 门</strong>
+              </div>
+              <div>
+                <span>固定模块</span>
+                <strong>9/9</strong>
+              </div>
+              <div>
+                <span>外型</span>
+                <strong>1000×1917×550</strong>
+              </div>
             </div>
-            <div>
-              <span>固定模块</span>
-              <strong>9/9</strong>
+            <small>包含维护门、插销、锁控板、M9 板、电源、WIFI 串口服务器等 transform-backed 固定模块；仍是工程参考模型。</small>
+            <p className="engineer-handoff-gate-note">
+              这是比骨架更完整的 SolidWorks 样机。先让结构工程师复核固定模块位置，再补后侧、电气和交接封包。
+            </p>
+            <div className="variant-quality-row-actions">
+              <button
+                type="button"
+                className="mini-action primary-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.assembly)}
+              >
+                <Play size={14} />
+                打开 SolidWorks 样机
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.step, 'reveal')}
+              >
+                定位 STEP
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.validationReport)}
+              >
+                验证报告
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.candidateMap)}
+              >
+                模块证据
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.outputDir)}
+              >
+                <FolderOpen size={14} />
+                目录
+              </button>
             </div>
-            <div>
-              <span>外型</span>
-              <strong>1000×1917×550</strong>
-            </div>
-          </div>
-          <small>包含维护门、插销、锁控板、M9 板、电源、WIFI 串口服务器等 transform-backed 固定模块；仍是工程参考模型。</small>
-          <p className="engineer-handoff-gate-note">
-            这是目前比 10/14 门骨架更完整的 SolidWorks 样机。先用它让结构工程师复核固定模块位置，再把同一套规则推广到 10/14 门。
-          </p>
-          <div className="variant-quality-row-actions">
-            <button
-              type="button"
-              className="mini-action primary-mini-action"
-              disabled={handoffBusy}
-              onClick={() => onOpenHandoff(enrichedReference.assembly)}
-            >
-              <Play size={14} />
-              打开 SolidWorks 样机
-            </button>
-            <button
-              type="button"
-              className="mini-action quiet-mini-action"
-              disabled={handoffBusy}
-              onClick={() => onOpenHandoff(enrichedReference.step, 'reveal')}
-            >
-              定位 STEP
-            </button>
-            <button
-              type="button"
-              className="mini-action quiet-mini-action"
-              disabled={handoffBusy}
-              onClick={() => onOpenHandoff(enrichedReference.validationReport)}
-            >
-              验证报告
-            </button>
-            <button
-              type="button"
-              className="mini-action quiet-mini-action"
-              disabled={handoffBusy}
-              onClick={() => onOpenHandoff(enrichedReference.candidateMap)}
-            >
-              模块证据
-            </button>
-            <button
-              type="button"
-              className="mini-action quiet-mini-action"
-              disabled={handoffBusy}
-              onClick={() => onOpenHandoff(enrichedReference.outputDir)}
-            >
-              <FolderOpen size={14} />
-              目录
-            </button>
-          </div>
-        </article>
+          </article>
+        ))}
       </div>
       {readinessSummary ? (
         <div className={`handoff-readiness-summary ${readinessSummary.all_ready ? 'handoff-all-ready' : 'handoff-has-blockers'}`}>
@@ -5222,7 +5222,7 @@ function generationRouteTitle(capabilityId: string) {
 
 function generationRouteDetail(capabilityId: string) {
   if (capabilityId === 'locker_16029_regression') {
-    return 'SolidWorks 大按钮开放 10/12/14 门原生整柜参考；12 门会使用增强矩阵样机 v2，10/14 门仍使用骨架 v2。FreeCAD 保留同门数规则验证件。当前仍是工程参考模型，不是生产图纸/BOM。'
+    return 'SolidWorks 大按钮开放 10/12/14 门原生整柜参考，并优先使用增强矩阵样机 v2。FreeCAD 保留同门数规则验证件。当前仍是工程参考模型，不是生产图纸/BOM。'
   }
   if (capabilityId === 'locker_16038_variant_template') {
     return '点击 SolidWorks 后会打开并保存已验证的 4/7/8 门整柜或 12/12 模块母版；这是同尺寸模板参考，不是任意门数自动重排。'
@@ -5354,7 +5354,7 @@ function runnerButtonLabel(cadRunner: CadRunner, capabilityId?: string) {
 
 function runnerButtonDetail(cadRunner: CadRunner, fallback: string, capabilityId?: string) {
   if (capabilityId === 'locker_16029_regression' && cadRunner === 'solidworks') {
-    return '12 门使用增强矩阵样机 v2；10/14 门使用骨架 v2。先 dry-run，再启动 SolidWorks 打开并另存。'
+    return '10/12/14 门使用增强矩阵样机 v2。先 dry-run，再启动 SolidWorks 打开并另存。'
   }
   if (capabilityId === 'locker_16029_regression' && cadRunner === 'freecad') {
     return '生成 10/12/14 门规则参考模型，并进入 STEP/FCStd 质量校验。'
@@ -5375,7 +5375,7 @@ function runnerCommandPreviewText(
     return `${runner.label}: 当前参数不支持该入口 - ${runnerIssue}`
   }
   if (capability.id === 'locker_16029_regression' && runner.id === 'solidworks') {
-    return `${runner.label}: 12门使用 enriched_v2.SLDASM，10/14门使用 skeleton_v2.SLDASM，打开并另存当前门数原生参考。`
+    return `${runner.label}: 10/12/14门使用 enriched_v2.SLDASM，打开并另存当前门数原生参考。`
   }
   return `${runner.label}: ${commandPreview(runner.id)}`
 }
@@ -5499,10 +5499,10 @@ function taskRunSnapshotFor(task: GenerationTask): {
       title: '已停用，不再作为当前生成入口',
       facts: [
         { label: '原因', value: 'direct assembly 曾出现错乱' },
-        { label: '建议', value: '改用原生骨架入口' },
+        { label: '建议', value: '改用增强样机入口' },
         { label: '门数', value: task.parameters.door_count ?? '-' },
       ],
-      note: '当前工程复核请用 16029 的 10/12/14 门原生 SolidWorks 骨架入口，历史 direct assembly 不再作为交接路线。',
+      note: '当前工程复核请用 16029 的 10/12/14 门原生 SolidWorks 增强样机入口，历史 direct assembly 不再作为交接路线。',
     }
   }
 
@@ -6028,7 +6028,7 @@ function parameterHintFor(capabilityId: string) {
     return '参数会写入任务 payload；16038 已绑定 4/7/8 门整柜模板和 12/12 单门模块证据，SolidWorks 为原生模板参考，FreeCAD 为 STEP 参考。'
   }
   if (capabilityId === 'locker_16029_regression') {
-    return '16029 外型固定为 1000mm 宽、1917mm 高、550mm 深；12 门已开放原生 SolidWorks 增强矩阵样机 v2，10/14 门开放骨架 v2，FreeCAD 保留规则验证件。其它宽高/门数仍需先补规则证据。'
+    return '16029 外型固定为 1000mm 宽、1917mm 高、550mm 深；10/12/14 门已开放原生 SolidWorks 增强矩阵样机 v2，FreeCAD 保留规则验证件。其它宽高/门数仍需先补规则证据。'
   }
   if (capabilityId === 'locker_16029_door_panel') {
     return '16029 单门板入口只生成 ordinary_door_panel；门数变化请走 16029 整柜入口，避免把 category 误填成 8/12。'

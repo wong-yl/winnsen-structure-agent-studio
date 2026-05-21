@@ -9,12 +9,25 @@ from typing import Any
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
-DEFAULT_OUT_DIR = ROOT_DIR / "workers" / "generated_models" / "SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521"
-OUT_DIR = Path(os.getenv("STUDIO_16029_ENRICHED_12DOOR_DIR", DEFAULT_OUT_DIR))
-MODE = os.getenv("STUDIO_16029_ENRICHED_12DOOR_MODE", "identity").strip().lower()
+DOOR_COUNT = int(os.getenv("STUDIO_16029_ENRICHED_DOOR_COUNT", "12"))
+DEFAULT_OUT_DIR = ROOT_DIR / "workers" / "generated_models" / f"SW-NATIVE-16029-CABINET-ENRICHED-{DOOR_COUNT}DOOR-20260521"
+OUT_DIR = Path(
+    os.getenv(
+        "STUDIO_16029_ENRICHED_DIR",
+        os.getenv("STUDIO_16029_ENRICHED_12DOOR_DIR", str(DEFAULT_OUT_DIR)),
+    )
+)
+MODE = os.getenv(
+    "STUDIO_16029_ENRICHED_MODE",
+    os.getenv("STUDIO_16029_ENRICHED_12DOOR_MODE", "identity"),
+).strip().lower()
 MATRIX_MODE = MODE == "matrix"
-DEFAULT_STEM = "native_16029_12door_cabinet_enriched_v2" if MATRIX_MODE else "native_16029_12door_cabinet_enriched_v1"
-STEM = os.getenv("STUDIO_16029_ENRICHED_12DOOR_STEM", DEFAULT_STEM)
+DEFAULT_STEM = (
+    f"native_16029_{DOOR_COUNT}door_cabinet_enriched_v2"
+    if MATRIX_MODE
+    else f"native_16029_{DOOR_COUNT}door_cabinet_enriched_v1"
+)
+STEM = os.getenv("STUDIO_16029_ENRICHED_STEM", os.getenv("STUDIO_16029_ENRICHED_12DOOR_STEM", DEFAULT_STEM))
 
 CANDIDATE_JSON_PATH = ROOT_DIR / "data" / "solidworks_16029_fixed_module_candidate_map.json"
 RESULT_JSON_PATH = OUT_DIR / f"{STEM}_result.json"
@@ -22,8 +35,17 @@ BBOX_CSV_PATH = OUT_DIR / f"{STEM}_step_bbox.csv"
 ASSEMBLY_PATH = OUT_DIR / f"{STEM}.SLDASM"
 STEP_PATH = OUT_DIR / f"{STEM}.step"
 
-DATA_PREFIX = "solidworks_16029_enriched_12door_matrix_validation" if MATRIX_MODE else "solidworks_16029_enriched_12door_validation"
-LOCAL_PREFIX = "enriched_12door_matrix_validation" if MATRIX_MODE else "enriched_12door_validation"
+if DOOR_COUNT == 12:
+    DATA_PREFIX = "solidworks_16029_enriched_12door_matrix_validation" if MATRIX_MODE else "solidworks_16029_enriched_12door_validation"
+else:
+    DATA_PREFIX = (
+        f"solidworks_16029_enriched_{DOOR_COUNT}door_matrix_validation"
+        if MATRIX_MODE
+        else f"solidworks_16029_enriched_{DOOR_COUNT}door_validation"
+    )
+LOCAL_PREFIX = (
+    f"enriched_{DOOR_COUNT}door_matrix_validation" if MATRIX_MODE else f"enriched_{DOOR_COUNT}door_validation"
+)
 DATA_JSON_PATH = ROOT_DIR / "data" / f"{DATA_PREFIX}.json"
 DATA_MD_PATH = ROOT_DIR / "data" / f"{DATA_PREFIX}.md"
 DATA_CSV_PATH = ROOT_DIR / "data" / f"{DATA_PREFIX}.csv"
@@ -287,7 +309,7 @@ def write_outputs(payload: dict[str, Any]) -> None:
                 writer.writerow({key: check.get(key) for key in fieldnames})
 
     lines = [
-        "# 16029 Enriched 12-Door Validation",
+        f"# 16029 Enriched {DOOR_COUNT}-Door Validation",
         "",
         f"- Generated at: `{payload['generated_at']}`",
         f"- Mode: `{payload['mode']}`",

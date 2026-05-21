@@ -1597,17 +1597,46 @@ def solidworks_16029_enriched_12door_validation_path() -> Path:
     )
 
 
+def solidworks_16029_enriched_validation_path(door_count: int) -> Path:
+    if door_count == 12:
+        return solidworks_16029_enriched_12door_validation_path()
+    return Path(
+        os.getenv(
+            f"STUDIO_SOLIDWORKS_16029_ENRICHED_{door_count}DOOR_VALIDATION_JSON",
+            str(ROOT_DIR / "data" / f"solidworks_16029_enriched_{door_count}door_matrix_validation.json"),
+        )
+    )
+
+
+def solidworks_16029_enriched_template_source(door_count: int) -> tuple[Path, str]:
+    enriched_dir = Path(
+        os.getenv(
+            f"STUDIO_SOLIDWORKS_16029_ENRICHED_{door_count}DOOR_DIR",
+            str(GENERATED_MODEL_DIR / f"SW-NATIVE-16029-CABINET-ENRICHED-{door_count}DOOR-20260521"),
+        )
+    )
+    return (
+        enriched_dir / f"native_16029_{door_count}door_cabinet_enriched_v2.SLDASM",
+        (
+            f"16029 {door_count}-door native SolidWorks cabinet enriched matrix v2; "
+            "skeleton plus 9 transform-backed fixed modules"
+        ),
+    )
+
+
 def solidworks_16029_template_source(door_count: int) -> tuple[Path, str]:
     skeleton_dir = solidworks_16029_native_skeleton_series_dir()
-    enriched_dir = solidworks_16029_enriched_12door_dir()
+    enriched_source, enriched_label = solidworks_16029_enriched_template_source(door_count)
+    if enriched_source.exists():
+        return enriched_source, enriched_label
     sources = {
         10: (
             skeleton_dir / "native_16029_10door_cabinet_skeleton_v2.SLDASM",
             "16029 10-door native SolidWorks cabinet skeleton v2",
         ),
         12: (
-            enriched_dir / "native_16029_12door_cabinet_enriched_v2.SLDASM",
-            "16029 12-door native SolidWorks cabinet enriched matrix v2; skeleton plus 9 transform-backed fixed modules",
+            skeleton_dir / "native_16029_12door_cabinet_skeleton_v2.SLDASM",
+            "16029 12-door native SolidWorks cabinet skeleton v2",
         ),
         14: (
             skeleton_dir / "native_16029_14door_cabinet_skeleton_v2.SLDASM",
@@ -1638,22 +1667,23 @@ def solidworks_16029_template_source_check(door_count: int) -> tuple[bool, str]:
 
 
 def solidworks_16029_native_skeleton_geometry_gate_check(door_count: int) -> tuple[bool, str]:
-    if door_count == 12:
-        enriched_path = solidworks_16029_enriched_12door_validation_path()
+    enriched_source, _enriched_label = solidworks_16029_enriched_template_source(door_count)
+    if enriched_source.exists():
+        enriched_path = solidworks_16029_enriched_validation_path(door_count)
         if not enriched_path.exists():
-            return False, f"16029 12-door enriched matrix validation was not found: {enriched_path}"
+            return False, f"16029 {door_count}-door enriched matrix validation was not found: {enriched_path}"
         try:
             payload = json.loads(enriched_path.read_text(encoding="utf-8-sig"))
         except json.JSONDecodeError as error:
-            return False, f"16029 12-door enriched matrix validation JSON is invalid: {error}"
+            return False, f"16029 {door_count}-door enriched matrix validation JSON is invalid: {error}"
         if payload.get("status") not in {"PASS", None} or payload.get("ok") is not True:
-            return False, f"16029 12-door enriched matrix validation did not pass; see {enriched_path}"
+            return False, f"16029 {door_count}-door enriched matrix validation did not pass; see {enriched_path}"
         bbox = payload.get("combined_bbox_mm") if isinstance(payload.get("combined_bbox_mm"), dict) else {}
         recommended_count = payload.get("recommended_candidate_count")
         return (
             True,
             (
-                "12-door enriched matrix gate PASS; "
+                f"{door_count}-door enriched matrix gate PASS; "
                 f"fixed modules={recommended_count}; "
                 f"bbox X={bbox.get('x_len')} Ymax={bbox.get('y_max')} Z={bbox.get('z_len')}; "
                 f"evidence={enriched_path}"

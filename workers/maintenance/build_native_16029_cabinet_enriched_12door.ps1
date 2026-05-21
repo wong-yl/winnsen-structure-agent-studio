@@ -1,4 +1,6 @@
 param(
+  [ValidateSet(10, 12, 14)]
+  [int]$DoorCount = 12,
   [switch]$UseMatrix
 )
 
@@ -6,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 
 $repo = 'D:\Winnsen_Structure_Agent_Studio'
 $skeletonDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521'
-$outDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521'
+$outDir = Join-Path $repo ("workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-{0}DOOR-20260521" -f $DoorCount)
 $candidateJson = Join-Path $repo 'data\solidworks_16029_fixed_module_candidate_map.json'
 $toolBuild = Join-Path $repo 'workers\solidworks_tools\build_placed_components_module.ps1'
 $builder = Join-Path $repo 'workers\solidworks_tools\bin\BuildPlacedComponentsModule.exe'
@@ -62,8 +64,8 @@ if (-not (Test-Path -LiteralPath $builder)) {
   throw "Builder not found: $builder"
 }
 
-$stem = $(if ($UseMatrix) { 'native_16029_12door_cabinet_enriched_v2' } else { 'native_16029_12door_cabinet_enriched_v1' })
-$skeleton = Join-Path $skeletonDir 'native_16029_12door_cabinet_skeleton_v2.SLDASM'
+$stem = $(if ($UseMatrix) { "native_16029_${DoorCount}door_cabinet_enriched_v2" } else { "native_16029_${DoorCount}door_cabinet_enriched_v1" })
+$skeleton = Join-Path $skeletonDir ("native_16029_{0}door_cabinet_skeleton_v2.SLDASM" -f $DoorCount)
 $placements = Join-Path $outDir ($stem + '_placements.tsv')
 $asm = Join-Path $outDir ($stem + '.SLDASM')
 $resultJson = Join-Path $outDir ($stem + '_result.json')
@@ -97,7 +99,7 @@ if ($safeCandidates.Count -lt 1) {
 
 $lines = [System.Collections.Generic.List[string]]::new()
 $lines.Add($(if ($UseMatrix) { "role`tpath`ttx_mm`tty_mm`ttz_mm`tr11`tr12`tr13`tr21`tr22`tr23`tr31`tr32`tr33" } else { "role`tpath`ttx_mm`tty_mm`ttz_mm" }))
-Add-Placement $lines 'cabinet_skeleton_12door_v2' $skeleton 0 0 0
+Add-Placement $lines ("cabinet_skeleton_{0}door_v2" -f $DoorCount) $skeleton 0 0 0
 foreach ($candidate in $safeCandidates) {
   if ($UseMatrix) {
     $transform = $candidate.axis_aligned_transform.translation_mm
@@ -112,23 +114,25 @@ foreach ($candidate in $safeCandidates) {
 
 & $builder $placements $asm $resultJson | Out-Host
 if ($LASTEXITCODE -ne 0) {
-  throw "BuildPlacedComponentsModule failed for enriched 12-door model"
+  throw "BuildPlacedComponentsModule failed for enriched $DoorCount-door model"
 }
 
 & cscript.exe //Nologo $exporter $asm $step | Out-Host
 if ($LASTEXITCODE -ne 0) {
-  throw "STEP export failed for enriched 12-door model"
+  throw "STEP export failed for enriched $DoorCount-door model"
 }
 
 Invoke-FreeCadBbox $step $bboxJson $bboxCsv
 
-$env:STUDIO_16029_ENRICHED_12DOOR_STEM = $stem
-$env:STUDIO_16029_ENRICHED_12DOOR_MODE = $(if ($UseMatrix) { 'matrix' } else { 'identity' })
+$env:STUDIO_16029_ENRICHED_DOOR_COUNT = [string]$DoorCount
+$env:STUDIO_16029_ENRICHED_DIR = $outDir
+$env:STUDIO_16029_ENRICHED_STEM = $stem
+$env:STUDIO_16029_ENRICHED_MODE = $(if ($UseMatrix) { 'matrix' } else { 'identity' })
 & python (Join-Path $repo 'workers\maintenance\validate_native_16029_cabinet_enriched_12door.py') | Out-Host
 $validationExitCode = $LASTEXITCODE
-Remove-Item Env:\STUDIO_16029_ENRICHED_12DOOR_STEM,Env:\STUDIO_16029_ENRICHED_12DOOR_MODE -ErrorAction SilentlyContinue
+Remove-Item Env:\STUDIO_16029_ENRICHED_DOOR_COUNT,Env:\STUDIO_16029_ENRICHED_DIR,Env:\STUDIO_16029_ENRICHED_STEM,Env:\STUDIO_16029_ENRICHED_MODE -ErrorAction SilentlyContinue
 if ($validationExitCode -ne 0) {
-  throw "Enriched 12-door validation failed"
+  throw "Enriched $DoorCount-door validation failed"
 }
 
 & cscript.exe //Nologo (Join-Path $repo 'workers\solidworks_tools\sw_exit_if_no_active_doc.js') | Out-Host
