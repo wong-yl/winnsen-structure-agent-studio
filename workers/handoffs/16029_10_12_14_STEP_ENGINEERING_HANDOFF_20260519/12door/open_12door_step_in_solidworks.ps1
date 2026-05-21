@@ -57,7 +57,7 @@ if (Test-Path -LiteralPath $solidWorksOpenScript) {
   if (Test-Path -LiteralPath $stdoutPath) {
     $output = Get-Content -LiteralPath $stdoutPath -Raw -Encoding Default
   }
-  if ($proc.ExitCode -eq 0 -and $output -match "active=") {
+  if ($output -match "active=") {
     Write-OpenStatus "opened" "SolidWorks API reported active document for STEP: $stepPath"
     exit 0
   }

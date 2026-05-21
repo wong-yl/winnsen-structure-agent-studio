@@ -34,6 +34,9 @@ workers/variant_step_evidence/
 workers/verification/
 workers/**/__pycache__/
 workers/handoffs/**/solidworks_native/*_step_bbox.*
+workers/handoffs/**/*.status.txt
+workers/handoffs/**/*.stdout.txt
+workers/handoffs/**/*.stderr.txt
 
 # Generated CAD and neutral geometry files
 *.SLDASM

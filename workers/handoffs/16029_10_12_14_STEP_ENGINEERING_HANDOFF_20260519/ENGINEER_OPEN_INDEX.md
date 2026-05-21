@@ -24,6 +24,9 @@
 - 结论：当前根脚本已改为优先打开原生 SLDASM；STEP/FCStd 作为中性和开源复核备选。
 - 验证记录：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_OPEN_VERIFICATION_20260520.md`
 
+- 原生 SLDASM 打开验证：10 门增强样机已通过 SolidWorks API active document 确认。
+- 原生验证记录：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260521.md`
+
 
 ## 交付边界
 

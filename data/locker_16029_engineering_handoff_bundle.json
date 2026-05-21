@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T18:53:22+08:00",
+  "generated_at": "2026-05-21T19:27:23+08:00",
   "product_family": "16029",
   "scope": "1000W x 1917H x 550D 10/12/14 door engineering-reference handoff",
   "source_quality_matrix": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
@@ -45,15 +45,15 @@
           "missing_roles": []
         },
         "transfer": {
-          "assembly": "hardlink",
-          "step": "hardlink",
-          "placements": "hardlink",
-          "result_json": "hardlink",
-          "bbox_json": "hardlink",
-          "bbox_csv": "hardlink",
-          "validation_json": "hardlink",
-          "validation_md": "hardlink",
-          "validation_csv": "hardlink"
+          "assembly": "existing",
+          "step": "existing",
+          "placements": "existing",
+          "result_json": "existing",
+          "bbox_json": "existing",
+          "bbox_csv": "existing",
+          "validation_json": "existing",
+          "validation_md": "existing",
+          "validation_csv": "existing"
         },
         "boundary": "native engineering reference package; not independent Pack-and-Go"
       },
@@ -123,15 +123,15 @@
           "missing_roles": []
         },
         "transfer": {
-          "assembly": "hardlink",
-          "step": "hardlink",
-          "placements": "hardlink",
-          "result_json": "hardlink",
-          "bbox_json": "hardlink",
-          "bbox_csv": "hardlink",
-          "validation_json": "hardlink",
-          "validation_md": "hardlink",
-          "validation_csv": "hardlink"
+          "assembly": "existing",
+          "step": "existing",
+          "placements": "existing",
+          "result_json": "existing",
+          "bbox_json": "existing",
+          "bbox_csv": "existing",
+          "validation_json": "existing",
+          "validation_md": "existing",
+          "validation_csv": "existing"
         },
         "boundary": "native engineering reference package; not independent Pack-and-Go"
       },
@@ -201,15 +201,15 @@
           "missing_roles": []
         },
         "transfer": {
-          "assembly": "hardlink",
-          "step": "hardlink",
-          "placements": "hardlink",
-          "result_json": "hardlink",
-          "bbox_json": "hardlink",
-          "bbox_csv": "hardlink",
-          "validation_json": "hardlink",
-          "validation_md": "hardlink",
-          "validation_csv": "hardlink"
+          "assembly": "existing",
+          "step": "existing",
+          "placements": "existing",
+          "result_json": "existing",
+          "bbox_json": "existing",
+          "bbox_csv": "existing",
+          "validation_json": "existing",
+          "validation_md": "existing",
+          "validation_csv": "existing"
         },
         "boundary": "native engineering reference package; not independent Pack-and-Go"
       },
@@ -255,9 +255,11 @@
     "SolidWorks users should open the native enriched .SLDASM files first; generated SolidWorks scripts use a safe API-open attempt and manual fallback.",
     "All included variants have STEP geometry PASS and FCStd integrity PASS.",
     "All included variants have structural rule audit PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X.",
-    "SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report."
+    "SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report.",
+    "Native SolidWorks 10-door enriched SLDASM open smoke passed; see the native open verification report."
   ],
   "solidworks_open_verification": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\SOLIDWORKS_OPEN_VERIFICATION_20260520.md",
+  "solidworks_native_open_verification": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260521.md",
   "root_launchers": [
     {
       "door_count": 10,
