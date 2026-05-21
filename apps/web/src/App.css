@@ -3210,6 +3210,15 @@ td strong {
   gap: 8px;
 }
 
+.enriched-reference-direct {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.enriched-reference-card {
+  border-color: #91d7b0;
+  background: linear-gradient(180deg, #ffffff 0%, #f6fff9 100%);
+}
+
 .engineer-handoff-card {
   min-width: 0;
   padding: 12px;

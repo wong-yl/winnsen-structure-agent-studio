@@ -1579,16 +1579,35 @@ def solidworks_16029_native_skeleton_series_dir() -> Path:
     )
 
 
+def solidworks_16029_enriched_12door_dir() -> Path:
+    return Path(
+        os.getenv(
+            "STUDIO_SOLIDWORKS_16029_ENRICHED_12DOOR_DIR",
+            str(GENERATED_MODEL_DIR / "SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521"),
+        )
+    )
+
+
+def solidworks_16029_enriched_12door_validation_path() -> Path:
+    return Path(
+        os.getenv(
+            "STUDIO_SOLIDWORKS_16029_ENRICHED_12DOOR_VALIDATION_JSON",
+            str(ROOT_DIR / "data" / "solidworks_16029_enriched_12door_matrix_validation.json"),
+        )
+    )
+
+
 def solidworks_16029_template_source(door_count: int) -> tuple[Path, str]:
     skeleton_dir = solidworks_16029_native_skeleton_series_dir()
+    enriched_dir = solidworks_16029_enriched_12door_dir()
     sources = {
         10: (
             skeleton_dir / "native_16029_10door_cabinet_skeleton_v2.SLDASM",
             "16029 10-door native SolidWorks cabinet skeleton v2",
         ),
         12: (
-            skeleton_dir / "native_16029_12door_cabinet_skeleton_v2.SLDASM",
-            "16029 12-door native SolidWorks cabinet skeleton v2",
+            enriched_dir / "native_16029_12door_cabinet_enriched_v2.SLDASM",
+            "16029 12-door native SolidWorks cabinet enriched matrix v2; skeleton plus 9 transform-backed fixed modules",
         ),
         14: (
             skeleton_dir / "native_16029_14door_cabinet_skeleton_v2.SLDASM",
@@ -1600,7 +1619,7 @@ def solidworks_16029_template_source(door_count: int) -> tuple[Path, str]:
         raise HTTPException(
             status_code=400,
             detail=(
-                "16029 SolidWorks native cabinet skeleton currently supports only "
+                "16029 SolidWorks native cabinet references currently support only "
                 f"{supported}-door output. Other door counts stay in rule-learning until their "
                 "door-frame, shelf, lock, hinge and BOM/DXF rules are verified."
             ),
@@ -1619,6 +1638,28 @@ def solidworks_16029_template_source_check(door_count: int) -> tuple[bool, str]:
 
 
 def solidworks_16029_native_skeleton_geometry_gate_check(door_count: int) -> tuple[bool, str]:
+    if door_count == 12:
+        enriched_path = solidworks_16029_enriched_12door_validation_path()
+        if not enriched_path.exists():
+            return False, f"16029 12-door enriched matrix validation was not found: {enriched_path}"
+        try:
+            payload = json.loads(enriched_path.read_text(encoding="utf-8-sig"))
+        except json.JSONDecodeError as error:
+            return False, f"16029 12-door enriched matrix validation JSON is invalid: {error}"
+        if payload.get("status") not in {"PASS", None} or payload.get("ok") is not True:
+            return False, f"16029 12-door enriched matrix validation did not pass; see {enriched_path}"
+        bbox = payload.get("combined_bbox_mm") if isinstance(payload.get("combined_bbox_mm"), dict) else {}
+        recommended_count = payload.get("recommended_candidate_count")
+        return (
+            True,
+            (
+                "12-door enriched matrix gate PASS; "
+                f"fixed modules={recommended_count}; "
+                f"bbox X={bbox.get('x_len')} Ymax={bbox.get('y_max')} Z={bbox.get('z_len')}; "
+                f"evidence={enriched_path}"
+            ),
+        )
+
     path = SOLIDWORKS_16029_NATIVE_SKELETON_GEOMETRY_GATE_PATH
     if not path.exists():
         return False, f"16029 native skeleton geometry gate was not found: {path}"
@@ -2122,11 +2163,11 @@ def build_dry_run(task: GenerationTask) -> DryRunResult:
             if template_ok:
                 gate_ok, gate_detail = solidworks_16029_native_skeleton_geometry_gate_check(source_door_count)
                 extra_checks.append(
-                    DryRunCheck(
-                        name="solidworks_16029_native_skeleton_geometry_gate",
-                        ok=gate_ok,
-                        detail=gate_detail,
-                    )
+                DryRunCheck(
+                    name="solidworks_16029_native_reference_geometry_gate",
+                    ok=gate_ok,
+                    detail=gate_detail,
+                )
                 )
 
         checks.extend(
@@ -2358,9 +2399,9 @@ def build_solidworks_run_summary(result: WorkerExecutionResult) -> SolidWorksRun
     if result.status == "requires_manual_run":
         generation_mode = "manual_package"
         interpretation = "已准备 SolidWorks 本地执行包；还没有完成原生装配生成。"
-    elif "native cabinet skeleton" in title_line:
+    elif "native cabinet reference" in title_line or "native cabinet skeleton" in title_line:
         generation_mode = "native_skeleton_reference"
-        interpretation = "打开并另存已验证的 10/12/14 门 SolidWorks 原生整柜骨架；用于工程参考和后续模块补齐。"
+        interpretation = "打开并另存已验证的 16029 SolidWorks 原生整柜参考；12 门优先使用增强矩阵样机，10/14 门仍使用骨架。"
     elif "template clone" in title_line:
         generation_mode = "template_clone"
         interpretation = "复制并保存 SolidWorks 10/12门模板，绑定为同尺寸门数组参考；当前不是逐个零件重排。"
