@@ -5,23 +5,23 @@
 ## 推荐操作
 
 1. 先打开对应门数的根目录脚本，例如 `open_12door_in_solidworks.cmd`。
-2. 脚本会先启动 SolidWorks 主程序，再尝试 API 打开已审计 `.stp` 交接文件。
-3. 如果 API 打开未确认，脚本会在资源管理器中选中 STEP 文件，由工程师在 SolidWorks 里手动 File > Open。
-4. 只在需要看 FreeCAD 原生参考时，再进入对应门数目录打开 `.FCStd`。
+2. 脚本会优先打开原生 SolidWorks 增强样机 `.SLDASM`，这是当前给结构工程师复核的主文件。
+3. 如果 API 打开未确认，脚本会在资源管理器中选中原生装配体，由工程师在 SolidWorks 里手动 File > Open。
+4. 只有需要中性格式复核时，再进入对应门数目录打开 `.stp`；需要看 FreeCAD 参考时再打开 `.FCStd`。
 5. 不要再使用历史 direct assembly 逐零件装配任务；该路线已因装配基准/transform 错乱停用。
 
 ## 可打开模型
 
-| 门数 | SolidWorks 安全脚本 | STP 交接文件 | 门高 | 门距 | 质量结论 |
-| ---: | --- | --- | ---: | ---: | --- |
-| 10 | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\open_10door_in_solidworks.cmd` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\10door\16029_1000W_1917H_550D_10door_solidworks_import.stp` | 359.0 | 366.0 | STEP geometry_check_pass; FCStd PASS; 结构 PASS |
-| 12 | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\open_12door_in_solidworks.cmd` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\16029_1000W_1917H_550D_12door_solidworks_import.stp` | 298.0 | 305.0 | STEP geometry_check_pass; FCStd PASS; 结构 PASS |
-| 14 | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\open_14door_in_solidworks.cmd` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\14door\16029_1000W_1917H_550D_14door_solidworks_import.stp` | 254.429 | 261.429 | STEP geometry_check_pass; FCStd PASS; 结构 PASS |
+| 门数 | SolidWorks 安全脚本 | 原生增强装配 | STP 备选 | 门高 | 门距 | 质量结论 |
+| ---: | --- | --- | --- | ---: | ---: | --- |
+| 10 | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\open_10door_in_solidworks.cmd` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\10door\solidworks_native\16029_1000W_1917H_550D_10door_enriched_v2.SLDASM` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\10door\16029_1000W_1917H_550D_10door_solidworks_import.stp` | 359.0 | 366.0 | STEP geometry_check_pass; FCStd PASS; 结构 PASS |
+| 12 | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\open_12door_in_solidworks.cmd` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\solidworks_native\16029_1000W_1917H_550D_12door_enriched_v2.SLDASM` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\16029_1000W_1917H_550D_12door_solidworks_import.stp` | 298.0 | 305.0 | STEP geometry_check_pass; FCStd PASS; 结构 PASS |
+| 14 | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\open_14door_in_solidworks.cmd` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\14door\solidworks_native\16029_1000W_1917H_550D_14door_enriched_v2.SLDASM` | `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\14door\16029_1000W_1917H_550D_14door_solidworks_import.stp` | 254.429 | 261.429 | STEP geometry_check_pass; FCStd PASS; 结构 PASS |
 
 ## 软件实测状态
 
-- 已做 SolidWorks 2025 受控打开验证：主程序可见启动通过，但 12 门 STP 自动导入未确认成功。
-- 结论：STEP/FCStd 几何质量可作为工程参考，SolidWorks API/一键可视化打开仍按阻塞项跟踪。
+- 已做 SolidWorks 2025 受控打开验证：主程序可见启动通过，STEP 自动导入曾不稳定。
+- 结论：当前根脚本已改为优先打开原生 SLDASM；STEP/FCStd 作为中性和开源复核备选。
 - 验证记录：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_OPEN_VERIFICATION_20260520.md`
 
 

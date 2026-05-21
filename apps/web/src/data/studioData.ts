@@ -225,7 +225,7 @@ export const projects: Project[] = [
       { label: 'Pattern seeds', value: '3', tone: 'warn' },
     ],
     notes: [
-      '16029 10/12/14 门增强矩阵样机已写入 workers/generated_models/SW-NATIVE-16029-CABINET-ENRICHED-{10,12,14}DOOR-20260521；9 个固定模块 bbox 匹配通过。',
+      '16029 10/12/14 门增强矩阵样机已收敛到 workers/handoffs/16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519；根脚本优先打开原生 SLDASM，9 个固定模块 bbox 匹配通过。',
       '16029 10/12/14 门原生 SolidWorks 骨架仍保留在 workers/generated_models/SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521，作为增强样机的上游骨架证据。',
       '当前骨架路线只收录视觉验证通过的 10/12/14 门，失败或错乱的 direct assembly 历史路线不再进入交接。',
       '组件角色与变体规则表已写入 data/solidworks_16029_role_rules.md：层板阵列 11×152.5mm、柜门阵列 6×305mm、衣架钢管 2×915mm。',

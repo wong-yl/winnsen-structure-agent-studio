@@ -202,6 +202,90 @@ if errorlevel 1 start "" notepad.exe "%~dpn0.log"
     write_text(path, cmd)
 
 
+def write_native_solidworks_launcher(path: Path, assembly_path: Path) -> None:
+    ps1 = path.with_suffix(".ps1")
+    status_path = path.with_suffix(".status.txt")
+    stdout_path = path.with_suffix(".solidworks_open.stdout.txt")
+    stderr_path = path.with_suffix(".solidworks_open.stderr.txt")
+    script = f"""$ErrorActionPreference = 'Stop'
+$assemblyPath = {ps_single_quote(str(assembly_path))}
+$solidWorksExe = {ps_single_quote(str(SOLIDWORKS_EXE))}
+$solidWorksShortcut = {ps_single_quote(str(SOLIDWORKS_SHORTCUT))}
+$solidWorksOpenScript = {ps_single_quote(str(SOLIDWORKS_OPEN_SCRIPT))}
+$statusPath = {ps_single_quote(str(status_path))}
+$stdoutPath = {ps_single_quote(str(stdout_path))}
+$stderrPath = {ps_single_quote(str(stderr_path))}
+
+function Write-OpenStatus([string] $status, [string] $message) {{
+  $line = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') | $status | $message"
+  Set-Content -LiteralPath $statusPath -Value $line -Encoding UTF8
+}}
+
+function Wait-SolidWorksMainWindow([int] $timeoutSeconds) {{
+  $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+  while ((Get-Date) -lt $deadline) {{
+    $proc = Get-Process -Name SLDWORKS -ErrorAction SilentlyContinue | Where-Object {{ $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }} | Select-Object -First 1
+    if ($null -ne $proc) {{
+      return $true
+    }}
+    Start-Sleep -Seconds 3
+  }}
+  return $false
+}}
+
+if (-not (Test-Path -LiteralPath $assemblyPath)) {{
+  throw "Native SolidWorks assembly was not found: $assemblyPath"
+}}
+
+$runningSolidWorks = Get-Process -Name SLDWORKS -ErrorAction SilentlyContinue | Where-Object {{ $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }} | Select-Object -First 1
+if ($null -eq $runningSolidWorks) {{
+  if (Test-Path -LiteralPath $solidWorksExe) {{
+    Start-Process -FilePath $solidWorksExe -WorkingDirectory (Split-Path -LiteralPath $solidWorksExe)
+    [void] (Wait-SolidWorksMainWindow 120)
+  }} elseif (Test-Path -LiteralPath $solidWorksShortcut) {{
+    Start-Process -FilePath $solidWorksShortcut
+    [void] (Wait-SolidWorksMainWindow 120)
+  }}
+}}
+
+if (Test-Path -LiteralPath $solidWorksOpenScript) {{
+  Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+  $proc = Start-Process -FilePath "cscript.exe" -ArgumentList @("//Nologo", $solidWorksOpenScript, $assemblyPath) -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
+  $deadline = (Get-Date).AddSeconds(240)
+  while ((Get-Date) -lt $deadline -and -not $proc.HasExited) {{
+    Start-Sleep -Seconds 5
+    $proc.Refresh()
+  }}
+  if (-not $proc.HasExited) {{
+    Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+    Write-OpenStatus "manual_open_required" "SolidWorks API open timed out; selected native assembly in Explorer: $assemblyPath"
+    Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$assemblyPath`""
+    exit 0
+  }}
+  $output = ""
+  if (Test-Path -LiteralPath $stdoutPath) {{
+    $output = Get-Content -LiteralPath $stdoutPath -Raw -Encoding Default
+  }}
+  if ($proc.ExitCode -eq 0 -and $output -match "active=") {{
+    Write-OpenStatus "opened" "SolidWorks API reported active document for native assembly: $assemblyPath"
+    exit 0
+  }}
+  Write-OpenStatus "manual_open_required" "SolidWorks API did not confirm open; selected native assembly in Explorer: $assemblyPath"
+  Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$assemblyPath`""
+  exit 0
+}}
+
+Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$assemblyPath`""
+Write-OpenStatus "manual_open_required" "Selected native assembly in Explorer: $assemblyPath"
+"""
+    write_powershell_script(ps1, script)
+    cmd = f"""@echo off
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dpn0.ps1" *> "%~dpn0.log"
+if errorlevel 1 start "" notepad.exe "%~dpn0.log"
+"""
+    write_text(path, cmd)
+
+
 def write_freecad_launcher(path: Path, model_path: Path) -> None:
     ps1 = path.with_suffix(".ps1")
     status_path = path.with_suffix(".status.txt")
@@ -232,9 +316,9 @@ if errorlevel 1 start "" notepad.exe "%~dpn0.log"
 def recommended_model_for_variant(variant: dict[str, Any]) -> str:
     status = variant.get("status")
     if status == "PASS_READY_FOR_ENGINEERING_REVIEW":
-        return "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff."
+        return "Use the native SolidWorks enriched assembly first; STEP and FCStd remain neutral/open-source review backups."
     if status == "PASS_STEP_GEOMETRY_NEEDS_FCSTD_AUDIT":
-        return "Use STEP for SolidWorks review; FCStd remains a FreeCAD reference until integrity audit passes."
+        return "Use the native SolidWorks enriched assembly first; use STEP as the neutral backup while FCStd integrity audit is pending."
     return "Do not use for engineering review until quality status improves."
 
 
@@ -249,6 +333,143 @@ def handoff_skip_reason(variant: dict[str, Any]) -> str | None:
     if status == "MISSING_OUTPUT":
         return "Expected model output is missing."
     return f"Status is not approved for engineering handoff: {status or 'unknown'}."
+
+
+def native_enriched_sources(door_count: int) -> dict[str, Path]:
+    source_dir = ROOT_DIR / "workers" / "generated_models" / f"SW-NATIVE-16029-CABINET-ENRICHED-{door_count}DOOR-20260521"
+    stem = f"native_16029_{door_count}door_cabinet_enriched_v2"
+    return {
+        "source_dir": source_dir,
+        "assembly": source_dir / f"{stem}.SLDASM",
+        "step": source_dir / f"{stem}.step",
+        "placements": source_dir / f"{stem}_placements.tsv",
+        "result_json": source_dir / f"{stem}_result.json",
+        "bbox_json": source_dir / f"{stem}_step_bbox.json",
+        "bbox_csv": source_dir / f"{stem}_step_bbox.csv",
+        "validation_json": ROOT_DIR / "data" / f"solidworks_16029_enriched_{door_count}door_matrix_validation.json",
+        "validation_md": ROOT_DIR / "data" / f"solidworks_16029_enriched_{door_count}door_matrix_validation.md",
+        "validation_csv": ROOT_DIR / "data" / f"solidworks_16029_enriched_{door_count}door_matrix_validation.csv",
+    }
+
+
+def read_placements(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def write_native_dependency_manifest(placements_path: Path, target_path: Path) -> dict[str, Any]:
+    rows = read_placements(placements_path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    with target_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=["role", "source_path", "exists", "size_mb", "note"],
+        )
+        writer.writeheader()
+        for row in rows:
+            source_path = Path(row.get("path") or "")
+            exists = source_path.exists()
+            writer.writerow(
+                {
+                    "role": row.get("role", ""),
+                    "source_path": str(source_path),
+                    "exists": "yes" if exists else "no",
+                    "size_mb": file_size_mb(source_path) if exists else "",
+                    "note": "top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go",
+                }
+            )
+    missing = [row for row in rows if not Path(row.get("path") or "").exists()]
+    return {
+        "path": str(target_path),
+        "row_count": len(rows),
+        "existing_count": len(rows) - len(missing),
+        "missing_count": len(missing),
+        "missing_roles": [row.get("role") for row in missing],
+    }
+
+
+def build_native_reference_handoff(door_count: int, target_dir: Path) -> dict[str, Any]:
+    sources = native_enriched_sources(door_count)
+    native_dir = target_dir / "solidworks_native"
+    native_dir.mkdir(parents=True, exist_ok=True)
+
+    assembly_target = native_dir / f"16029_1000W_1917H_550D_{door_count}door_enriched_v2.SLDASM"
+    step_target = native_dir / f"16029_1000W_1917H_550D_{door_count}door_enriched_v2.step"
+    placements_target = native_dir / f"16029_{door_count}door_enriched_v2_placements.tsv"
+    result_target = native_dir / f"16029_{door_count}door_enriched_v2_result.json"
+    bbox_json_target = native_dir / f"16029_{door_count}door_enriched_v2_step_bbox.json"
+    bbox_csv_target = native_dir / f"16029_{door_count}door_enriched_v2_step_bbox.csv"
+    validation_json_target = native_dir / f"solidworks_16029_enriched_{door_count}door_matrix_validation.json"
+    validation_md_target = native_dir / f"solidworks_16029_enriched_{door_count}door_matrix_validation.md"
+    validation_csv_target = native_dir / f"solidworks_16029_enriched_{door_count}door_matrix_validation.csv"
+
+    transfers: dict[str, str | None] = {}
+    transfers["assembly"] = ensure_link_or_copy(sources["assembly"], assembly_target) if sources["assembly"].exists() else None
+    transfers["step"] = ensure_link_or_copy(sources["step"], step_target) if sources["step"].exists() else None
+    transfers["placements"] = ensure_link_or_copy(sources["placements"], placements_target) if sources["placements"].exists() else None
+    transfers["result_json"] = ensure_link_or_copy(sources["result_json"], result_target) if sources["result_json"].exists() else None
+    transfers["bbox_json"] = ensure_link_or_copy(sources["bbox_json"], bbox_json_target) if sources["bbox_json"].exists() else None
+    transfers["bbox_csv"] = ensure_link_or_copy(sources["bbox_csv"], bbox_csv_target) if sources["bbox_csv"].exists() else None
+    transfers["validation_json"] = (
+        ensure_link_or_copy(sources["validation_json"], validation_json_target) if sources["validation_json"].exists() else None
+    )
+    transfers["validation_md"] = (
+        ensure_link_or_copy(sources["validation_md"], validation_md_target) if sources["validation_md"].exists() else None
+    )
+    transfers["validation_csv"] = (
+        ensure_link_or_copy(sources["validation_csv"], validation_csv_target) if sources["validation_csv"].exists() else None
+    )
+
+    dependency_manifest = write_native_dependency_manifest(placements_target, native_dir / "native_dependency_manifest.csv")
+    launcher = native_dir / f"open_{door_count}door_native_enriched_solidworks.cmd"
+    write_native_solidworks_launcher(launcher, assembly_target)
+
+    readme_path = native_dir / "README.md"
+    readme = f"""# 16029 {door_count} door native SolidWorks enriched reference
+
+Output level: engineering reference, not released production drawing.
+
+## Open first
+
+- Native SolidWorks assembly: `{assembly_target}`
+- Safe launcher: `{launcher}`
+- Neutral STEP from the same native assembly: `{step_target}`
+
+## Validation
+
+- Validation report: `{validation_md_target}`
+- Validation data: `{validation_csv_target}`
+- STEP bbox CSV: `{bbox_csv_target}`
+- Builder result JSON: `{result_target}`
+- Placement TSV: `{placements_target}`
+- Dependency manifest: `{dependency_manifest['path']}`
+
+## Boundary
+
+- This folder collects the current native enhanced reference and its evidence in one place.
+- This is not a true independent Pack-and-Go release yet. The dependency manifest lists top-level source references that must stay available on this workstation.
+- Use this before the older STEP-only handoff when reviewing in SolidWorks 2025.
+"""
+    write_text(readme_path, readme)
+
+    return {
+        "package_dir": str(native_dir),
+        "assembly": str(assembly_target),
+        "step": str(step_target),
+        "solidworks_launcher": str(launcher),
+        "placements_tsv": str(placements_target),
+        "result_json": str(result_target),
+        "bbox_json": str(bbox_json_target),
+        "bbox_csv": str(bbox_csv_target),
+        "validation_json": str(validation_json_target),
+        "validation_md": str(validation_md_target),
+        "validation_csv": str(validation_csv_target),
+        "dependency_manifest": dependency_manifest,
+        "transfer": transfers,
+        "boundary": "native engineering reference package; not independent Pack-and-Go",
+    }
 
 
 def build_variant_handoff(variant: dict[str, Any]) -> dict[str, Any]:
@@ -288,6 +509,7 @@ def build_variant_handoff(variant: dict[str, Any]) -> dict[str, Any]:
     write_solidworks_launcher(sw_launcher, stp_target)
     freecad_launcher = target_dir / f"open_{door_count}door_reference_in_freecad.cmd"
     write_freecad_launcher(freecad_launcher, fcstd_target or step_target)
+    native_reference = build_native_reference_handoff(door_count, target_dir)
 
     readme_path = target_dir / "README.md"
     readme = f"""# 16029 {door_count} door engineering handoff
@@ -296,6 +518,8 @@ Output level: engineering reference, not released production drawing.
 
 ## Recommended file
 
+- Native SolidWorks enriched reference: `{native_reference['assembly']}`
+- Native SolidWorks launcher: `{native_reference['solidworks_launcher']}`
 - SolidWorks review: `{stp_target}`
 - FreeCAD reference: `{fcstd_target or step_target}`
 - Status: `{variant.get('status')}`
@@ -325,6 +549,13 @@ Output level: engineering reference, not released production drawing.
 - STEP geometry json: `{copied_step_check or ''}`
 - FCStd integrity report: `{copied_fcstd_integrity or ''}`
 - structural rule audit: `{copied_structural_rule_audit or ''}`
+
+## Native SolidWorks package
+
+- package dir: `{native_reference['package_dir']}`
+- dependency manifest: `{native_reference['dependency_manifest']['path']}`
+- dependency rows: `{native_reference['dependency_manifest']['existing_count']}/{native_reference['dependency_manifest']['row_count']}`
+- boundary: `{native_reference['boundary']}`
 """
     write_text(readme_path, readme)
 
@@ -339,6 +570,7 @@ Output level: engineering reference, not released production drawing.
         "fcstd": str(fcstd_target) if fcstd_target else None,
         "solidworks_launcher": str(sw_launcher),
         "freecad_launcher": str(freecad_launcher),
+        "native_reference": native_reference,
         "report_md": copied_report,
         "verify_csv": copied_verify,
         "step_geometry_check_json": copied_step_check,
@@ -386,6 +618,10 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                 "door_pitch_mm",
                 "step",
                 "solidworks_launcher",
+                "native_assembly",
+                "native_solidworks_launcher",
+                "native_dependency_manifest",
+                "native_dependency_missing_count",
                 "handoff_dir",
             ],
         )
@@ -406,6 +642,10 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                     "door_pitch_mm": metrics.get("door_pitch_mm"),
                     "step": row["step"],
                     "solidworks_launcher": row["solidworks_launcher"],
+                    "native_assembly": (row.get("native_reference") or {}).get("assembly"),
+                    "native_solidworks_launcher": (row.get("native_reference") or {}).get("solidworks_launcher"),
+                    "native_dependency_manifest": ((row.get("native_reference") or {}).get("dependency_manifest") or {}).get("path"),
+                    "native_dependency_missing_count": ((row.get("native_reference") or {}).get("dependency_manifest") or {}).get("missing_count"),
                     "handoff_dir": row["handoff_dir"],
                 }
             )
@@ -416,7 +656,8 @@ def write_root_launchers(payload: dict[str, Any]) -> list[dict[str, Any]]:
     handoff_dir = Path(payload["handoff_dir"])
     for row in payload["variants"]:
         door_count = int(row["door_count"])
-        solidworks_launcher = Path(row["solidworks_launcher"])
+        native_reference = row.get("native_reference") or {}
+        solidworks_launcher = Path(native_reference.get("solidworks_launcher") or row["solidworks_launcher"])
         root_launcher = handoff_dir / f"open_{door_count}door_in_solidworks.cmd"
         cmd = f"""@echo off
 call "{solidworks_launcher}"
@@ -428,6 +669,8 @@ call "{solidworks_launcher}"
                 "solidworks_launcher": str(root_launcher),
                 "target_launcher": str(solidworks_launcher),
                 "stp": row["stp"],
+                "native_assembly": native_reference.get("assembly"),
+                "step_launcher": row["solidworks_launcher"],
             }
         )
     return launchers
@@ -444,15 +687,15 @@ def write_engineer_open_index(payload: dict[str, Any]) -> str:
         "## 推荐操作",
         "",
         "1. 先打开对应门数的根目录脚本，例如 `open_12door_in_solidworks.cmd`。",
-        "2. 脚本会先启动 SolidWorks 主程序，再尝试 API 打开已审计 `.stp` 交接文件。",
-        "3. 如果 API 打开未确认，脚本会在资源管理器中选中 STEP 文件，由工程师在 SolidWorks 里手动 File > Open。",
-        "4. 只在需要看 FreeCAD 原生参考时，再进入对应门数目录打开 `.FCStd`。",
+        "2. 脚本会优先打开原生 SolidWorks 增强样机 `.SLDASM`，这是当前给结构工程师复核的主文件。",
+        "3. 如果 API 打开未确认，脚本会在资源管理器中选中原生装配体，由工程师在 SolidWorks 里手动 File > Open。",
+        "4. 只有需要中性格式复核时，再进入对应门数目录打开 `.stp`；需要看 FreeCAD 参考时再打开 `.FCStd`。",
         "5. 不要再使用历史 direct assembly 逐零件装配任务；该路线已因装配基准/transform 错乱停用。",
         "",
         "## 可打开模型",
         "",
-        "| 门数 | SolidWorks 安全脚本 | STP 交接文件 | 门高 | 门距 | 质量结论 |",
-        "| ---: | --- | --- | ---: | ---: | --- |",
+        "| 门数 | SolidWorks 安全脚本 | 原生增强装配 | STP 备选 | 门高 | 门距 | 质量结论 |",
+        "| ---: | --- | --- | --- | ---: | ---: | --- |",
     ]
     root_launchers = {int(row["door_count"]): row for row in payload.get("root_launchers", [])}
     for row in payload["variants"]:
@@ -470,6 +713,7 @@ def write_engineer_open_index(payload: dict[str, Any]) -> str:
                 [
                     str(door_count),
                     f"`{root_launcher}`",
+                    f"`{(row.get('native_reference') or {}).get('assembly', '')}`",
                     f"`{row['stp']}`",
                     str(metrics.get("door_height_mm") or ""),
                     str(metrics.get("door_pitch_mm") or ""),
@@ -484,8 +728,8 @@ def write_engineer_open_index(payload: dict[str, Any]) -> str:
                 "",
                 "## 软件实测状态",
                 "",
-                "- 已做 SolidWorks 2025 受控打开验证：主程序可见启动通过，但 12 门 STP 自动导入未确认成功。",
-                "- 结论：STEP/FCStd 几何质量可作为工程参考，SolidWorks API/一键可视化打开仍按阻塞项跟踪。",
+                "- 已做 SolidWorks 2025 受控打开验证：主程序可见启动通过，STEP 自动导入曾不稳定。",
+                "- 结论：当前根脚本已改为优先打开原生 SLDASM；STEP/FCStd 作为中性和开源复核备选。",
                 f"- 验证记录：`{solidworks_open_verification}`",
                 "",
             ]
@@ -528,14 +772,15 @@ def write_root_readme(payload: dict[str, Any]) -> None:
     ]
     for row in payload["variants"]:
         metrics = row["metrics"]
+        native_reference = row.get("native_reference") or {}
         lines.append(
             "| "
             + " | ".join(
                 [
                     str(row["door_count"]),
                     row["status_label"],
-                    f"`{row['stp']}`",
-                    f"`{row['solidworks_launcher']}`",
+                    f"`{native_reference.get('assembly') or row['stp']}`",
+                    f"`{native_reference.get('solidworks_launcher') or row['solidworks_launcher']}`",
                     f"bbox X={metrics.get('bbox_x_mm')}mm; STEP={metrics.get('step_geometry_status')}; invalid={metrics.get('step_invalid_shape_count')}; FCStd={metrics.get('fcstd_integrity_status')}; structural={metrics.get('structural_rule_status')}",
                 ]
             )
@@ -571,17 +816,19 @@ def write_root_readme(payload: dict[str, Any]) -> None:
             "",
             f"- Chinese index: `{payload.get('engineer_open_index', '')}`",
             "- Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.",
-            "- The launchers start the SolidWorks main window first, try API open, and fall back to selecting the STEP file in Explorer.",
+            "- The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.",
             "",
             "## Software verification",
             "",
-            "- STEP and FCStd quality gates are available for this bundle.",
-            "- SolidWorks API/visual-open automation is not production-ready until a visible document open is confirmed.",
+            "- Native SolidWorks enriched assemblies, STEP exports, and FCStd/STEP quality gates are available for this bundle.",
+            "- This is a native engineering-reference package, not a true independent Pack-and-Go release yet.",
             f"- SolidWorks open verification: `{solidworks_open_verification or ''}`",
             "",
             "## Use rules",
             "",
-            "- Prefer the `.stp` files for SolidWorks engineering review.",
+            "- Prefer the native enriched `.SLDASM` files for SolidWorks engineering review on this workstation.",
+            "- Keep the listed source dependency paths available until true Pack-and-Go is implemented.",
+            "- Use `.stp` files when a neutral exchange file is required.",
             "- Use `.FCStd` as FreeCAD reference after confirming the FCStd integrity status is PASS.",
             "- Do not treat these files as production drawings or released BOM/DXF.",
         "",
@@ -606,7 +853,7 @@ def build_notes(variants: list[dict[str, Any]]) -> list[str]:
     ]
     notes = [
         "This handoff bundle is for engineering review only.",
-        "SolidWorks users should open the standardized .stp files; generated SolidWorks scripts use a safe API-open attempt and manual fallback.",
+        "SolidWorks users should open the native enriched .SLDASM files first; generated SolidWorks scripts use a safe API-open attempt and manual fallback.",
     ]
     if pending_fcstd:
         notes.append(

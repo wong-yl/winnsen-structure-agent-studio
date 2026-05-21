@@ -33,6 +33,7 @@ workers/validation_screenshots/
 workers/variant_step_evidence/
 workers/verification/
 workers/**/__pycache__/
+workers/handoffs/**/solidworks_native/*_step_bbox.*
 
 # Generated CAD and neutral geometry files
 *.SLDASM

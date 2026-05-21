@@ -687,12 +687,12 @@ const LOCKER_16029_SUPPORTED_RULE_COUNTS = Array.from(
 const LOCKER_16029_ENRICHED_REFERENCES = [10, 12, 14].map((doorCount) => ({
   doorCount,
   title: `${doorCount} 门增强矩阵样机 v2`,
-  outputDir: `D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-${doorCount}DOOR-20260521`,
-  assembly: `D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-${doorCount}DOOR-20260521\\native_16029_${doorCount}door_cabinet_enriched_v2.SLDASM`,
-  step: `D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-${doorCount}DOOR-20260521\\native_16029_${doorCount}door_cabinet_enriched_v2.step`,
-  validationReport: `D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_enriched_${doorCount}door_matrix_validation.md`,
-  validationData: `D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_enriched_${doorCount}door_matrix_validation.csv`,
-  candidateMap: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_fixed_module_candidate_map.md',
+  outputDir: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native`,
+  assembly: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_${doorCount}door_in_solidworks.cmd`,
+  step: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\16029_1000W_1917H_550D_${doorCount}door_enriched_v2.step`,
+  validationReport: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\solidworks_16029_enriched_${doorCount}door_matrix_validation.md`,
+  validationData: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\solidworks_16029_enriched_${doorCount}door_matrix_validation.csv`,
+  candidateMap: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\native_dependency_manifest.csv`,
 }))
 const DRAWING_UPLOAD_ACCEPT = [
   '.dxf',

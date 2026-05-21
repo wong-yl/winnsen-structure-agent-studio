@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T17:12:10+08:00",
+  "generated_at": "2026-05-21T18:53:22+08:00",
   "product_family": "16029",
   "scope": "1000W x 1917H x 550D 10/12/14 door engineering-reference handoff",
   "source_quality_matrix": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
@@ -19,12 +19,44 @@
       "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
       "status_label": "ready_for_engineering_review",
       "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door",
-      "recommended_model": "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff.",
+      "recommended_model": "Use the native SolidWorks enriched assembly first; STEP and FCStd remain neutral/open-source review backups.",
       "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_engineering_reference.step",
       "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_solidworks_import.stp",
       "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_freecad_reference.FCStd",
       "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_step_in_solidworks.cmd",
       "freecad_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_reference_in_freecad.cmd",
+      "native_reference": {
+        "package_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native",
+        "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_1000W_1917H_550D_10door_enriched_v2.SLDASM",
+        "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_1000W_1917H_550D_10door_enriched_v2.step",
+        "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\open_10door_native_enriched_solidworks.cmd",
+        "placements_tsv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_10door_enriched_v2_placements.tsv",
+        "result_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_10door_enriched_v2_result.json",
+        "bbox_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_10door_enriched_v2_step_bbox.json",
+        "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_10door_enriched_v2_step_bbox.csv",
+        "validation_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\solidworks_16029_enriched_10door_matrix_validation.json",
+        "validation_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\solidworks_16029_enriched_10door_matrix_validation.md",
+        "validation_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\solidworks_16029_enriched_10door_matrix_validation.csv",
+        "dependency_manifest": {
+          "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\native_dependency_manifest.csv",
+          "row_count": 10,
+          "existing_count": 10,
+          "missing_count": 0,
+          "missing_roles": []
+        },
+        "transfer": {
+          "assembly": "hardlink",
+          "step": "hardlink",
+          "placements": "hardlink",
+          "result_json": "hardlink",
+          "bbox_json": "hardlink",
+          "bbox_csv": "hardlink",
+          "validation_json": "hardlink",
+          "validation_md": "hardlink",
+          "validation_csv": "hardlink"
+        },
+        "boundary": "native engineering reference package; not independent Pack-and-Go"
+      },
       "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\locker_16029_10door_rule_driven_report.md",
       "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\locker_16029_10door_rule_driven_verify.csv",
       "step_geometry_check_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\freecad_geometry_check.json",
@@ -65,12 +97,44 @@
       "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
       "status_label": "ready_for_engineering_review",
       "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door",
-      "recommended_model": "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff.",
+      "recommended_model": "Use the native SolidWorks enriched assembly first; STEP and FCStd remain neutral/open-source review backups.",
       "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_engineering_reference.step",
       "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_solidworks_import.stp",
       "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_freecad_reference.FCStd",
       "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_step_in_solidworks.cmd",
       "freecad_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_reference_in_freecad.cmd",
+      "native_reference": {
+        "package_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native",
+        "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_1000W_1917H_550D_12door_enriched_v2.SLDASM",
+        "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_1000W_1917H_550D_12door_enriched_v2.step",
+        "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\open_12door_native_enriched_solidworks.cmd",
+        "placements_tsv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_12door_enriched_v2_placements.tsv",
+        "result_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_12door_enriched_v2_result.json",
+        "bbox_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_12door_enriched_v2_step_bbox.json",
+        "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_12door_enriched_v2_step_bbox.csv",
+        "validation_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\solidworks_16029_enriched_12door_matrix_validation.json",
+        "validation_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\solidworks_16029_enriched_12door_matrix_validation.md",
+        "validation_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\solidworks_16029_enriched_12door_matrix_validation.csv",
+        "dependency_manifest": {
+          "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\native_dependency_manifest.csv",
+          "row_count": 10,
+          "existing_count": 10,
+          "missing_count": 0,
+          "missing_roles": []
+        },
+        "transfer": {
+          "assembly": "hardlink",
+          "step": "hardlink",
+          "placements": "hardlink",
+          "result_json": "hardlink",
+          "bbox_json": "hardlink",
+          "bbox_csv": "hardlink",
+          "validation_json": "hardlink",
+          "validation_md": "hardlink",
+          "validation_csv": "hardlink"
+        },
+        "boundary": "native engineering reference package; not independent Pack-and-Go"
+      },
       "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_report.md",
       "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_verify.csv",
       "step_geometry_check_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\freecad_geometry_check.json",
@@ -111,12 +175,44 @@
       "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
       "status_label": "ready_for_engineering_review",
       "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door",
-      "recommended_model": "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff.",
+      "recommended_model": "Use the native SolidWorks enriched assembly first; STEP and FCStd remain neutral/open-source review backups.",
       "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_engineering_reference.step",
       "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_solidworks_import.stp",
       "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_freecad_reference.FCStd",
       "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_step_in_solidworks.cmd",
       "freecad_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_reference_in_freecad.cmd",
+      "native_reference": {
+        "package_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native",
+        "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_1000W_1917H_550D_14door_enriched_v2.SLDASM",
+        "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_1000W_1917H_550D_14door_enriched_v2.step",
+        "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\open_14door_native_enriched_solidworks.cmd",
+        "placements_tsv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_14door_enriched_v2_placements.tsv",
+        "result_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_14door_enriched_v2_result.json",
+        "bbox_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_14door_enriched_v2_step_bbox.json",
+        "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_14door_enriched_v2_step_bbox.csv",
+        "validation_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\solidworks_16029_enriched_14door_matrix_validation.json",
+        "validation_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\solidworks_16029_enriched_14door_matrix_validation.md",
+        "validation_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\solidworks_16029_enriched_14door_matrix_validation.csv",
+        "dependency_manifest": {
+          "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\native_dependency_manifest.csv",
+          "row_count": 10,
+          "existing_count": 10,
+          "missing_count": 0,
+          "missing_roles": []
+        },
+        "transfer": {
+          "assembly": "hardlink",
+          "step": "hardlink",
+          "placements": "hardlink",
+          "result_json": "hardlink",
+          "bbox_json": "hardlink",
+          "bbox_csv": "hardlink",
+          "validation_json": "hardlink",
+          "validation_md": "hardlink",
+          "validation_csv": "hardlink"
+        },
+        "boundary": "native engineering reference package; not independent Pack-and-Go"
+      },
       "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\locker_16029_14door_rule_driven_report.md",
       "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\locker_16029_14door_rule_driven_verify.csv",
       "step_geometry_check_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\freecad_geometry_check.json",
@@ -156,7 +252,7 @@
   "skipped_variants": [],
   "notes": [
     "This handoff bundle is for engineering review only.",
-    "SolidWorks users should open the standardized .stp files; generated SolidWorks scripts use a safe API-open attempt and manual fallback.",
+    "SolidWorks users should open the native enriched .SLDASM files first; generated SolidWorks scripts use a safe API-open attempt and manual fallback.",
     "All included variants have STEP geometry PASS and FCStd integrity PASS.",
     "All included variants have structural rule audit PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X.",
     "SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report."
@@ -166,20 +262,26 @@
     {
       "door_count": 10,
       "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_10door_in_solidworks.cmd",
-      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_step_in_solidworks.cmd",
-      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_solidworks_import.stp"
+      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\open_10door_native_enriched_solidworks.cmd",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_solidworks_import.stp",
+      "native_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_1000W_1917H_550D_10door_enriched_v2.SLDASM",
+      "step_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_step_in_solidworks.cmd"
     },
     {
       "door_count": 12,
       "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_12door_in_solidworks.cmd",
-      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_step_in_solidworks.cmd",
-      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_solidworks_import.stp"
+      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\open_12door_native_enriched_solidworks.cmd",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_solidworks_import.stp",
+      "native_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_1000W_1917H_550D_12door_enriched_v2.SLDASM",
+      "step_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_step_in_solidworks.cmd"
     },
     {
       "door_count": 14,
       "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_14door_in_solidworks.cmd",
-      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_step_in_solidworks.cmd",
-      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_solidworks_import.stp"
+      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\open_14door_native_enriched_solidworks.cmd",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_solidworks_import.stp",
+      "native_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_1000W_1917H_550D_14door_enriched_v2.SLDASM",
+      "step_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_step_in_solidworks.cmd"
     }
   ],
   "engineer_open_index": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\ENGINEER_OPEN_INDEX.md"
