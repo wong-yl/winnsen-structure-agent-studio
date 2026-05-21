@@ -53,6 +53,7 @@ from .config import (
     RULE_SEED_REVIEW_LEDGER_PATH,
     SHEETMETAL_RULE_EVIDENCE_16029_MARKDOWN_PATH,
     SHEETMETAL_RULE_EVIDENCE_16029_PATH,
+    SOLIDWORKS_16029_NATIVE_SKELETON_GEOMETRY_GATE_PATH,
     SOLIDWORKS_EXE,
     SOLIDWORKS_RUN_LOCK_PATH,
     SOLIDWORKS_SHORTCUT,
@@ -1617,6 +1618,41 @@ def solidworks_16029_template_source_check(door_count: int) -> tuple[bool, str]:
     return True, f"{variant_label}; source={source_path}"
 
 
+def solidworks_16029_native_skeleton_geometry_gate_check(door_count: int) -> tuple[bool, str]:
+    path = SOLIDWORKS_16029_NATIVE_SKELETON_GEOMETRY_GATE_PATH
+    if not path.exists():
+        return False, f"16029 native skeleton geometry gate was not found: {path}"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as error:
+        return False, f"16029 native skeleton geometry gate JSON is invalid: {error}"
+    if payload.get("status") != "PASS":
+        return False, f"16029 native skeleton geometry gate status is {payload.get('status')}; see {path}"
+    variant = next(
+        (
+            item
+            for item in payload.get("variants", [])
+            if isinstance(item, dict) and int(item.get("door_count", -1)) == door_count
+        ),
+        None,
+    )
+    if not variant:
+        return False, f"16029 native skeleton geometry gate has no {door_count}-door variant; see {path}"
+    if variant.get("status") != "PASS":
+        return False, f"{door_count}-door native skeleton geometry gate status is {variant.get('status')}; see {path}"
+    metrics = variant.get("metrics") if isinstance(variant.get("metrics"), dict) else {}
+    root_bbox = metrics.get("root_bbox") if isinstance(metrics.get("root_bbox"), dict) else variant.get("root_bbox", {})
+    pitch = variant.get("expected_pitch_mm")
+    return (
+        True,
+        (
+            f"{door_count}-door geometry gate PASS; "
+            f"bbox X={root_bbox.get('x_len')} Ymax={root_bbox.get('y_max')} Z={root_bbox.get('z_len')}; "
+            f"pitch={pitch}; evidence={path}"
+        ),
+    )
+
+
 def solidworks_16029_layout_info(door_count: int) -> tuple[int, float, int | None, str]:
     if door_count % 2:
         raise ValueError("door_count must be even.")
@@ -2083,6 +2119,15 @@ def build_dry_run(task: GenerationTask) -> DryRunResult:
                     detail=template_detail,
                 )
             )
+            if template_ok:
+                gate_ok, gate_detail = solidworks_16029_native_skeleton_geometry_gate_check(source_door_count)
+                extra_checks.append(
+                    DryRunCheck(
+                        name="solidworks_16029_native_skeleton_geometry_gate",
+                        ok=gate_ok,
+                        detail=gate_detail,
+                    )
+                )
 
         checks.extend(
             runner_checks

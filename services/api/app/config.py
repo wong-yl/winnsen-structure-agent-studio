@@ -116,6 +116,12 @@ LOCKER_16029_ENGINEERING_HANDOFF_BUNDLE_SCRIPT = Path(
         ROOT_DIR / "workers" / "maintenance" / "build_16029_engineering_handoff_bundle.py",
     )
 )
+SOLIDWORKS_16029_NATIVE_SKELETON_GEOMETRY_GATE_PATH = Path(
+    os.getenv(
+        "STUDIO_16029_NATIVE_SKELETON_GEOMETRY_GATE_JSON",
+        ROOT_DIR / "data" / "solidworks_16029_native_skeleton_geometry_gate.json",
+    )
+)
 MAX_DRAWING_SHEETMETAL_UPLOAD_BYTES = int(os.getenv("STUDIO_MAX_DRAWING_SHEETMETAL_UPLOAD_BYTES", str(80 * 1024 * 1024)))
 FREECAD_SHORTCUT = Path(os.getenv("STUDIO_FREECAD_SHORTCUT", r"C:\Users\Administrator\Desktop\FreeCAD 1.1.1.lnk"))
 FREECAD_EXE = Path(
