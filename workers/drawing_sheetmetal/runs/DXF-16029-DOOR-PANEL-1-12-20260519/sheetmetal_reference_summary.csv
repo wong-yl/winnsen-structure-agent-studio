@@ -1,0 +1,28 @@
+﻿field,value
+source_path,C:\Users\Administrator\Desktop\参数化模板素材\16029 寄存柜(标准组合式 1917×1000×550)\10.备份\2.钣金展开图20190423\储物柜门板1╱12展开图.dxf
+file_name,储物柜门板1╱12展开图.dxf
+role_guess,door_panel
+thickness_mm_from_name,
+flat_bbox_mm.min_x,308.2921
+flat_bbox_mm.min_y,289.0868
+flat_bbox_mm.max_x,781.6921
+flat_bbox_mm.max_y,470.9868
+flat_bbox_mm.width,473.4
+flat_bbox_mm.height,181.9
+manufacturing_bbox_mm.min_x,308.2921
+manufacturing_bbox_mm.min_y,289.0868
+manufacturing_bbox_mm.max_x,781.6921
+manufacturing_bbox_mm.max_y,470.9868
+manufacturing_bbox_mm.width,473.4
+manufacturing_bbox_mm.height,181.9
+manufacturing_bbox_source,raw_curve_bbox
+entity_counts,"{""ARC"": 2, ""CIRCLE"": 4, ""LINE"": 65, ""VIEWPORT"": 1}"
+layer_counts,"{""0"": 72}"
+space_counts,"{""model"": 71, ""paper"": 1}"
+layout_counts,"{""Model"": 71, ""Layout"": 1}"
+circle_radius_counts,"{""5.1"": 4}"
+quality_status,needs_layout_filter
+closed_loop_count,0
+open_endpoint_count,0
+quality_warnings,DXF contains VIEWPORT; bbox may describe drawing/layout space instead of true flat manufacturing extents.; DXF has paper-space entities; filter model-space geometry before deriving manufacturing rules.; Outline appears fragmented into LINE/ARC entities; closed-loop reconstruction is required before automatic unfold output.; No closed curve loop was detected; geometry can be used for reference statistics but not for automatic unfold output yet.; Sheet thickness was not found in the file name; confirm material/thickness before bend deduction.
+missing_inputs_before_production_release,material grade; sheet thickness; bend radius; K-factor or bend deduction table; datum and tolerance rules; formal drawing title block/version

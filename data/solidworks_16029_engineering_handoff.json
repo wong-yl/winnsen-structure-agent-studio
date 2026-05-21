@@ -1,0 +1,113 @@
+{
+  "generatedAt": "2026-05-18T23:36:28.390684+00:00",
+  "status": "usable_10_12_template_clones_10door_native_save_smoke_passed",
+  "modelFamily": "16029 standard locker",
+  "outerSizeMm": {
+    "width": 1000,
+    "height": 1917,
+    "depth": 550
+  },
+  "solidworksEntry": {
+    "uiPath": "可生成模型 -> 16029 标准寄存柜 -> 10/12门 -> 一键运行 SOLIDWORKS 2025",
+    "script": "D:\\winnsen_cad_workspace\\scripts\\sw_clone_16029_baseline_template.js",
+    "supportedDoorCounts": [
+      10,
+      12
+    ],
+    "blockedDoorCounts": [
+      4,
+      6,
+      8,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24
+    ]
+  },
+  "baselineOutput": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\manual_runs\\BASELINE-16029-12DOOR-CLONE\\BASELINE-16029-12DOOR-CLONE.SLDASM",
+    "exists": true,
+    "sizeBytes": 3809186,
+    "updatedAt": "2026-05-18T16:24:09.421124+00:00"
+  },
+  "sourceAssembly": {
+    "path": "C:\\sw16029_direct_18door\\source\\top_assembly.SLDASM",
+    "exists": true,
+    "sizeBytes": 3724637,
+    "updatedAt": "2025-01-17T07:38:23.576432+00:00"
+  },
+  "tenDoorTemplateSource": {
+    "path": "D:\\机械结构工程师智能体\\work\\16029_练习副本_20260429\\1.工程图\\标准寄存柜1917×1000×550(总装配).SLDASM",
+    "exists": true,
+    "sizeBytes": 3834013,
+    "updatedAt": "2026-04-30T02:10:33.919003+00:00"
+  },
+  "tenDoorRecipe": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_10door_mutator_recipe.md",
+    "exists": true,
+    "sizeBytes": 2654,
+    "updatedAt": "2026-05-18T23:35:48.188177+00:00"
+  },
+  "tenDoorNativeSaveSmokeOutput": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\manual_runs\\QA-16029-10DOOR-FAST-CLONE-20260519073300\\QA-16029-10DOOR-FAST-CLONE-20260519073300.SLDASM",
+    "exists": true,
+    "sizeBytes": 3373551,
+    "updatedAt": "2026-05-18T23:33:03.959974+00:00"
+  },
+  "reports": {
+    "buildReport": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\manual_runs\\BASELINE-16029-12DOOR-CLONE\\BASELINE-16029-12DOOR-CLONE_build_report.md",
+      "exists": true,
+      "sizeBytes": 1030,
+      "updatedAt": "2026-05-18T16:08:55.407113+00:00"
+    },
+    "validationReport": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\manual_runs\\BASELINE-16029-12DOOR-CLONE\\BASELINE-16029-12DOOR-CLONE_solidworks_validation_report.md",
+      "exists": true,
+      "sizeBytes": 1031,
+      "updatedAt": "2026-05-18T16:08:54.576411+00:00"
+    },
+    "tenDoorSmokeReport": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\manual_runs\\QA-16029-10DOOR-FAST-CLONE-20260519073300\\QA-16029-10DOOR-FAST-CLONE-20260519073300_solidworks_validation_report.md",
+      "exists": true,
+      "sizeBytes": 1313,
+      "updatedAt": "2026-05-18T23:33:04.131185+00:00"
+    },
+    "ruleLearningSummary": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4\\rule_learning_summary.md",
+      "exists": true,
+      "sizeBytes": 3867,
+      "updatedAt": "2026-05-18T01:17:36.506349+00:00"
+    }
+  },
+  "evidenceCounts": {
+    "components": 38,
+    "componentsWithTransform": 0,
+    "componentsWithBBox": 0,
+    "mateFeatureCount": 75,
+    "mateEntityRows": 150,
+    "features": 98,
+    "dimensions": 6,
+    "patternRuleCount": 3,
+    "sheetMetalFeatureCount": 0,
+    "maxComponentDepth": 1,
+    "stepObjectBBoxCount": 208,
+    "stepSourceObjectCount": 425,
+    "stepSkippedObjectCount": 217,
+    "stepRoleBindingCount": 177,
+    "stepRoleMatchedComponentCount": 79,
+    "stepRoleRepeatedGroupCount": 34
+  },
+  "handoffNotes": [
+    "This is a SolidWorks-native 10/12-door template clone route, not a from-zero arbitrary mutator.",
+    "Keep the source folder available until Pack-and-Go packaging is implemented.",
+    "Other door counts are blocked because direct part insertion lost assembly datum/transform evidence."
+  ],
+  "nextGates": [
+    "Run a short human visual acceptance pass on the saved 10-door clone if the current SolidWorks view is available.",
+    "Add Pack-and-Go handoff packaging for the 10/12-door template assemblies.",
+    "Convert the 2/10 practice recipe into a transform/mate-backed mutator before reopening broader door-count options."
+  ]
+}

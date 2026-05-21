@@ -1,0 +1,100 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\门框 竖隔板L展开图.DXF",
+  "file_name": "门框 竖隔板L展开图.DXF",
+  "role_guess": "divider",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": -70.5,
+    "min_y": 26.5,
+    "max_x": -21.2,
+    "max_y": 1860.5,
+    "width": 49.3,
+    "height": 1834.0
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": -70.5,
+    "min_y": 26.5,
+    "max_x": -21.2,
+    "max_y": 1860.5,
+    "width": 49.3,
+    "height": 1834.0
+  },
+  "manufacturing_bbox_source": "largest_closed_loop",
+  "entity_counts": {
+    "CIRCLE": 12,
+    "LINE": 100
+  },
+  "layer_counts": {
+    "0": 112
+  },
+  "space_counts": {
+    "model": 112
+  },
+  "layout_counts": {
+    "Model": 112
+  },
+  "circle_count": 12,
+  "arc_count": 0,
+  "line_count": 100,
+  "polyline_count": 0,
+  "circle_radius_counts": {
+    "1.75": 12
+  },
+  "point_count_for_bbox": 224,
+  "loop_analysis": {
+    "curve_segment_count": 100,
+    "connected_component_count": 1,
+    "closed_loop_count": 1,
+    "open_endpoint_count": 0,
+    "largest_component_bbox_mm": {
+      "min_x": -70.5,
+      "min_y": 26.5,
+      "max_x": -21.2,
+      "max_y": 1860.5,
+      "width": 49.3,
+      "height": 1834.0
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": -70.5,
+      "min_y": 26.5,
+      "max_x": -21.2,
+      "max_y": 1860.5,
+      "width": 49.3,
+      "height": 1834.0
+    },
+    "components": [
+      {
+        "edge_count": 100,
+        "node_count": 100,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": -70.5,
+          "min_y": 26.5,
+          "max_x": -21.2,
+          "max_y": 1860.5,
+          "width": 49.3,
+          "height": 1834.0
+        },
+        "bbox_area_mm2": 90416.2,
+        "source_types": {
+          "LINE": 100
+        }
+      }
+    ]
+  },
+  "quality_status": "geometry_rule_seed_only",
+  "quality_warnings": [
+    "Outline appears fragmented into LINE/ARC entities; closed-loop reconstruction is required before automatic unfold output.",
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}

@@ -1,0 +1,637 @@
+{
+  "generated_at": "2026-05-20T17:12:10+08:00",
+  "product_family": "16029",
+  "scope": "1000W x 1917H x 550D FreeCAD engineering-reference variants",
+  "source_rule_packet": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_rule_packet.json",
+  "summary": {
+    "target_door_counts": [
+      10,
+      12,
+      14
+    ],
+    "pass_ready_count": 3,
+    "pass_step_geometry_needs_fcstd_audit_count": 0,
+    "pass_rule_counts_needs_fcstd_audit_count": 0,
+    "fail_count": 0,
+    "missing_output_count": 0
+  },
+  "variants": [
+    {
+      "door_count": 10,
+      "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "source": "curated_10door_reference",
+      "task_id": null,
+      "output_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven_verify.csv",
+      "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven_report.md",
+      "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven.FCStd",
+      "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven.step",
+      "fcstd_mb": 3.404,
+      "step_mb": 29.729,
+      "verify_rows": 306,
+      "verify_bbox_x_len": 1000.0,
+      "expected_counts": {
+        "door_modules": 10,
+        "lock_holes": 10,
+        "lock_hooks": 10,
+        "shelves": 8,
+        "door_frame_horizontal_dividers": 8,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "actual_counts": {
+        "center_vertical_upper_hole_cut": 8,
+        "circlip_reference": 20,
+        "door_bend_semantic_feature": 40,
+        "door_frame_horizontal": 8,
+        "door_hardware_step_repositioned": 90,
+        "door_module": 10,
+        "door_rib": 10,
+        "fixed_center_vertical_structure": 4,
+        "hinge_panel_hole_reference": 20,
+        "hinge_pin_reference": 10,
+        "lock_hole_reference": 10,
+        "lock_hook_reference": 10,
+        "lock_pad_reference": 10,
+        "plastic_bushing_reference": 20,
+        "shelf_weld": 8,
+        "side_arc_relief_cut": 10,
+        "sw_api_module_reference": 18
+      },
+      "report_stats": {
+        "valid_solid_objects": 361,
+        "door_height_mm": 359.0
+      },
+      "structural_rule_audit": {
+        "status": "PASS",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+        "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+        "rows_per_column": 5,
+        "failed_checks": 0,
+        "door_width_mm": 437.0,
+        "door_height_mm": 359.0,
+        "door_pitch_mm": 366.0,
+        "door_y_span": {
+          "bottom": 32.0,
+          "top": 1855.0
+        },
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        }
+      },
+      "step_geometry_check": {
+        "status": "geometry_check_pass",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\step_geometry_check\\freecad_geometry_check.json",
+        "shape_object_count": 391,
+        "invalid_shape_count": 0,
+        "solid_count": 778,
+        "bbox_x_len": 1000.0,
+        "bbox_y_len": 1983.0,
+        "bbox_z_len": 552.0
+      },
+      "geometry_integrity": {
+        "status": "PASS",
+        "shape_objects": 361.0,
+        "invalid_shape_objects": 0.0,
+        "center_vertical_signature_failures": 0.0,
+        "total_bbox_x_status": "PASS",
+        "total_bbox_x_len": 1000.0,
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven_geometry_integrity.md"
+      },
+      "checks": [
+        {
+          "gate": "verify_bbox_x_len",
+          "expected": 1000.0,
+          "actual": 1000.0,
+          "ok": true
+        },
+        {
+          "gate": "door_modules",
+          "verify_type": "door_module",
+          "expected": 10,
+          "actual": 10,
+          "ok": true
+        },
+        {
+          "gate": "lock_holes",
+          "verify_type": "lock_hole_reference",
+          "expected": 10,
+          "actual": 10,
+          "ok": true
+        },
+        {
+          "gate": "lock_hooks",
+          "verify_type": "lock_hook_reference",
+          "expected": 10,
+          "actual": 10,
+          "ok": true
+        },
+        {
+          "gate": "shelves",
+          "verify_type": "shelf_weld",
+          "expected": 8,
+          "actual": 8,
+          "ok": true
+        },
+        {
+          "gate": "door_frame_horizontal_dividers",
+          "verify_type": "door_frame_horizontal",
+          "expected": 8,
+          "actual": 8,
+          "ok": true
+        },
+        {
+          "gate": "fixed_center_vertical_structure",
+          "verify_type": "fixed_center_vertical_structure",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "gate": "structural_rule_audit",
+          "expected": "PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X",
+          "actual": {
+            "status": "PASS",
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+            "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+            "rows_per_column": 5,
+            "failed_checks": 0,
+            "door_width_mm": 437.0,
+            "door_height_mm": 359.0,
+            "door_pitch_mm": 366.0,
+            "door_y_span": {
+              "bottom": 32.0,
+              "top": 1855.0
+            },
+            "lock_center_x_abs_mm": {
+              "min": 55.0,
+              "max": 55.0,
+              "spread": 0.0
+            },
+            "hinge_axis_x_abs_mm": {
+              "min": 467.0,
+              "max": 467.0,
+              "spread": 0.0
+            }
+          },
+          "ok": true
+        },
+        {
+          "gate": "step_geometry_check",
+          "expected": "geometry_check_pass with invalid_shape_count=0 and bbox_x_len=1000",
+          "actual": {
+            "status": "geometry_check_pass",
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\step_geometry_check\\freecad_geometry_check.json",
+            "shape_object_count": 391,
+            "invalid_shape_count": 0,
+            "solid_count": 778,
+            "bbox_x_len": 1000.0,
+            "bbox_y_len": 1983.0,
+            "bbox_z_len": 552.0
+          },
+          "ok": true
+        },
+        {
+          "gate": "fcstd_geometry_integrity",
+          "expected": "PASS with invalid_shape_objects=0 and center_vertical_signature_failures=0",
+          "actual": {
+            "status": "PASS",
+            "shape_objects": 361.0,
+            "invalid_shape_objects": 0.0,
+            "center_vertical_signature_failures": 0.0,
+            "total_bbox_x_status": "PASS",
+            "total_bbox_x_len": 1000.0,
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven_geometry_integrity.md"
+          },
+          "ok": true
+        }
+      ],
+      "notes": [
+        "All available rule-count and geometry-integrity gates passed."
+      ]
+    },
+    {
+      "door_count": 12,
+      "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "source": "generation_task_best_evidence",
+      "task_id": "GEN-20260520042611-E8E6F4",
+      "output_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven_verify.csv",
+      "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven_report.md",
+      "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven.FCStd",
+      "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven.step",
+      "fcstd_mb": 3.697,
+      "step_mb": 32.987,
+      "verify_rows": 386,
+      "verify_bbox_x_len": 1000.0,
+      "expected_counts": {
+        "door_modules": 12,
+        "lock_holes": 12,
+        "lock_hooks": 12,
+        "shelves": 10,
+        "door_frame_horizontal_dividers": 10,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "actual_counts": {
+        "center_vertical_upper_hole_cut": 8,
+        "circlip_reference": 24,
+        "door_bend_semantic_feature": 48,
+        "door_frame_horizontal": 10,
+        "door_hardware_step_repositioned": 108,
+        "door_module": 12,
+        "door_rib": 12,
+        "fixed_center_vertical_structure": 4,
+        "hinge_panel_hole_reference": 24,
+        "hinge_pin_reference": 12,
+        "lock_hole_reference": 12,
+        "lock_hook_reference": 12,
+        "lock_mount_hole_reference": 24,
+        "lock_pad_reference": 12,
+        "plastic_bushing_reference": 24,
+        "shelf_weld": 10,
+        "side_arc_relief_cut": 12,
+        "sw_api_module_reference": 18
+      },
+      "report_stats": {
+        "valid_solid_objects": 435,
+        "door_height_mm": 298.0
+      },
+      "structural_rule_audit": {
+        "status": "PASS",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+        "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+        "rows_per_column": 6,
+        "failed_checks": 0,
+        "door_width_mm": 437.0,
+        "door_height_mm": 298.0,
+        "door_pitch_mm": 305.0,
+        "door_y_span": {
+          "bottom": 32.0,
+          "top": 1855.0
+        },
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        }
+      },
+      "step_geometry_check": {
+        "status": "geometry_check_pass",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\step_geometry_check\\freecad_geometry_check.json",
+        "shape_object_count": 469,
+        "invalid_shape_count": 0,
+        "solid_count": 934,
+        "bbox_x_len": 1000.0,
+        "bbox_y_len": 1983.0,
+        "bbox_z_len": 552.0
+      },
+      "geometry_integrity": {
+        "status": "PASS",
+        "shape_objects": 435.0,
+        "invalid_shape_objects": 0.0,
+        "center_vertical_signature_failures": 0.0,
+        "total_bbox_x_status": "PASS",
+        "total_bbox_x_len": 1000.0,
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven_geometry_integrity.md"
+      },
+      "checks": [
+        {
+          "gate": "verify_bbox_x_len",
+          "expected": 1000.0,
+          "actual": 1000.0,
+          "ok": true
+        },
+        {
+          "gate": "door_modules",
+          "verify_type": "door_module",
+          "expected": 12,
+          "actual": 12,
+          "ok": true
+        },
+        {
+          "gate": "lock_holes",
+          "verify_type": "lock_hole_reference",
+          "expected": 12,
+          "actual": 12,
+          "ok": true
+        },
+        {
+          "gate": "lock_hooks",
+          "verify_type": "lock_hook_reference",
+          "expected": 12,
+          "actual": 12,
+          "ok": true
+        },
+        {
+          "gate": "shelves",
+          "verify_type": "shelf_weld",
+          "expected": 10,
+          "actual": 10,
+          "ok": true
+        },
+        {
+          "gate": "door_frame_horizontal_dividers",
+          "verify_type": "door_frame_horizontal",
+          "expected": 10,
+          "actual": 10,
+          "ok": true
+        },
+        {
+          "gate": "fixed_center_vertical_structure",
+          "verify_type": "fixed_center_vertical_structure",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "gate": "structural_rule_audit",
+          "expected": "PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X",
+          "actual": {
+            "status": "PASS",
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+            "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+            "rows_per_column": 6,
+            "failed_checks": 0,
+            "door_width_mm": 437.0,
+            "door_height_mm": 298.0,
+            "door_pitch_mm": 305.0,
+            "door_y_span": {
+              "bottom": 32.0,
+              "top": 1855.0
+            },
+            "lock_center_x_abs_mm": {
+              "min": 55.0,
+              "max": 55.0,
+              "spread": 0.0
+            },
+            "hinge_axis_x_abs_mm": {
+              "min": 467.0,
+              "max": 467.0,
+              "spread": 0.0
+            }
+          },
+          "ok": true
+        },
+        {
+          "gate": "step_geometry_check",
+          "expected": "geometry_check_pass with invalid_shape_count=0 and bbox_x_len=1000",
+          "actual": {
+            "status": "geometry_check_pass",
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\step_geometry_check\\freecad_geometry_check.json",
+            "shape_object_count": 469,
+            "invalid_shape_count": 0,
+            "solid_count": 934,
+            "bbox_x_len": 1000.0,
+            "bbox_y_len": 1983.0,
+            "bbox_z_len": 552.0
+          },
+          "ok": true
+        },
+        {
+          "gate": "fcstd_geometry_integrity",
+          "expected": "PASS with invalid_shape_objects=0 and center_vertical_signature_failures=0",
+          "actual": {
+            "status": "PASS",
+            "shape_objects": 435.0,
+            "invalid_shape_objects": 0.0,
+            "center_vertical_signature_failures": 0.0,
+            "total_bbox_x_status": "PASS",
+            "total_bbox_x_len": 1000.0,
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven_geometry_integrity.md"
+          },
+          "ok": true
+        }
+      ],
+      "notes": [
+        "All available rule-count and geometry-integrity gates passed."
+      ]
+    },
+    {
+      "door_count": 14,
+      "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "source": "generation_task_best_evidence",
+      "task_id": "GEN-20260517142633-D1E0AB",
+      "output_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven_verify.csv",
+      "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven_report.md",
+      "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven.FCStd",
+      "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven.step",
+      "fcstd_mb": 3.962,
+      "step_mb": 35.439,
+      "verify_rows": 418,
+      "verify_bbox_x_len": 1000.0,
+      "expected_counts": {
+        "door_modules": 14,
+        "lock_holes": 14,
+        "lock_hooks": 14,
+        "shelves": 12,
+        "door_frame_horizontal_dividers": 12,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "actual_counts": {
+        "center_vertical_upper_hole_cut": 8,
+        "circlip_reference": 28,
+        "door_bend_semantic_feature": 56,
+        "door_frame_horizontal": 12,
+        "door_hardware_step_repositioned": 126,
+        "door_module": 14,
+        "door_rib": 14,
+        "fixed_center_vertical_structure": 4,
+        "hinge_panel_hole_reference": 28,
+        "hinge_pin_reference": 14,
+        "lock_hole_reference": 14,
+        "lock_hook_reference": 14,
+        "lock_pad_reference": 14,
+        "plastic_bushing_reference": 28,
+        "shelf_weld": 12,
+        "side_arc_relief_cut": 14,
+        "sw_api_module_reference": 18
+      },
+      "report_stats": {
+        "valid_solid_objects": 461,
+        "door_height_mm": 254.429
+      },
+      "structural_rule_audit": {
+        "status": "PASS",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+        "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+        "rows_per_column": 7,
+        "failed_checks": 0,
+        "door_width_mm": 437.0,
+        "door_height_mm": 254.429,
+        "door_pitch_mm": 261.429,
+        "door_y_span": {
+          "bottom": 32.0,
+          "top": 1855.0
+        },
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        }
+      },
+      "step_geometry_check": {
+        "status": "geometry_check_pass",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\step_geometry_check\\freecad_geometry_check.json",
+        "shape_object_count": 499,
+        "invalid_shape_count": 0,
+        "solid_count": 994,
+        "bbox_x_len": 1000.0,
+        "bbox_y_len": 1983.0,
+        "bbox_z_len": 552.0
+      },
+      "geometry_integrity": {
+        "status": "PASS",
+        "shape_objects": 461.0,
+        "invalid_shape_objects": 0.0,
+        "center_vertical_signature_failures": 0.0,
+        "total_bbox_x_status": "PASS",
+        "total_bbox_x_len": 1000.0,
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven_geometry_integrity.md"
+      },
+      "checks": [
+        {
+          "gate": "verify_bbox_x_len",
+          "expected": 1000.0,
+          "actual": 1000.0,
+          "ok": true
+        },
+        {
+          "gate": "door_modules",
+          "verify_type": "door_module",
+          "expected": 14,
+          "actual": 14,
+          "ok": true
+        },
+        {
+          "gate": "lock_holes",
+          "verify_type": "lock_hole_reference",
+          "expected": 14,
+          "actual": 14,
+          "ok": true
+        },
+        {
+          "gate": "lock_hooks",
+          "verify_type": "lock_hook_reference",
+          "expected": 14,
+          "actual": 14,
+          "ok": true
+        },
+        {
+          "gate": "shelves",
+          "verify_type": "shelf_weld",
+          "expected": 12,
+          "actual": 12,
+          "ok": true
+        },
+        {
+          "gate": "door_frame_horizontal_dividers",
+          "verify_type": "door_frame_horizontal",
+          "expected": 12,
+          "actual": 12,
+          "ok": true
+        },
+        {
+          "gate": "fixed_center_vertical_structure",
+          "verify_type": "fixed_center_vertical_structure",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "gate": "structural_rule_audit",
+          "expected": "PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X",
+          "actual": {
+            "status": "PASS",
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+            "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+            "rows_per_column": 7,
+            "failed_checks": 0,
+            "door_width_mm": 437.0,
+            "door_height_mm": 254.429,
+            "door_pitch_mm": 261.429,
+            "door_y_span": {
+              "bottom": 32.0,
+              "top": 1855.0
+            },
+            "lock_center_x_abs_mm": {
+              "min": 55.0,
+              "max": 55.0,
+              "spread": 0.0
+            },
+            "hinge_axis_x_abs_mm": {
+              "min": 467.0,
+              "max": 467.0,
+              "spread": 0.0
+            }
+          },
+          "ok": true
+        },
+        {
+          "gate": "step_geometry_check",
+          "expected": "geometry_check_pass with invalid_shape_count=0 and bbox_x_len=1000",
+          "actual": {
+            "status": "geometry_check_pass",
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\step_geometry_check\\freecad_geometry_check.json",
+            "shape_object_count": 499,
+            "invalid_shape_count": 0,
+            "solid_count": 994,
+            "bbox_x_len": 1000.0,
+            "bbox_y_len": 1983.0,
+            "bbox_z_len": 552.0
+          },
+          "ok": true
+        },
+        {
+          "gate": "fcstd_geometry_integrity",
+          "expected": "PASS with invalid_shape_objects=0 and center_vertical_signature_failures=0",
+          "actual": {
+            "status": "PASS",
+            "shape_objects": 461.0,
+            "invalid_shape_objects": 0.0,
+            "center_vertical_signature_failures": 0.0,
+            "total_bbox_x_status": "PASS",
+            "total_bbox_x_len": 1000.0,
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven_geometry_integrity.md"
+          },
+          "ok": true
+        }
+      ],
+      "notes": [
+        "All available rule-count and geometry-integrity gates passed."
+      ]
+    }
+  ],
+  "output_paths": {
+    "json": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
+    "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.md",
+    "csv": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.csv",
+    "structural_rule_audit_json": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+    "structural_rule_audit_markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md"
+  },
+  "notes": [
+    "This matrix gates engineering-reference model quality; it is not a production drawing release.",
+    "structural_rule_audit PASS verifies door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X from verify.csv evidence.",
+    "PASS_STEP_GEOMETRY_NEEDS_FCSTD_AUDIT means verify.csv counts and exported STEP geometry pass, but FCStd shape integrity has not yet passed.",
+    "PASS_RULE_COUNTS_NEEDS_FCSTD_AUDIT means verify.csv counts and bbox pass, but FCStd shape integrity has not yet passed."
+  ]
+}

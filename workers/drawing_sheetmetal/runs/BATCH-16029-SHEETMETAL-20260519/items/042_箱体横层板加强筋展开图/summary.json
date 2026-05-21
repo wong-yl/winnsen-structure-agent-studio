@@ -1,0 +1,102 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板加强筋展开图.DXF",
+  "file_name": "箱体横层板加强筋展开图.DXF",
+  "role_guess": "shelf",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": -35.7,
+    "min_y": -214.5,
+    "max_x": 35.7,
+    "max_y": 214.5,
+    "width": 71.4,
+    "height": 429.0
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": -35.7,
+    "min_y": -214.5,
+    "max_x": 35.7,
+    "max_y": 214.5,
+    "width": 71.4,
+    "height": 429.0
+  },
+  "manufacturing_bbox_source": "largest_closed_loop",
+  "entity_counts": {
+    "ARC": 2,
+    "CIRCLE": 6,
+    "LINE": 6
+  },
+  "layer_counts": {
+    "0": 14
+  },
+  "space_counts": {
+    "model": 14
+  },
+  "layout_counts": {
+    "Model": 14
+  },
+  "circle_count": 6,
+  "arc_count": 2,
+  "line_count": 6,
+  "polyline_count": 0,
+  "circle_radius_counts": {
+    "1.0": 4,
+    "2.5": 2
+  },
+  "point_count_for_bbox": 50,
+  "loop_analysis": {
+    "curve_segment_count": 8,
+    "connected_component_count": 1,
+    "closed_loop_count": 1,
+    "open_endpoint_count": 0,
+    "largest_component_bbox_mm": {
+      "min_x": -35.7,
+      "min_y": -214.5,
+      "max_x": 35.7,
+      "max_y": 214.5,
+      "width": 71.4,
+      "height": 429.0
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": -35.7,
+      "min_y": -214.5,
+      "max_x": 35.7,
+      "max_y": 214.5,
+      "width": 71.4,
+      "height": 429.0
+    },
+    "components": [
+      {
+        "edge_count": 8,
+        "node_count": 8,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": -35.7,
+          "min_y": -214.5,
+          "max_x": 35.7,
+          "max_y": 214.5,
+          "width": 71.4,
+          "height": 429.0
+        },
+        "bbox_area_mm2": 30630.6,
+        "source_types": {
+          "LINE": 6,
+          "ARC": 2
+        }
+      }
+    ]
+  },
+  "quality_status": "geometry_rule_seed_only",
+  "quality_warnings": [
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}

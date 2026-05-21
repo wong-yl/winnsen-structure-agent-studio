@@ -1,0 +1,9 @@
+﻿path,solid_count,assembly_x_min,assembly_x_max,assembly_x_center,assembly_x_len,assembly_y_min,assembly_y_max,assembly_y_center,assembly_y_len,assembly_z_min,assembly_z_max,assembly_z_center,assembly_z_len,panel_found
+C:\sw16029_direct_18door\source\door_frame_weld.step,16,-500.0,500.0,0.0,1000.0,-0.0,1917.0,958.5,1917.0,-45.0,0.0,-22.5,45.0,False
+C:\sw16029_direct_18door\source\cabinet_vertical_L_weld.step,5,-83.0,-21.2,-52.1,61.8,28.8,1858.2,943.5,1829.4,-548.2,-18.5,-283.35,529.7,False
+C:\sw16029_direct_18door\source\cabinet_vertical_R_weld.step,5,21.2,83.0,52.1,61.8,28.8,1858.2,943.5,1829.4,-548.2,-18.5,-283.35,529.7,False
+C:\sw16029_direct_18door\source\shelf_L_weld.step,3,-497.7,-64.5,-281.1,433.2,1692.5,1717.5,1705.0,25.0,-547.7,-20.5,-284.1,527.2,False
+C:\sw16029_direct_18door\source\shelf_R_weld.step,3,64.5,497.7,281.1,433.2,1692.5,1717.5,1705.0,25.0,-547.7,-20.5,-284.1,527.2,False
+C:\sw16029_direct_18door\source\standard_top_export_from_sw.step,146,-500.0,500.0,-0.0,1000.0,-60.0,1923.0,931.5,1983.0,-550.0,0.0,-275.0,550.0,False
+C:\sw16029_direct_18door\source\structural_001_base.step,1,-500.0,500.0,0.0,1000.0,-0.0,26.8,13.4,26.8,-550.0,-36.8,-293.4,513.2,False
+C:\sw16029_direct_18door\source\structural_002_base.step,1,-479.0,479.0,0.0,958.0,20.8,27.8,24.3,7.0,-529.0,-19.5,-274.25,509.5,False

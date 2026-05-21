@@ -4,13 +4,14 @@ Winnsen 硬件结构知识与智能钣金模型生成平台。
 
 ## Current MVP
 
-已在 `apps/web` 搭建本地 React/Vite 控制台 MVP，第一版包含五个页面：
+已在 `apps/web` 搭建本地 React/Vite 控制台 MVP，当前包含六个页面：
 
 - `项目总览`
 - `数据录入状态`
 - `规则库成熟度`
 - `可生成模型`
 - `待确认项`
+- `结构 Agent`
 
 运行方式：
 
@@ -85,9 +86,10 @@ Current implemented pages:
 - Intake pipeline status
 - Rule maturity board
 - Generatable model catalog with a persistent local generation task draft queue
+- Structure Agent console for generation boundaries, rule closure, and next gates
 - Manual review queue
 
-The Structure Review Agent console is intentionally left for a later iteration after the status dashboard and data adapter are stable.
+The Structure Agent console is now implemented as a boundary page: it tells the user what can be generated today, what is only a reference, and which evidence gates block arbitrary door-size changes.
 
 ## Generation Queue Boundary
 
@@ -103,14 +105,16 @@ Current behavior:
   - SOLIDWORKS 2025: `C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk`
   - FreeCAD 1.1.1: `C:\Users\Administrator\Desktop\FreeCAD 1.1.1.lnk`
 - Task drafts store CAD runner, capability, editable parameters, evidence, maturity, output level, and the expected worker command.
-- The 16029 standard locker generation entry accepts editable `door_count`; current two-column generation requires an even value and has verified 8/12/14/16/18-door cases.
+- The 16029 SolidWorks generation entry currently exposes the verified 12-door standard top-assembly clone and the 10-door 2/10 practice-template clone inside the 1000 W × 1917 H × 550 D envelope. The previous direct part-insertion route is blocked because visual QA showed datum/transform misalignment.
+- The API dry-run enforces that the 16029 SolidWorks mainline stays at `door_count=10` or `door_count=12`, `cabinet_width=1000`, and `geometry_source=auto`, checks the selected template assembly before a run is allowed, and blocks concurrent SolidWorks automation runs. Other door counts and width-rule experiments stay in the transform/mate or FreeCAD/STEP rule-learning route until evidence is closed.
+- Arbitrary door width/height changes under the same 1000×1917 outer size remain blocked until door-frame divider, lock, hinge, BOM, and DXF formula evidence is closed.
 - Task details can run a dry-run preflight that checks the selected CAD shortcut, executable, generator script path, parameters, evidence, and output boundary.
 - SolidWorks is the current engineering-mainline runner; its manual package produces native assembly output when the local SolidWorks session and license are available.
-- SolidWorks tasks can run the generated package directly through the API via PowerShell; the `.ps1` file is kept for inspection and fallback, not as the primary user action.
-- SolidWorks execution now writes a quality diagnostic report (`*_solidworks_quality_report.md` / `.json`) that separates a normal component-tree assembly from a `Reference`-feature-only engineering reference. `Reference`-feature-only results can be opened for visual/placement review but are not presented as production-ready editable assemblies.
+- SolidWorks tasks can run the generated package directly through the API via PowerShell; the `.ps1` file is kept for inspection and fallback, not as the primary user action. A lock file under `workers\generation_logs\solidworks-run.lock` prevents repeated clicks or parallel jobs from starting multiple SolidWorks automation sessions.
+- SolidWorks direct-component diagnostics remain available for transform experiments, but the 16029 10/12-door template clone route skips the expensive component-tree walk by default to avoid long SolidWorks sessions. The 10-door template clone has a native-save smoke output under `workers\manual_runs\QA-16029-10DOOR-FAST-CLONE-20260519073300`.
 - FreeCAD tasks can execute through the local `FreeCADCmd.exe` worker after dry-run passes as the open-source migration route.
 - FreeCAD engineering-reference outputs are written under `workers\generated_models\<task_id>`.
-- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. The direct runner cleans reference-plane/sketch/origin display before saving generated `.SLDASM` outputs, writes SolidWorks validation CSV/report files, and records quality diagnostics for component-tree vs reference-feature-only status.
+- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. The 16029 template runner cleans reference-plane/sketch/origin display before saving the cloned `.SLDASM`, writes build and validation reports, and leaves Pack-and-Go as a later handoff step.
 - Dry-run and execution metadata write logs under `workers\generation_logs`.
 - The API does not create production drawings or mark any output as production-released.
 
@@ -207,6 +211,23 @@ python workers\maintenance\build_rule_seed_evidence_checklist.py
 python workers\maintenance\build_rule_seed_quantity_formulas.py
 ```
 
+The current 16029 SolidWorks handoff and component-role summary are generated by:
+
+```powershell
+cd D:\Winnsen_Structure_Agent_Studio
+python workers\maintenance\build_16029_engineering_handoff.py
+python workers\maintenance\build_16029_10door_mutator_recipe.py
+```
+
+It writes:
+
+- `data\solidworks_16029_engineering_handoff.json`
+- `data\solidworks_16029_engineering_handoff.md`
+- `data\solidworks_16029_role_rules.json`
+- `data\solidworks_16029_role_rules.md`
+- `data\solidworks_16029_10door_mutator_recipe.json`
+- `data\solidworks_16029_10door_mutator_recipe.md`
+
 Current highest-value rule-learning samples:
 
 - `16038` 1917x1000x550: strongest same-size, different-door-count evidence set.
@@ -216,7 +237,7 @@ Current highest-value rule-learning samples:
 
 Key current interpretation:
 
-- 16029 standard locker: SolidWorks native assembly route is the current engineering mainline; FreeCAD regression `PASS` supports the open-source migration route. Strict queue `P0=0`, remaining `P2=37` W784 width-derived rows.
+- 16029 standard locker: SolidWorks 12-door baseline clone and 10-door 2/10 practice-template clone are the current usable handoffs; the 10-door clone has passed a native-save smoke run. Other SolidWorks door counts are blocked until a transform/mate-backed mutator passes QA; the next technical step is Pack-and-Go for 10/12 plus converting the 10-door practice recipe into a real mutator rather than broadening door counts.
 - Outdoor courier family: Stage 2 and formed STEP bbox gate built, but `P0=32` STEP export blockers remain.
 - Outdoor `1/12 R` waterproof door: bbox reference model passed, topology still needs upgrade.
 - No row is currently presented as production-ready automatic drawing output.
@@ -250,7 +271,7 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/api/template-rule-extr
 Python maintenance scripts checked with:
 
 ```powershell
-python -m py_compile services\api\app\main.py workers\maintenance\summarize_solidworks_rule_extraction.py workers\maintenance\compare_rule_extractions.py
+python -m py_compile services\api\app\main.py workers\maintenance\summarize_solidworks_rule_extraction.py workers\maintenance\compare_rule_extractions.py workers\maintenance\build_16029_engineering_handoff.py workers\maintenance\build_16029_10door_mutator_recipe.py
 ```
 
 Playwright visual QA artifacts are saved under:

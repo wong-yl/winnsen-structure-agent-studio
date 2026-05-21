@@ -1,0 +1,40 @@
+{
+  "id": "INTAKE-20260520043455-4EE793",
+  "status": "intake_received",
+  "created_at": "2026-05-20T04:34:55.792904Z",
+  "source_type": "drawing_or_sheetmetal",
+  "notes": "",
+  "output_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\intake\\INTAKE-20260520043455-4EE793",
+  "files": [
+    {
+      "file_name": "压条二.SLDPRT",
+      "saved_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\intake\\INTAKE-20260520043455-4EE793\\压条二.SLDPRT",
+      "size_bytes": 147190,
+      "suffix": ".sldprt",
+      "source_category": "cad_model"
+    }
+  ],
+  "next_action": "CAD 模型已进入 intake，下一步做低并发几何检查和结构角色归类，不自动启动重 CAD 批处理。",
+  "dxf_extraction": {
+    "status": "not_started",
+    "updated_at": null,
+    "output_dir": null,
+    "processed_files": 0,
+    "failed_files": 0,
+    "rule_seed_candidates": 0,
+    "quality_status_counts": {},
+    "results": [],
+    "message": "尚未运行 DXF 轻量解析。"
+  },
+  "cad_check": {
+    "status": "not_started",
+    "updated_at": null,
+    "output_dir": null,
+    "processed_files": 0,
+    "failed_files": 0,
+    "pass_files": 0,
+    "quality_status_counts": {},
+    "results": [],
+    "message": "尚未运行 FreeCAD 几何检查。"
+  }
+}

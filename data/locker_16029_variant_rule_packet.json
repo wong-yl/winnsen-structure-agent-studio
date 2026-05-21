@@ -1,0 +1,230 @@
+{
+  "generated_at": "2026-05-21T10:41:30+08:00",
+  "product_family": "16029",
+  "purpose": "Door-count rule packet for standard 1000W x 1917H x 550D locker variants.",
+  "source_evidence_json": "D:\\Winnsen_Structure_Agent_Studio\\data\\sheetmetal_rule_evidence_16029.json",
+  "cabinet_rules": {
+    "width_mm": 1000.0,
+    "height_mm": 1917.0,
+    "depth_mm": 550.0,
+    "door_area_height_mm": 1827.0,
+    "door_width_mm": 437.0,
+    "visual_gap_mm": 7.0,
+    "grid_edge_gap_mm": 2.0,
+    "door_flat_height_extra_mm": 36.4,
+    "door_flat_width_extra_mm": 38.4,
+    "door_unit_pitch_mm": 152.5
+  },
+  "supported_counts": {
+    "freecad_rule_validation": [
+      10,
+      12,
+      14
+    ],
+    "solidworks_native_skeleton": [
+      10,
+      12,
+      14
+    ]
+  },
+  "variants": [
+    {
+      "door_count": 10,
+      "output_level": "engineering_reference",
+      "cad_routes": {
+        "freecad": {
+          "enabled": true,
+          "status": "rule_validation_mainline",
+          "reason": "FreeCAD is the low-cost path for 10/12/14 door-count rule validation before SolidWorks handoff."
+        },
+        "solidworks": {
+          "enabled": true,
+          "status": "native_skeleton_reference",
+          "reason": "SolidWorks native cabinet skeleton v2 is available for 10/12/14; still engineering reference, not production drawings."
+        }
+      },
+      "layout": {
+        "rows_per_column": 5,
+        "door_height_mm": 359.0,
+        "door_pitch_mm": 366.0,
+        "exact_12_unit": null,
+        "layout_descriptor": "5 rows/column, equal-row derived height",
+        "row_labels": [
+          "1: 359.000mm",
+          "2: 359.000mm",
+          "3: 359.000mm",
+          "4: 359.000mm",
+          "5: 359.000mm"
+        ]
+      },
+      "derived_dimensions_mm": {
+        "cabinet_width": 1000.0,
+        "cabinet_height": 1917.0,
+        "cabinet_depth": 550.0,
+        "door_width": 437.0,
+        "door_height": 359.0,
+        "door_flat_width_estimate": 475.4,
+        "door_flat_height_estimate": 395.4
+      },
+      "expected_component_counts": {
+        "door_modules": 10,
+        "lock_holes": 10,
+        "lock_hooks": 10,
+        "shelves": 8,
+        "door_frame_horizontal_dividers": 8,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "source_mode": "solidworks_native_10door_skeleton_v2_and_freecad_equal_row_reference",
+      "quality_gates": [
+        "bbox X must remain 1000mm for the standard-width route",
+        "door_modules, lock_holes and lock_hooks must equal door_count",
+        "shelves and door_frame_horizontal_dividers must equal (rows_per_column - 1) x 2",
+        "invalid_shape_count must be 0 before promoting to SolidWorks handoff"
+      ],
+      "evidence_refs": {
+        "door_flat_formula": "16029-door-panel-1-to-6-flat-height-series",
+        "shelf": "16029-cabinet-shelf-flat",
+        "vertical_divider": "16029-cabinet-vertical-divider-flat",
+        "door_frame_horizontal": "16029-door-frame-horizontal-divider-flat",
+        "door_frame_vertical": "16029-door-frame-vertical-divider-flat"
+      }
+    },
+    {
+      "door_count": 12,
+      "output_level": "engineering_reference",
+      "cad_routes": {
+        "freecad": {
+          "enabled": true,
+          "status": "rule_validation_mainline",
+          "reason": "FreeCAD is the low-cost path for 10/12/14 door-count rule validation before SolidWorks handoff."
+        },
+        "solidworks": {
+          "enabled": true,
+          "status": "native_skeleton_reference",
+          "reason": "SolidWorks native cabinet skeleton v2 is available for 10/12/14; still engineering reference, not production drawings."
+        }
+      },
+      "layout": {
+        "rows_per_column": 6,
+        "door_height_mm": 298.0,
+        "door_pitch_mm": 305.0,
+        "exact_12_unit": 2,
+        "layout_descriptor": "6 rows/column, exact 2/12 door source",
+        "row_labels": [
+          "1: 298.000mm",
+          "2: 298.000mm",
+          "3: 298.000mm",
+          "4: 298.000mm",
+          "5: 298.000mm",
+          "6: 298.000mm"
+        ]
+      },
+      "derived_dimensions_mm": {
+        "cabinet_width": 1000.0,
+        "cabinet_height": 1917.0,
+        "cabinet_depth": 550.0,
+        "door_width": 437.0,
+        "door_height": 298.0,
+        "door_flat_width_estimate": 475.4,
+        "door_flat_height_estimate": 334.4
+      },
+      "expected_component_counts": {
+        "door_modules": 12,
+        "lock_holes": 12,
+        "lock_hooks": 12,
+        "shelves": 10,
+        "door_frame_horizontal_dividers": 10,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "source_mode": "solidworks_native_12door_skeleton_v2_and_exact_2_12_panel_source",
+      "quality_gates": [
+        "bbox X must remain 1000mm for the standard-width route",
+        "door_modules, lock_holes and lock_hooks must equal door_count",
+        "shelves and door_frame_horizontal_dividers must equal (rows_per_column - 1) x 2",
+        "invalid_shape_count must be 0 before promoting to SolidWorks handoff"
+      ],
+      "evidence_refs": {
+        "door_flat_formula": "16029-door-panel-1-to-6-flat-height-series",
+        "shelf": "16029-cabinet-shelf-flat",
+        "vertical_divider": "16029-cabinet-vertical-divider-flat",
+        "door_frame_horizontal": "16029-door-frame-horizontal-divider-flat",
+        "door_frame_vertical": "16029-door-frame-vertical-divider-flat"
+      }
+    },
+    {
+      "door_count": 14,
+      "output_level": "engineering_reference",
+      "cad_routes": {
+        "freecad": {
+          "enabled": true,
+          "status": "rule_validation_mainline",
+          "reason": "FreeCAD is the low-cost path for 10/12/14 door-count rule validation before SolidWorks handoff."
+        },
+        "solidworks": {
+          "enabled": true,
+          "status": "native_skeleton_reference",
+          "reason": "SolidWorks native cabinet skeleton v2 is available for 10/12/14; still engineering reference, not production drawings."
+        }
+      },
+      "layout": {
+        "rows_per_column": 7,
+        "door_height_mm": 254.429,
+        "door_pitch_mm": 261.429,
+        "exact_12_unit": null,
+        "layout_descriptor": "7 rows/column, equal-row derived height",
+        "row_labels": [
+          "1: 254.429mm",
+          "2: 254.429mm",
+          "3: 254.429mm",
+          "4: 254.429mm",
+          "5: 254.429mm",
+          "6: 254.429mm",
+          "7: 254.429mm"
+        ]
+      },
+      "derived_dimensions_mm": {
+        "cabinet_width": 1000.0,
+        "cabinet_height": 1917.0,
+        "cabinet_depth": 550.0,
+        "door_width": 437.0,
+        "door_height": 254.429,
+        "door_flat_width_estimate": 475.4,
+        "door_flat_height_estimate": 290.829
+      },
+      "expected_component_counts": {
+        "door_modules": 14,
+        "lock_holes": 14,
+        "lock_hooks": 14,
+        "shelves": 12,
+        "door_frame_horizontal_dividers": 12,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "source_mode": "solidworks_native_14door_skeleton_v2_and_freecad_equal_row_reference",
+      "quality_gates": [
+        "bbox X must remain 1000mm for the standard-width route",
+        "door_modules, lock_holes and lock_hooks must equal door_count",
+        "shelves and door_frame_horizontal_dividers must equal (rows_per_column - 1) x 2",
+        "invalid_shape_count must be 0 before promoting to SolidWorks handoff"
+      ],
+      "evidence_refs": {
+        "door_flat_formula": "16029-door-panel-1-to-6-flat-height-series",
+        "shelf": "16029-cabinet-shelf-flat",
+        "vertical_divider": "16029-cabinet-vertical-divider-flat",
+        "door_frame_horizontal": "16029-door-frame-horizontal-divider-flat",
+        "door_frame_vertical": "16029-door-frame-vertical-divider-flat"
+      }
+    }
+  ],
+  "notes": [
+    "This packet is a generator input, not a production drawing release.",
+    "10/12/14 are the convergence targets; the system is not generating all door-count inventory variants.",
+    "FreeCAD remains the rule-validation route; SolidWorks native skeleton v2 is the current engineering reference route for 10/12/14."
+  ],
+  "output_paths": {
+    "json": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_rule_packet.json",
+    "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_rule_packet.md"
+  }
+}

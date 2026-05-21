@@ -1,0 +1,58 @@
+﻿door_count,status,check,ok,actual,expected,severity,detail
+10,PASS,door_module_count,True,10,10,error,
+10,PASS,left_column_row_count,True,5,5,error,
+10,PASS,right_column_row_count,True,5,5,error,
+10,PASS,door_height_formula,True,"{""min"": 359.0, ""max"": 359.0, ""spread"": 0.0}",359.0,error,
+10,PASS,door_gap_formula,True,"{""min"": 7.0, ""max"": 7.0, ""spread"": 0.0}",7.0,error,
+10,PASS,door_pitch_formula,True,"{""door_height"": {""min"": 359.0, ""max"": 359.0, ""spread"": 0.0}, ""gap"": {""min"": 7.0, ""max"": 7.0, ""spread"": 0.0}}",366.0,error,door pitch = door height + visual gap
+10,PASS,door_stack_bottom_top,True,"{""first_y_min"": 32.0, ""last_y_max"": 1855.0}","{""first_y_min"": 32.0, ""last_y_max"": 1855.0}",error,
+10,PASS,left_right_door_row_alignment,True,0.0,<= 0.05,error,
+10,PASS,door_width_reference,True,"{""min"": 437.0, ""max"": 437.0, ""spread"": 0.0}",437.0,error,guards against wrong door template width when changing row count
+10,PASS,door_lock_hinge_side_relation,True,"{""L"": {""lock_hole_center_x"": -55.0, ""hinge_axis_x"": -467.0}, ""R"": {""lock_hole_center_x"": 55.0, ""hinge_axis_x"": 467.0}}","left negative, right positive",error,guards against mirrored or swapped door modules
+10,PASS,lock_hole_count,True,10,10,error,
+10,PASS,lock_hook_count,True,10,10,error,
+10,PASS,lock_position_relation,True,all lock centers match door centers and side sign,per-door lock references,error,
+10,PASS,shelf_count,True,8,8,error,
+10,PASS,door_frame_horizontal_count,True,8,8,error,
+10,PASS,shelf_and_frame_driven_from_door_boundary,True,all shelf/frame rows follow door boundary offsets,"{""shelf_y_min"": ""+2mm from lower door y_max"", ""frame_y_min"": ""-10mm from lower door y_max""}",error,
+10,PASS,overall_bbox_x,True,1000.0,1000.0,error,
+10,PASS,step_bbox_xyz_envelope,True,"{""x"": 1000.0, ""y"": 1983.0, ""z"": 552.0}","{""x"": 1000.0, ""y"": 1983.0, ""z"": 552.0}",error,guards against exploded or out-of-envelope generated assemblies
+10,PASS,step_invalid_shape_count,True,0.0,0,error,guards against visually present but invalid STEP solids
+12,PASS,door_module_count,True,12,12,error,
+12,PASS,left_column_row_count,True,6,6,error,
+12,PASS,right_column_row_count,True,6,6,error,
+12,PASS,door_height_formula,True,"{""min"": 298.0, ""max"": 298.0, ""spread"": 0.0}",298.0,error,
+12,PASS,door_gap_formula,True,"{""min"": 7.0, ""max"": 7.0, ""spread"": 0.0}",7.0,error,
+12,PASS,door_pitch_formula,True,"{""door_height"": {""min"": 298.0, ""max"": 298.0, ""spread"": 0.0}, ""gap"": {""min"": 7.0, ""max"": 7.0, ""spread"": 0.0}}",305.0,error,door pitch = door height + visual gap
+12,PASS,door_stack_bottom_top,True,"{""first_y_min"": 32.0, ""last_y_max"": 1855.0}","{""first_y_min"": 32.0, ""last_y_max"": 1855.0}",error,
+12,PASS,left_right_door_row_alignment,True,0.0,<= 0.05,error,
+12,PASS,door_width_reference,True,"{""min"": 437.0, ""max"": 437.0, ""spread"": 0.0}",437.0,error,guards against wrong door template width when changing row count
+12,PASS,door_lock_hinge_side_relation,True,"{""L"": {""lock_hole_center_x"": -55.0, ""hinge_axis_x"": -467.0}, ""R"": {""lock_hole_center_x"": 55.0, ""hinge_axis_x"": 467.0}}","left negative, right positive",error,guards against mirrored or swapped door modules
+12,PASS,lock_hole_count,True,12,12,error,
+12,PASS,lock_hook_count,True,12,12,error,
+12,PASS,lock_position_relation,True,all lock centers match door centers and side sign,per-door lock references,error,
+12,PASS,shelf_count,True,10,10,error,
+12,PASS,door_frame_horizontal_count,True,10,10,error,
+12,PASS,shelf_and_frame_driven_from_door_boundary,True,all shelf/frame rows follow door boundary offsets,"{""shelf_y_min"": ""+2mm from lower door y_max"", ""frame_y_min"": ""-10mm from lower door y_max""}",error,
+12,PASS,overall_bbox_x,True,1000.0,1000.0,error,
+12,PASS,step_bbox_xyz_envelope,True,"{""x"": 1000.0, ""y"": 1983.0, ""z"": 552.0}","{""x"": 1000.0, ""y"": 1983.0, ""z"": 552.0}",error,guards against exploded or out-of-envelope generated assemblies
+12,PASS,step_invalid_shape_count,True,0.0,0,error,guards against visually present but invalid STEP solids
+14,PASS,door_module_count,True,14,14,error,
+14,PASS,left_column_row_count,True,7,7,error,
+14,PASS,right_column_row_count,True,7,7,error,
+14,PASS,door_height_formula,True,"{""min"": 254.428, ""max"": 254.429, ""spread"": 0.001}",254.429,error,
+14,PASS,door_gap_formula,True,"{""min"": 7.0, ""max"": 7.0, ""spread"": 0.0}",7.0,error,
+14,PASS,door_pitch_formula,True,"{""door_height"": {""min"": 254.428, ""max"": 254.429, ""spread"": 0.001}, ""gap"": {""min"": 7.0, ""max"": 7.0, ""spread"": 0.0}}",261.429,error,door pitch = door height + visual gap
+14,PASS,door_stack_bottom_top,True,"{""first_y_min"": 32.0, ""last_y_max"": 1855.0}","{""first_y_min"": 32.0, ""last_y_max"": 1855.0}",error,
+14,PASS,left_right_door_row_alignment,True,0.0,<= 0.05,error,
+14,PASS,door_width_reference,True,"{""min"": 437.0, ""max"": 437.0, ""spread"": 0.0}",437.0,error,guards against wrong door template width when changing row count
+14,PASS,door_lock_hinge_side_relation,True,"{""L"": {""lock_hole_center_x"": -55.0, ""hinge_axis_x"": -467.0}, ""R"": {""lock_hole_center_x"": 55.0, ""hinge_axis_x"": 467.0}}","left negative, right positive",error,guards against mirrored or swapped door modules
+14,PASS,lock_hole_count,True,14,14,error,
+14,PASS,lock_hook_count,True,14,14,error,
+14,PASS,lock_position_relation,True,all lock centers match door centers and side sign,per-door lock references,error,
+14,PASS,shelf_count,True,12,12,error,
+14,PASS,door_frame_horizontal_count,True,12,12,error,
+14,PASS,shelf_and_frame_driven_from_door_boundary,True,all shelf/frame rows follow door boundary offsets,"{""shelf_y_min"": ""+2mm from lower door y_max"", ""frame_y_min"": ""-10mm from lower door y_max""}",error,
+14,PASS,overall_bbox_x,True,1000.0,1000.0,error,
+14,PASS,step_bbox_xyz_envelope,True,"{""x"": 1000.0, ""y"": 1983.0, ""z"": 552.0}","{""x"": 1000.0, ""y"": 1983.0, ""z"": 552.0}",error,guards against exploded or out-of-envelope generated assemblies
+14,PASS,step_invalid_shape_count,True,0.0,0,error,guards against visually present but invalid STEP solids

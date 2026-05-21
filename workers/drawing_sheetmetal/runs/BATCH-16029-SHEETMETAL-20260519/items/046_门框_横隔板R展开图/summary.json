@@ -1,0 +1,101 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\门框 横隔板R展开图.DXF",
+  "file_name": "门框 横隔板R展开图.DXF",
+  "role_guess": "divider",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": 797.762,
+    "min_y": 631.1062,
+    "max_x": 1242.762,
+    "max_y": 681.1336,
+    "width": 445.0,
+    "height": 50.0274
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": 797.762,
+    "min_y": 631.1062,
+    "max_x": 1242.762,
+    "max_y": 681.1336,
+    "width": 445.0,
+    "height": 50.0274
+  },
+  "manufacturing_bbox_source": "largest_closed_loop",
+  "entity_counts": {
+    "CIRCLE": 10,
+    "LINE": 19
+  },
+  "layer_counts": {
+    "0": 29
+  },
+  "space_counts": {
+    "model": 29
+  },
+  "layout_counts": {
+    "Model": 29
+  },
+  "circle_count": 10,
+  "arc_count": 0,
+  "line_count": 19,
+  "polyline_count": 0,
+  "circle_radius_counts": {
+    "1.75": 6,
+    "3.1": 2,
+    "3.5": 2
+  },
+  "point_count_for_bbox": 58,
+  "loop_analysis": {
+    "curve_segment_count": 19,
+    "connected_component_count": 1,
+    "closed_loop_count": 1,
+    "open_endpoint_count": 0,
+    "largest_component_bbox_mm": {
+      "min_x": 797.762,
+      "min_y": 631.1062,
+      "max_x": 1242.762,
+      "max_y": 681.1336,
+      "width": 445.0,
+      "height": 50.0274
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": 797.762,
+      "min_y": 631.1062,
+      "max_x": 1242.762,
+      "max_y": 681.1336,
+      "width": 445.0,
+      "height": 50.0274
+    },
+    "components": [
+      {
+        "edge_count": 19,
+        "node_count": 19,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 797.762,
+          "min_y": 631.1062,
+          "max_x": 1242.762,
+          "max_y": 681.1336,
+          "width": 445.0,
+          "height": 50.0274
+        },
+        "bbox_area_mm2": 22262.193,
+        "source_types": {
+          "LINE": 19
+        }
+      }
+    ]
+  },
+  "quality_status": "geometry_rule_seed_only",
+  "quality_warnings": [
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}

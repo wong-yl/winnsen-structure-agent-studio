@@ -103,6 +103,55 @@ export type ReviewItem = {
   status: 'open' | 'watching' | 'waiting_source'
 }
 
+export type DrawingSheetMetalSource = {
+  id: string
+  title: string
+  sourceType: string
+  firstTarget: string
+  currentState: string
+  nextAction: string
+  evidence: Evidence[]
+  status: 'ready_for_intake' | 'candidate' | 'planned' | 'blocked'
+}
+
+export type DrawingSheetMetalOutput = {
+  id: string
+  title: string
+  level: string
+  description: string
+  boundary: string
+  statusTone: 'good' | 'warn' | 'risk' | 'idle'
+}
+
+export type DrawingSheetMetalRisk = {
+  item: string
+  requiredInput: string
+  reason: string
+  owner: string
+}
+
+export type DrawingSheetMetalRoadmapStep = {
+  step: string
+  focus: string
+  deliverable: string
+  relationToMainline: string
+  statusTone: 'good' | 'warn' | 'risk' | 'idle'
+}
+
+export type DrawingSheetMetalBatchRun = {
+  runId: string
+  sourceRoot: string
+  outputDir: string
+  summaryPath: string
+  fileCount: number
+  errorCount: number
+  ruleSeedCandidateCount: number
+  qualityStatusCounts: Array<{ label: string; value: number; tone: 'good' | 'warn' | 'risk' | 'idle' }>
+  roleCounts: Array<{ label: string; value: number }>
+  keyFindings: string[]
+  nextActions: string[]
+}
+
 const snapshot = generatedSnapshot
 const lockerSnapshot = snapshot.projects.locker16029
 const outdoorSnapshot = snapshot.projects.outdoorCourier
@@ -115,10 +164,18 @@ export const sourcePaths = {
   cadWorkspace: snapshot.sourcePaths.cadWorkspace,
   startupBrief: 'C:\\Users\\Administrator\\Desktop\\Winnsen_Structure_Agent_Studio_项目启动说明.md',
   parametricTemplateRoot: 'C:\\Users\\Administrator\\Desktop\\参数化模板素材',
+  drawingSheetMetalWorkspace: 'D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal',
+  drawingSheetMetalFirstRun:
+    'D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\runs\\DXF-16029-DOOR-PANEL-1-12-20260519',
+  drawingSheetMetalBatchRun:
+    'D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\runs\\BATCH-16029-SHEETMETAL-20260519',
   intakeStatus: snapshot.sourcePaths.intakeStatus,
   outdoorStatus: snapshot.sourcePaths.outdoorStatus,
   strictQueue: snapshot.sourcePaths.strictQueueMd,
   outdoorGate: snapshot.sourcePaths.outdoorGateMd,
+  solidworks16029Handoff: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_engineering_handoff.md',
+  solidworks16029RoleRules: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_role_rules.md',
+  solidworks16029TenDoorRecipe: 'D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_10door_mutator_recipe.md',
 }
 
 export const projects: Project[] = [
@@ -151,25 +208,27 @@ export const projects: Project[] = [
     id: 'locker_16029_baseline_v1',
     name: '16029 标准寄存柜',
     productType: '标准组合式寄存柜',
-    status: '基线已冻结，SolidWorks 主线已接入，FreeCAD 迁移回归 PASS',
+    status: '10/12/14 门原生 SolidWorks 骨架已验证；FreeCAD 规则结果保留为开源验证线',
     statusTone: 'good',
     sourceRoot: 'C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)',
-    modelStatus: 'SolidWorks 原生装配与 FreeCAD 开源迁移模型均为工程参考',
-    progress: 91,
-    capability: '8门、12门、14门、16门、18门 W784 回归模型',
-    risk: '37 条 W784 宽度派生 X 仍需宽度专用来源或证据闭环',
-    updatedAt: '2026-05-15 17:24',
+    modelStatus: '10/12/14 门原生 SolidWorks 整柜骨架 v2 可打开；门阵列、层板、前门框横隔随门数变化',
+    progress: 86,
+    capability: '10/12/14 门 SolidWorks native skeleton + FreeCAD rule-driven 参考模型；规则证据含门高、门距、层板/门框、锁/铰链/五金重排表',
+    risk: '当前仍是工程参考模型，不是正式 SolidWorks 工程图/DXF/BOM；后续需补后门、维护门、电气件、Pack-and-Go 和出图流程',
+    updatedAt: '2026-05-21 09:50',
     stats: [
       { label: 'Indexed files', value: formatNumber(lockerSnapshot.indexedFiles), tone: 'good' },
       { label: 'DXF parsed', value: `${lockerSnapshot.dxfParsed}/${lockerSnapshot.dxfFiles}`, tone: 'good' },
       { label: 'BOM mapped', value: `${lockerSnapshot.bomMapped}/${lockerSnapshot.bomRows}`, tone: 'good' },
-      { label: 'Strict P0', value: `${lockerSnapshot.strictPriorityCounts.P0 ?? 0}`, tone: 'good' },
-      { label: 'Strict P2', value: `${lockerSnapshot.strictPriorityCounts.P2 ?? 0}`, tone: 'warn' },
+      { label: 'FreeCAD 10门', value: 'PASS', tone: 'good' },
+      { label: 'Role bindings', value: '177', tone: 'warn' },
+      { label: 'Pattern seeds', value: '3', tone: 'warn' },
     ],
     notes: [
-      'Rule seed coverage gate: 8门 170/170, 12门 386/386, 14门 418/418, 18门 W784 530/530.',
-      '门板折弯、锁中心关系、门体切孔、硬件 bbox、结构 STEP 关系已纳入多轮验证。',
-      '当前工程使用 SolidWorks；FreeCAD 是未来开源替代路线，不作为 SolidWorks 输出的主检查器。',
+      '16029 10/12/14 门原生 SolidWorks 骨架已写入 workers/generated_models/SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521。',
+      '当前骨架路线只收录视觉验证通过的 10/12/14 门，失败或错乱的 direct assembly 历史路线不再进入交接。',
+      '组件角色与变体规则表已写入 data/solidworks_16029_role_rules.md：层板阵列 11×152.5mm、柜门阵列 6×305mm、衣架钢管 2×915mm。',
+      'SolidWorks 入口已改为打开并另存原生骨架源；下一步补后门、维护门、电气模块和 Pack-and-Go。',
     ],
   },
   {
@@ -310,11 +369,11 @@ export const pipelineRows: PipelineRow[] = [
   {
     stage: '可生成模型',
     owner: 'generator',
-    locker16029: '8/12/14/16/18 W784 engineering reference',
+    locker16029: '10/12/14 native SolidWorks skeletons gated; FreeCAD rule validation retained',
     outdoor: '1/12 R waterproof door reference',
-    next: '新增模板先进入规则学习队列，通过后再开放同尺寸补模型',
+    next: '把后门、维护门、电气件、Pack-and-Go 和工程图流程接到 10/12/14 原生骨架',
     evidence: ['SolidWorks', 'FreeCAD', 'STEP', 'DXF'],
-    risk: '不能把工程参考模型描述为自动生产图纸',
+    risk: '骨架已可工程参考，但仍缺后侧/电气/出图交付模块，不能标为生产图纸',
     status: 'partial',
   },
 ]
@@ -552,10 +611,10 @@ export const ruleLearningAxes: RuleLearningAxis[] = [
     axis: '同尺寸不同门数',
     purpose: '同一外形尺寸下补 4/7/8/10/12/14 门模型时，门框分隔、层板数量、门板高度、锁位和铰链阵列不能靠猜。',
     sourceTemplates: '16038 1917x1000x550 + 16029 1917x1000x550',
-    currentState: '候选总装配、BOM、DXF、PDF/STEP 已定位；尚未抽取完整 transform/mate/展开图映射。',
-    nextAction: '优先抽 16038 的 4门/8门/主版本，再用 16029 备份订单变体补 7/10/14 门规则。',
-    maturity: 'mapped',
-    evidence: ['SolidWorks', 'DXF', 'BOM', '工程图'],
+    currentState: '16029 已有 10/12/14 门原生 SolidWorks 骨架 v2；STEP 角色绑定 177、重复角色组 34、阵列种子 3。transform 自动重排仍未扩展到所有后侧/电气模块。',
+    nextAction: '先做 10/12/14 Pack-and-Go，再把后门、维护门、电气件、锁/铰链规则补进骨架生成链。',
+    maturity: 'step_bbox_measured',
+    evidence: ['SolidWorks', 'STEP', 'DXF', 'BOM', '证据闭环记录'],
   },
   {
     axis: '同系列不同柜深',
@@ -621,14 +680,15 @@ export const capabilities: Capability[] = [
     title: '16029 标准寄存柜整柜回归模型',
     productType: '标准寄存柜',
     module: '整柜 / 门板 / 柜体 / 锁具 / 铰链',
-    variants: '8门, 12门, 14门, 16门, 18门 W784',
+    variants: '1000×1917×550 外型下 10/12/14 门原生 SolidWorks 整柜骨架；FreeCAD 作为规则验证通道',
     status: 'generatable',
     maturity: 'engineering_reference',
     generator: 'scripts\\generate_locker_16029_freecad.py',
-    validation: 'scripts\\run_locker_16029_regression_checks.py',
+    validation: 'SolidWorks 视觉验证 + STEP 几何校验 + FCStd 完整性审计 + 16029 结构规则审计',
     parameters: ['door_count', 'cabinet_width', 'geometry_source'],
     evidence: ['DXF', 'STEP', 'SolidWorks', 'FreeCAD', 'BOM'],
-    limitation: 'SolidWorks 是当前工程主线，FreeCAD 是开源迁移路线；严格队列 P0=0，但 W784 仍有 37 条宽度派生 P2；不可称为自动生产图纸。',
+    limitation:
+      'SolidWorks 是当前工程复核工具；逐零件直装路线因装配基准/transform 视觉错乱已降级。当前主交接物为 10/12/14 门原生整柜骨架 v2 与 FreeCAD 规则参考模型，不作为正式生产图纸；任意门宽/门高变化仍需补齐门框、锁位、铰链和 BOM/DXF 公式闭环。',
   },
   {
     id: 'locker_16029_door_panel',
@@ -688,7 +748,197 @@ export const capabilities: Capability[] = [
   },
 ]
 
+export const drawingSheetMetalSources: DrawingSheetMetalSource[] = [
+  {
+    id: 'dxf-to-sheetmetal-reference',
+    title: 'DXF 展开图转参考钣金件',
+    sourceType: 'DXF',
+    firstTarget: '16029 门板 / 层板 / 横隔板',
+    currentState: '已跑通 16029 1/12 门板 DXF 解析卡，可提取 bbox、实体数量、圆孔半径和质量警告。',
+    nextAction: '补闭合轮廓重建和 model/layout 空间判定，再把孔位、折弯线和尺寸基准写入规则表。',
+    evidence: ['DXF', '工程图', '证据闭环记录'],
+    status: 'ready_for_intake',
+  },
+  {
+    id: 'pdf-drawing-to-parameters',
+    title: 'PDF 工程图转参数与待确认项',
+    sourceType: 'PDF / 工程图',
+    firstTarget: '有标题栏、材料、厚度或折弯说明的单件图',
+    currentState: '适合提取尺寸、材料、厚度、版本和公差，但图层/线型信息不如 DXF 稳定。',
+    nextAction: '先做 OCR + 尺寸表提取，无法确认的孔径、折弯方向和基准进入待确认项。',
+    evidence: ['工程图', '证据闭环记录'],
+    status: 'candidate',
+  },
+  {
+    id: 'image-to-cad-reference',
+    title: '图片识别转结构草案',
+    sourceType: '截图 / 拍照图片',
+    firstTarget: '外观草图、局部结构截图、旧图纸截图',
+    currentState: '只能做结构意图识别和缺项列表，不能直接作为精准建模依据。',
+    nextAction: '先输出轮廓、孔位疑点、折弯疑点和需要补充的标尺/基准，不直接生成生产图。',
+    evidence: ['工程图', '证据闭环记录'],
+    status: 'planned',
+  },
+  {
+    id: 'solidworks-drawing-to-handoff',
+    title: 'SolidWorks 工程图/模型反推规则',
+    sourceType: 'SLDDRW / SLDPRT / SLDASM',
+    firstTarget: '现有标准件的展开、孔位、折弯和工程图交接',
+    currentState: '可以作为工程交接主通道，但自动展开和出图需要 SolidWorks API 稳定性验证。',
+    nextAction: '先保持低并发，单件验证展开、尺寸标注和保存流程，再接入整柜规则。',
+    evidence: ['SolidWorks', 'DXF', '工程图'],
+    status: 'candidate',
+  },
+]
+
+export const drawingSheetMetalOutputs: DrawingSheetMetalOutput[] = [
+  {
+    id: 'parameter-review-table',
+    title: '图纸参数表',
+    level: '可先交付',
+    description: '把外形、孔位、折弯边、材料/厚度线索和缺失项整理成结构工程师可复核表。',
+    boundary: '来自图片或 PDF 的尺寸需要人工确认比例和基准。',
+    statusTone: 'good',
+  },
+  {
+    id: 'reference-unfold-dxf',
+    title: '参考展开 DXF',
+    level: '工程参考',
+    description: '面向门板、层板、横隔板等单件，输出可复核的展开轮廓和孔位参考。',
+    boundary: '未确认 K 因子、折弯扣除、材料和厚度前，不标记为正式展开图。',
+    statusTone: 'warn',
+  },
+  {
+    id: 'dimensioned-reference-pdf',
+    title: '尺寸标注 PDF',
+    level: '工程参考',
+    description: '自动生成主要外形、孔距、折弯位置和关键间距标注，帮助工程师快速校对。',
+    boundary: '标题栏、版本、BOM 和公差体系未确认前不能作为生产释放图纸。',
+    statusTone: 'warn',
+  },
+  {
+    id: 'bend-hole-checklist',
+    title: '折弯/孔位校验表',
+    level: '规则证据',
+    description: '检查孔到折弯线距离、对称孔、锁孔/铰链孔阵列和外形 bbox 是否符合模板规则。',
+    boundary: '异常项进入待确认项，不自动修改原工程规则。',
+    statusTone: 'good',
+  },
+]
+
+export const drawingSheetMetalRisks: DrawingSheetMetalRisk[] = [
+  {
+    item: '材料与厚度',
+    requiredInput: '材质牌号、板厚、表面处理',
+    reason: '展开尺寸、折弯补偿和外观面风险都依赖材料与厚度。',
+    owner: '结构工程师 / 工艺',
+  },
+  {
+    item: '折弯半径与 K 因子',
+    requiredInput: '内 R、K 因子或折弯扣除表',
+    reason: '没有折弯参数只能生成参考展开，不能输出生产级展开尺寸。',
+    owner: '结构工程师 / 钣金供应商',
+  },
+  {
+    item: '尺寸基准与公差',
+    requiredInput: '孔位基准、关键尺寸公差、装配间隙要求',
+    reason: '图片/PDF 识别容易丢失基准关系，必须把关键尺寸和功能孔分开。',
+    owner: '结构工程师',
+  },
+  {
+    item: '图纸版本与标题栏',
+    requiredInput: '图号、版本、BOM 关系、公司图框规范',
+    reason: '自动标注 PDF 只能做复核件，正式图纸需要版本和审批链。',
+    owner: '工程资料 / 结构工程师',
+  },
+]
+
+export const drawingSheetMetalRoadmap: DrawingSheetMetalRoadmapStep[] = [
+  {
+    step: '1',
+    focus: '单件图纸解析',
+    deliverable: '16029 门板 DXF/PDF 参数卡和待确认项',
+    relationToMainline: '不占用 SolidWorks 整柜生成资源，先补规则证据。',
+    statusTone: 'good',
+  },
+  {
+    step: '2',
+    focus: '参考展开与标注',
+    deliverable: '门板/层板/横隔板参考展开 DXF 与尺寸标注 PDF',
+    relationToMainline: '用于校验门数变化时的门板、层板和横隔阵列规则。',
+    statusTone: 'warn',
+  },
+  {
+    step: '3',
+    focus: '规则回写生成器',
+    deliverable: '把孔位、折弯边、bbox、阵列节距写入 16029 10/12/14 门规则。',
+    relationToMainline: '服务同外形不同门数生成，不做全量变种库存。',
+    statusTone: 'warn',
+  },
+  {
+    step: '4',
+    focus: 'SolidWorks 工程交接',
+    deliverable: '单件展开和尺寸图通过工程师复核后，再接入 SolidWorks 出图流程。',
+    relationToMainline: 'SolidWorks 继续作为工程交接通道，FreeCAD/解析线做规则验证。',
+    statusTone: 'idle',
+  },
+]
+
+export const drawingSheetMetalBatchRun: DrawingSheetMetalBatchRun = {
+  runId: 'BATCH-16029-SHEETMETAL-20260519',
+  sourceRoot: 'C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)',
+  outputDir: sourcePaths.drawingSheetMetalBatchRun,
+  summaryPath: 'D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\runs\\BATCH-16029-SHEETMETAL-20260519\\BATCH_SUMMARY.md',
+  fileCount: 49,
+  errorCount: 0,
+  ruleSeedCandidateCount: 34,
+  qualityStatusCounts: [
+    { label: 'rule_seed_candidate', value: 2, tone: 'good' },
+    { label: 'geometry_rule_seed_only', value: 32, tone: 'good' },
+    { label: 'needs_layout_filter', value: 7, tone: 'warn' },
+    { label: 'needs_closed_loop_rebuild', value: 8, tone: 'warn' },
+  ],
+  roleCounts: [
+    { label: 'door_panel', value: 17 },
+    { label: 'shelf', value: 9 },
+    { label: 'divider', value: 23 },
+  ],
+  keyFindings: [
+    '16029 门板、层板、竖/横隔板 DXF 共 49 个样本完成轻量解析，未出现解析异常。',
+    '34 个样本具备几何规则种子价值，可用于门板高度、层板/隔板 bbox、孔径和阵列关系比对。',
+    '2 个样本带板厚 0.8 且可作为优先规则种子：12/12 门板和门框加强筋。',
+    '脚本已把小孔闭合环排除在规则 bbox 外；仍有 7 个样本存在 paper-space / VIEWPORT 干扰，8 个样本需要 LINE/ARC 闭合轮廓重建。',
+  ],
+  nextActions: [
+    '先对 needs_layout_filter 文件过滤图纸空间，避免把布局视图尺寸写入规则库。',
+    '对 needs_closed_loop_rebuild 文件做闭合轮廓重建，尤其是 1/12 到 6/12 门板序列。',
+    '把 25 个几何规则种子的 bbox、孔径、闭合轮廓与 SolidWorks/BOM 角色绑定交叉验证。',
+  ],
+}
+
 export const reviewItems: ReviewItem[] = [
+  {
+    id: 'STD-P1-16029-10DOOR-MUTATOR',
+    project: '16029 标准寄存柜',
+    module: 'same_size_variant / transform-mate mutator',
+    priority: 'P1',
+    severity: '严重',
+    issue: '10/12/14 门骨架已验证，但还缺后门、维护门、电气件以及 transform/mate 级别锁、铰链自动重排器',
+    nextAction: '在现有骨架上补后侧/电气模块，再把锁位、铰链和 Pack-and-Go 交付流程固化为规则。',
+    evidence: ['SolidWorks', 'STEP', 'BOM', 'DXF', '证据闭环记录'],
+    status: 'open',
+  },
+  {
+    id: 'STD-P1-16029-PACKGO',
+    project: '16029 标准寄存柜',
+    module: 'SolidWorks handoff',
+    priority: 'P1',
+    severity: '严重',
+    issue: '10/12/14 门原生骨架未做 Pack-and-Go 封包，移动 SLDASM 时仍依赖源文件目录',
+    nextAction: '给 10/12/14 门骨架增加 Pack-and-Go 或明确复制依赖清单，保证结构工程师在独立目录打开不丢引用。',
+    evidence: ['SolidWorks', '工程图'],
+    status: 'open',
+  },
   {
     id: 'OUT-P0-DOOR-L',
     project: '户外快递柜系列',

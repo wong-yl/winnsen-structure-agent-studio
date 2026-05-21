@@ -1,0 +1,2 @@
+@echo off
+call "D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\open_12door_step_in_solidworks.cmd"

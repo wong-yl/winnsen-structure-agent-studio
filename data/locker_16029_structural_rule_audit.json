@@ -1,0 +1,757 @@
+{
+  "generated_at": "2026-05-20T17:12:10+08:00",
+  "product_family": "16029",
+  "scope": "1000W x 1917H x 550D 10/12/14 structural rule audit from verify.csv",
+  "source_quality_matrix": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
+  "summary": {
+    "variant_count": 3,
+    "pass_count": 3,
+    "fail_count": 0
+  },
+  "variants": [
+    {
+      "door_count": 10,
+      "rows_per_column": 5,
+      "status": "PASS",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\FREECAD-16029-10DOOR-VARIANT-20260519\\locker_16029_10door_rule_driven_verify.csv",
+      "verify_rows": 306,
+      "metrics": {
+        "door_height_mm": 359.0,
+        "door_width_mm": 437.0,
+        "door_pitch_mm": 366.0,
+        "door_gap_mm": 7.0,
+        "door_rows_per_column": 5,
+        "door_y_span": {
+          "bottom": 32.0,
+          "top": 1855.0
+        },
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        },
+        "step_bbox_mm": {
+          "x": 1000.0,
+          "y": 1983.0,
+          "z": 552.0
+        },
+        "step_invalid_shape_count": 0.0,
+        "door_source_levels": [
+          "derived_one_piece_folded_sheetmetal_with_bend_radius"
+        ],
+        "door_template_names": [
+          "door_2_12_panel_template"
+        ]
+      },
+      "checks": [
+        {
+          "name": "door_module_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_row_count",
+          "ok": true,
+          "actual": 5,
+          "expected": 5,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_row_count",
+          "ok": true,
+          "actual": 5,
+          "expected": 5,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_height_formula",
+          "ok": true,
+          "actual": {
+            "min": 359.0,
+            "max": 359.0,
+            "spread": 0.0
+          },
+          "expected": 359.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_gap_formula",
+          "ok": true,
+          "actual": {
+            "min": 7.0,
+            "max": 7.0,
+            "spread": 0.0
+          },
+          "expected": 7.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_pitch_formula",
+          "ok": true,
+          "actual": {
+            "door_height": {
+              "min": 359.0,
+              "max": 359.0,
+              "spread": 0.0
+            },
+            "gap": {
+              "min": 7.0,
+              "max": 7.0,
+              "spread": 0.0
+            }
+          },
+          "expected": 366.0,
+          "severity": "error",
+          "detail": "door pitch = door height + visual gap"
+        },
+        {
+          "name": "door_stack_bottom_top",
+          "ok": true,
+          "actual": {
+            "first_y_min": 32.0,
+            "last_y_max": 1855.0
+          },
+          "expected": {
+            "first_y_min": 32.0,
+            "last_y_max": 1855.0
+          },
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_right_door_row_alignment",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "<= 0.05",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_width_reference",
+          "ok": true,
+          "actual": {
+            "min": 437.0,
+            "max": 437.0,
+            "spread": 0.0
+          },
+          "expected": 437.0,
+          "severity": "error",
+          "detail": "guards against wrong door template width when changing row count"
+        },
+        {
+          "name": "door_lock_hinge_side_relation",
+          "ok": true,
+          "actual": {
+            "L": {
+              "lock_hole_center_x": -55.0,
+              "hinge_axis_x": -467.0
+            },
+            "R": {
+              "lock_hole_center_x": 55.0,
+              "hinge_axis_x": 467.0
+            }
+          },
+          "expected": "left negative, right positive",
+          "severity": "error",
+          "detail": "guards against mirrored or swapped door modules"
+        },
+        {
+          "name": "lock_hole_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_hook_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_position_relation",
+          "ok": true,
+          "actual": "all lock centers match door centers and side sign",
+          "expected": "per-door lock references",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_count",
+          "ok": true,
+          "actual": 8,
+          "expected": 8,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_frame_horizontal_count",
+          "ok": true,
+          "actual": 8,
+          "expected": 8,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_and_frame_driven_from_door_boundary",
+          "ok": true,
+          "actual": "all shelf/frame rows follow door boundary offsets",
+          "expected": {
+            "shelf_y_min": "+2mm from lower door y_max",
+            "frame_y_min": "-10mm from lower door y_max"
+          },
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "overall_bbox_x",
+          "ok": true,
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "step_bbox_xyz_envelope",
+          "ok": true,
+          "actual": {
+            "x": 1000.0,
+            "y": 1983.0,
+            "z": 552.0
+          },
+          "expected": {
+            "x": 1000.0,
+            "y": 1983.0,
+            "z": 552.0
+          },
+          "severity": "error",
+          "detail": "guards against exploded or out-of-envelope generated assemblies"
+        },
+        {
+          "name": "step_invalid_shape_count",
+          "ok": true,
+          "actual": 0.0,
+          "expected": 0,
+          "severity": "error",
+          "detail": "guards against visually present but invalid STEP solids"
+        }
+      ],
+      "failed_checks": [],
+      "warning_checks": []
+    },
+    {
+      "door_count": 12,
+      "rows_per_column": 6,
+      "status": "PASS",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260520042611-E8E6F4\\locker_16029_12door_rule_driven_verify.csv",
+      "verify_rows": 386,
+      "metrics": {
+        "door_height_mm": 298.0,
+        "door_width_mm": 437.0,
+        "door_pitch_mm": 305.0,
+        "door_gap_mm": 7.0,
+        "door_rows_per_column": 6,
+        "door_y_span": {
+          "bottom": 32.0,
+          "top": 1855.0
+        },
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        },
+        "step_bbox_mm": {
+          "x": 1000.0,
+          "y": 1983.0,
+          "z": 552.0
+        },
+        "step_invalid_shape_count": 0.0,
+        "door_source_levels": [
+          "validated_solidworks_panel_step"
+        ],
+        "door_template_names": [
+          "door_2_12_panel_template"
+        ]
+      },
+      "checks": [
+        {
+          "name": "door_module_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_row_count",
+          "ok": true,
+          "actual": 6,
+          "expected": 6,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_row_count",
+          "ok": true,
+          "actual": 6,
+          "expected": 6,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_height_formula",
+          "ok": true,
+          "actual": {
+            "min": 298.0,
+            "max": 298.0,
+            "spread": 0.0
+          },
+          "expected": 298.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_gap_formula",
+          "ok": true,
+          "actual": {
+            "min": 7.0,
+            "max": 7.0,
+            "spread": 0.0
+          },
+          "expected": 7.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_pitch_formula",
+          "ok": true,
+          "actual": {
+            "door_height": {
+              "min": 298.0,
+              "max": 298.0,
+              "spread": 0.0
+            },
+            "gap": {
+              "min": 7.0,
+              "max": 7.0,
+              "spread": 0.0
+            }
+          },
+          "expected": 305.0,
+          "severity": "error",
+          "detail": "door pitch = door height + visual gap"
+        },
+        {
+          "name": "door_stack_bottom_top",
+          "ok": true,
+          "actual": {
+            "first_y_min": 32.0,
+            "last_y_max": 1855.0
+          },
+          "expected": {
+            "first_y_min": 32.0,
+            "last_y_max": 1855.0
+          },
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_right_door_row_alignment",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "<= 0.05",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_width_reference",
+          "ok": true,
+          "actual": {
+            "min": 437.0,
+            "max": 437.0,
+            "spread": 0.0
+          },
+          "expected": 437.0,
+          "severity": "error",
+          "detail": "guards against wrong door template width when changing row count"
+        },
+        {
+          "name": "door_lock_hinge_side_relation",
+          "ok": true,
+          "actual": {
+            "L": {
+              "lock_hole_center_x": -55.0,
+              "hinge_axis_x": -467.0
+            },
+            "R": {
+              "lock_hole_center_x": 55.0,
+              "hinge_axis_x": 467.0
+            }
+          },
+          "expected": "left negative, right positive",
+          "severity": "error",
+          "detail": "guards against mirrored or swapped door modules"
+        },
+        {
+          "name": "lock_hole_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_hook_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_position_relation",
+          "ok": true,
+          "actual": "all lock centers match door centers and side sign",
+          "expected": "per-door lock references",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_frame_horizontal_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_and_frame_driven_from_door_boundary",
+          "ok": true,
+          "actual": "all shelf/frame rows follow door boundary offsets",
+          "expected": {
+            "shelf_y_min": "+2mm from lower door y_max",
+            "frame_y_min": "-10mm from lower door y_max"
+          },
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "overall_bbox_x",
+          "ok": true,
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "step_bbox_xyz_envelope",
+          "ok": true,
+          "actual": {
+            "x": 1000.0,
+            "y": 1983.0,
+            "z": 552.0
+          },
+          "expected": {
+            "x": 1000.0,
+            "y": 1983.0,
+            "z": 552.0
+          },
+          "severity": "error",
+          "detail": "guards against exploded or out-of-envelope generated assemblies"
+        },
+        {
+          "name": "step_invalid_shape_count",
+          "ok": true,
+          "actual": 0.0,
+          "expected": 0,
+          "severity": "error",
+          "detail": "guards against visually present but invalid STEP solids"
+        }
+      ],
+      "failed_checks": [],
+      "warning_checks": []
+    },
+    {
+      "door_count": 14,
+      "rows_per_column": 7,
+      "status": "PASS",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\GEN-20260517142633-D1E0AB\\locker_16029_14door_rule_driven_verify.csv",
+      "verify_rows": 418,
+      "metrics": {
+        "door_height_mm": 254.429,
+        "door_width_mm": 437.0,
+        "door_pitch_mm": 261.429,
+        "door_gap_mm": 7.0,
+        "door_rows_per_column": 7,
+        "door_y_span": {
+          "bottom": 32.0,
+          "top": 1855.0
+        },
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        },
+        "step_bbox_mm": {
+          "x": 1000.0,
+          "y": 1983.0,
+          "z": 552.0
+        },
+        "step_invalid_shape_count": 0.0,
+        "door_source_levels": [
+          "freecad_gold_seam_production_signature_candidate"
+        ],
+        "door_template_names": [
+          "gold_seam_signature_W437_H254429_step_valid_p4_golds131164"
+        ]
+      },
+      "checks": [
+        {
+          "name": "door_module_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_row_count",
+          "ok": true,
+          "actual": 7,
+          "expected": 7,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_row_count",
+          "ok": true,
+          "actual": 7,
+          "expected": 7,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_height_formula",
+          "ok": true,
+          "actual": {
+            "min": 254.428,
+            "max": 254.429,
+            "spread": 0.001
+          },
+          "expected": 254.429,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_gap_formula",
+          "ok": true,
+          "actual": {
+            "min": 7.0,
+            "max": 7.0,
+            "spread": 0.0
+          },
+          "expected": 7.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_pitch_formula",
+          "ok": true,
+          "actual": {
+            "door_height": {
+              "min": 254.428,
+              "max": 254.429,
+              "spread": 0.001
+            },
+            "gap": {
+              "min": 7.0,
+              "max": 7.0,
+              "spread": 0.0
+            }
+          },
+          "expected": 261.429,
+          "severity": "error",
+          "detail": "door pitch = door height + visual gap"
+        },
+        {
+          "name": "door_stack_bottom_top",
+          "ok": true,
+          "actual": {
+            "first_y_min": 32.0,
+            "last_y_max": 1855.0
+          },
+          "expected": {
+            "first_y_min": 32.0,
+            "last_y_max": 1855.0
+          },
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_right_door_row_alignment",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "<= 0.05",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_width_reference",
+          "ok": true,
+          "actual": {
+            "min": 437.0,
+            "max": 437.0,
+            "spread": 0.0
+          },
+          "expected": 437.0,
+          "severity": "error",
+          "detail": "guards against wrong door template width when changing row count"
+        },
+        {
+          "name": "door_lock_hinge_side_relation",
+          "ok": true,
+          "actual": {
+            "L": {
+              "lock_hole_center_x": -55.0,
+              "hinge_axis_x": -467.0
+            },
+            "R": {
+              "lock_hole_center_x": 55.0,
+              "hinge_axis_x": 467.0
+            }
+          },
+          "expected": "left negative, right positive",
+          "severity": "error",
+          "detail": "guards against mirrored or swapped door modules"
+        },
+        {
+          "name": "lock_hole_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_hook_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_position_relation",
+          "ok": true,
+          "actual": "all lock centers match door centers and side sign",
+          "expected": "per-door lock references",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_frame_horizontal_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_and_frame_driven_from_door_boundary",
+          "ok": true,
+          "actual": "all shelf/frame rows follow door boundary offsets",
+          "expected": {
+            "shelf_y_min": "+2mm from lower door y_max",
+            "frame_y_min": "-10mm from lower door y_max"
+          },
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "overall_bbox_x",
+          "ok": true,
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "step_bbox_xyz_envelope",
+          "ok": true,
+          "actual": {
+            "x": 1000.0,
+            "y": 1983.0,
+            "z": 552.0
+          },
+          "expected": {
+            "x": 1000.0,
+            "y": 1983.0,
+            "z": 552.0
+          },
+          "severity": "error",
+          "detail": "guards against exploded or out-of-envelope generated assemblies"
+        },
+        {
+          "name": "step_invalid_shape_count",
+          "ok": true,
+          "actual": 0.0,
+          "expected": 0,
+          "severity": "error",
+          "detail": "guards against visually present but invalid STEP solids"
+        }
+      ],
+      "failed_checks": [],
+      "warning_checks": []
+    }
+  ],
+  "output_paths": {
+    "json": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.json",
+    "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.md",
+    "csv": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_structural_rule_audit.csv"
+  },
+  "notes": [
+    "This audit verifies layout rules from generated evidence rows; it does not release production drawings.",
+    "Checks cover door grid, door width, lock/hinge side relation, shelf/frame boundary offsets, L/R symmetry, STEP bbox X/Y/Z envelope, invalid STEP shape count, and overall bbox X."
+  ]
+}

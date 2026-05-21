@@ -1,0 +1,30 @@
+{
+  "status": "open_failed",
+  "message": "SolidWorks did not return a model document for this STEP file.",
+  "step_path": "C:\\sw16029_standard_ascii\\plastic_bushing.step",
+  "status_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\solidworks_tools\\solidworks_probe_source_plastic_bushing_wait180.json",
+  "attach_mode": "created_object",
+  "visible_set": true,
+  "close_after": true,
+  "auto_repair_dialog": false,
+  "silent_only": true,
+  "wait_seconds": 180,
+  "dialog_click_count": 0,
+  "success_method": "",
+  "document_count": 0,
+  "active_title": "",
+  "active_path": "",
+  "exception": "",
+  "methods": [
+    {"name":"OpenDoc7_part_silent","ok":false,"error":"null document","error_code":0,"warning_code":262144,"title":"","path_name":""},
+    {"name":"OpenDoc6_part_silent","ok":false,"error":"null document","error_code":2097152,"warning_code":0,"title":"","path_name":""},
+    {"name":"OpenDoc6_none_silent","ok":false,"error":"null document","error_code":1024,"warning_code":0,"title":"","path_name":""},
+    {"name":"LoadFile4_r","ok":false,"error":"null document","error_code":1,"warning_code":null,"title":"","path_name":""}
+  ],
+  "dialog_events": [
+  ],
+  "diagnostics": [
+    {"name":"Marshal.GetActiveObject","ok":false,"error":"操作无法使用 (异常来自 HRESULT:0x800401E3 (MK_E_UNAVAILABLE))","error_code":null,"warning_code":null,"title":"","path_name":""},
+    {"name":"WaitForActiveDocument","ok":false,"error":"timeout waiting for active document","error_code":null,"warning_code":null,"title":"","path_name":""}
+  ]
+}

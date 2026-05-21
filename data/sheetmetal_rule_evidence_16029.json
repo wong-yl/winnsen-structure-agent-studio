@@ -1,0 +1,432 @@
+{
+  "generated_at": "2026-05-19T19:15:33+08:00",
+  "product_family": "16029",
+  "source_batch": {
+    "run_id": "BATCH-16029-SHEETMETAL-20260519",
+    "source_root": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)",
+    "batch_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\runs\\BATCH-16029-SHEETMETAL-20260519",
+    "manifest_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\runs\\BATCH-16029-SHEETMETAL-20260519\\manifest.json",
+    "summary_csv_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\drawing_sheetmetal\\runs\\BATCH-16029-SHEETMETAL-20260519\\summary.csv"
+  },
+  "summary": {
+    "file_count": 49,
+    "main_source_file_count": 19,
+    "accepted_rule_seed_file_count": 34,
+    "formula_count": 1,
+    "candidate_count": 7,
+    "quality_status_counts": {
+      "geometry_rule_seed_only": 32,
+      "needs_layout_filter": 7,
+      "needs_closed_loop_rebuild": 8,
+      "rule_seed_candidate": 2
+    },
+    "role_counts": {
+      "door_panel": 17,
+      "shelf": 9,
+      "divider": 23
+    }
+  },
+  "formulas": [
+    {
+      "id": "16029-door-panel-1-to-6-flat-height-series",
+      "title": "16029 储物柜门板 1/12-6/12 展开高度序列",
+      "role": "door_panel",
+      "evidence_level": "engineering_reference",
+      "confidence": "high",
+      "formula_text": "flat_height_mm = 181.9 + (door_index - 1) * 152.5",
+      "dimensions_mm": {
+        "flat_width_avg": 473.4,
+        "flat_width_span": 0.0,
+        "base_height_at_index_1": 181.9,
+        "height_step_per_index": 152.5,
+        "max_fit_residual": 0.0
+      },
+      "sample_count": 6,
+      "samples": [
+        {
+          "door_index": 1,
+          "flat_width_mm": 473.4,
+          "flat_height_mm": 181.9,
+          "file_name": "储物柜门板1╱12展开图.DXF",
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\储物柜门板1╱12展开图.DXF"
+        },
+        {
+          "door_index": 2,
+          "flat_width_mm": 473.4,
+          "flat_height_mm": 334.4,
+          "file_name": "储物柜门板2╱12展开图.DXF",
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\储物柜门板2╱12展开图.DXF"
+        },
+        {
+          "door_index": 3,
+          "flat_width_mm": 473.4,
+          "flat_height_mm": 486.9,
+          "file_name": "储物柜门板3╱12展开图.DXF",
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\储物柜门板3╱12展开图.DXF"
+        },
+        {
+          "door_index": 4,
+          "flat_width_mm": 473.4,
+          "flat_height_mm": 639.4,
+          "file_name": "储物柜门板4╱12展开图.DXF",
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\储物柜门板4╱12展开图.DXF"
+        },
+        {
+          "door_index": 5,
+          "flat_width_mm": 473.4,
+          "flat_height_mm": 791.9,
+          "file_name": "储物柜门板5╱12展开图.DXF",
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\储物柜门板5╱12展开图.DXF"
+        },
+        {
+          "door_index": 6,
+          "flat_width_mm": 473.4,
+          "flat_height_mm": 944.4,
+          "file_name": "储物柜门板6╱12展开图.DXF",
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\储物柜门板6╱12展开图.DXF"
+        }
+      ],
+      "usage_note": "这是 DXF 展开图的门板尺寸序列证据，可用于生成器的单件规则校准；不是直接等同于整柜装配门缝或外观尺寸。"
+    }
+  ],
+  "rule_candidates": [
+    {
+      "id": "16029-door-panel-12-flat",
+      "title": "16029 储物柜门板 12/12 展开件",
+      "role": "door_panel",
+      "evidence_level": "engineering_reference",
+      "confidence": "high",
+      "dimensions_mm": {
+        "long": 1878.6,
+        "short": 492.0
+      },
+      "source_files_count": 1,
+      "accepted_source_files_count": 1,
+      "blocked_source_files_count": 0,
+      "rule_seed": "door_panel_full_height_flat_pattern_bbox",
+      "notes": "文件名带 0.8mm 厚度，适合作为门板展开外形和厚度的强证据；后续需要与 10/12/14 门装配门缝规则分开使用。",
+      "source_examples": [
+        {
+          "file_name": "16029-22-01-01 储物柜门板12╱12 展开图(0.8).DXF",
+          "quality_status": "rule_seed_candidate",
+          "bbox_mm": {
+            "width": 492.0,
+            "height": 1878.6
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\16029-22-01-01 储物柜门板12╱12 展开图(0.8).DXF"
+        }
+      ]
+    },
+    {
+      "id": "16029-door-panel-reinforcement-flat",
+      "title": "16029 门板/门框加强筋展开件",
+      "role": "door_reinforcement",
+      "evidence_level": "engineering_reference",
+      "confidence": "medium",
+      "dimensions_mm": {
+        "long": 1800.5,
+        "short": 66.8
+      },
+      "source_files_count": 1,
+      "accepted_source_files_count": 1,
+      "blocked_source_files_count": 0,
+      "rule_seed": "door_reinforcement_bbox_and_hole_pattern",
+      "notes": "可先做加强筋长度、宽度和孔位数量证据，暂不自动推断折弯扣减。",
+      "source_examples": [
+        {
+          "file_name": "16029-22-01-02 储物柜门板12╱12 门框加强筋 展开图(0.8).DXF",
+          "quality_status": "rule_seed_candidate",
+          "bbox_mm": {
+            "width": 1800.5,
+            "height": 66.8
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\16029-22-01-02 储物柜门板12╱12 门框加强筋 展开图(0.8).DXF"
+        }
+      ]
+    },
+    {
+      "id": "16029-cabinet-shelf-flat",
+      "title": "16029 箱体横层板 L/R 展开外形",
+      "role": "shelf",
+      "evidence_level": "engineering_reference",
+      "confidence": "medium",
+      "dimensions_mm": {
+        "long": 574.4,
+        "short": 480.4
+      },
+      "source_files_count": 2,
+      "accepted_source_files_count": 1,
+      "blocked_source_files_count": 1,
+      "rule_seed": "shelf_flat_pattern_normalized_bbox",
+      "notes": "L 件已可作为几何种子，R 件同尺寸但需要闭合轮廓修复；生成器先用归一化 bbox，不直接释放正式展开。",
+      "source_examples": [
+        {
+          "file_name": "箱体横层板L展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 574.4,
+            "height": 480.4
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板L展开图.DXF"
+        },
+        {
+          "file_name": "箱体横层板R展开图.DXF",
+          "quality_status": "needs_closed_loop_rebuild",
+          "bbox_mm": {
+            "width": 480.4,
+            "height": 574.4
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板R展开图.DXF"
+        }
+      ]
+    },
+    {
+      "id": "16029-shelf-stiffener-flat",
+      "title": "16029 箱体横层板加强筋展开件",
+      "role": "shelf_stiffener",
+      "evidence_level": "engineering_reference",
+      "confidence": "medium",
+      "dimensions_mm": {
+        "long": 429.0,
+        "short": 71.4
+      },
+      "source_files_count": 1,
+      "accepted_source_files_count": 1,
+      "blocked_source_files_count": 0,
+      "rule_seed": "shelf_stiffener_bbox",
+      "notes": "可用于层板加强筋单件外形候选，后续补孔位/折弯方向。",
+      "source_examples": [
+        {
+          "file_name": "箱体横层板加强筋展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 71.4,
+            "height": 429.0
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\箱体横层板加强筋展开图.DXF"
+        }
+      ]
+    },
+    {
+      "id": "16029-cabinet-vertical-divider-flat",
+      "title": "16029 箱体竖隔板 L/R 展开外形",
+      "role": "cabinet_divider",
+      "evidence_level": "engineering_reference",
+      "confidence": "high",
+      "dimensions_mm": {
+        "long": 1856.6,
+        "short": 583.7
+      },
+      "source_files_count": 12,
+      "accepted_source_files_count": 12,
+      "blocked_source_files_count": 0,
+      "rule_seed": "vertical_divider_flat_pattern_bbox_and_hole_count",
+      "notes": "主目录和备份目录均反复出现 1856.6 x 583.7mm 级别外形，可作为竖隔板规则基准。",
+      "source_examples": [
+        {
+          "file_name": "箱体竖隔板L展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 1856.6,
+            "height": 583.7
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板L展开图.DXF"
+        },
+        {
+          "file_name": "箱体竖隔板R(镜向)展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 1856.6,
+            "height": 583.7
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板R(镜向)展开图.DXF"
+        },
+        {
+          "file_name": "(20180606 西班牙)箱体竖隔板L展开图.dxf",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 583.7,
+            "height": 1856.6
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板\\(20180606 西班牙)箱体竖隔板L展开图.dxf"
+        },
+        {
+          "file_name": "(20180606 西班牙)箱体竖隔板R(镜向)展开图.dxf",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 583.7,
+            "height": 1856.6
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板\\(20180606 西班牙)箱体竖隔板R(镜向)展开图.dxf"
+        }
+      ]
+    },
+    {
+      "id": "16029-door-frame-horizontal-divider-flat",
+      "title": "16029 门框横隔板展开外形",
+      "role": "door_frame_divider",
+      "evidence_level": "engineering_reference",
+      "confidence": "high",
+      "dimensions_mm": {
+        "long": 445.0,
+        "short": 50.0
+      },
+      "source_files_count": 2,
+      "accepted_source_files_count": 2,
+      "blocked_source_files_count": 0,
+      "rule_seed": "door_frame_horizontal_divider_bbox",
+      "notes": "横隔板两种方向文件尺寸一致，可优先用于门数变化时的横隔板数量和位置规则。",
+      "source_examples": [
+        {
+          "file_name": "门框 横隔板R展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 445.0,
+            "height": 50.0274
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\门框 横隔板R展开图.DXF"
+        },
+        {
+          "file_name": "门框 横隔板展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 49.9848,
+            "height": 445.0
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\门框 横隔板展开图.DXF"
+        }
+      ]
+    },
+    {
+      "id": "16029-door-frame-vertical-divider-flat",
+      "title": "16029 门框竖隔板展开外形",
+      "role": "door_frame_divider",
+      "evidence_level": "engineering_reference",
+      "confidence": "high",
+      "dimensions_mm": {
+        "long": 1834.0,
+        "short": 49.3
+      },
+      "source_files_count": 2,
+      "accepted_source_files_count": 2,
+      "blocked_source_files_count": 0,
+      "rule_seed": "door_frame_vertical_divider_bbox",
+      "notes": "竖隔板 L/R 主目录尺寸稳定；备份目录中 9170mm 异常样本被排除。",
+      "source_examples": [
+        {
+          "file_name": "门框 竖隔板L展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 49.3,
+            "height": 1834.0
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\门框 竖隔板L展开图.DXF"
+        },
+        {
+          "file_name": "门框 竖隔板R展开图.DXF",
+          "quality_status": "geometry_rule_seed_only",
+          "bbox_mm": {
+            "width": 1834.0,
+            "height": 49.4274
+          },
+          "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\2.钣金展开图\\门框 竖隔板R展开图.DXF"
+        }
+      ]
+    }
+  ],
+  "blocked_evidence_summary": {
+    "blocked_count": 15,
+    "quality_status_counts": {
+      "needs_layout_filter": 7,
+      "needs_closed_loop_rebuild": 8
+    },
+    "large_bbox_noise_count": 4,
+    "blocked_examples": [
+      {
+        "file_name": "储物柜门板1╱12展开图.dxf",
+        "quality_status": "needs_layout_filter",
+        "bbox_text": "473.4 x 181.9 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板1╱12展开图.dxf"
+      },
+      {
+        "file_name": "储物柜门板3╱12展开图.dxf",
+        "quality_status": "needs_layout_filter",
+        "bbox_text": "946.8 x 973.8 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板3╱12展开图.dxf"
+      },
+      {
+        "file_name": "储物柜门板4╱12展开图.dxf",
+        "quality_status": "needs_layout_filter",
+        "bbox_text": "946.8 x 1278.8 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板4╱12展开图.dxf"
+      },
+      {
+        "file_name": "储物柜门板5╱12展开图.dxf",
+        "quality_status": "needs_layout_filter",
+        "bbox_text": "946.8 x 1583.8 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板5╱12展开图.dxf"
+      },
+      {
+        "file_name": "储物柜门板6╱12展开图.dxf",
+        "quality_status": "needs_layout_filter",
+        "bbox_text": "946.8 x 1888.8 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板6╱12展开图.dxf"
+      },
+      {
+        "file_name": "后下门板展开图.dxf",
+        "quality_status": "needs_layout_filter",
+        "bbox_text": "1006.8 x 1908.8 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\后下门板展开图.dxf"
+      },
+      {
+        "file_name": "层板(控制安装)展开图.DXF",
+        "quality_status": "needs_closed_loop_rebuild",
+        "bbox_text": "478.7 x 360.6 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\层板(控制安装)展开图.DXF"
+      },
+      {
+        "file_name": "层板(控制安装2)展开图.DXF",
+        "quality_status": "needs_closed_loop_rebuild",
+        "bbox_text": "478.7 x 370.6 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\层板(控制安装2)展开图.DXF"
+      }
+    ],
+    "large_bbox_noise_examples": [
+      {
+        "file_name": "门框 竖隔板L展开图.dxf",
+        "quality_status": "geometry_rule_seed_only",
+        "bbox_text": "246.5 x 9170.0 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 竖隔板L展开图.dxf"
+      },
+      {
+        "file_name": "门框 竖隔板R(镜向)展开图.dxf",
+        "quality_status": "geometry_rule_seed_only",
+        "bbox_text": "246.5 x 9170.0 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\门框 竖隔板R(镜向)展开图.dxf"
+      },
+      {
+        "file_name": "箱体竖隔板L展开图.dxf",
+        "quality_status": "needs_closed_loop_rebuild",
+        "bbox_text": "16771.481 x 19648.743 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板\\箱体竖隔板L展开图.dxf"
+      },
+      {
+        "file_name": "箱体竖隔板R(镜向)展开图.dxf",
+        "quality_status": "needs_closed_loop_rebuild",
+        "bbox_text": "16771.481 x 19648.743 mm",
+        "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板\\箱体竖隔板R(镜向)展开图.dxf"
+      }
+    ]
+  },
+  "generator_guidance": [
+    "先把 16029 同外形 10/12/14 门的门板、层板、门框横隔板、竖隔板规则跑通，不做全量变种库存。",
+    "门板 1/12-6/12 展开高度序列可作为尺寸变化证据，但整柜门缝、铰链、锁孔位置仍需独立装配规则。",
+    "needs_layout_filter 和 needs_closed_loop_rebuild 样本不能直接驱动模型生成，只能进入待修复证据池。",
+    "SolidWorks 交付前，应先用 FreeCAD/STEP 或 SolidWorks 低并发检查 bbox、实体数和装配位置。"
+  ],
+  "output_paths": {
+    "json": "D:\\Winnsen_Structure_Agent_Studio\\data\\sheetmetal_rule_evidence_16029.json",
+    "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\sheetmetal_rule_evidence_16029.md",
+    "csv": "D:\\Winnsen_Structure_Agent_Studio\\data\\sheetmetal_rule_evidence_16029.csv"
+  }
+}

@@ -1,0 +1,8 @@
+﻿id,title,role,long_mm,short_mm,source_files_count,accepted_source_files_count,confidence,rule_seed,notes
+16029-door-panel-12-flat,16029 储物柜门板 12/12 展开件,door_panel,1878.6,492.0,1,1,high,door_panel_full_height_flat_pattern_bbox,文件名带 0.8mm 厚度，适合作为门板展开外形和厚度的强证据；后续需要与 10/12/14 门装配门缝规则分开使用。
+16029-door-panel-reinforcement-flat,16029 门板/门框加强筋展开件,door_reinforcement,1800.5,66.8,1,1,medium,door_reinforcement_bbox_and_hole_pattern,可先做加强筋长度、宽度和孔位数量证据，暂不自动推断折弯扣减。
+16029-cabinet-shelf-flat,16029 箱体横层板 L/R 展开外形,shelf,574.4,480.4,2,1,medium,shelf_flat_pattern_normalized_bbox,L 件已可作为几何种子，R 件同尺寸但需要闭合轮廓修复；生成器先用归一化 bbox，不直接释放正式展开。
+16029-shelf-stiffener-flat,16029 箱体横层板加强筋展开件,shelf_stiffener,429.0,71.4,1,1,medium,shelf_stiffener_bbox,可用于层板加强筋单件外形候选，后续补孔位/折弯方向。
+16029-cabinet-vertical-divider-flat,16029 箱体竖隔板 L/R 展开外形,cabinet_divider,1856.6,583.7,12,12,high,vertical_divider_flat_pattern_bbox_and_hole_count,主目录和备份目录均反复出现 1856.6 x 583.7mm 级别外形，可作为竖隔板规则基准。
+16029-door-frame-horizontal-divider-flat,16029 门框横隔板展开外形,door_frame_divider,445.0,50.0,2,2,high,door_frame_horizontal_divider_bbox,横隔板两种方向文件尺寸一致，可优先用于门数变化时的横隔板数量和位置规则。
+16029-door-frame-vertical-divider-flat,16029 门框竖隔板展开外形,door_frame_divider,1834.0,49.3,2,2,high,door_frame_vertical_divider_bbox,竖隔板 L/R 主目录尺寸稳定；备份目录中 9170mm 异常样本被排除。

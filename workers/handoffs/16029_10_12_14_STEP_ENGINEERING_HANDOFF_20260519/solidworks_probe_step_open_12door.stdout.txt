@@ -1,0 +1,7 @@
+OpenDoc6_part_silent ERROR 类型不匹配
+OpenDoc6_part_none ERROR 类型不匹配
+OpenDoc6_assembly_silent ERROR 类型不匹配
+OpenDoc6_none_silent ERROR 类型不匹配
+GetImportFileData OK
+LoadFile4_empty ERROR 类型不匹配
+LoadFile4_r ERROR 类型不匹配

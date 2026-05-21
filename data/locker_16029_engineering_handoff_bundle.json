@@ -1,0 +1,186 @@
+{
+  "generated_at": "2026-05-20T17:12:10+08:00",
+  "product_family": "16029",
+  "scope": "1000W x 1917H x 550D 10/12/14 door engineering-reference handoff",
+  "source_quality_matrix": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
+  "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519",
+  "manifest_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\handoff_manifest.csv",
+  "handoff_gate": {
+    "allowed_statuses": [
+      "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "PASS_STEP_GEOMETRY_NEEDS_FCSTD_AUDIT"
+    ],
+    "included_count": 3,
+    "skipped_count": 0
+  },
+  "variants": [
+    {
+      "door_count": 10,
+      "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "status_label": "ready_for_engineering_review",
+      "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door",
+      "recommended_model": "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff.",
+      "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_engineering_reference.step",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_solidworks_import.stp",
+      "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_freecad_reference.FCStd",
+      "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_step_in_solidworks.cmd",
+      "freecad_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_reference_in_freecad.cmd",
+      "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\locker_16029_10door_rule_driven_report.md",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\locker_16029_10door_rule_driven_verify.csv",
+      "step_geometry_check_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\freecad_geometry_check.json",
+      "fcstd_integrity_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\locker_16029_10door_rule_driven_geometry_integrity.md",
+      "structural_rule_audit_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\locker_16029_structural_rule_audit.md",
+      "transfer": {
+        "step": "existing",
+        "stp": "existing",
+        "fcstd": "existing"
+      },
+      "metrics": {
+        "bbox_x_mm": 1000.0,
+        "verify_rows": 306,
+        "step_mb": 29.729,
+        "fcstd_mb": 3.404,
+        "step_geometry_status": "geometry_check_pass",
+        "step_invalid_shape_count": 0,
+        "fcstd_integrity_status": "PASS",
+        "structural_rule_status": "PASS",
+        "structural_rule_failed_checks": 0,
+        "door_width_mm": 437.0,
+        "door_height_mm": 359.0,
+        "door_pitch_mm": 366.0,
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        }
+      }
+    },
+    {
+      "door_count": 12,
+      "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "status_label": "ready_for_engineering_review",
+      "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door",
+      "recommended_model": "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff.",
+      "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_engineering_reference.step",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_solidworks_import.stp",
+      "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_freecad_reference.FCStd",
+      "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_step_in_solidworks.cmd",
+      "freecad_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_reference_in_freecad.cmd",
+      "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_report.md",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_verify.csv",
+      "step_geometry_check_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\freecad_geometry_check.json",
+      "fcstd_integrity_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_geometry_integrity.md",
+      "structural_rule_audit_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_structural_rule_audit.md",
+      "transfer": {
+        "step": "existing",
+        "stp": "existing",
+        "fcstd": "existing"
+      },
+      "metrics": {
+        "bbox_x_mm": 1000.0,
+        "verify_rows": 386,
+        "step_mb": 32.987,
+        "fcstd_mb": 3.697,
+        "step_geometry_status": "geometry_check_pass",
+        "step_invalid_shape_count": 0,
+        "fcstd_integrity_status": "PASS",
+        "structural_rule_status": "PASS",
+        "structural_rule_failed_checks": 0,
+        "door_width_mm": 437.0,
+        "door_height_mm": 298.0,
+        "door_pitch_mm": 305.0,
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        }
+      }
+    },
+    {
+      "door_count": 14,
+      "status": "PASS_READY_FOR_ENGINEERING_REVIEW",
+      "status_label": "ready_for_engineering_review",
+      "handoff_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door",
+      "recommended_model": "FCStd and STEP are both available; STEP is the SolidWorks-neutral handoff.",
+      "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_engineering_reference.step",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_solidworks_import.stp",
+      "fcstd": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_freecad_reference.FCStd",
+      "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_step_in_solidworks.cmd",
+      "freecad_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_reference_in_freecad.cmd",
+      "report_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\locker_16029_14door_rule_driven_report.md",
+      "verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\locker_16029_14door_rule_driven_verify.csv",
+      "step_geometry_check_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\freecad_geometry_check.json",
+      "fcstd_integrity_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\locker_16029_14door_rule_driven_geometry_integrity.md",
+      "structural_rule_audit_md": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\locker_16029_structural_rule_audit.md",
+      "transfer": {
+        "step": "existing",
+        "stp": "existing",
+        "fcstd": "existing"
+      },
+      "metrics": {
+        "bbox_x_mm": 1000.0,
+        "verify_rows": 418,
+        "step_mb": 35.439,
+        "fcstd_mb": 3.962,
+        "step_geometry_status": "geometry_check_pass",
+        "step_invalid_shape_count": 0,
+        "fcstd_integrity_status": "PASS",
+        "structural_rule_status": "PASS",
+        "structural_rule_failed_checks": 0,
+        "door_width_mm": 437.0,
+        "door_height_mm": 254.429,
+        "door_pitch_mm": 261.429,
+        "lock_center_x_abs_mm": {
+          "min": 55.0,
+          "max": 55.0,
+          "spread": 0.0
+        },
+        "hinge_axis_x_abs_mm": {
+          "min": 467.0,
+          "max": 467.0,
+          "spread": 0.0
+        }
+      }
+    }
+  ],
+  "skipped_variants": [],
+  "notes": [
+    "This handoff bundle is for engineering review only.",
+    "SolidWorks users should open the standardized .stp files; generated SolidWorks scripts use a safe API-open attempt and manual fallback.",
+    "All included variants have STEP geometry PASS and FCStd integrity PASS.",
+    "All included variants have structural rule audit PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X.",
+    "SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report."
+  ],
+  "solidworks_open_verification": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\SOLIDWORKS_OPEN_VERIFICATION_20260520.md",
+  "root_launchers": [
+    {
+      "door_count": 10,
+      "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_10door_in_solidworks.cmd",
+      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\open_10door_step_in_solidworks.cmd",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\16029_1000W_1917H_550D_10door_solidworks_import.stp"
+    },
+    {
+      "door_count": 12,
+      "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_12door_in_solidworks.cmd",
+      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\open_12door_step_in_solidworks.cmd",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_solidworks_import.stp"
+    },
+    {
+      "door_count": 14,
+      "solidworks_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_14door_in_solidworks.cmd",
+      "target_launcher": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\open_14door_step_in_solidworks.cmd",
+      "stp": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\16029_1000W_1917H_550D_14door_solidworks_import.stp"
+    }
+  ],
+  "engineer_open_index": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\ENGINEER_OPEN_INDEX.md"
+}

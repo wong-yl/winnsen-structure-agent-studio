@@ -1,0 +1,184 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板\\PO#1870901箱体竖隔板R(镜向)展开图.dxf",
+  "file_name": "PO#1870901箱体竖隔板R(镜向)展开图.dxf",
+  "role_guess": "divider",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": 2181.8178,
+    "min_y": 3526.7173,
+    "max_x": 2765.5178,
+    "max_y": 5383.3173,
+    "width": 583.7,
+    "height": 1856.6
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": 2181.8178,
+    "min_y": 3526.7173,
+    "max_x": 2765.5178,
+    "max_y": 5383.3173,
+    "width": 583.7,
+    "height": 1856.6
+  },
+  "manufacturing_bbox_source": "largest_closed_loop",
+  "entity_counts": {
+    "CIRCLE": 132,
+    "INSERT": 180,
+    "LINE": 84,
+    "VIEWPORT": 1
+  },
+  "layer_counts": {
+    "0": 397
+  },
+  "space_counts": {
+    "model": 396,
+    "paper": 1
+  },
+  "layout_counts": {
+    "Model": 396,
+    "Layout": 1
+  },
+  "circle_count": 132,
+  "arc_count": 0,
+  "line_count": 84,
+  "polyline_count": 0,
+  "circle_radius_counts": {
+    "1.0": 20,
+    "1.75": 24,
+    "2.0": 12,
+    "2.5": 12,
+    "2.6": 8,
+    "2.75": 40,
+    "3.0": 16
+  },
+  "point_count_for_bbox": 432,
+  "loop_analysis": {
+    "curve_segment_count": 84,
+    "connected_component_count": 5,
+    "closed_loop_count": 5,
+    "open_endpoint_count": 0,
+    "largest_component_bbox_mm": {
+      "min_x": 2181.8178,
+      "min_y": 3526.7173,
+      "max_x": 2765.5178,
+      "max_y": 5383.3173,
+      "width": 583.7,
+      "height": 1856.6
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": 2181.8178,
+      "min_y": 3526.7173,
+      "max_x": 2765.5178,
+      "max_y": 5383.3173,
+      "width": 583.7,
+      "height": 1856.6
+    },
+    "components": [
+      {
+        "edge_count": 60,
+        "node_count": 60,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 2181.8178,
+          "min_y": 3526.7173,
+          "max_x": 2765.5178,
+          "max_y": 5383.3173,
+          "width": 583.7,
+          "height": 1856.6
+        },
+        "bbox_area_mm2": 1083697.42,
+        "source_types": {
+          "LINE": 60
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 6,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 2452.2178,
+          "min_y": 4658.8173,
+          "max_x": 2476.7178,
+          "max_y": 4683.3173,
+          "width": 24.5,
+          "height": 24.5
+        },
+        "bbox_area_mm2": 600.25,
+        "source_types": {
+          "LINE": 6
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 6,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 2452.2178,
+          "min_y": 4684.3173,
+          "max_x": 2476.7178,
+          "max_y": 4708.8173,
+          "width": 24.5,
+          "height": 24.5
+        },
+        "bbox_area_mm2": 600.25,
+        "source_types": {
+          "LINE": 6
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 6,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 2477.7178,
+          "min_y": 4684.3173,
+          "max_x": 2502.2178,
+          "max_y": 4708.8173,
+          "width": 24.5,
+          "height": 24.5
+        },
+        "bbox_area_mm2": 600.25,
+        "source_types": {
+          "LINE": 6
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 6,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 2477.7178,
+          "min_y": 4658.8173,
+          "max_x": 2502.2178,
+          "max_y": 4683.3173,
+          "width": 24.5,
+          "height": 24.5
+        },
+        "bbox_area_mm2": 600.25,
+        "source_types": {
+          "LINE": 6
+        }
+      }
+    ]
+  },
+  "quality_status": "geometry_rule_seed_only",
+  "quality_warnings": [
+    "DXF contains VIEWPORT; bbox may describe drawing/layout space instead of true flat manufacturing extents.",
+    "DXF has paper-space entities; filter model-space geometry before deriving manufacturing rules.",
+    "Outline appears fragmented into LINE/ARC entities; closed-loop reconstruction is required before automatic unfold output.",
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}

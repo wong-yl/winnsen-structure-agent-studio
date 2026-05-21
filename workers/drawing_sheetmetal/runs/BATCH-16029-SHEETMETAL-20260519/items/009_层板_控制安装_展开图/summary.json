@@ -1,0 +1,313 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\层板(控制安装)展开图.DXF",
+  "file_name": "层板(控制安装)展开图.DXF",
+  "role_guess": "shelf",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": 440.3603,
+    "min_y": 465.337,
+    "max_x": 919.0603,
+    "max_y": 825.937,
+    "width": 478.7,
+    "height": 360.6
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": 440.3603,
+    "min_y": 465.337,
+    "max_x": 919.0603,
+    "max_y": 825.937,
+    "width": 478.7,
+    "height": 360.6
+  },
+  "manufacturing_bbox_source": "raw_curve_bbox",
+  "entity_counts": {
+    "ARC": 128,
+    "CIRCLE": 48,
+    "LINE": 204
+  },
+  "layer_counts": {
+    "0": 380
+  },
+  "space_counts": {
+    "model": 380
+  },
+  "layout_counts": {
+    "Model": 380
+  },
+  "circle_count": 48,
+  "arc_count": 128,
+  "line_count": 204,
+  "polyline_count": 0,
+  "circle_radius_counts": {
+    "2.5": 44,
+    "2.7": 4
+  },
+  "point_count_for_bbox": 2008,
+  "loop_analysis": {
+    "curve_segment_count": 332,
+    "connected_component_count": 31,
+    "closed_loop_count": 0,
+    "open_endpoint_count": 0,
+    "largest_component_bbox_mm": {
+      "min_x": 440.3603,
+      "min_y": 465.337,
+      "max_x": 919.0603,
+      "max_y": 825.937,
+      "width": 478.7,
+      "height": 360.6
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": null,
+      "min_y": null,
+      "max_x": null,
+      "max_y": null,
+      "width": null,
+      "height": null
+    },
+    "components": [
+      {
+        "edge_count": 112,
+        "node_count": 88,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 440.3603,
+          "min_y": 465.337,
+          "max_x": 919.0603,
+          "max_y": 825.937,
+          "width": 478.7,
+          "height": 360.6
+        },
+        "bbox_area_mm2": 172619.22,
+        "source_types": {
+          "LINE": 88,
+          "ARC": 24
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 766.7103,
+          "min_y": 565.637,
+          "max_x": 772.7103,
+          "max_y": 585.637,
+          "width": 6.0,
+          "height": 20.0
+        },
+        "bbox_area_mm2": 120.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 586.7103,
+          "min_y": 565.637,
+          "max_x": 592.7103,
+          "max_y": 585.637,
+          "width": 6.0,
+          "height": 20.0
+        },
+        "bbox_area_mm2": 120.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 712.2103,
+          "min_y": 794.637,
+          "max_x": 717.2103,
+          "max_y": 805.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 642.2103,
+          "min_y": 565.637,
+          "max_x": 647.2103,
+          "max_y": 576.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 712.2103,
+          "min_y": 565.637,
+          "max_x": 717.2103,
+          "max_y": 576.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 642.2103,
+          "min_y": 794.637,
+          "max_x": 647.2103,
+          "max_y": 805.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 562.2103,
+          "min_y": 794.637,
+          "max_x": 567.2103,
+          "max_y": 805.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 492.2103,
+          "min_y": 565.637,
+          "max_x": 497.2103,
+          "max_y": 576.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 562.2103,
+          "min_y": 565.637,
+          "max_x": 567.2103,
+          "max_y": 576.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 492.2103,
+          "min_y": 794.637,
+          "max_x": 497.2103,
+          "max_y": 805.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "ARC": 4,
+          "LINE": 2
+        }
+      },
+      {
+        "edge_count": 6,
+        "node_count": 4,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 792.2103,
+          "min_y": 794.637,
+          "max_x": 797.2103,
+          "max_y": 805.637,
+          "width": 5.0,
+          "height": 11.0
+        },
+        "bbox_area_mm2": 55.0,
+        "source_types": {
+          "LINE": 2,
+          "ARC": 4
+        }
+      }
+    ]
+  },
+  "quality_status": "needs_closed_loop_rebuild",
+  "quality_warnings": [
+    "Outline appears fragmented into LINE/ARC entities; closed-loop reconstruction is required before automatic unfold output.",
+    "No closed curve loop was detected; geometry can be used for reference statistics but not for automatic unfold output yet.",
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}

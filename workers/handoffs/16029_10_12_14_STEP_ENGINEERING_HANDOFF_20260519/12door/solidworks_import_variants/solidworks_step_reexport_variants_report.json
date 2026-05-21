@@ -1,0 +1,115 @@
+{
+  "generated_at": "2026-05-20T16:19:59.181936+00:00",
+  "source_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_freecad_reference.FCStd",
+  "output_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants",
+  "source_stats": {
+    "object_count": 435,
+    "invalid_shape_count": 0,
+    "solid_count": 467,
+    "face_count": 22659,
+    "edge_count": 57828,
+    "bbox_mm": {
+      "min_x": -500.0,
+      "min_y": -60.0,
+      "min_z": -550.0,
+      "max_x": 500.0,
+      "max_y": 1923.0,
+      "max_z": 2.0,
+      "size_x": 1000.0,
+      "size_y": 1983.0,
+      "size_z": 552.0
+    }
+  },
+  "production_stats": {
+    "object_count": 267,
+    "invalid_shape_count": 0,
+    "solid_count": 299,
+    "face_count": 21831,
+    "edge_count": 56352,
+    "bbox_mm": {
+      "min_x": -500.0,
+      "min_y": -60.0,
+      "min_z": -550.0,
+      "max_x": 500.0,
+      "max_y": 1923.0,
+      "max_z": 0.0,
+      "size_x": 1000.0,
+      "size_y": 1983.0,
+      "size_z": 550.0
+    }
+  },
+  "variants": [
+    {
+      "name": "part_objects_ap214is",
+      "scheme": "AP214IS",
+      "method": "export_part_objects",
+      "object_count": 435,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_part_objects_ap214is.stp",
+      "status": "exported",
+      "size_bytes": 33722175
+    },
+    {
+      "name": "part_compound_ap214is",
+      "scheme": "AP214IS",
+      "method": "export_compound",
+      "object_count": 435,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_part_compound_ap214is.stp",
+      "status": "exported",
+      "size_bytes": 33721979
+    },
+    {
+      "name": "import_objects_ap214is",
+      "scheme": "AP214IS",
+      "method": "export_import_objects",
+      "object_count": 435,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_import_objects_ap214is.stp",
+      "status": "exported",
+      "size_bytes": 34207933
+    },
+    {
+      "name": "part_objects_ap203",
+      "scheme": "AP203",
+      "method": "export_part_objects",
+      "object_count": 435,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_part_objects_ap203.stp",
+      "status": "exported",
+      "size_bytes": 33722175
+    },
+    {
+      "name": "part_compound_ap203",
+      "scheme": "AP203",
+      "method": "export_compound",
+      "object_count": 435,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_part_compound_ap203.stp",
+      "status": "exported",
+      "size_bytes": 33721979
+    },
+    {
+      "name": "production_part_objects_ap214is",
+      "scheme": "AP214IS",
+      "method": "export_part_objects",
+      "object_count": 267,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_production_part_objects_ap214is.stp",
+      "status": "exported",
+      "size_bytes": 32873818
+    },
+    {
+      "name": "production_part_compound_ap214is",
+      "scheme": "AP214IS",
+      "method": "export_compound",
+      "object_count": 267,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_production_part_compound_ap214is.stp",
+      "status": "exported",
+      "size_bytes": 32873622
+    },
+    {
+      "name": "production_part_objects_ap203",
+      "scheme": "AP203",
+      "method": "export_part_objects",
+      "object_count": 267,
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\16029_1000W_1917H_550D_12door_freecad_reference_production_part_objects_ap203.stp",
+      "status": "exported",
+      "size_bytes": 32873818
+    }
+  ]
+}

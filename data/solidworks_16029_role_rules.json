@@ -1,0 +1,704 @@
+{
+  "generatedAt": "2026-05-18T23:36:28.390684+00:00",
+  "modelFamily": "16029 standard locker",
+  "outerSizeMm": {
+    "width": 1000,
+    "height": 1917,
+    "depth": 550
+  },
+  "sourceEvidence": {
+    "ruleRunDir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-20260517023937-37D2A4",
+    "baselineDir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\manual_runs\\BASELINE-16029-12DOOR-CLONE",
+    "sourceAssembly": "C:\\sw16029_direct_18door\\source\\top_assembly.SLDASM"
+  },
+  "qualityGate": "step_role_binding_available_needs_formula_derivation",
+  "counts": {
+    "components": 38,
+    "componentsWithTransform": 0,
+    "componentsWithBBox": 0,
+    "mateFeatureCount": 75,
+    "mateEntityRows": 150,
+    "features": 98,
+    "dimensions": 6,
+    "patternRuleCount": 3,
+    "sheetMetalFeatureCount": 0,
+    "maxComponentDepth": 1,
+    "stepObjectBBoxCount": 208,
+    "stepSourceObjectCount": 425,
+    "stepSkippedObjectCount": 217,
+    "stepRoleBindingCount": 177,
+    "stepRoleMatchedComponentCount": 79,
+    "stepRoleRepeatedGroupCount": 34
+  },
+  "stepRoleCounts": {
+    "cabinet_body": 16,
+    "hanger_rail": 12,
+    "shelf_or_partition": 46,
+    "top_cover": 6,
+    "base_or_leveling": 11,
+    "reinforcement": 5,
+    "door_frame": 17,
+    "lock_system": 28,
+    "door_module": 9,
+    "hinge_or_pivot": 14,
+    "unclassified": 8,
+    "electronics_or_power": 5
+  },
+  "solidworksFeatureRoles": {
+    "roleCounts": {
+      "base_or_leveling": 5,
+      "cabinet_body": 3,
+      "door_frame": 1,
+      "door_module": 20,
+      "electronics_or_power": 2,
+      "hanger_rail": 4,
+      "hinge_or_pivot": 4,
+      "lock_system": 13,
+      "service_rear_door": 1,
+      "shelf_or_partition": 16,
+      "top_cover": 2
+    },
+    "roleTypeCounts": {
+      "base_or_leveling": {
+        "Reference": 5
+      },
+      "cabinet_body": {
+        "Reference": 3
+      },
+      "door_frame": {
+        "Reference": 1
+      },
+      "door_module": {
+        "Reference": 10,
+        "ReferencePattern": 10
+      },
+      "electronics_or_power": {
+        "Reference": 2
+      },
+      "hanger_rail": {
+        "Reference": 2,
+        "ReferencePattern": 2
+      },
+      "hinge_or_pivot": {
+        "Reference": 4
+      },
+      "lock_system": {
+        "Reference": 3,
+        "ReferencePattern": 10
+      },
+      "service_rear_door": {
+        "Reference": 1
+      },
+      "shelf_or_partition": {
+        "Reference": 6,
+        "ReferencePattern": 10
+      },
+      "top_cover": {
+        "Reference": 2
+      }
+    },
+    "samples": {
+      "base_or_leveling": [
+        "底座焊接-1",
+        "调整脚 M12X60(模型)-1",
+        "调整脚 M12X60(模型)-2",
+        "调整脚 M12X60(模型)-3",
+        "调整脚 M12X60(模型)-4"
+      ],
+      "cabinet_body": [
+        "标准寄存柜 模型-1",
+        "箱体左侧板焊接-1",
+        "箱体右侧板焊接-1"
+      ],
+      "door_frame": [
+        "门框焊接-1"
+      ],
+      "door_module": [
+        "储物柜门1╱12装配-1",
+        "储物柜门1╱12装配-2",
+        "储物柜门2╱12装配-3",
+        "储物柜门2╱12装配-2",
+        "储物柜门3╱12装配-1",
+        "储物柜门4╱12装配-1",
+        "储物柜门5╱12装配-1",
+        "储物柜门6╱12装配-1"
+      ],
+      "electronics_or_power": [
+        "锁控板装配组件-1",
+        "电源插座(滤波器)-1"
+      ],
+      "hanger_rail": [
+        "衣架钢管-1",
+        "衣架钢管-2",
+        "衣架钢管-3",
+        "衣架钢管-4"
+      ],
+      "hinge_or_pivot": [
+        "门轴销(短)-1",
+        "门轴销(短)-2",
+        "门轴销(短)-3",
+        "门轴销(短)-4"
+      ],
+      "lock_system": [
+        "电控锁ZJA-S500-1",
+        "电控锁ZJA-S500-7",
+        "电控锁ZJA-S500-2",
+        "电控锁ZJA-S500-3",
+        "电控锁ZJA-S500-4",
+        "电控锁ZJA-S500-5",
+        "电控锁ZJA-S500-6",
+        "按钮插销装配-1"
+      ],
+      "service_rear_door": [
+        "应急维护门焊接-1"
+      ],
+      "shelf_or_partition": [
+        "箱体竖隔板L焊接-1",
+        "箱体竖隔板R焊接-1",
+        "箱体横层板L焊接-1",
+        "箱体横层板R焊接-1",
+        "箱体横层板L焊接-3",
+        "箱体横层板L焊接-5",
+        "箱体横层板L焊接-7",
+        "箱体横层板L焊接-9"
+      ],
+      "top_cover": [
+        "上盖焊接-1",
+        "顶棚组件-1"
+      ]
+    }
+  },
+  "patternSeeds": [
+    {
+      "feature": "层板阵列",
+      "featureType": "LocalLPattern",
+      "instances": 11,
+      "spacingMm": 152.5
+    },
+    {
+      "feature": "柜门阵列",
+      "featureType": "LocalLPattern",
+      "instances": 6,
+      "spacingMm": 305.0
+    },
+    {
+      "feature": "衣架钢管整列",
+      "featureType": "LocalLPattern",
+      "instances": 2,
+      "spacingMm": 915.0
+    }
+  ],
+  "distanceMateSeeds": [
+    {
+      "mate": "距离6",
+      "dimension": "D1@距离6",
+      "valueMm": 0.5
+    },
+    {
+      "mate": "距离11",
+      "dimension": "D1@距离11",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离15",
+      "dimension": "D1@距离15",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离16",
+      "dimension": "D1@距离16",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离4",
+      "dimension": "D1@距离4",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离7",
+      "dimension": "D1@距离7",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离8",
+      "dimension": "D1@距离8",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离9",
+      "dimension": "D1@距离9",
+      "valueMm": 2.0
+    },
+    {
+      "mate": "距离17",
+      "dimension": "D1@距离17",
+      "valueMm": 60.0
+    }
+  ],
+  "repeatedRoleGroups": [
+    {
+      "role": "shelf_or_partition",
+      "subrole": "shelf_panel",
+      "bboxSignatureMm": "433.2 x 25.0 x 527.2",
+      "count": 20,
+      "labelSamples": [
+        "箱体横层板L",
+        "箱体横层板L焊接",
+        "箱体横层板L",
+        "箱体横层板L焊接",
+        "箱体横层板L",
+        "箱体横层板L焊接",
+        "箱体横层板L",
+        "箱体横层板L焊接"
+      ],
+      "centerXRangeMm": [
+        -281.1,
+        281.1
+      ],
+      "centerYRangeMm": [
+        332.5,
+        1705.0
+      ],
+      "centerZRangeMm": [
+        -284.1,
+        -284.1
+      ]
+    },
+    {
+      "role": "shelf_or_partition",
+      "subrole": "shelf_reinforcement",
+      "bboxSignatureMm": "429.0 x 11.0 x 53.4",
+      "count": 20,
+      "labelSamples": [
+        "箱体横层板加强筋",
+        "箱体横层板加强筋",
+        "箱体横层板加强筋",
+        "箱体横层板加强筋",
+        "箱体横层板加强筋",
+        "箱体横层板加强筋",
+        "箱体横层板加强筋",
+        "箱体横层板加强筋"
+      ],
+      "centerXRangeMm": [
+        -281.1,
+        281.1
+      ],
+      "centerYRangeMm": [
+        1711.2,
+        1711.2
+      ],
+      "centerZRangeMm": [
+        -398.5,
+        -148.5
+      ]
+    },
+    {
+      "role": "door_frame",
+      "subrole": "horizontal_divider",
+      "bboxSignatureMm": "445.0 x 15.0 x 19.7",
+      "count": 10,
+      "labelSamples": [
+        "门框 横隔板",
+        "门框 横隔板",
+        "门框 横隔板",
+        "门框 横隔板",
+        "门框 横隔板",
+        "门框 横隔板R",
+        "门框 横隔板R",
+        "门框 横隔板R"
+      ],
+      "centerXRangeMm": [
+        -259.0,
+        259.0
+      ],
+      "centerYRangeMm": [
+        327.5,
+        1547.5
+      ],
+      "centerZRangeMm": [
+        -9.85,
+        -9.85
+      ]
+    },
+    {
+      "role": "cabinet_body",
+      "subrole": "side_panel_reinforcement",
+      "bboxSignatureMm": "4.8 x 1805.8 x 50.0",
+      "count": 8,
+      "labelSamples": [
+        "箱体侧板加强筋1",
+        "箱体侧板加强筋",
+        "箱体侧板加强筋",
+        "箱体侧板加强筋",
+        "箱体侧板加强筋",
+        "箱体侧板加强筋",
+        "箱体侧板加强筋",
+        "箱体侧板加强筋"
+      ],
+      "centerXRangeMm": [
+        -496.6,
+        496.6
+      ],
+      "centerYRangeMm": [
+        933.5,
+        933.5
+      ],
+      "centerZRangeMm": [
+        -398.5,
+        -148.5
+      ]
+    },
+    {
+      "role": "hanger_rail",
+      "subrole": "hanger_or_bracket",
+      "bboxSignatureMm": "20.0 x 30.0 x 88.4",
+      "count": 8,
+      "labelSamples": [
+        "衣杆固定支架",
+        "衣杆固定支架",
+        "衣杆固定支架",
+        "衣杆固定支架",
+        "衣杆固定支架",
+        "衣杆固定支架",
+        "衣杆固定支架",
+        "衣杆固定支架"
+      ],
+      "centerXRangeMm": [
+        -489.2,
+        489.2
+      ],
+      "centerYRangeMm": [
+        872.4,
+        1787.4
+      ],
+      "centerZRangeMm": [
+        -273.5,
+        -273.5
+      ]
+    },
+    {
+      "role": "base_or_leveling",
+      "subrole": "base_leveling_part",
+      "bboxSignatureMm": "20.8 x 10.8 x 20.8",
+      "count": 4,
+      "labelSamples": [
+        "螺母M12",
+        "螺母M001",
+        "螺母M002",
+        "螺母M003"
+      ],
+      "centerXRangeMm": [
+        -465.0,
+        465.0
+      ],
+      "centerYRangeMm": [
+        7.4,
+        7.4
+      ],
+      "centerZRangeMm": [
+        -500.5,
+        -74.5
+      ]
+    },
+    {
+      "role": "base_or_leveling",
+      "subrole": "base_leveling_part",
+      "bboxSignatureMm": "50.0 x 79.0 x 50.0",
+      "count": 4,
+      "labelSamples": [
+        "调整脚 M12X60(模型)",
+        "调整脚 M12X60(模型)",
+        "调整脚 M12X60(模型)",
+        "调整脚 M12X60(模型)"
+      ],
+      "centerXRangeMm": [
+        -465.0,
+        465.0
+      ],
+      "centerYRangeMm": [
+        -20.5,
+        -20.5
+      ],
+      "centerZRangeMm": [
+        -500.5,
+        -74.5
+      ]
+    },
+    {
+      "role": "hanger_rail",
+      "subrole": "hanger_or_bracket",
+      "bboxSignatureMm": "430.0 x 16.0 x 16.0",
+      "count": 4,
+      "labelSamples": [
+        "衣架钢管",
+        "衣架钢管",
+        "衣架钢管",
+        "衣架钢管"
+      ],
+      "centerXRangeMm": [
+        -284.2,
+        284.2
+      ],
+      "centerYRangeMm": [
+        873.4,
+        1788.4
+      ],
+      "centerZRangeMm": [
+        -273.5,
+        -273.5
+      ]
+    },
+    {
+      "role": "hinge_or_pivot",
+      "subrole": "pin_bushing_retainer",
+      "bboxSignatureMm": "13.0 x 7.0 x 13.0",
+      "count": 4,
+      "labelSamples": [
+        "塑料轴套(云绅模具)",
+        "塑料轴套(云绅模具)",
+        "塑料轴套(云绅模具)",
+        "塑料轴套(云绅模具)"
+      ],
+      "centerXRangeMm": [
+        -208.5,
+        -208.5
+      ],
+      "centerYRangeMm": [
+        -147.0,
+        147.0
+      ],
+      "centerZRangeMm": [
+        -7.0,
+        -7.0
+      ]
+    },
+    {
+      "role": "hinge_or_pivot",
+      "subrole": "pin_bushing_retainer",
+      "bboxSignatureMm": "10.0 x 0.8 x 8.6",
+      "count": 4,
+      "labelSamples": [
+        "开口挡圈 5",
+        "开口挡圈",
+        "开口挡圈",
+        "开口挡圈"
+      ],
+      "centerXRangeMm": [
+        -208.5,
+        -208.5
+      ],
+      "centerYRangeMm": [
+        -119.8,
+        119.3
+      ],
+      "centerZRangeMm": [
+        -7.7236,
+        -7.7236
+      ]
+    },
+    {
+      "role": "hinge_or_pivot",
+      "subrole": "pin_bushing_retainer",
+      "bboxSignatureMm": "6.0 x 60.0 x 6.0",
+      "count": 4,
+      "labelSamples": [
+        "门轴销(短)",
+        "门轴销(短)",
+        "门轴销(短)",
+        "门轴销(短)"
+      ],
+      "centerXRangeMm": [
+        -467.0,
+        467.0
+      ],
+      "centerYRangeMm": [
+        46.8,
+        1840.2
+      ],
+      "centerZRangeMm": [
+        -7.0,
+        -7.0
+      ]
+    },
+    {
+      "role": "lock_system",
+      "subrole": "lock_or_latch",
+      "bboxSignatureMm": "14.0 x 80.8 x 80.8",
+      "count": 4,
+      "labelSamples": [
+        "电控锁ZJA-S500",
+        "电控锁ZJA-S502",
+        "电控锁ZJA-S503",
+        "电控锁ZJA-S505"
+      ],
+      "centerXRangeMm": [
+        -55.2,
+        55.2
+      ],
+      "centerYRangeMm": [
+        1691.0,
+        1691.0
+      ],
+      "centerZRangeMm": [
+        -61.5,
+        -61.5
+      ]
+    },
+    {
+      "role": "lock_system",
+      "subrole": "lock_or_latch",
+      "bboxSignatureMm": "18.0 x 28.0 x 13.2",
+      "count": 4,
+      "labelSamples": [
+        "插销固定板",
+        "插销固定板",
+        "插销固定板",
+        "插销固定板"
+      ],
+      "centerXRangeMm": [
+        -208.5,
+        -208.5
+      ],
+      "centerYRangeMm": [
+        -134.2,
+        134.2
+      ],
+      "centerZRangeMm": [
+        -7.4,
+        -7.4
+      ]
+    },
+    {
+      "role": "cabinet_body",
+      "subrole": "side_panel",
+      "bboxSignatureMm": "514.7 x 1834.4 x 530.5",
+      "count": 2,
+      "labelSamples": [
+        "箱体左侧板",
+        "箱体左侧板焊接"
+      ],
+      "centerXRangeMm": [
+        -242.65,
+        -242.65
+      ],
+      "centerYRangeMm": [
+        941.0,
+        941.0
+      ],
+      "centerZRangeMm": [
+        -284.75,
+        -284.75
+      ]
+    },
+    {
+      "role": "cabinet_body",
+      "subrole": "side_panel",
+      "bboxSignatureMm": "499.5 x 1834.4 x 530.5",
+      "count": 2,
+      "labelSamples": [
+        "箱体右侧板",
+        "箱体右侧板焊接"
+      ],
+      "centerXRangeMm": [
+        250.25,
+        250.25
+      ],
+      "centerYRangeMm": [
+        941.0,
+        941.0
+      ],
+      "centerZRangeMm": [
+        -284.75,
+        -284.75
+      ]
+    },
+    {
+      "role": "cabinet_body",
+      "subrole": "side_panel_reinforcement",
+      "bboxSignatureMm": "34.2 x 1807.4 x 24.0",
+      "count": 2,
+      "labelSamples": [
+        "箱体侧板加强筋2",
+        "箱体侧板加强筋"
+      ],
+      "centerXRangeMm": [
+        -44.1,
+        44.1
+      ],
+      "centerYRangeMm": [
+        933.5,
+        933.5
+      ],
+      "centerZRangeMm": [
+        -537.0,
+        -537.0
+      ]
+    },
+    {
+      "role": "cabinet_body",
+      "subrole": "side_panel_reinforcement",
+      "bboxSignatureMm": "50.0 x 1805.8 x 4.8",
+      "count": 2,
+      "labelSamples": [
+        "箱体侧板加强筋",
+        "箱体侧板加强筋"
+      ],
+      "centerXRangeMm": [
+        -281.1,
+        281.1
+      ],
+      "centerYRangeMm": [
+        933.5,
+        933.5
+      ],
+      "centerZRangeMm": [
+        -546.6,
+        -546.6
+      ]
+    },
+    {
+      "role": "door_frame",
+      "subrole": "frame_part",
+      "bboxSignatureMm": "20.0 x 1917.0 x 45.0",
+      "count": 2,
+      "labelSamples": [
+        "门框 左",
+        "门框 右"
+      ],
+      "centerXRangeMm": [
+        -490.0,
+        490.0
+      ],
+      "centerYRangeMm": [
+        958.5,
+        958.5
+      ],
+      "centerZRangeMm": [
+        -22.5,
+        -22.5
+      ]
+    }
+  ],
+  "variantReadiness": [
+    {
+      "target": "12-door",
+      "status": "usable_baseline",
+      "reason": "Standard top assembly clone exists and opens as SolidWorks-native baseline."
+    },
+    {
+      "target": "10-door first mutator",
+      "status": "template_clone_available_mutator_pending",
+      "reason": "Practice source and 2/10 recipe exist: 5 rows per column, 366mm door pitch, 359mm door panel height, 10 locks, 5 shelves/dividers per side."
+    },
+    {
+      "target": "14/16/18+ doors",
+      "status": "blocked_until_10door_passes",
+      "reason": "Adding rows/components is higher risk than suppressing/remapping from 12-door; wait for one successful transform/mate mutator."
+    }
+  ],
+  "blockedReasons": [
+    "SolidWorks component transforms are not exposed by the current API extraction.",
+    "STEP role bboxes are usable evidence, but must be bound into editable SolidWorks placement operations.",
+    "Door frame divider, lock, hinge, shelf, and BOM/DXF formulas must close before enabling arbitrary door size changes."
+  ]
+}

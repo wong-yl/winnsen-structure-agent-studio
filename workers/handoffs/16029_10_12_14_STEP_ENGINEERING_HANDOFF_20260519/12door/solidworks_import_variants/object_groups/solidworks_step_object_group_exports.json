@@ -1,0 +1,213 @@
+{
+  "generated_at": "2026-05-20T16:29:42.821964+00:00",
+  "source_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\16029_1000W_1917H_550D_12door_freecad_reference.FCStd",
+  "output_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups",
+  "groups": [
+    {
+      "group": "01_shell_seed_from_solidworks_step",
+      "object_count": 93,
+      "solid_count": 93,
+      "face_count": 8678,
+      "bbox_mm": {
+        "min_x": -500.0,
+        "min_y": -60.0,
+        "min_z": -550.0,
+        "max_x": 500.0,
+        "max_y": 1923.0,
+        "max_z": 0.0,
+        "size_x": 1000.0,
+        "size_y": 1983.0,
+        "size_z": 550.0
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_01_shell_seed_from_solidworks_step.stp",
+      "status": "exported",
+      "sample_labels": [
+        "standard_top_export_from_sw",
+        "standard_top_export_from_sw001",
+        "standard_top_export_from_sw002",
+        "standard_top_export_from_sw003",
+        "standard_top_export_from_sw004",
+        "standard_top_export_from_sw005",
+        "standard_top_export_from_sw006",
+        "standard_top_export_from_sw007"
+      ],
+      "size_bytes": 12505381
+    },
+    {
+      "group": "02_verticals_and_door_frame",
+      "object_count": 4,
+      "solid_count": 12,
+      "face_count": 1750,
+      "bbox_mm": {
+        "min_x": -83.0,
+        "min_y": 26.5,
+        "min_z": -548.2,
+        "max_x": 83.0,
+        "max_y": 1860.5,
+        "max_z": 0.0,
+        "size_x": 166.0,
+        "size_y": 1834.0,
+        "size_z": 548.2
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_02_verticals_and_door_frame.stp",
+      "status": "exported",
+      "sample_labels": [
+        "SW_cabinet_vertical_L_explicit",
+        "SW_cabinet_vertical_R_explicit",
+        "SW_door_frame_vertical_L_explicit",
+        "SW_door_frame_vertical_R_explicit"
+      ],
+      "size_bytes": 2990616
+    },
+    {
+      "group": "03_base_maintenance_lock_electrical",
+      "object_count": 18,
+      "solid_count": 22,
+      "face_count": 2815,
+      "bbox_mm": {
+        "min_x": -500.0,
+        "min_y": -8.8,
+        "min_z": -550.0,
+        "max_x": 500.0,
+        "max_y": 1909.0,
+        "max_z": 0.0,
+        "size_x": 1000.0,
+        "size_y": 1917.8,
+        "size_z": 550.0
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_03_base_maintenance_lock_electrical.stp",
+      "status": "exported",
+      "sample_labels": [
+        "SW_API_base_025_底座_模型_1",
+        "SW_API_base_026_底座底板_1",
+        "SW_API_base_027_底座外框_1",
+        "SW_API_base_028_底座加强筋_1",
+        "SW_API_base_029_底座加强筋_2",
+        "SW_API_base_030_螺母M12_1",
+        "SW_API_base_031_螺母M12_2",
+        "SW_API_base_032_螺母M12_3"
+      ],
+      "size_bytes": 5483012
+    },
+    {
+      "group": "04_door_panels_and_ribs",
+      "object_count": 24,
+      "solid_count": 24,
+      "face_count": 2520,
+      "bbox_mm": {
+        "min_x": -477.0,
+        "min_y": 32.0,
+        "min_z": -15.0,
+        "max_x": 477.0,
+        "max_y": 1855.0,
+        "max_z": 0.0,
+        "size_x": 954.0,
+        "size_y": 1823.0,
+        "size_z": 15.0
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_04_door_panels_and_ribs.stp",
+      "status": "exported",
+      "sample_labels": [
+        "SW_exact_sheetmetal_door_panel_door_2_12_panel_template_L01",
+        "SW_rebuilt_sheetmetal_rib_rib_2_12_gold_step_L01",
+        "SW_exact_sheetmetal_door_panel_door_2_12_panel_template_L02",
+        "SW_rebuilt_sheetmetal_rib_rib_2_12_gold_step_L02",
+        "SW_exact_sheetmetal_door_panel_door_2_12_panel_template_L03",
+        "SW_rebuilt_sheetmetal_rib_rib_2_12_gold_step_L03",
+        "SW_exact_sheetmetal_door_panel_door_2_12_panel_template_L04",
+        "SW_rebuilt_sheetmetal_rib_rib_2_12_gold_step_L04"
+      ],
+      "size_bytes": 2987446
+    },
+    {
+      "group": "05_door_hardware",
+      "object_count": 108,
+      "solid_count": 108,
+      "face_count": 2808,
+      "bbox_mm": {
+        "min_x": -476.0,
+        "min_y": -21.2,
+        "min_z": -40.5884,
+        "max_x": 476.0,
+        "max_y": 1856.5,
+        "max_z": -0.5,
+        "size_x": 952.0,
+        "size_y": 1877.7,
+        "size_z": 40.0884
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_05_door_hardware.stp",
+      "status": "exported",
+      "sample_labels": [
+        "SW_door_hardware_latch_mount_plate_01_L01",
+        "SW_door_hardware_latch_mount_plate_02_L01",
+        "SW_door_hardware_u_lock_hook_pad_03_L01",
+        "SW_door_hardware_plastic_bushing_04_L01",
+        "SW_door_hardware_plastic_bushing_05_L01",
+        "SW_door_hardware_door_hinge_pin_06_L01",
+        "SW_door_hardware_hinge_retainer_plate_07_L01",
+        "SW_door_hardware_hinge_retainer_plate_08_L01"
+      ],
+      "size_bytes": 3616237
+    },
+    {
+      "group": "06_shelves",
+      "object_count": 10,
+      "solid_count": 30,
+      "face_count": 2710,
+      "bbox_mm": {
+        "min_x": -497.7,
+        "min_y": 332.0,
+        "min_z": -547.7,
+        "max_x": 497.7,
+        "max_y": 1577.0,
+        "max_z": -20.5,
+        "size_x": 995.4,
+        "size_y": 1245.0,
+        "size_z": 527.2
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_06_shelves.stp",
+      "status": "exported",
+      "sample_labels": [
+        "SW_shelf_L_weld_12door_01",
+        "SW_shelf_L_weld_12door_02",
+        "SW_shelf_L_weld_12door_03",
+        "SW_shelf_L_weld_12door_04",
+        "SW_shelf_L_weld_12door_05",
+        "SW_shelf_R_weld_12door_01",
+        "SW_shelf_R_weld_12door_02",
+        "SW_shelf_R_weld_12door_03"
+      ],
+      "size_bytes": 3594990
+    },
+    {
+      "group": "99_other_production",
+      "object_count": 10,
+      "solid_count": 10,
+      "face_count": 550,
+      "bbox_mm": {
+        "min_x": -481.5,
+        "min_y": 320.0,
+        "min_z": -19.7,
+        "max_x": 481.5,
+        "max_y": 1555.0,
+        "max_z": 0.0,
+        "size_x": 963.0,
+        "size_y": 1235.0,
+        "size_z": 19.7
+      },
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_import_variants\\object_groups\\16029_1000W_1917H_550D_12door_freecad_reference_99_other_production.stp",
+      "status": "exported",
+      "sample_labels": [
+        "SW_door_frame_horizontal_L_12door_01",
+        "SW_door_frame_horizontal_L_12door_02",
+        "SW_door_frame_horizontal_L_12door_03",
+        "SW_door_frame_horizontal_L_12door_04",
+        "SW_door_frame_horizontal_L_12door_05",
+        "SW_door_frame_horizontal_R_12door_01",
+        "SW_door_frame_horizontal_R_12door_02",
+        "SW_door_frame_horizontal_R_12door_03"
+      ],
+      "size_bytes": 678832
+    }
+  ]
+}

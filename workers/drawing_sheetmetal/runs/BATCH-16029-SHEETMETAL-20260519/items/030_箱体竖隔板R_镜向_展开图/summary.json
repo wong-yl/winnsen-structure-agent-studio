@@ -1,0 +1,326 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\箱体竖隔板\\箱体竖隔板R(镜向)展开图.dxf",
+  "file_name": "箱体竖隔板R(镜向)展开图.dxf",
+  "role_guess": "divider",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": 968.4556,
+    "min_y": -4880.7342,
+    "max_x": 17739.9363,
+    "max_y": 14768.0086,
+    "width": 16771.4807,
+    "height": 19648.7428
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": 968.4556,
+    "min_y": -4880.7342,
+    "max_x": 17739.9363,
+    "max_y": 14768.0086,
+    "width": 16771.4807,
+    "height": 19648.7428
+  },
+  "manufacturing_bbox_source": "raw_curve_bbox_closed_loop_too_small",
+  "entity_counts": {
+    "ARC": 2343,
+    "CIRCLE": 571,
+    "HATCH": 64,
+    "INSERT": 612,
+    "LINE": 23655,
+    "LWPOLYLINE": 146,
+    "MTEXT": 323,
+    "SPLINE": 55,
+    "VIEWPORT": 1
+  },
+  "layer_counts": {
+    "0": 27385,
+    "尺寸线层": 321,
+    "中心线层": 64
+  },
+  "space_counts": {
+    "model": 27769,
+    "paper": 1
+  },
+  "layout_counts": {
+    "Model": 27769,
+    "Layout": 1
+  },
+  "circle_count": 571,
+  "arc_count": 2343,
+  "line_count": 23655,
+  "polyline_count": 146,
+  "circle_radius_counts": {
+    "1.0": 101,
+    "1.5": 2,
+    "1.75": 132,
+    "2.0": 30,
+    "2.5": 12,
+    "2.6": 48,
+    "2.75": 216,
+    "3.0": 17,
+    "3.15": 2,
+    "4.0": 1,
+    "4.5": 9,
+    "1520.283": 1
+  },
+  "point_count_for_bbox": 67717,
+  "loop_analysis": {
+    "curve_segment_count": 27220,
+    "connected_component_count": 5683,
+    "closed_loop_count": 222,
+    "open_endpoint_count": 13439,
+    "largest_component_bbox_mm": {
+      "min_x": 16722.4096,
+      "min_y": 12598.5765,
+      "max_x": 17739.3149,
+      "max_y": 14559.7114,
+      "width": 1016.9053,
+      "height": 1961.1349
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": 2181.8178,
+      "min_y": 3526.7173,
+      "max_x": 2765.5178,
+      "max_y": 5383.3173,
+      "width": 583.7,
+      "height": 1856.6
+    },
+    "components": [
+      {
+        "edge_count": 106,
+        "node_count": 91,
+        "closed": false,
+        "open_endpoint_count": 25,
+        "bbox_mm": {
+          "min_x": 16722.4096,
+          "min_y": 12598.5765,
+          "max_x": 17739.3149,
+          "max_y": 14559.7114,
+          "width": 1016.9053,
+          "height": 1961.1349
+        },
+        "bbox_area_mm2": 1994288.4738,
+        "source_types": {
+          "LINE": 78,
+          "ARC": 13,
+          "LWPOLYLINE": 15
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": 12748.9594,
+          "max_x": 14269.0155,
+          "max_y": 14665.4593,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": 10452.249,
+          "max_x": 14269.0155,
+          "max_y": 12368.749,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": 8257.0213,
+          "max_x": 14269.0155,
+          "max_y": 10173.5213,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": 6049.3308,
+          "max_x": 14269.0155,
+          "max_y": 7965.8307,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": 3793.3634,
+          "max_x": 14269.0155,
+          "max_y": 5709.8634,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": 1600.3171,
+          "max_x": 14269.0155,
+          "max_y": 3516.8171,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": -512.7532,
+          "max_x": 14269.0155,
+          "max_y": 1403.7467,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": -2636.2058,
+          "max_x": 14269.0155,
+          "max_y": -719.7058,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 98,
+        "node_count": 78,
+        "closed": false,
+        "open_endpoint_count": 6,
+        "bbox_mm": {
+          "min_x": 13269.0155,
+          "min_y": -4807.7342,
+          "max_x": 14269.0155,
+          "max_y": -2891.2343,
+          "width": 1000.0,
+          "height": 1916.5
+        },
+        "bbox_area_mm2": 1916500.0,
+        "source_types": {
+          "LINE": 98
+        }
+      },
+      {
+        "edge_count": 132,
+        "node_count": 112,
+        "closed": false,
+        "open_endpoint_count": 33,
+        "bbox_mm": {
+          "min_x": 16690.5868,
+          "min_y": 12568.1153,
+          "max_x": 17428.1051,
+          "max_y": 14558.2011,
+          "width": 737.5183,
+          "height": 1990.0858
+        },
+        "bbox_area_mm2": 1467724.6961,
+        "source_types": {
+          "LINE": 100,
+          "ARC": 25,
+          "LWPOLYLINE": 7
+        }
+      },
+      {
+        "edge_count": 60,
+        "node_count": 60,
+        "closed": true,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 2181.8178,
+          "min_y": 3526.7173,
+          "max_x": 2765.5178,
+          "max_y": 5383.3173,
+          "width": 583.7,
+          "height": 1856.6
+        },
+        "bbox_area_mm2": 1083697.42,
+        "source_types": {
+          "LINE": 60
+        }
+      }
+    ]
+  },
+  "quality_status": "needs_closed_loop_rebuild",
+  "quality_warnings": [
+    "DXF contains VIEWPORT; bbox may describe drawing/layout space instead of true flat manufacturing extents.",
+    "DXF has paper-space entities; filter model-space geometry before deriving manufacturing rules.",
+    "Detected closed loops are too small to be treated as sheet-metal outline; using raw bbox and requiring outline rebuild.",
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}

@@ -1,0 +1,108 @@
+{
+  "source_path": "C:\\Users\\Administrator\\Desktop\\参数化模板素材\\16029 寄存柜(标准组合式 1917×1000×550)\\10.备份\\2.钣金展开图20190423\\储物柜门板6╱12展开图.dxf",
+  "file_name": "储物柜门板6╱12展开图.dxf",
+  "role_guess": "door_panel",
+  "thickness_mm_from_name": null,
+  "flat_bbox_mm": {
+    "min_x": 767.0121,
+    "min_y": -115.777,
+    "max_x": 1713.8121,
+    "max_y": 1773.023,
+    "width": 946.8,
+    "height": 1888.8
+  },
+  "manufacturing_bbox_mm": {
+    "min_x": 767.0121,
+    "min_y": -115.777,
+    "max_x": 1713.8121,
+    "max_y": 1773.023,
+    "width": 946.8,
+    "height": 1888.8
+  },
+  "manufacturing_bbox_source": "raw_curve_bbox",
+  "entity_counts": {
+    "ARC": 2,
+    "CIRCLE": 4,
+    "LINE": 65,
+    "VIEWPORT": 1
+  },
+  "layer_counts": {
+    "0": 72
+  },
+  "space_counts": {
+    "model": 71,
+    "paper": 1
+  },
+  "layout_counts": {
+    "Model": 71,
+    "Layout": 1
+  },
+  "circle_count": 4,
+  "arc_count": 2,
+  "line_count": 65,
+  "polyline_count": 0,
+  "circle_radius_counts": {
+    "10.2": 4
+  },
+  "point_count_for_bbox": 164,
+  "loop_analysis": {
+    "curve_segment_count": 67,
+    "connected_component_count": 1,
+    "closed_loop_count": 0,
+    "open_endpoint_count": 0,
+    "largest_component_bbox_mm": {
+      "min_x": 767.0121,
+      "min_y": -115.777,
+      "max_x": 1713.8121,
+      "max_y": 1773.023,
+      "width": 946.8,
+      "height": 1888.8
+    },
+    "largest_closed_loop_bbox_mm": {
+      "min_x": null,
+      "min_y": null,
+      "max_x": null,
+      "max_y": null,
+      "width": null,
+      "height": null
+    },
+    "components": [
+      {
+        "edge_count": 67,
+        "node_count": 66,
+        "closed": false,
+        "open_endpoint_count": 0,
+        "bbox_mm": {
+          "min_x": 767.0121,
+          "min_y": -115.777,
+          "max_x": 1713.8121,
+          "max_y": 1773.023,
+          "width": 946.8,
+          "height": 1888.8
+        },
+        "bbox_area_mm2": 1788315.84,
+        "source_types": {
+          "LINE": 65,
+          "ARC": 2
+        }
+      }
+    ]
+  },
+  "quality_status": "needs_layout_filter",
+  "quality_warnings": [
+    "DXF contains VIEWPORT; bbox may describe drawing/layout space instead of true flat manufacturing extents.",
+    "DXF has paper-space entities; filter model-space geometry before deriving manufacturing rules.",
+    "Outline appears fragmented into LINE/ARC entities; closed-loop reconstruction is required before automatic unfold output.",
+    "No closed curve loop was detected; geometry can be used for reference statistics but not for automatic unfold output yet.",
+    "Sheet thickness was not found in the file name; confirm material/thickness before bend deduction."
+  ],
+  "missing_inputs_before_production_release": [
+    "material grade",
+    "sheet thickness",
+    "bend radius",
+    "K-factor or bend deduction table",
+    "datum and tolerance rules",
+    "formal drawing title block/version"
+  ],
+  "output_level": "engineering_reference"
+}
