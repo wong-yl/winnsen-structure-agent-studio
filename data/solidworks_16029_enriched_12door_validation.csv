@@ -1,0 +1,11 @@
+﻿name,ok,actual,expected,severity
+assembly_exists,True,D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\native_16029_12door_cabinet_enriched_v1.SLDASM,native SolidWorks assembly,error
+step_exists,True,D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\native_16029_12door_cabinet_enriched_v1.step,STEP export,error
+bbox_csv_exists,True,D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\native_16029_12door_cabinet_enriched_v1_step_bbox.csv,FreeCAD bbox CSV,error
+builder_saved,True,True,True,error
+placement_count,True,4,4,error
+all_components_added,True,[],no failed component additions,error
+cabinet_width_preserved,True,1000.0,1000.0,error
+cabinet_height_top_preserved,True,1917.0,1917.0,error
+cabinet_depth_preserved,True,550.0,550.0,error
+recommended_candidate_bboxes_match,True,3/3 matched,3 candidate bboxes match within 0.75 mm,error

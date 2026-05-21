@@ -1,0 +1,100 @@
+$ErrorActionPreference = 'Stop'
+
+$repo = 'D:\Winnsen_Structure_Agent_Studio'
+$skeletonDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521'
+$outDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521'
+$candidateJson = Join-Path $repo 'data\solidworks_16029_fixed_module_candidate_map.json'
+$toolBuild = Join-Path $repo 'workers\solidworks_tools\build_placed_components_module.ps1'
+$builder = Join-Path $repo 'workers\solidworks_tools\bin\BuildPlacedComponentsModule.exe'
+$cadRootName = -join ([char[]](0x673A,0x68B0,0x7ED3,0x6784,0x5DE5,0x7A0B,0x5E08,0x667A,0x80FD,0x4F53))
+$softwareInstallDirName = -join ([char[]](0x8F6F,0x4EF6,0x5B89,0x88C5,0x5F55))
+$exporter = Join-Path (Join-Path 'D:\' $cadRootName) 'scripts\sw_export_step_ascii.js'
+$freecad = Join-Path (Join-Path 'D:\' $softwareInstallDirName) 'freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe'
+$freecadEntry = Join-Path $repo 'workers\rule_extractions\RULE-16029-WELD-MODULE-PLACEMENT-20260521\freecad_env_worker_entry.py'
+
+function Format-Mm([double]$value) {
+  return $value.ToString('0.###', [Globalization.CultureInfo]::InvariantCulture)
+}
+
+function Add-Placement([System.Collections.Generic.List[string]]$lines, [string]$role, [string]$path, [double]$tx, [double]$ty, [double]$tz) {
+  if (-not (Test-Path -LiteralPath $path)) {
+    throw "Missing source component: $path"
+  }
+  $lines.Add(($role, $path, (Format-Mm $tx), (Format-Mm $ty), (Format-Mm $tz)) -join "`t")
+}
+
+function Invoke-FreeCadBbox([string]$stepPath, [string]$jsonOut, [string]$csvOut) {
+  $env:STEP_PATH = $stepPath
+  $env:JSON_OUT = $jsonOut
+  $env:CSV_OUT = $csvOut
+  & $freecad $freecadEntry | Out-Host
+  if ($LASTEXITCODE -ne 0) {
+    throw "FreeCAD bbox failed for $stepPath"
+  }
+  Remove-Item Env:\STEP_PATH,Env:\JSON_OUT,Env:\CSV_OUT -ErrorAction SilentlyContinue
+}
+
+if (-not (Test-Path -LiteralPath $candidateJson)) {
+  & python (Join-Path $repo 'workers\maintenance\build_16029_fixed_module_candidate_map.py') | Out-Host
+}
+
+New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+& $toolBuild | Out-Host
+if (-not (Test-Path -LiteralPath $builder)) {
+  throw "Builder not found: $builder"
+}
+
+$stem = 'native_16029_12door_cabinet_enriched_v1'
+$skeleton = Join-Path $skeletonDir 'native_16029_12door_cabinet_skeleton_v2.SLDASM'
+$placements = Join-Path $outDir ($stem + '_placements.tsv')
+$asm = Join-Path $outDir ($stem + '.SLDASM')
+$resultJson = Join-Path $outDir ($stem + '_result.json')
+$step = Join-Path $outDir ($stem + '.step')
+$bboxJson = Join-Path $outDir ($stem + '_step_bbox.json')
+$bboxCsv = Join-Path $outDir ($stem + '_step_bbox.csv')
+
+if (-not (Test-Path -LiteralPath $skeleton)) {
+  throw "Skeleton assembly not found. Run build_native_16029_cabinet_skeleton_variants.ps1 first: $skeleton"
+}
+
+$candidateMap = Get-Content -LiteralPath $candidateJson -Encoding UTF8 | ConvertFrom-Json
+$safeCandidates = @($candidateMap.candidates | Where-Object {
+  $_.recommended_for_first_enriched_model -eq $true -and
+  $_.placement_strategy -eq 'identity_transform_ready' -and
+  $_.can_place_native -eq $true
+})
+if ($safeCandidates.Count -lt 1) {
+  throw "No identity-transform-ready candidates found in $candidateJson"
+}
+
+$lines = [System.Collections.Generic.List[string]]::new()
+$lines.Add("role`tpath`ttx_mm`tty_mm`ttz_mm")
+Add-Placement $lines 'cabinet_skeleton_12door_v2' $skeleton 0 0 0
+foreach ($candidate in $safeCandidates) {
+  $transform = $candidate.placement_transform_mm
+  Add-Placement $lines $candidate.role $candidate.component_path ([double]$transform.tx_mm) ([double]$transform.ty_mm) ([double]$transform.tz_mm)
+}
+[IO.File]::WriteAllLines($placements, $lines, [Text.UTF8Encoding]::new($false))
+
+& $builder $placements $asm $resultJson | Out-Host
+if ($LASTEXITCODE -ne 0) {
+  throw "BuildPlacedComponentsModule failed for enriched 12-door model"
+}
+
+& cscript.exe //Nologo $exporter $asm $step | Out-Host
+if ($LASTEXITCODE -ne 0) {
+  throw "STEP export failed for enriched 12-door model"
+}
+
+Invoke-FreeCadBbox $step $bboxJson $bboxCsv
+
+& python (Join-Path $repo 'workers\maintenance\validate_native_16029_cabinet_enriched_12door.py') | Out-Host
+if ($LASTEXITCODE -ne 0) {
+  throw "Enriched 12-door validation failed"
+}
+
+& cscript.exe //Nologo (Join-Path $repo 'workers\solidworks_tools\sw_exit_if_no_active_doc.js') | Out-Host
+
+Write-Output "assembly=$asm"
+Write-Output "step=$step"
+Write-Output "placements=$placements"

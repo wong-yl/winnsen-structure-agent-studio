@@ -1,0 +1,487 @@
+{
+  "generated_at": "2026-05-21T13:10:11+08:00",
+  "source_verify_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\locker_16029_12door_rule_driven_verify.csv",
+  "source_bbox_summary": "D:\\Winnsen_Structure_Agent_Studio\\workers\\rule_extractions\\RULE-16029-FIXED-MODULE-CANDIDATES-20260521\\candidate_bbox_summary.json",
+  "target_modules": [
+    "latch_system",
+    "lock_system",
+    "maintenance_door"
+  ],
+  "summary": {
+    "transform_backed_candidates": 9,
+    "native_placeable_candidates": 9,
+    "identity_transform_ready_candidates": 3,
+    "requires_rotation_or_full_matrix_candidates": 6,
+    "recommended_first_enriched_model_candidates": 3,
+    "blocked_local_only_candidates": 3,
+    "all_recommended_native_placeable": true
+  },
+  "candidates": [
+    {
+      "role": "maintenance_door_lock_hole",
+      "module": "maintenance_door",
+      "component_name": "维护门锁孔-1",
+      "component_path": "C:\\sw16029_standard_ascii\\维护门锁孔.SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\maintenance_door_lock_hole_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 0.0,
+        "ty_mm": 1751.5,
+        "tz_mm": -0.8
+      },
+      "target_bbox_mm": {
+        "x_min": -20.0,
+        "x_max": 20.0,
+        "y_min": 1731.5,
+        "y_max": 1751.5,
+        "z_min": -44.8,
+        "z_max": -0.8
+      },
+      "source_local_bbox_mm": {
+        "x_min": -20.0,
+        "x_max": 20.0,
+        "y_min": -20.0,
+        "y_max": 0.0,
+        "z_min": -44.0,
+        "z_max": 0.0
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": -20.0,
+        "x_max": 20.0,
+        "y_min": 1731.5,
+        "y_max": 1751.5,
+        "z_min": -44.8,
+        "z_max": -0.8
+      },
+      "local_bbox_match_max_error_mm": 0.0,
+      "transform_bbox_match_ok": true,
+      "translation_only_safe": true,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": true,
+      "placement_strategy": "identity_transform_ready",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_maintenance_door_128_维护门锁孔_1"
+    },
+    {
+      "role": "maintenance_door_panel",
+      "module": "maintenance_door",
+      "component_name": "应急维护门-1",
+      "component_path": "C:\\sw16029_standard_ascii\\应急维护门.SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\maintenance_door_panel_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 0.0,
+        "ty_mm": 943.0,
+        "tz_mm": -16.0
+      },
+      "target_bbox_mm": {
+        "x_min": -34.0,
+        "x_max": 34.0,
+        "y_min": 21.3,
+        "y_max": 1855.5,
+        "z_min": -18.0,
+        "z_max": 0.0
+      },
+      "source_local_bbox_mm": {
+        "x_min": -34.0,
+        "x_max": 34.0,
+        "y_min": -921.7,
+        "y_max": 912.5,
+        "z_min": -2.0,
+        "z_max": 16.0
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": -34.0,
+        "x_max": 34.0,
+        "y_min": 21.3,
+        "y_max": 1855.5,
+        "z_min": -18.0,
+        "z_max": 0.0
+      },
+      "local_bbox_match_max_error_mm": 0.0,
+      "transform_bbox_match_ok": true,
+      "translation_only_safe": true,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": true,
+      "placement_strategy": "identity_transform_ready",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_maintenance_door_127_应急维护门_1"
+    },
+    {
+      "role": "auto_lock_latch",
+      "module": "latch_system",
+      "component_name": "自动锁闭插销(索科斯D-3016Z-2)-1",
+      "component_path": "C:\\sw16029_standard_ascii\\自动锁闭插销(索科斯D-3016Z-2).SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\auto_lock_latch_d3016z2.step",
+      "placement_transform_mm": {
+        "tx_mm": -0.0,
+        "ty_mm": 1795.0,
+        "tz_mm": -29.6
+      },
+      "target_bbox_mm": {
+        "x_min": -10.5,
+        "x_max": 10.5,
+        "y_min": 1743.5,
+        "y_max": 1865.5,
+        "z_min": -39.1,
+        "z_max": -20.1
+      },
+      "source_local_bbox_mm": {
+        "x_min": -10.5,
+        "x_max": 10.5,
+        "y_min": -9.5,
+        "y_max": 9.5,
+        "z_min": -70.5,
+        "z_max": 51.5
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": -10.5,
+        "x_max": 10.5,
+        "y_min": 1785.5,
+        "y_max": 1804.5,
+        "z_min": -100.1,
+        "z_max": 21.9
+      },
+      "local_bbox_match_max_error_mm": 61.0,
+      "transform_bbox_match_ok": false,
+      "translation_only_safe": false,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": false,
+      "placement_strategy": "requires_rotation_or_full_matrix",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_latch_system_130_自动锁闭插销_索科斯D_3016Z_2_1"
+    },
+    {
+      "role": "push_latch_mount_plate",
+      "module": "latch_system",
+      "component_name": "按钮插销固定板-1",
+      "component_path": "C:\\sw16029_standard_ascii\\按钮插销固定板.SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\push_latch_mount_plate.step",
+      "placement_transform_mm": {
+        "tx_mm": -0.0,
+        "ty_mm": 1800.5,
+        "tz_mm": -20.1
+      },
+      "target_bbox_mm": {
+        "x_min": -45.0,
+        "x_max": 45.0,
+        "y_min": 1765.5,
+        "y_max": 1835.5,
+        "z_min": -31.3,
+        "z_max": -19.3
+      },
+      "source_local_bbox_mm": {
+        "x_min": -45.0,
+        "x_max": 45.0,
+        "y_min": -0.8,
+        "y_max": 11.2,
+        "z_min": -35.0,
+        "z_max": 35.0
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": -45.0,
+        "x_max": 45.0,
+        "y_min": 1799.7,
+        "y_max": 1811.7,
+        "z_min": -55.1,
+        "z_max": 14.9
+      },
+      "local_bbox_match_max_error_mm": 34.2,
+      "transform_bbox_match_ok": false,
+      "translation_only_safe": false,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": false,
+      "placement_strategy": "requires_rotation_or_full_matrix",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_latch_system_129_按钮插销固定板_1"
+    },
+    {
+      "role": "electronics_board_bracket",
+      "module": "lock_system",
+      "component_name": "电路板支架-1",
+      "component_path": "C:\\sw16029_standard_ascii\\电路板支架.SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\electronics_board_bracket_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 235.0,
+        "ty_mm": 1860.0,
+        "tz_mm": -279.5
+      },
+      "target_bbox_mm": {
+        "x_min": 65.0,
+        "x_max": 405.0,
+        "y_min": 1860.0,
+        "y_max": 1890.0,
+        "z_min": -449.5,
+        "z_max": -99.5
+      },
+      "source_local_bbox_mm": {
+        "x_min": -170.0,
+        "x_max": 170.0,
+        "y_min": -0.0,
+        "y_max": 30.0,
+        "z_min": -180.0,
+        "z_max": 170.0
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": 65.0,
+        "x_max": 405.0,
+        "y_min": 1860.0,
+        "y_max": 1890.0,
+        "z_min": -459.5,
+        "z_max": -109.5
+      },
+      "local_bbox_match_max_error_mm": 10.0,
+      "transform_bbox_match_ok": false,
+      "translation_only_safe": false,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": false,
+      "placement_strategy": "requires_rotation_or_full_matrix",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_lock_system_131_电路板支架_1"
+    },
+    {
+      "role": "lock_control_board_24ch",
+      "module": "lock_system",
+      "component_name": "LK-4-6-V2.0 24口锁控板-1",
+      "component_path": "C:\\sw16029_standard_ascii\\LK-4-6-V2.0 24口锁控板.SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\lock_control_board_24ch_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 295.0,
+        "ty_mm": 1872.6,
+        "tz_mm": -179.0
+      },
+      "target_bbox_mm": {
+        "x_min": 215.0,
+        "x_max": 375.0,
+        "y_min": 1871.0,
+        "y_max": 1885.6,
+        "z_min": -237.5,
+        "z_max": -120.5
+      },
+      "source_local_bbox_mm": {
+        "x_min": -80.0,
+        "x_max": 80.0,
+        "y_min": -1.6,
+        "y_max": 13.0,
+        "z_min": -58.5,
+        "z_max": 58.5
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": 215.0,
+        "x_max": 375.0,
+        "y_min": 1871.0,
+        "y_max": 1885.6,
+        "z_min": -237.5,
+        "z_max": -120.5
+      },
+      "local_bbox_match_max_error_mm": 0.0,
+      "transform_bbox_match_ok": true,
+      "translation_only_safe": true,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": true,
+      "placement_strategy": "identity_transform_ready",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_lock_system_133_LK_4_6_V2_0_24口锁控板_1"
+    },
+    {
+      "role": "m9_v11_board",
+      "module": "lock_system",
+      "component_name": "M9 V1.1-1",
+      "component_path": "C:\\sw16029_standard_ascii\\M9 V1.1.SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\m9_v11_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 293.5,
+        "ty_mm": 1871.0,
+        "tz_mm": -186.5
+      },
+      "target_bbox_mm": {
+        "x_min": 212.0,
+        "x_max": 375.0,
+        "y_min": 1871.0,
+        "y_max": 1888.1,
+        "z_min": -252.5,
+        "z_max": -120.5
+      },
+      "source_local_bbox_mm": {
+        "x_min": -66.0,
+        "x_max": 66.0,
+        "y_min": 0.0,
+        "y_max": 17.1,
+        "z_min": -81.5,
+        "z_max": 81.5
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": 227.5,
+        "x_max": 359.5,
+        "y_min": 1871.0,
+        "y_max": 1888.1,
+        "z_min": -268.0,
+        "z_max": -105.0
+      },
+      "local_bbox_match_max_error_mm": 15.5,
+      "transform_bbox_match_ok": false,
+      "translation_only_safe": false,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": false,
+      "placement_strategy": "requires_rotation_or_full_matrix",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_lock_system_135_M9_V1_1_1"
+    },
+    {
+      "role": "switching_power_supply_assembly",
+      "module": "lock_system",
+      "component_name": "开关模式电源 装配-1",
+      "component_path": "C:\\sw16029_standard_ascii\\开关模式电源 装配.SLDASM",
+      "step_source": "C:\\sw16029_standard_ascii\\switching_power_supply_assembly_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 235.0,
+        "ty_mm": 1861.0,
+        "tz_mm": -372.0
+      },
+      "target_bbox_mm": {
+        "x_min": 108.5,
+        "x_max": 361.5,
+        "y_min": 1861.0,
+        "y_max": 1909.0,
+        "z_min": -420.5,
+        "z_max": -321.5
+      },
+      "source_local_bbox_mm": {
+        "x_min": -50.5,
+        "x_max": 48.5,
+        "y_min": -0.0,
+        "y_max": 48.0,
+        "z_min": -126.5,
+        "z_max": 126.5
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": 184.5,
+        "x_max": 283.5,
+        "y_min": 1861.0,
+        "y_max": 1909.0,
+        "z_min": -498.5,
+        "z_max": -245.5
+      },
+      "local_bbox_match_max_error_mm": 78.0,
+      "transform_bbox_match_ok": false,
+      "translation_only_safe": false,
+      "native_exists": true,
+      "native_file_type": "SLDASM",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": false,
+      "placement_strategy": "requires_rotation_or_full_matrix",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_lock_system_134_开关模式电源_装配_1"
+    },
+    {
+      "role": "wifi_serial_server",
+      "module": "lock_system",
+      "component_name": "WIFI串口服务器(USR-WIFI232-610)-1",
+      "component_path": "C:\\sw16029_standard_ascii\\WIFI串口服务器(USR-WIFI232-610).SLDPRT",
+      "step_source": "C:\\sw16029_standard_ascii\\wifi_serial_server_from_sw.step",
+      "placement_transform_mm": {
+        "tx_mm": 151.75,
+        "ty_mm": 1861.0,
+        "tz_mm": -182.0
+      },
+      "target_bbox_mm": {
+        "x_min": 108.5,
+        "x_max": 195.0,
+        "y_min": 1861.0,
+        "y_max": 1886.5,
+        "z_min": -228.5,
+        "z_max": -130.5
+      },
+      "source_local_bbox_mm": {
+        "x_min": -43.25,
+        "x_max": 43.25,
+        "y_min": 0.0,
+        "y_max": 25.5,
+        "z_min": -51.5,
+        "z_max": 46.5
+      },
+      "predicted_target_bbox_mm": {
+        "x_min": 108.5,
+        "x_max": 195.0,
+        "y_min": 1861.0,
+        "y_max": 1886.5,
+        "z_min": -233.5,
+        "z_max": -135.5
+      },
+      "local_bbox_match_max_error_mm": 5.0,
+      "transform_bbox_match_ok": false,
+      "translation_only_safe": false,
+      "native_exists": true,
+      "native_file_type": "SLDPRT",
+      "can_place_native": true,
+      "recommended_for_first_enriched_model": false,
+      "placement_strategy": "requires_rotation_or_full_matrix",
+      "evidence_level": "sw_api_transform",
+      "source_item": "SW_API_lock_system_132_WIFI串口服务器_USR_WIFI232_610_1"
+    }
+  ],
+  "blocked_local_only_candidates": [
+    {
+      "id": "rear_lower_door_assembly",
+      "step": "C:\\sw16029_standard_ascii\\rear_lower_door_assembly.step",
+      "local_bbox_mm": {
+        "x_min": -222.508,
+        "x_max": 222.508,
+        "y_min": -463.5,
+        "y_max": 463.5,
+        "z_min": -1.2,
+        "z_max": 20.594
+      },
+      "objects": 16,
+      "placement_status": "blocked_no_transform",
+      "reason": "Only local STEP bbox was found; no transform-backed assembly placement row was found in the 12-door verification CSV."
+    },
+    {
+      "id": "rear_lower_door_weld",
+      "step": "C:\\sw16029_standard_ascii\\rear_lower_door_weld.step",
+      "local_bbox_mm": {
+        "x_min": -222.508,
+        "x_max": 222.508,
+        "y_min": -456.25,
+        "y_max": 448.008,
+        "z_min": 0.0,
+        "z_max": 20.008
+      },
+      "objects": 9,
+      "placement_status": "blocked_no_transform",
+      "reason": "Only local STEP bbox was found; no transform-backed assembly placement row was found in the 12-door verification CSV."
+    },
+    {
+      "id": "clothes_rail",
+      "step": "C:\\sw16029_standard_ascii\\structural_008_clothes_rail.step",
+      "local_bbox_mm": {
+        "x_min": -15.0,
+        "x_max": 15.0,
+        "y_min": -0.0,
+        "y_max": 20.0,
+        "z_min": -44.2,
+        "z_max": 44.2
+      },
+      "objects": 1,
+      "placement_status": "blocked_no_transform",
+      "reason": "Only local STEP bbox was found; no transform-backed assembly placement row was found in the 12-door verification CSV."
+    }
+  ],
+  "notes": [
+    "Use these rows as placement evidence for fixed modules only; do not infer placements from local bbox alone.",
+    "The first enriched native SolidWorks sample should use the recommended rows on one 12-door skeleton before batch generation.",
+    "Rear lower door and clothes rail are intentionally blocked until transform-backed placement evidence is extracted."
+  ]
+}

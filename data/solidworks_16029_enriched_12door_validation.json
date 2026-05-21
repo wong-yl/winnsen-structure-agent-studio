@@ -1,0 +1,142 @@
+{
+  "generated_at": "2026-05-21T13:12:19+08:00",
+  "ok": true,
+  "out_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521",
+  "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v1.SLDASM",
+  "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v1.step",
+  "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v1_step_bbox.csv",
+  "recommended_candidate_count": 3,
+  "combined_bbox_mm": {
+    "x_min": -500.0,
+    "x_max": 500.0,
+    "x_len": 1000.0,
+    "y_min": -202.2,
+    "y_max": 1917.0,
+    "y_len": 2119.2,
+    "z_min": -550.0,
+    "z_max": 0.0,
+    "z_len": 550.0
+  },
+  "candidate_matches": [
+    {
+      "role": "maintenance_door_lock_hole",
+      "component_path": "C:\\sw16029_standard_ascii\\维护门锁孔.SLDPRT",
+      "target_bbox_mm": {
+        "x_min": -20.0,
+        "x_max": 20.0,
+        "y_min": 1731.5,
+        "y_max": 1751.5,
+        "z_min": -44.8,
+        "z_max": -0.8
+      },
+      "matched": true,
+      "max_error_mm": 0.0,
+      "label": "维护门锁孔",
+      "type_id": "Part::Feature"
+    },
+    {
+      "role": "maintenance_door_panel",
+      "component_path": "C:\\sw16029_standard_ascii\\应急维护门.SLDPRT",
+      "target_bbox_mm": {
+        "x_min": -34.0,
+        "x_max": 34.0,
+        "y_min": 21.3,
+        "y_max": 1855.5,
+        "z_min": -18.0,
+        "z_max": 0.0
+      },
+      "matched": true,
+      "max_error_mm": 0.0,
+      "label": "应急维护门",
+      "type_id": "Part::Feature"
+    },
+    {
+      "role": "lock_control_board_24ch",
+      "component_path": "C:\\sw16029_standard_ascii\\LK-4-6-V2.0 24口锁控板.SLDPRT",
+      "target_bbox_mm": {
+        "x_min": 215.0,
+        "x_max": 375.0,
+        "y_min": 1871.0,
+        "y_max": 1885.6,
+        "z_min": -237.5,
+        "z_max": -120.5
+      },
+      "matched": true,
+      "max_error_mm": 0.0,
+      "label": "LK-4-6-V2.0 24口锁控板",
+      "type_id": "Part::Feature"
+    }
+  ],
+  "checks": [
+    {
+      "name": "assembly_exists",
+      "ok": true,
+      "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v1.SLDASM",
+      "expected": "native SolidWorks assembly",
+      "severity": "error"
+    },
+    {
+      "name": "step_exists",
+      "ok": true,
+      "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v1.step",
+      "expected": "STEP export",
+      "severity": "error"
+    },
+    {
+      "name": "bbox_csv_exists",
+      "ok": true,
+      "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521\\native_16029_12door_cabinet_enriched_v1_step_bbox.csv",
+      "expected": "FreeCAD bbox CSV",
+      "severity": "error"
+    },
+    {
+      "name": "builder_saved",
+      "ok": true,
+      "actual": true,
+      "expected": true,
+      "severity": "error"
+    },
+    {
+      "name": "placement_count",
+      "ok": true,
+      "actual": 4,
+      "expected": 4,
+      "severity": "error"
+    },
+    {
+      "name": "all_components_added",
+      "ok": true,
+      "actual": [],
+      "expected": "no failed component additions",
+      "severity": "error"
+    },
+    {
+      "name": "cabinet_width_preserved",
+      "ok": true,
+      "actual": 1000.0,
+      "expected": 1000.0,
+      "severity": "error"
+    },
+    {
+      "name": "cabinet_height_top_preserved",
+      "ok": true,
+      "actual": 1917.0,
+      "expected": 1917.0,
+      "severity": "error"
+    },
+    {
+      "name": "cabinet_depth_preserved",
+      "ok": true,
+      "actual": 550.0,
+      "expected": 550.0,
+      "severity": "error"
+    },
+    {
+      "name": "recommended_candidate_bboxes_match",
+      "ok": true,
+      "actual": "3/3 matched",
+      "expected": "3 candidate bboxes match within 0.75 mm",
+      "severity": "error"
+    }
+  ]
+}
