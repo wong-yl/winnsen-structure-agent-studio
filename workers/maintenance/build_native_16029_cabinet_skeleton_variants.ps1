@@ -162,4 +162,12 @@ $summaryPath = Join-Path $outDir 'cabinet_skeleton_variant_validation_summary.cs
 $summary | Export-Csv -LiteralPath $summaryPath -NoTypeInformation -Encoding UTF8
 $summary | Format-Table -AutoSize
 
+$geometryGate = Join-Path $repo 'workers\maintenance\validate_native_16029_cabinet_skeleton_geometry.py'
+if (Test-Path -LiteralPath $geometryGate) {
+  & python $geometryGate | Out-Host
+  if ($LASTEXITCODE -ne 0) {
+    throw "16029 cabinet skeleton geometry gate failed"
+  }
+}
+
 & cscript.exe //Nologo (Join-Path $repo 'workers\solidworks_tools\sw_exit_if_no_active_doc.js') | Out-Host

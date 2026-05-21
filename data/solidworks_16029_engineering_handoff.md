@@ -29,6 +29,7 @@
 | 前门框模块复核证据 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-FRONT-FRAME-MODULE-20260521\ENGINEERING_EVIDENCE.md |
 | 原生 SolidWorks 整柜骨架 10/12/14 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521 |
 | 整柜骨架 10/12/14 复核证据 | ready | D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\ENGINEERING_EVIDENCE.md |
+| 整柜骨架 10/12/14 几何质量门 | ready | D:\Winnsen_Structure_Agent_Studio\data\solidworks_16029_native_skeleton_geometry_gate.md |
 | SolidWorks 12门基线 | ready | D:\Winnsen_Structure_Agent_Studio\workers\manual_runs\BASELINE-16029-12DOOR-CLONE\BASELINE-16029-12DOOR-CLONE.SLDASM |
 | SolidWorks 10门练习副本 | ready | D:\机械结构工程师智能体\work\16029_练习副本_20260429\1.工程图\标准寄存柜1917×1000×550(总装配).SLDASM |
 | SolidWorks 10门快速保存烟测 | ready | D:\Winnsen_Structure_Agent_Studio\workers\manual_runs\QA-16029-10DOOR-FAST-CLONE-20260519073300\QA-16029-10DOOR-FAST-CLONE-20260519073300.SLDASM |
@@ -59,6 +60,7 @@
 - 12 门整柜骨架 v1 已接入前框+门阵列、底座、左右侧板、左右竖隔板、上盖和 10 个层板模块。
 - 10/12/14 整柜骨架 v2 已完成，门阵列、前门框横隔板和层板数量随门数同步变化。
 - v2 校验结果：10 门 = 10 个普通门 / 8 个层板 / 8 个前框横隔板；12 门 = 12 / 10 / 10；14 门 = 14 / 12 / 12。
+- v2 几何质量门已通过：10/12/14 外形 bbox 均为 X=1000mm、Y 顶部=1917mm、Z 深度=550mm；左右门列 Y 对齐误差 0；门距、层板节距、前框横隔板节距均跟随对应门高 + 7mm 间隙。
 - 当前仍未完成完整整柜生产交付；后门、电气件、衣杆、线束和部分五金细节还未接入。
 - SolidWorks 入口只放开 `10` 门练习副本模板和 `12` 门标准基线模板。
 - 其它门数不再走逐零件直装，避免继续生成错乱模型。

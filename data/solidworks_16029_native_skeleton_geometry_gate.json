@@ -1,0 +1,1154 @@
+{
+  "generated_at": "2026-05-21T12:08:58+08:00",
+  "status": "PASS",
+  "source_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521",
+  "target_door_counts": [
+    10,
+    12,
+    14
+  ],
+  "variants": [
+    {
+      "door_count": 10,
+      "rows_per_column": 5,
+      "door_height_mm": 359.0,
+      "expected_pitch_mm": 366.0,
+      "status": "PASS",
+      "root_bbox": {
+        "x_min": -500.0,
+        "x_max": 500.0,
+        "x_len": 1000.0,
+        "y_min": -21.2,
+        "y_max": 1917.0,
+        "y_len": 1938.2,
+        "z_min": -550.0,
+        "z_max": 0.0,
+        "z_len": 550.0
+      },
+      "check_count": 22,
+      "failed_error_count": 0,
+      "failed_warning_count": 0,
+      "checks": [
+        {
+          "name": "assembly_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_10door_cabinet_skeleton_v2.SLDASM",
+          "expected": "existing native SLDASM",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "step_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_10door_cabinet_skeleton_v2.step",
+          "expected": "existing STEP export",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "bbox_csv_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_10door_cabinet_skeleton_v2_step_bbox.csv",
+          "expected": "existing FreeCAD bbox CSV",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_bbox_exists",
+          "ok": true,
+          "actual": "native_16029_10door_cabinet_skeleton_v2",
+          "expected": "native_16029_10door_cabinet_skeleton_v2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_width_1000mm",
+          "ok": true,
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_top_y_1917mm",
+          "ok": true,
+          "actual": 1917.0,
+          "expected": 1917.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_bottom_not_flying",
+          "ok": true,
+          "actual": -21.2,
+          "expected": ">= -35mm",
+          "severity": "error",
+          "detail": "door hardware may protrude slightly below the nominal datum"
+        },
+        {
+          "name": "root_depth_550mm",
+          "ok": true,
+          "actual": 550.0,
+          "expected": 550.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "ordinary_door_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_door_count",
+          "ok": true,
+          "actual": 5,
+          "expected": 5,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_door_count",
+          "ok": true,
+          "actual": 5,
+          "expected": 5,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_right_door_y_alignment",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "<= 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_array_bottom_in_range",
+          "ok": true,
+          "actual": -21.2,
+          "expected": ">= -25.0mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_array_top_in_range",
+          "ok": true,
+          "actual": 1856.5,
+          "expected": "<= 1857.0mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              366.0,
+              366.0,
+              366.0,
+              366.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 366.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              366.0,
+              366.0,
+              366.0,
+              366.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 366.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_module_count",
+          "ok": true,
+          "actual": 8,
+          "expected": 8,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_level_pairs",
+          "ok": true,
+          "actual": [
+            {
+              "center": 576.5,
+              "count": 2
+            },
+            {
+              "center": 942.5,
+              "count": 2
+            },
+            {
+              "center": 1308.5,
+              "count": 2
+            },
+            {
+              "center": 1674.5,
+              "count": 2
+            }
+          ],
+          "expected": "4 levels x 2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              366.0,
+              366.0,
+              366.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 366.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_count",
+          "ok": true,
+          "actual": 8,
+          "expected": 8,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_level_pairs",
+          "ok": true,
+          "actual": [
+            {
+              "center": 541.0,
+              "count": 2
+            },
+            {
+              "center": 907.0,
+              "count": 2
+            },
+            {
+              "center": 1273.0,
+              "count": 2
+            },
+            {
+              "center": 1639.0,
+              "count": 2
+            }
+          ],
+          "expected": "4 levels x 2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              366.0,
+              366.0,
+              366.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 366.0,
+          "severity": "error",
+          "detail": ""
+        }
+      ],
+      "metrics": {
+        "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_10door_cabinet_skeleton_v2_step_bbox.csv",
+        "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_10door_cabinet_skeleton_v2.SLDASM",
+        "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_10door_cabinet_skeleton_v2.step",
+        "root_bbox": {
+          "x_min": -500.0,
+          "x_max": 500.0,
+          "x_len": 1000.0,
+          "y_min": -21.2,
+          "y_max": 1917.0,
+          "y_len": 1938.2,
+          "z_min": -550.0,
+          "z_max": 0.0,
+          "z_len": 550.0
+        },
+        "door_count": 10,
+        "left_column_door_count": 5,
+        "right_column_door_count": 5,
+        "left_column_pitch": {
+          "values": [
+            366.0,
+            366.0,
+            366.0,
+            366.0
+          ],
+          "max_error": 0.0
+        },
+        "right_column_pitch": {
+          "values": [
+            366.0,
+            366.0,
+            366.0,
+            366.0
+          ],
+          "max_error": 0.0
+        },
+        "shelf_count": 8,
+        "shelf_levels": [
+          {
+            "center": 576.5,
+            "count": 2
+          },
+          {
+            "center": 942.5,
+            "count": 2
+          },
+          {
+            "center": 1308.5,
+            "count": 2
+          },
+          {
+            "center": 1674.5,
+            "count": 2
+          }
+        ],
+        "shelf_pitch": {
+          "values": [
+            366.0,
+            366.0,
+            366.0
+          ],
+          "max_error": 0.0
+        },
+        "crossbar_count": 8,
+        "crossbar_levels": [
+          {
+            "center": 541.0,
+            "count": 2
+          },
+          {
+            "center": 907.0,
+            "count": 2
+          },
+          {
+            "center": 1273.0,
+            "count": 2
+          },
+          {
+            "center": 1639.0,
+            "count": 2
+          }
+        ],
+        "crossbar_pitch": {
+          "values": [
+            366.0,
+            366.0,
+            366.0
+          ],
+          "max_error": 0.0
+        }
+      }
+    },
+    {
+      "door_count": 12,
+      "rows_per_column": 6,
+      "door_height_mm": 298.0,
+      "expected_pitch_mm": 305.0,
+      "status": "PASS",
+      "root_bbox": {
+        "x_min": -500.0,
+        "x_max": 500.0,
+        "x_len": 1000.0,
+        "y_min": -21.2,
+        "y_max": 1917.0,
+        "y_len": 1938.2,
+        "z_min": -550.0,
+        "z_max": 0.0,
+        "z_len": 550.0
+      },
+      "check_count": 22,
+      "failed_error_count": 0,
+      "failed_warning_count": 0,
+      "checks": [
+        {
+          "name": "assembly_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_12door_cabinet_skeleton_v2.SLDASM",
+          "expected": "existing native SLDASM",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "step_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_12door_cabinet_skeleton_v2.step",
+          "expected": "existing STEP export",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "bbox_csv_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_12door_cabinet_skeleton_v2_step_bbox.csv",
+          "expected": "existing FreeCAD bbox CSV",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_bbox_exists",
+          "ok": true,
+          "actual": "native_16029_12door_cabinet_skeleton_v2",
+          "expected": "native_16029_12door_cabinet_skeleton_v2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_width_1000mm",
+          "ok": true,
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_top_y_1917mm",
+          "ok": true,
+          "actual": 1917.0,
+          "expected": 1917.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_bottom_not_flying",
+          "ok": true,
+          "actual": -21.2,
+          "expected": ">= -35mm",
+          "severity": "error",
+          "detail": "door hardware may protrude slightly below the nominal datum"
+        },
+        {
+          "name": "root_depth_550mm",
+          "ok": true,
+          "actual": 550.0,
+          "expected": 550.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "ordinary_door_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_door_count",
+          "ok": true,
+          "actual": 6,
+          "expected": 6,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_door_count",
+          "ok": true,
+          "actual": 6,
+          "expected": 6,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_right_door_y_alignment",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "<= 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_array_bottom_in_range",
+          "ok": true,
+          "actual": -21.2,
+          "expected": ">= -25.0mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_array_top_in_range",
+          "ok": true,
+          "actual": 1856.5,
+          "expected": "<= 1857.0mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              305.0,
+              305.0,
+              305.0,
+              305.0,
+              305.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 305.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              305.0,
+              305.0,
+              305.0,
+              305.0,
+              305.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 305.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_module_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_level_pairs",
+          "ok": true,
+          "actual": [
+            {
+              "center": 485.0,
+              "count": 2
+            },
+            {
+              "center": 790.0,
+              "count": 2
+            },
+            {
+              "center": 1095.0,
+              "count": 2
+            },
+            {
+              "center": 1400.0,
+              "count": 2
+            },
+            {
+              "center": 1705.0,
+              "count": 2
+            }
+          ],
+          "expected": "5 levels x 2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              305.0,
+              305.0,
+              305.0,
+              305.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 305.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_level_pairs",
+          "ok": true,
+          "actual": [
+            {
+              "center": 480.0,
+              "count": 2
+            },
+            {
+              "center": 785.0,
+              "count": 2
+            },
+            {
+              "center": 1090.0,
+              "count": 2
+            },
+            {
+              "center": 1395.0,
+              "count": 2
+            },
+            {
+              "center": 1700.0,
+              "count": 2
+            }
+          ],
+          "expected": "5 levels x 2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              305.0,
+              305.0,
+              305.0,
+              305.0
+            ],
+            "max_error": 0.0
+          },
+          "expected": 305.0,
+          "severity": "error",
+          "detail": ""
+        }
+      ],
+      "metrics": {
+        "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_12door_cabinet_skeleton_v2_step_bbox.csv",
+        "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_12door_cabinet_skeleton_v2.SLDASM",
+        "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_12door_cabinet_skeleton_v2.step",
+        "root_bbox": {
+          "x_min": -500.0,
+          "x_max": 500.0,
+          "x_len": 1000.0,
+          "y_min": -21.2,
+          "y_max": 1917.0,
+          "y_len": 1938.2,
+          "z_min": -550.0,
+          "z_max": 0.0,
+          "z_len": 550.0
+        },
+        "door_count": 12,
+        "left_column_door_count": 6,
+        "right_column_door_count": 6,
+        "left_column_pitch": {
+          "values": [
+            305.0,
+            305.0,
+            305.0,
+            305.0,
+            305.0
+          ],
+          "max_error": 0.0
+        },
+        "right_column_pitch": {
+          "values": [
+            305.0,
+            305.0,
+            305.0,
+            305.0,
+            305.0
+          ],
+          "max_error": 0.0
+        },
+        "shelf_count": 10,
+        "shelf_levels": [
+          {
+            "center": 485.0,
+            "count": 2
+          },
+          {
+            "center": 790.0,
+            "count": 2
+          },
+          {
+            "center": 1095.0,
+            "count": 2
+          },
+          {
+            "center": 1400.0,
+            "count": 2
+          },
+          {
+            "center": 1705.0,
+            "count": 2
+          }
+        ],
+        "shelf_pitch": {
+          "values": [
+            305.0,
+            305.0,
+            305.0,
+            305.0
+          ],
+          "max_error": 0.0
+        },
+        "crossbar_count": 10,
+        "crossbar_levels": [
+          {
+            "center": 480.0,
+            "count": 2
+          },
+          {
+            "center": 785.0,
+            "count": 2
+          },
+          {
+            "center": 1090.0,
+            "count": 2
+          },
+          {
+            "center": 1395.0,
+            "count": 2
+          },
+          {
+            "center": 1700.0,
+            "count": 2
+          }
+        ],
+        "crossbar_pitch": {
+          "values": [
+            305.0,
+            305.0,
+            305.0,
+            305.0
+          ],
+          "max_error": 0.0
+        }
+      }
+    },
+    {
+      "door_count": 14,
+      "rows_per_column": 7,
+      "door_height_mm": 254.429,
+      "expected_pitch_mm": 261.429,
+      "status": "PASS",
+      "root_bbox": {
+        "x_min": -500.0,
+        "x_max": 500.0,
+        "x_len": 1000.0,
+        "y_min": -21.2,
+        "y_max": 1917.0,
+        "y_len": 1938.2,
+        "z_min": -550.0,
+        "z_max": 0.0,
+        "z_len": 550.0
+      },
+      "check_count": 22,
+      "failed_error_count": 0,
+      "failed_warning_count": 0,
+      "checks": [
+        {
+          "name": "assembly_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_14door_cabinet_skeleton_v2.SLDASM",
+          "expected": "existing native SLDASM",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "step_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_14door_cabinet_skeleton_v2.step",
+          "expected": "existing STEP export",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "bbox_csv_exists",
+          "ok": true,
+          "actual": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_14door_cabinet_skeleton_v2_step_bbox.csv",
+          "expected": "existing FreeCAD bbox CSV",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_bbox_exists",
+          "ok": true,
+          "actual": "native_16029_14door_cabinet_skeleton_v2",
+          "expected": "native_16029_14door_cabinet_skeleton_v2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_width_1000mm",
+          "ok": true,
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_top_y_1917mm",
+          "ok": true,
+          "actual": 1917.0,
+          "expected": 1917.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "root_bottom_not_flying",
+          "ok": true,
+          "actual": -21.2,
+          "expected": ">= -35mm",
+          "severity": "error",
+          "detail": "door hardware may protrude slightly below the nominal datum"
+        },
+        {
+          "name": "root_depth_550mm",
+          "ok": true,
+          "actual": 550.0,
+          "expected": 550.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "ordinary_door_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_door_count",
+          "ok": true,
+          "actual": 7,
+          "expected": 7,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_door_count",
+          "ok": true,
+          "actual": 7,
+          "expected": 7,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_right_door_y_alignment",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "<= 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_array_bottom_in_range",
+          "ok": true,
+          "actual": -21.2,
+          "expected": ">= -25.0mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_array_top_in_range",
+          "ok": true,
+          "actual": 1856.503,
+          "expected": "<= 1857.0mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              261.429,
+              261.429,
+              261.429,
+              261.429,
+              261.429,
+              261.429
+            ],
+            "max_error": 0.0
+          },
+          "expected": 261.429,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              261.429,
+              261.429,
+              261.429,
+              261.429,
+              261.429,
+              261.429
+            ],
+            "max_error": 0.0
+          },
+          "expected": 261.429,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_module_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_level_pairs",
+          "ok": true,
+          "actual": [
+            {
+              "center": 419.643,
+              "count": 2
+            },
+            {
+              "center": 681.072,
+              "count": 2
+            },
+            {
+              "center": 942.501,
+              "count": 2
+            },
+            {
+              "center": 1203.93,
+              "count": 2
+            },
+            {
+              "center": 1465.359,
+              "count": 2
+            },
+            {
+              "center": 1726.788,
+              "count": 2
+            }
+          ],
+          "expected": "6 levels x 2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "shelf_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              261.429,
+              261.429,
+              261.429,
+              261.429,
+              261.429
+            ],
+            "max_error": 0.0
+          },
+          "expected": 261.429,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_level_pairs",
+          "ok": true,
+          "actual": [
+            {
+              "center": 436.429,
+              "count": 2
+            },
+            {
+              "center": 697.858,
+              "count": 2
+            },
+            {
+              "center": 959.287,
+              "count": 2
+            },
+            {
+              "center": 1220.716,
+              "count": 2
+            },
+            {
+              "center": 1482.145,
+              "count": 2
+            },
+            {
+              "center": 1743.574,
+              "count": 2
+            }
+          ],
+          "expected": "6 levels x 2",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "front_frame_crossbar_pitch",
+          "ok": true,
+          "actual": {
+            "values": [
+              261.429,
+              261.429,
+              261.429,
+              261.429,
+              261.429
+            ],
+            "max_error": 0.0
+          },
+          "expected": 261.429,
+          "severity": "error",
+          "detail": ""
+        }
+      ],
+      "metrics": {
+        "bbox_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_14door_cabinet_skeleton_v2_step_bbox.csv",
+        "assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_14door_cabinet_skeleton_v2.SLDASM",
+        "step": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\native_16029_14door_cabinet_skeleton_v2.step",
+        "root_bbox": {
+          "x_min": -500.0,
+          "x_max": 500.0,
+          "x_len": 1000.0,
+          "y_min": -21.2,
+          "y_max": 1917.0,
+          "y_len": 1938.2,
+          "z_min": -550.0,
+          "z_max": 0.0,
+          "z_len": 550.0
+        },
+        "door_count": 14,
+        "left_column_door_count": 7,
+        "right_column_door_count": 7,
+        "left_column_pitch": {
+          "values": [
+            261.429,
+            261.429,
+            261.429,
+            261.429,
+            261.429,
+            261.429
+          ],
+          "max_error": 0.0
+        },
+        "right_column_pitch": {
+          "values": [
+            261.429,
+            261.429,
+            261.429,
+            261.429,
+            261.429,
+            261.429
+          ],
+          "max_error": 0.0
+        },
+        "shelf_count": 12,
+        "shelf_levels": [
+          {
+            "center": 419.643,
+            "count": 2
+          },
+          {
+            "center": 681.072,
+            "count": 2
+          },
+          {
+            "center": 942.501,
+            "count": 2
+          },
+          {
+            "center": 1203.93,
+            "count": 2
+          },
+          {
+            "center": 1465.359,
+            "count": 2
+          },
+          {
+            "center": 1726.788,
+            "count": 2
+          }
+        ],
+        "shelf_pitch": {
+          "values": [
+            261.429,
+            261.429,
+            261.429,
+            261.429,
+            261.429
+          ],
+          "max_error": 0.0
+        },
+        "crossbar_count": 12,
+        "crossbar_levels": [
+          {
+            "center": 436.429,
+            "count": 2
+          },
+          {
+            "center": 697.858,
+            "count": 2
+          },
+          {
+            "center": 959.287,
+            "count": 2
+          },
+          {
+            "center": 1220.716,
+            "count": 2
+          },
+          {
+            "center": 1482.145,
+            "count": 2
+          },
+          {
+            "center": 1743.574,
+            "count": 2
+          }
+        ],
+        "crossbar_pitch": {
+          "values": [
+            261.429,
+            261.429,
+            261.429,
+            261.429,
+            261.429
+          ],
+          "max_error": 0.0
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "data_json": "D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_native_skeleton_geometry_gate.json",
+    "data_markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_native_skeleton_geometry_gate.md",
+    "data_csv": "D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_native_skeleton_geometry_gate.csv",
+    "local_json": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\cabinet_skeleton_geometry_gate.json",
+    "local_markdown": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\cabinet_skeleton_geometry_gate.md",
+    "local_csv": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\\cabinet_skeleton_geometry_gate.csv"
+  }
+}
