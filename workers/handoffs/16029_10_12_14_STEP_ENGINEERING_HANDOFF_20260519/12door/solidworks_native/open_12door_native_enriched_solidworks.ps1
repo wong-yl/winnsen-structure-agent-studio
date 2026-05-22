@@ -3,6 +3,8 @@ $assemblyPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_
 $solidWorksExe = 'D:\软件安装录\soildworks\SOLIDWORKS\SLDWORKS.exe'
 $solidWorksShortcut = 'C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk'
 $solidWorksOpenScript = 'D:\机械结构工程师智能体\scripts\sw_open_and_activate.js'
+$dependencyManifestPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\solidworks_native\native_dependency_manifest.csv'
+$missingDependencyPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\solidworks_native\open_12door_native_enriched_solidworks.missing_dependencies.txt'
 $statusPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\solidworks_native\open_12door_native_enriched_solidworks.status.txt'
 $stdoutPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\solidworks_native\open_12door_native_enriched_solidworks.solidworks_open.stdout.txt'
 $stderrPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\12door\solidworks_native\open_12door_native_enriched_solidworks.solidworks_open.stderr.txt'
@@ -26,6 +28,31 @@ function Wait-SolidWorksMainWindow([int] $timeoutSeconds) {
 
 if (-not (Test-Path -LiteralPath $assemblyPath)) {
   throw "Native SolidWorks assembly was not found: $assemblyPath"
+}
+
+if ($dependencyManifestPath -and (Test-Path -LiteralPath $dependencyManifestPath)) {
+  $manifestRows = Import-Csv -LiteralPath $dependencyManifestPath
+  $missingRows = @($manifestRows | Where-Object {
+    -not $_.source_path -or
+    $_.exists -ne 'yes' -or
+    -not (Test-Path -LiteralPath $_.source_path)
+  })
+  if ($missingRows.Count -gt 0) {
+    $lines = @(
+      "Missing SolidWorks native dependency references before opening:",
+      "Assembly: $assemblyPath",
+      "Manifest: $dependencyManifestPath",
+      ""
+    )
+    foreach ($row in $missingRows) {
+      $lines += ("0 | 1" -f $row.role, $row.source_path)
+    }
+    Set-Content -LiteralPath $missingDependencyPath -Value $lines -Encoding UTF8
+    Write-OpenStatus "missing_dependency" "Missing $($missingRows.Count) native dependency reference(s). See: $missingDependencyPath"
+    Start-Process -FilePath "notepad.exe" -ArgumentList @($missingDependencyPath)
+    Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$assemblyPath`""
+    exit 1
+  }
 }
 
 $runningSolidWorks = Get-Process -Name SLDWORKS -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle } | Select-Object -First 1

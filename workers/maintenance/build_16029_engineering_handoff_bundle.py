@@ -203,16 +203,19 @@ if errorlevel 1 start "" notepad.exe "%~dpn0.log"
     write_text(path, cmd)
 
 
-def write_native_solidworks_launcher(path: Path, assembly_path: Path) -> None:
+def write_native_solidworks_launcher(path: Path, assembly_path: Path, dependency_manifest_path: Path | None = None) -> None:
     ps1 = path.with_suffix(".ps1")
     status_path = path.with_suffix(".status.txt")
     stdout_path = path.with_suffix(".solidworks_open.stdout.txt")
     stderr_path = path.with_suffix(".solidworks_open.stderr.txt")
+    missing_dependency_path = path.with_suffix(".missing_dependencies.txt")
     script = f"""$ErrorActionPreference = 'Stop'
 $assemblyPath = {ps_single_quote(str(assembly_path))}
 $solidWorksExe = {ps_single_quote(str(SOLIDWORKS_EXE))}
 $solidWorksShortcut = {ps_single_quote(str(SOLIDWORKS_SHORTCUT))}
 $solidWorksOpenScript = {ps_single_quote(str(SOLIDWORKS_OPEN_SCRIPT))}
+$dependencyManifestPath = {ps_single_quote(str(dependency_manifest_path or ""))}
+$missingDependencyPath = {ps_single_quote(str(missing_dependency_path))}
 $statusPath = {ps_single_quote(str(status_path))}
 $stdoutPath = {ps_single_quote(str(stdout_path))}
 $stderrPath = {ps_single_quote(str(stderr_path))}
@@ -236,6 +239,31 @@ function Wait-SolidWorksMainWindow([int] $timeoutSeconds) {{
 
 if (-not (Test-Path -LiteralPath $assemblyPath)) {{
   throw "Native SolidWorks assembly was not found: $assemblyPath"
+}}
+
+if ($dependencyManifestPath -and (Test-Path -LiteralPath $dependencyManifestPath)) {{
+  $manifestRows = Import-Csv -LiteralPath $dependencyManifestPath
+  $missingRows = @($manifestRows | Where-Object {{
+    -not $_.source_path -or
+    $_.exists -ne 'yes' -or
+    -not (Test-Path -LiteralPath $_.source_path)
+  }})
+  if ($missingRows.Count -gt 0) {{
+    $lines = @(
+      "Missing SolidWorks native dependency references before opening:",
+      "Assembly: $assemblyPath",
+      "Manifest: $dependencyManifestPath",
+      ""
+    )
+    foreach ($row in $missingRows) {{
+      $lines += ("{0} | {1}" -f $row.role, $row.source_path)
+    }}
+    Set-Content -LiteralPath $missingDependencyPath -Value $lines -Encoding UTF8
+    Write-OpenStatus "missing_dependency" "Missing $($missingRows.Count) native dependency reference(s). See: $missingDependencyPath"
+    Start-Process -FilePath "notepad.exe" -ArgumentList @($missingDependencyPath)
+    Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$assemblyPath`""
+    exit 1
+  }}
 }}
 
 $runningSolidWorks = Get-Process -Name SLDWORKS -ErrorAction SilentlyContinue | Where-Object {{ $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }} | Select-Object -First 1
@@ -425,7 +453,7 @@ def build_native_reference_handoff(door_count: int, target_dir: Path) -> dict[st
 
     dependency_manifest = write_native_dependency_manifest(placements_target, native_dir / "native_dependency_manifest.csv")
     launcher = native_dir / f"open_{door_count}door_native_enriched_solidworks.cmd"
-    write_native_solidworks_launcher(launcher, assembly_target)
+    write_native_solidworks_launcher(launcher, assembly_target, Path(dependency_manifest["path"]))
 
     readme_path = native_dir / "README.md"
     readme = f"""# 16029 {door_count} door native SolidWorks enriched reference
@@ -451,6 +479,7 @@ Output level: engineering reference, not released production drawing.
 
 - This folder collects the current native enhanced reference and its evidence in one place.
 - This is not a true independent Pack-and-Go release yet. The dependency manifest lists top-level source references that must stay available on this workstation.
+- The launcher preflights the dependency manifest before opening SolidWorks and writes a missing-dependency report if references are not available.
 - Use this before the older STEP-only handoff when reviewing in SolidWorks 2025.
 """
     write_text(readme_path, readme)

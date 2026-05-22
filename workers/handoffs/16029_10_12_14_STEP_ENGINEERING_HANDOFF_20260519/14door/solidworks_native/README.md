@@ -21,4 +21,5 @@ Output level: engineering reference, not released production drawing.
 
 - This folder collects the current native enhanced reference and its evidence in one place.
 - This is not a true independent Pack-and-Go release yet. The dependency manifest lists top-level source references that must stay available on this workstation.
+- The launcher preflights the dependency manifest before opening SolidWorks and writes a missing-dependency report if references are not available.
 - Use this before the older STEP-only handoff when reviewing in SolidWorks 2025.
