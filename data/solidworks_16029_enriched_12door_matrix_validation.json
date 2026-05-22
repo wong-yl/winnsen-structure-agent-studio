@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T08:49:07+08:00",
+  "generated_at": "2026-05-22T09:38:12+08:00",
   "ok": true,
   "out_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521",
   "mode": "matrix",
@@ -165,6 +165,105 @@
       "type_id": "Part::Feature"
     }
   ],
+  "embedded_door_quality": {
+    "door_count": 12,
+    "left_column_door_count": 6,
+    "right_column_door_count": 6,
+    "door_array_transform_summary": {
+      "total": 12,
+      "ok": 12,
+      "failed_roles": []
+    },
+    "left_column_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "right_column_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "door_weld_count": 12,
+    "door_panel_feature_count": 12,
+    "hinge_pin_count": 12,
+    "lock_hook_pad_count": 12,
+    "electric_lock_hook_count": 12,
+    "shelf_count": 10,
+    "shelf_levels": [
+      {
+        "center": 333.5,
+        "count": 2
+      },
+      {
+        "center": 638.5,
+        "count": 2
+      },
+      {
+        "center": 943.5,
+        "count": 2
+      },
+      {
+        "center": 1248.5,
+        "count": 2
+      },
+      {
+        "center": 1553.5,
+        "count": 2
+      }
+    ],
+    "shelf_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "crossbar_count": 10,
+    "crossbar_levels": [
+      {
+        "center": 333.5,
+        "count": 2
+      },
+      {
+        "center": 638.5,
+        "count": 2
+      },
+      {
+        "center": 943.5,
+        "count": 2
+      },
+      {
+        "center": 1248.5,
+        "count": 2
+      },
+      {
+        "center": 1553.5,
+        "count": 2
+      }
+    ],
+    "crossbar_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    }
+  },
   "checks": [
     {
       "name": "assembly_exists",
@@ -234,6 +333,256 @@
       "ok": true,
       "actual": "9/9 matched",
       "expected": "9 candidate bboxes match within 0.75 mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_ordinary_door_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_column_door_count",
+      "ok": true,
+      "actual": 6,
+      "expected": 6,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_door_count",
+      "ok": true,
+      "actual": 6,
+      "expected": 6,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_array_all_transforms_applied",
+      "ok": true,
+      "actual": {
+        "total": 12,
+        "ok": 12,
+        "failed_roles": []
+      },
+      "expected": "12 placements with added=true and transformApplied=true",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_column_x_position",
+      "ok": true,
+      "actual": 0.0,
+      "expected": "-258.5mm +/- 0.1mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_x_position",
+      "ok": true,
+      "actual": 0.0,
+      "expected": "258.5mm +/- 0.1mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_standard_rotation",
+      "ok": true,
+      "actual": [
+        [
+          -1,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "expected": "right door placements use 180deg Z rotation",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_right_door_y_alignment",
+      "ok": true,
+      "actual": 0.0,
+      "expected": "<= 0.1mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_column_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_weld_subassembly_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_panel_feature_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_hinge_pin_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_lock_hook_pad_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_electric_lock_hook_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_module_count",
+      "ok": true,
+      "actual": 10,
+      "expected": 10,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_level_pairs",
+      "ok": true,
+      "actual": [
+        {
+          "center": 333.5,
+          "count": 2
+        },
+        {
+          "center": 638.5,
+          "count": 2
+        },
+        {
+          "center": 943.5,
+          "count": 2
+        },
+        {
+          "center": 1248.5,
+          "count": 2
+        },
+        {
+          "center": 1553.5,
+          "count": 2
+        }
+      ],
+      "expected": "5 levels x 2",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_count",
+      "ok": true,
+      "actual": 10,
+      "expected": 10,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_level_pairs",
+      "ok": true,
+      "actual": [
+        {
+          "center": 333.5,
+          "count": 2
+        },
+        {
+          "center": 638.5,
+          "count": 2
+        },
+        {
+          "center": 943.5,
+          "count": 2
+        },
+        {
+          "center": 1248.5,
+          "count": 2
+        },
+        {
+          "center": 1553.5,
+          "count": 2
+        }
+      ],
+      "expected": "5 levels x 2",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
       "severity": "error"
     }
   ]

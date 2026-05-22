@@ -9,3 +9,24 @@ cabinet_width_preserved,True,1000.0,1000.0,error
 cabinet_height_top_preserved,True,1917.0,1917.0,error
 cabinet_depth_preserved,True,550.0,550.0,error
 recommended_candidate_bboxes_match,True,9/9 matched,9 candidate bboxes match within 0.75 mm,error
+embedded_ordinary_door_count,True,12,12,error
+embedded_left_column_door_count,True,6,6,error
+embedded_right_column_door_count,True,6,6,error
+embedded_door_array_all_transforms_applied,True,"{'total': 12, 'ok': 12, 'failed_roles': []}",12 placements with added=true and transformApplied=true,error
+embedded_left_column_x_position,True,0.0,-258.5mm +/- 0.1mm,error
+embedded_right_column_x_position,True,0.0,258.5mm +/- 0.1mm,error
+embedded_right_column_standard_rotation,True,"[[-1, 0, 0, 0, -1, 0, 0, 0, 1], [-1, 0, 0, 0, -1, 0, 0, 0, 1]]",right door placements use 180deg Z rotation,error
+embedded_left_right_door_y_alignment,True,0.0,<= 0.1mm,error
+embedded_left_column_pitch,True,"{'values': [305.0, 305.0, 305.0, 305.0, 305.0], 'max_error': 0.0}",305.0,error
+embedded_right_column_pitch,True,"{'values': [305.0, 305.0, 305.0, 305.0, 305.0], 'max_error': 0.0}",305.0,error
+embedded_door_weld_subassembly_count,True,12,12,error
+embedded_door_panel_feature_count,True,12,12,error
+embedded_hinge_pin_count,True,12,12,error
+embedded_lock_hook_pad_count,True,12,12,error
+embedded_electric_lock_hook_count,True,12,12,error
+embedded_shelf_module_count,True,10,10,error
+embedded_shelf_level_pairs,True,"[{'center': 333.5, 'count': 2}, {'center': 638.5, 'count': 2}, {'center': 943.5, 'count': 2}, {'center': 1248.5, 'count': 2}, {'center': 1553.5, 'count': 2}]",5 levels x 2,error
+embedded_shelf_pitch,True,"{'values': [305.0, 305.0, 305.0, 305.0], 'max_error': 0.0}",305.0,error
+embedded_front_frame_crossbar_count,True,10,10,error
+embedded_front_frame_crossbar_level_pairs,True,"[{'center': 333.5, 'count': 2}, {'center': 638.5, 'count': 2}, {'center': 943.5, 'count': 2}, {'center': 1248.5, 'count': 2}, {'center': 1553.5, 'count': 2}]",5 levels x 2,error
+embedded_front_frame_crossbar_pitch,True,"{'values': [305.0, 305.0, 305.0, 305.0], 'max_error': 0.0}",305.0,error

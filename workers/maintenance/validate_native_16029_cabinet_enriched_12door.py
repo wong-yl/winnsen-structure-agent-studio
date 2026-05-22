@@ -7,6 +7,33 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from validate_native_16029_cabinet_skeleton_geometry import (
+    DOOR_HEIGHT_BY_COUNT,
+    EXPECTED_LEFT_DOOR_COLUMN_X_MM,
+    EXPECTED_RIGHT_DOOR_COLUMN_X_MM,
+    TOL_COUNT_PITCH_MM,
+    TOL_PAIR_MM,
+    TOL_PLACEMENT_X_MM,
+    VISUAL_GAP_MM,
+    center,
+    cluster_centers,
+    cluster_pitch_deltas,
+    count_ok_cluster_pairs,
+    count_rows,
+    count_rows_where,
+    is_crossbar,
+    is_door_module_row,
+    load_door_array_result,
+    placement_column_rows,
+    placement_pitch_deltas,
+    placement_transform_summary,
+    placement_x_error,
+    right_column_rotation_ok,
+    row_label,
+    split_door_columns,
+    valid_geometry,
+)
+
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DOOR_COUNT = int(os.getenv("STUDIO_16029_ENRICHED_DOOR_COUNT", "12"))
@@ -100,6 +127,9 @@ def load_bbox_rows(path: Path) -> list[dict[str, Any]]:
                 "volume",
             ):
                 row[key] = parse_float(raw.get(key))
+            row["x_center"] = center(row.get("x_min"), row.get("x_max"))
+            row["y_center"] = center(row.get("y_min"), row.get("y_max"))
+            row["z_center"] = center(row.get("z_min"), row.get("z_max"))
             rows.append(row)
     return rows
 
@@ -277,6 +307,163 @@ def build_payload() -> dict[str, Any]:
         f"{len(recommended)} candidate bboxes match within {TOL_MM} mm",
     )
 
+    door_height = DOOR_HEIGHT_BY_COUNT[DOOR_COUNT]
+    expected_pitch = door_height + VISUAL_GAP_MM
+    rows_per_column = DOOR_COUNT // 2
+    expected_internal_levels = rows_per_column - 1
+    valid_rows = [row for row in rows if valid_geometry(row)]
+    door_rows = [row for row in valid_rows if is_door_module_row(row, DOOR_COUNT)]
+    left_doors, right_doors = split_door_columns(door_rows)
+    door_array_result = load_door_array_result(DOOR_COUNT)
+    left_placements = placement_column_rows(door_array_result, "L")
+    right_placements = placement_column_rows(door_array_result, "R")
+    all_placements = left_placements + right_placements
+    transform_summary = placement_transform_summary(all_placements)
+    left_x_error = placement_x_error(left_placements, EXPECTED_LEFT_DOOR_COLUMN_X_MM)
+    right_x_error = placement_x_error(right_placements, EXPECTED_RIGHT_DOOR_COLUMN_X_MM)
+    left_pitch = placement_pitch_deltas(left_placements, expected_pitch)
+    right_pitch = placement_pitch_deltas(right_placements, expected_pitch)
+    left_pitch_error = left_pitch.get("max_error")
+    right_pitch_error = right_pitch.get("max_error")
+    placement_pair_delta = (
+        max(abs(float(left["tyMm"]) - float(right["tyMm"])) for left, right in zip(left_placements, right_placements))
+        if len(left_placements) == len(right_placements) and left_placements
+        else None
+    )
+
+    add_check(checks, "embedded_ordinary_door_count", len(door_rows) == DOOR_COUNT, len(door_rows), DOOR_COUNT)
+    add_check(checks, "embedded_left_column_door_count", len(left_doors) == rows_per_column, len(left_doors), rows_per_column)
+    add_check(checks, "embedded_right_column_door_count", len(right_doors) == rows_per_column, len(right_doors), rows_per_column)
+    add_check(
+        checks,
+        "embedded_door_array_all_transforms_applied",
+        transform_summary["total"] == DOOR_COUNT and transform_summary["ok"] == DOOR_COUNT,
+        transform_summary,
+        f"{DOOR_COUNT} placements with added=true and transformApplied=true",
+    )
+    add_check(
+        checks,
+        "embedded_left_column_x_position",
+        isinstance(left_x_error, (int, float)) and float(left_x_error) <= TOL_PLACEMENT_X_MM,
+        rounded(left_x_error),
+        f"{EXPECTED_LEFT_DOOR_COLUMN_X_MM}mm +/- {TOL_PLACEMENT_X_MM}mm",
+    )
+    add_check(
+        checks,
+        "embedded_right_column_x_position",
+        isinstance(right_x_error, (int, float)) and float(right_x_error) <= TOL_PLACEMENT_X_MM,
+        rounded(right_x_error),
+        f"{EXPECTED_RIGHT_DOOR_COLUMN_X_MM}mm +/- {TOL_PLACEMENT_X_MM}mm",
+    )
+    add_check(
+        checks,
+        "embedded_right_column_standard_rotation",
+        right_column_rotation_ok(right_placements),
+        [row.get("rotation") for row in right_placements[:2]],
+        "right door placements use 180deg Z rotation",
+    )
+    add_check(
+        checks,
+        "embedded_left_right_door_y_alignment",
+        isinstance(placement_pair_delta, (int, float)) and float(placement_pair_delta) <= TOL_PAIR_MM,
+        rounded(placement_pair_delta),
+        f"<= {TOL_PAIR_MM}mm",
+    )
+    add_check(
+        checks,
+        "embedded_left_column_pitch",
+        isinstance(left_pitch_error, (int, float)) and float(left_pitch_error) <= TOL_COUNT_PITCH_MM,
+        left_pitch,
+        expected_pitch,
+    )
+    add_check(
+        checks,
+        "embedded_right_column_pitch",
+        isinstance(right_pitch_error, (int, float)) and float(right_pitch_error) <= TOL_COUNT_PITCH_MM,
+        right_pitch,
+        expected_pitch,
+    )
+
+    door_weld_count = count_rows_where(
+        valid_rows,
+        "App::Part",
+        lambda label: ("\u50a8\u7269\u67dc\u95e8" in label and "\u710a\u63a5" in label)
+        or "native_16029_door_weld" in label,
+    )
+    door_panel_count = count_rows_where(
+        valid_rows,
+        "Part::Feature",
+        lambda label: "\u50a8\u7269\u67dc\u95e8\u677f" in label or "native_16029_door_panel" in label,
+    )
+    hinge_pin_count = count_rows_where(
+        valid_rows,
+        "Part::Feature",
+        lambda label: "\u95e8\u8f74\u9500" in label or "door_hinge_pin" in label,
+    )
+    lock_hook_pad_count = count_rows(valid_rows, "Part::Feature", "U\u578b\u9501\u94a9\u57ab\u677f")
+    electric_lock_hook_count = count_rows_where(
+        valid_rows,
+        "Part::Feature",
+        lambda label: "\u7535\u63a7U\u578b\u9501\u94a9" in label or "electric_lock_hook" in label,
+    )
+    add_check(checks, "embedded_door_weld_subassembly_count", door_weld_count == DOOR_COUNT, door_weld_count, DOOR_COUNT)
+    add_check(checks, "embedded_door_panel_feature_count", door_panel_count == DOOR_COUNT, door_panel_count, DOOR_COUNT)
+    add_check(checks, "embedded_hinge_pin_count", hinge_pin_count == DOOR_COUNT, hinge_pin_count, DOOR_COUNT)
+    add_check(checks, "embedded_lock_hook_pad_count", lock_hook_pad_count == DOOR_COUNT, lock_hook_pad_count, DOOR_COUNT)
+    add_check(checks, "embedded_electric_lock_hook_count", electric_lock_hook_count == DOOR_COUNT, electric_lock_hook_count, DOOR_COUNT)
+
+    shelf_rows = [row for row in valid_rows if row.get("type_id") == "App::Part" and "\u6a2a\u5c42\u677f" in row_label(row)]
+    shelf_clusters = cluster_centers(shelf_rows)
+    shelf_pitch = cluster_pitch_deltas(shelf_clusters, expected_pitch)
+    shelf_pitch_error = shelf_pitch.get("max_error")
+    add_check(
+        checks,
+        "embedded_shelf_module_count",
+        len(shelf_rows) == expected_internal_levels * 2,
+        len(shelf_rows),
+        expected_internal_levels * 2,
+    )
+    add_check(
+        checks,
+        "embedded_shelf_level_pairs",
+        count_ok_cluster_pairs(shelf_clusters, expected_internal_levels),
+        shelf_clusters,
+        f"{expected_internal_levels} levels x 2",
+    )
+    add_check(
+        checks,
+        "embedded_shelf_pitch",
+        isinstance(shelf_pitch_error, (int, float)) and float(shelf_pitch_error) <= TOL_COUNT_PITCH_MM,
+        shelf_pitch,
+        expected_pitch,
+    )
+
+    crossbar_rows = [row for row in valid_rows if is_crossbar(row)]
+    crossbar_clusters = cluster_centers(crossbar_rows)
+    crossbar_pitch = cluster_pitch_deltas(crossbar_clusters, expected_pitch)
+    crossbar_pitch_error = crossbar_pitch.get("max_error")
+    add_check(
+        checks,
+        "embedded_front_frame_crossbar_count",
+        len(crossbar_rows) == expected_internal_levels * 2,
+        len(crossbar_rows),
+        expected_internal_levels * 2,
+    )
+    add_check(
+        checks,
+        "embedded_front_frame_crossbar_level_pairs",
+        count_ok_cluster_pairs(crossbar_clusters, expected_internal_levels),
+        crossbar_clusters,
+        f"{expected_internal_levels} levels x 2",
+    )
+    add_check(
+        checks,
+        "embedded_front_frame_crossbar_pitch",
+        isinstance(crossbar_pitch_error, (int, float)) and float(crossbar_pitch_error) <= TOL_COUNT_PITCH_MM,
+        crossbar_pitch,
+        expected_pitch,
+    )
+
     ok = all(item["ok"] or item["severity"] != "error" for item in checks)
     return {
         "generated_at": now_iso(),
@@ -290,6 +477,25 @@ def build_payload() -> dict[str, Any]:
         "combined_bbox_mm": combined_bbox,
         "combined_bbox_source": "root_app_part" if root_bbox_row else "union_valid_shapes",
         "candidate_matches": candidate_matches,
+        "embedded_door_quality": {
+            "door_count": len(door_rows),
+            "left_column_door_count": len(left_doors),
+            "right_column_door_count": len(right_doors),
+            "door_array_transform_summary": transform_summary,
+            "left_column_pitch": left_pitch,
+            "right_column_pitch": right_pitch,
+            "door_weld_count": door_weld_count,
+            "door_panel_feature_count": door_panel_count,
+            "hinge_pin_count": hinge_pin_count,
+            "lock_hook_pad_count": lock_hook_pad_count,
+            "electric_lock_hook_count": electric_lock_hook_count,
+            "shelf_count": len(shelf_rows),
+            "shelf_levels": shelf_clusters,
+            "shelf_pitch": shelf_pitch,
+            "crossbar_count": len(crossbar_rows),
+            "crossbar_levels": crossbar_clusters,
+            "crossbar_pitch": crossbar_pitch,
+        },
         "checks": checks,
     }
 
