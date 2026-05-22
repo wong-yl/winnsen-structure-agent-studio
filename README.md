@@ -105,8 +105,8 @@ Current behavior:
   - SOLIDWORKS 2025: `C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk`
   - FreeCAD 1.1.1: `C:\Users\Administrator\Desktop\FreeCAD 1.1.1.lnk`
 - Task drafts store CAD runner, capability, editable parameters, evidence, maturity, output level, and the expected worker command.
-- The 16029 SolidWorks generation entry currently exposes the verified 12-door standard top-assembly clone and the 10-door 2/10 practice-template clone inside the 1000 W × 1917 H × 550 D envelope. The previous direct part-insertion route is blocked because visual QA showed datum/transform misalignment.
-- The API dry-run enforces that the 16029 SolidWorks mainline stays at `door_count=10` or `door_count=12`, `cabinet_width=1000`, and `geometry_source=auto`, checks the selected template assembly before a run is allowed, and blocks concurrent SolidWorks automation runs. Other door counts and width-rule experiments stay in the transform/mate or FreeCAD/STEP rule-learning route until evidence is closed.
+- The 16029 SolidWorks generation entry currently exposes the verified 10/12/14-door native enriched reference assemblies inside the 1000 W × 1917 H × 550 D envelope. The previous direct part-insertion route is blocked because visual QA showed datum/transform misalignment.
+- The API dry-run enforces that the 16029 SolidWorks/FreeCAD mainline stays on the verified rule packet, currently `door_count=10/12/14`, `cabinet_width=1000`, and `geometry_source=auto`. It checks the selected native assembly, verified rule packet, right-door mirror evidence, Pack-and-Go independence, and one-run SolidWorks guard before a run is allowed. Other door counts and width-rule experiments stay in the rule-learning route until evidence is closed.
 - Arbitrary door width/height changes under the same 1000×1917 outer size remain blocked until door-frame divider, lock, hinge, BOM, and DXF formula evidence is closed.
 - Task details can run a dry-run preflight that checks the selected CAD shortcut, executable, generator script path, parameters, evidence, and output boundary.
 - SolidWorks is the current engineering-mainline runner; its manual package produces native assembly output when the local SolidWorks session and license are available.
@@ -114,7 +114,7 @@ Current behavior:
 - SolidWorks direct-component diagnostics remain available for transform experiments, but the 16029 10/12-door template clone route skips the expensive component-tree walk by default to avoid long SolidWorks sessions. The 10-door template clone has a native-save smoke output under `workers\manual_runs\QA-16029-10DOOR-FAST-CLONE-20260519073300`.
 - FreeCAD tasks can execute through the local `FreeCADCmd.exe` worker after dry-run passes as the open-source migration route.
 - FreeCAD engineering-reference outputs are written under `workers\generated_models\<task_id>`.
-- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. The 16029 template runner cleans reference-plane/sketch/origin display before saving the cloned `.SLDASM`, writes build and validation reports, and leaves Pack-and-Go as a later handoff step.
+- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. The 16029 template runner cleans reference-plane/sketch/origin display before saving the cloned `.SLDASM`, writes build and validation reports, and the current 10/12/14-door engineering handoff also has local Pack-and-Go packages with zero external top-level references.
 - Dry-run and execution metadata write logs under `workers\generation_logs`.
 - The API does not create production drawings or mark any output as production-released.
 

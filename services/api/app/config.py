@@ -80,6 +80,15 @@ LOCKER_16029_VARIANT_RULE_PACKET_PATH = Path(
 LOCKER_16029_VARIANT_RULE_PACKET_MARKDOWN_PATH = Path(
     os.getenv("STUDIO_16029_VARIANT_RULE_PACKET_MD", ROOT_DIR / "data" / "locker_16029_variant_rule_packet.md")
 )
+LOCKER_16029_VERIFIED_RULE_PACKET_PATH = Path(
+    os.getenv("STUDIO_16029_VERIFIED_RULE_PACKET_JSON", ROOT_DIR / "data" / "locker_16029_verified_rule_packet.json")
+)
+LOCKER_16029_VERIFIED_RULE_PACKET_MARKDOWN_PATH = Path(
+    os.getenv("STUDIO_16029_VERIFIED_RULE_PACKET_MD", ROOT_DIR / "data" / "locker_16029_verified_rule_packet.md")
+)
+LOCKER_16029_VERIFIED_RULE_PACKET_CSV_PATH = Path(
+    os.getenv("STUDIO_16029_VERIFIED_RULE_PACKET_CSV", ROOT_DIR / "data" / "locker_16029_verified_rule_packet.csv")
+)
 LOCKER_16029_VARIANT_QUALITY_MATRIX_PATH = Path(
     os.getenv("STUDIO_16029_VARIANT_QUALITY_MATRIX_JSON", ROOT_DIR / "data" / "locker_16029_variant_quality_matrix.json")
 )

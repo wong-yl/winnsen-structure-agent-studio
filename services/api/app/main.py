@@ -38,6 +38,9 @@ from .config import (
     LOCKER_16029_ENGINEERING_HANDOFF_BUNDLE_PATH,
     LOCKER_16029_ENGINEERING_HANDOFF_BUNDLE_SCRIPT,
     LOCKER_16029_STRUCTURAL_RULE_AUDIT_SCRIPT,
+    LOCKER_16029_VERIFIED_RULE_PACKET_CSV_PATH,
+    LOCKER_16029_VERIFIED_RULE_PACKET_MARKDOWN_PATH,
+    LOCKER_16029_VERIFIED_RULE_PACKET_PATH,
     LOCKER_16029_VARIANT_QUALITY_MATRIX_MARKDOWN_PATH,
     LOCKER_16029_VARIANT_QUALITY_MATRIX_PATH,
     LOCKER_16029_VARIANT_QUALITY_MATRIX_SCRIPT,
@@ -659,6 +662,97 @@ def read_locker_16029_variant_rule_packet() -> dict[str, Any]:
         return json.loads(LOCKER_16029_VARIANT_RULE_PACKET_PATH.read_text(encoding="utf-8-sig"))
     except json.JSONDecodeError as exc:
         raise HTTPException(status_code=500, detail=f"16029 variant rule packet JSON is invalid: {exc}") from exc
+
+
+def read_locker_16029_verified_rule_packet() -> dict[str, Any]:
+    if not LOCKER_16029_VERIFIED_RULE_PACKET_PATH.exists():
+        return {
+            "generated_at": None,
+            "product_family": "16029",
+            "purpose": "Verified rule packet for same-outer-size 16029 locker door-count generation.",
+            "scope": "1000W x 1917H x 550D; verified packet has not been generated yet.",
+            "status": "MISSING_OUTPUT",
+            "verified_door_counts": sorted(VERIFIED_LOCKER_16029_SOLIDWORKS_DOOR_COUNTS),
+            "verified_variants": [],
+            "formula_candidates_not_enabled": [],
+            "generator_contract": {
+                "use_this_packet_as_single_source_of_truth": False,
+                "must_not_enable_unverified_door_count_for_engineering_handoff": True,
+            },
+            "output_files": {
+                "json": str(LOCKER_16029_VERIFIED_RULE_PACKET_PATH),
+                "markdown": str(LOCKER_16029_VERIFIED_RULE_PACKET_MARKDOWN_PATH),
+                "csv": str(LOCKER_16029_VERIFIED_RULE_PACKET_CSV_PATH),
+            },
+            "notes": ["尚未生成 16029 verified rule packet，后端会退回到静态 10/12/14 门安全名单。"],
+        }
+    try:
+        return json.loads(LOCKER_16029_VERIFIED_RULE_PACKET_PATH.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=500, detail=f"16029 verified rule packet JSON is invalid: {exc}") from exc
+
+
+def locker_16029_verified_rule_variants() -> dict[int, dict[str, Any]]:
+    payload = read_locker_16029_verified_rule_packet()
+    if payload.get("status") != "PASS":
+        return {}
+    variants: dict[int, dict[str, Any]] = {}
+    for variant in payload.get("verified_variants", []):
+        if not isinstance(variant, dict) or not variant.get("enabled_for_engineering_handoff"):
+            continue
+        try:
+            door_count = int(variant.get("door_count"))
+        except (TypeError, ValueError):
+            continue
+        variants[door_count] = variant
+    return variants
+
+
+def locker_16029_verified_door_counts() -> set[int]:
+    variants = locker_16029_verified_rule_variants()
+    if variants:
+        return set(variants)
+    return set(VERIFIED_LOCKER_16029_SOLIDWORKS_DOOR_COUNTS)
+
+
+def locker_16029_verified_rule_packet_check(door_count: int) -> tuple[bool, str]:
+    payload = read_locker_16029_verified_rule_packet()
+    if payload.get("status") != "PASS":
+        return False, f"16029 verified rule packet status is {payload.get('status')}; see {LOCKER_16029_VERIFIED_RULE_PACKET_PATH}"
+    variant = locker_16029_verified_rule_variants().get(door_count)
+    if not variant:
+        supported = ", ".join(str(value) for value in sorted(locker_16029_verified_door_counts()))
+        return False, f"16029 verified rule packet currently enables only {supported}-door engineering handoff."
+    layout = variant.get("layout_rule") if isinstance(variant.get("layout_rule"), dict) else {}
+    counts = variant.get("component_count_rule") if isinstance(variant.get("component_count_rule"), dict) else {}
+    measured = variant.get("measured_gate") if isinstance(variant.get("measured_gate"), dict) else {}
+    pack = variant.get("pack_and_go_handoff") if isinstance(variant.get("pack_and_go_handoff"), dict) else {}
+    failures: list[str] = []
+    if measured.get("right_column_rotation_ok") != "yes":
+        failures.append("right mirror is not verified")
+    if int(measured.get("dependency_missing_count") or 0) != 0:
+        failures.append("native dependencies are missing")
+    if pack.get("ok") != "True":
+        failures.append("Pack-and-Go did not pass")
+    if int(pack.get("external_top_reference_count") or 0) != 0:
+        failures.append("Pack-and-Go still has external top references")
+    if int(pack.get("missing_top_reference_path_count") or 0) != 0:
+        failures.append("Pack-and-Go still has empty top reference paths")
+    if failures:
+        return False, f"16029 {door_count}-door verified rule packet failed: {'; '.join(failures)}"
+    return (
+        True,
+        (
+            f"16029 {door_count}-door verified rule packet PASS; "
+            f"rows={layout.get('rows_per_column')}; "
+            f"door_h={layout.get('door_height_mm')}mm; "
+            f"pitch={layout.get('door_pitch_mm')}mm; "
+            f"shelves={counts.get('shelves')}; "
+            f"crossbars={counts.get('front_frame_crossbars')}; "
+            f"right_mirror={measured.get('right_column_rotation_ok')}; "
+            f"pack_files={pack.get('file_count')}; evidence={LOCKER_16029_VERIFIED_RULE_PACKET_PATH}"
+        ),
+    )
 
 
 def read_locker_16029_variant_quality_matrix() -> dict[str, Any]:
@@ -2034,17 +2128,13 @@ def validate_task_parameters(task: GenerationTask) -> list[str]:
             elif door_count % 2:
                 errors.append("door_count must be even for the current two-column 16029 layout.")
             else:
-                supported_counts = (
-                    SUPPORTED_16029_SOLIDWORKS_TEMPLATE_DOOR_COUNTS
-                    if task.cad_runner == "solidworks"
-                    else SUPPORTED_16029_FREECAD_RULE_DOOR_COUNTS
-                )
+                supported_counts = locker_16029_verified_door_counts()
                 if door_count not in supported_counts:
                     supported = ", ".join(str(value) for value in sorted(supported_counts))
                     route = (
-                        "SolidWorks native cabinet skeleton"
+                        "SolidWorks native verified rule packet"
                         if task.cad_runner == "solidworks"
-                        else "FreeCAD rule-validation"
+                        else "FreeCAD verified rule packet"
                     )
                     errors.append(
                         f"{route} for 16029 currently supports only {supported}-door output. "
@@ -2141,6 +2231,20 @@ def build_dry_run(task: GenerationTask) -> DryRunResult:
                     name="solidworks_single_run_guard",
                     ok=guard_ok,
                     detail=guard_detail,
+                )
+            )
+        if task.capability_id == "locker_16029_regression":
+            try:
+                verified_door_count = int(str(task.parameters.get("door_count", "")).strip())
+            except ValueError:
+                verified_ok, verified_detail = False, "door_count must be an integer before checking the 16029 verified rule packet."
+            else:
+                verified_ok, verified_detail = locker_16029_verified_rule_packet_check(verified_door_count)
+            extra_checks.append(
+                DryRunCheck(
+                    name="locker_16029_verified_rule_packet",
+                    ok=verified_ok,
+                    detail=verified_detail,
                 )
             )
         if (
@@ -3856,6 +3960,11 @@ def get_sheetmetal_rule_evidence_16029() -> dict[str, Any]:
 @app.get("/api/locker-16029-variant-rule-packet")
 def get_locker_16029_variant_rule_packet() -> dict[str, Any]:
     return read_locker_16029_variant_rule_packet()
+
+
+@app.get("/api/locker-16029-verified-rule-packet")
+def get_locker_16029_verified_rule_packet() -> dict[str, Any]:
+    return read_locker_16029_verified_rule_packet()
 
 
 @app.get("/api/locker-16029-variant-quality-matrix")

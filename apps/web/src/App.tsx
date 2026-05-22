@@ -279,6 +279,36 @@ type Locker16029EngineeringHandoffBundle = {
   }[]
 }
 
+type Locker16029VerifiedRulePacket = {
+  generated_at: string | null
+  status: string
+  scope: string
+  verified_door_counts: number[]
+  formula_candidate_door_counts?: number[]
+  verified_variants: {
+    door_count: number
+    layout_rule: {
+      rows_per_column: number
+      door_height_mm: number
+      door_pitch_mm: number
+      door_width_mm: number
+    }
+    component_count_rule: {
+      shelves: number
+      front_frame_crossbars: number
+      electric_lock_hooks: number
+    }
+    measured_gate: {
+      right_column_rotation_ok: string
+    }
+    pack_and_go_handoff: {
+      ok: string
+      file_count: number
+      external_top_reference_count: number
+    }
+  }[]
+}
+
 type LocalActionResult = {
   status: string
   path: string
@@ -1639,6 +1669,8 @@ function ModelsPage() {
   const [quantityFormulaMessage, setQuantityFormulaMessage] = useState('正在读取 16038 规则绑定证据...')
   const [variantQualityMatrix, setVariantQualityMatrix] = useState<Locker16029VariantQualityMatrix | null>(null)
   const [variantQualityMessage, setVariantQualityMessage] = useState('正在读取 16029 质量矩阵...')
+  const [verifiedRulePacket, setVerifiedRulePacket] = useState<Locker16029VerifiedRulePacket | null>(null)
+  const [verifiedRulePacketMessage, setVerifiedRulePacketMessage] = useState('正在读取 16029 已验证规则包...')
   const [engineeringHandoffBundle, setEngineeringHandoffBundle] =
     useState<Locker16029EngineeringHandoffBundle | null>(null)
   const [engineeringHandoffMessage, setEngineeringHandoffMessage] = useState('正在读取 16029 工程交接包...')
@@ -1773,6 +1805,35 @@ function ModelsPage() {
     }
 
     loadVariantQualityMatrix()
+    return () => {
+      active = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadVerifiedRulePacket() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/locker-16029-verified-rule-packet`)
+        if (!response.ok) throw new Error(await response.text())
+        const packet = (await response.json()) as Locker16029VerifiedRulePacket
+        if (!active) return
+        setVerifiedRulePacket(packet)
+        setVerifiedRulePacketMessage(
+          packet.status === 'PASS'
+            ? `已验证规则包 PASS：${packet.verified_door_counts.join('/')} 门可进入工程交接。`
+            : `已验证规则包状态：${packet.status}。`,
+        )
+      } catch (error) {
+        if (!active) return
+        setVerifiedRulePacket(null)
+        setVerifiedRulePacketMessage(`16029 已验证规则包读取失败: ${error instanceof Error ? error.message : 'unknown error'}`)
+        console.warn('16029 verified rule packet unavailable', error)
+      }
+    }
+
+    loadVerifiedRulePacket()
     return () => {
       active = false
     }
@@ -2187,7 +2248,11 @@ function ModelsPage() {
           </div>
           {activeCapability.id === 'locker_16029_regression' && (
             <>
-              <Locker16029DoorLayoutPanel doorCount={parameterValues.door_count} />
+              <Locker16029DoorLayoutPanel
+                doorCount={parameterValues.door_count}
+                verifiedRulePacket={verifiedRulePacket}
+                message={verifiedRulePacketMessage}
+              />
               <Locker16029QualityMatrixPanel
                 matrix={variantQualityMatrix}
                 message={variantQualityMessage}
@@ -4525,11 +4590,45 @@ function GeneratorRuleBindingPanel({
   )
 }
 
-function Locker16029DoorLayoutPanel({ doorCount }: { doorCount?: string }) {
-  const layout = locker16029SolidWorksLayoutSummary(doorCount)
-  const supported = LOCKER_16029_SUPPORTED_RULE_COUNTS.join(' / ')
+function Locker16029DoorLayoutPanel({
+  doorCount,
+  verifiedRulePacket,
+  message,
+}: {
+  doorCount?: string
+  verifiedRulePacket: Locker16029VerifiedRulePacket | null
+  message: string
+}) {
+  const numericDoorCount = Number(doorCount)
+  const verifiedVariant =
+    verifiedRulePacket?.status === 'PASS'
+      ? verifiedRulePacket.verified_variants.find((variant) => variant.door_count === numericDoorCount)
+      : null
+  const fallbackLayout = locker16029SolidWorksLayoutSummary(doorCount)
+  const layout = verifiedVariant
+    ? {
+        doorCount: verifiedVariant.door_count,
+        rowsPerColumn: verifiedVariant.layout_rule.rows_per_column,
+        doorHeight: verifiedVariant.layout_rule.door_height_mm,
+        doorPitch: verifiedVariant.layout_rule.door_pitch_mm,
+        doorWidth: verifiedVariant.layout_rule.door_width_mm,
+        exactUnit: locker16029ExactUnitForHeight(verifiedVariant.layout_rule.door_height_mm),
+        sourceMode: 'Verified rule packet / SolidWorks Pack-and-Go',
+        rowLabels: Array.from(
+          { length: verifiedVariant.layout_rule.rows_per_column },
+          (_, index) => `${index + 1}: ${formatMm(verifiedVariant.layout_rule.door_height_mm)} mm`,
+        ),
+      }
+    : fallbackLayout
+  const supported = (verifiedRulePacket?.verified_door_counts.length
+    ? verifiedRulePacket.verified_door_counts
+    : LOCKER_16029_SUPPORTED_RULE_COUNTS
+  ).join(' / ')
   const solidWorksSupported = LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS.join(' / ')
   const freeCadSupported = LOCKER_16029_SUPPORTED_FREECAD_COUNTS.join(' / ')
+  const lockHookCount = verifiedVariant?.component_count_rule.electric_lock_hooks ?? layout?.doorCount
+  const shelfCount = verifiedVariant?.component_count_rule.shelves
+  const crossbarCount = verifiedVariant?.component_count_rule.front_frame_crossbars
 
   return (
     <div className={`door-layout-panel ${layout ? '' : 'layout-warning'}`}>
@@ -4555,6 +4654,20 @@ function Locker16029DoorLayoutPanel({ doorCount }: { doorCount?: string }) {
               <span>门板来源</span>
               <strong>{layout.sourceMode}</strong>
             </div>
+            {verifiedVariant && (
+              <div>
+                <span>层板 / 横隔板</span>
+                <strong>{shelfCount} / {crossbarCount}</strong>
+              </div>
+            )}
+            {verifiedVariant && (
+              <div>
+                <span>锁钩 / 右门镜像</span>
+                <strong>
+                  {lockHookCount} / {verifiedVariant.measured_gate.right_column_rotation_ok}
+                </strong>
+              </div>
+            )}
           </div>
           <div className="door-layout-rows" aria-label="每列门尺寸序列">
             {layout.rowLabels.map((label) => (
@@ -4565,11 +4678,16 @@ function Locker16029DoorLayoutPanel({ doorCount }: { doorCount?: string }) {
             ))}
           </div>
           <p>
-            FreeCAD 规则验证支持 {freeCadSupported} 门；SolidWorks 原生整柜骨架当前支持 {solidWorksSupported} 门。其它门数先进入规则学习队列。
+            {message} FreeCAD 规则验证支持 {freeCadSupported} 门；SolidWorks 原生整柜骨架当前支持 {solidWorksSupported} 门。其它门数先进入规则学习队列。
           </p>
+          {verifiedVariant && (
+            <p>
+              Pack-and-Go: {verifiedVariant.pack_and_go_handoff.ok}，文件 {verifiedVariant.pack_and_go_handoff.file_count} 个，外部引用 {verifiedVariant.pack_and_go_handoff.external_top_reference_count}。
+            </p>
+          )}
         </>
       ) : (
-        <p>当前 16029 规则收敛样本只放开 {supported} 门。其它门数先进入规则学习队列，暂不直接生成。</p>
+        <p>{message} 当前 16029 规则收敛样本只放开 {supported} 门。其它门数先进入规则学习队列，暂不直接生成。</p>
       )}
     </div>
   )
