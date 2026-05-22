@@ -34,11 +34,14 @@ EXPECTED_CABINET_HEIGHT_MAX_Y_MM = 1917.0
 EXPECTED_CABINET_DEPTH_MM = 550.0
 EXPECTED_DOOR_TOP_MAX_Y_MM = 1857.0
 EXPECTED_DOOR_BOTTOM_MIN_Y_MM = -25.0
+EXPECTED_LEFT_DOOR_COLUMN_X_MM = -258.5
+EXPECTED_RIGHT_DOOR_COLUMN_X_MM = 258.5
 VISUAL_GAP_MM = 7.0
 SHELF_LABEL_TOKEN = "\u6a2a\u5c42\u677f"
 TOL_COUNT_PITCH_MM = 0.15
 TOL_BBOX_MM = 0.5
 TOL_PAIR_MM = 0.1
+TOL_PLACEMENT_X_MM = 0.1
 
 
 def now_iso() -> str:
@@ -179,6 +182,22 @@ def is_door_module_row(row: dict[str, Any], doors: int) -> bool:
     )
 
 
+def label_contains(row: dict[str, Any], token: str) -> bool:
+    return token in row_label(row)
+
+
+def count_rows(rows: list[dict[str, Any]], type_id: str, *tokens: str) -> int:
+    return sum(
+        1
+        for row in rows
+        if row.get("type_id") == type_id and all(label_contains(row, token) for token in tokens)
+    )
+
+
+def count_rows_where(rows: list[dict[str, Any]], type_id: str, predicate) -> int:
+    return sum(1 for row in rows if row.get("type_id") == type_id and predicate(row_label(row)))
+
+
 def root_row(rows: list[dict[str, Any]], doors: int) -> dict[str, Any] | None:
     exact = f"native_16029_{doors}door_cabinet_skeleton_v2"
     for row in rows:
@@ -248,6 +267,29 @@ def max_placement_y_delta(left: list[dict[str, Any]], right: list[dict[str, Any]
     if len(left) != len(right) or not left:
         return None
     return max(abs(float(left_row["tyMm"]) - float(right_row["tyMm"])) for left_row, right_row in zip(left, right))
+
+
+def placement_transform_summary(placements: list[dict[str, Any]]) -> dict[str, Any]:
+    failed: list[str] = []
+    for placement in placements:
+        ok = (
+            placement.get("exists") is True
+            and placement.get("opened") is True
+            and placement.get("added") is True
+            and placement.get("transformCreated") is True
+            and placement.get("transformApplied") is True
+            and not placement.get("error")
+        )
+        if not ok:
+            failed.append(str(placement.get("role") or ""))
+    return {"total": len(placements), "ok": len(placements) - len(failed), "failed_roles": failed}
+
+
+def placement_x_error(placements: list[dict[str, Any]], expected_x: float) -> float | None:
+    values = [float(row["txMm"]) for row in placements if isinstance(row.get("txMm"), (int, float))]
+    if not values:
+        return None
+    return max(abs(value - expected_x) for value in values)
 
 
 def placement_visual_y_values(placements: list[dict[str, Any]], door_height: float) -> list[float]:
@@ -390,6 +432,7 @@ def audit_variant(doors: int) -> dict[str, Any]:
     left_placements = placement_column_rows(door_array_result, "L")
     right_placements = placement_column_rows(door_array_result, "R")
     all_placements = left_placements + right_placements
+    transform_summary = placement_transform_summary(all_placements)
     add_check(checks, "ordinary_door_count", len(door_rows) == doors, len(door_rows), doors)
     add_check(checks, "left_column_door_count", len(left_doors) == rows_per_column, len(left_doors), rows_per_column)
     add_check(checks, "right_column_door_count", len(right_doors) == rows_per_column, len(right_doors), rows_per_column)
@@ -401,6 +444,29 @@ def audit_variant(doors: int) -> dict[str, Any]:
         len(left_placements) == rows_per_column and len(right_placements) == rows_per_column,
         {"left": len(left_placements), "right": len(right_placements), "source": (door_array_result or {}).get("_path", "")},
         f"{rows_per_column} left placements and {rows_per_column} right placements",
+    )
+    add_check(
+        checks,
+        "door_array_all_transforms_applied",
+        transform_summary["total"] == doors and transform_summary["ok"] == doors,
+        transform_summary,
+        f"{doors} placements with added=true and transformApplied=true",
+    )
+    left_x_error = placement_x_error(left_placements, EXPECTED_LEFT_DOOR_COLUMN_X_MM)
+    right_x_error = placement_x_error(right_placements, EXPECTED_RIGHT_DOOR_COLUMN_X_MM)
+    add_check(
+        checks,
+        "left_column_x_position",
+        isinstance(left_x_error, (int, float)) and float(left_x_error) <= TOL_PLACEMENT_X_MM,
+        rounded(left_x_error),
+        f"{EXPECTED_LEFT_DOOR_COLUMN_X_MM}mm +/- {TOL_PLACEMENT_X_MM}mm",
+    )
+    add_check(
+        checks,
+        "right_column_x_position",
+        isinstance(right_x_error, (int, float)) and float(right_x_error) <= TOL_PLACEMENT_X_MM,
+        rounded(right_x_error),
+        f"{EXPECTED_RIGHT_DOOR_COLUMN_X_MM}mm +/- {TOL_PLACEMENT_X_MM}mm",
     )
     add_check(
         checks,
@@ -456,6 +522,34 @@ def audit_variant(doors: int) -> dict[str, Any]:
         expected_pitch,
     )
 
+    door_weld_count = count_rows_where(
+        rows,
+        "App::Part",
+        lambda label: ("\u50a8\u7269\u67dc\u95e8" in label and "\u710a\u63a5" in label)
+        or "native_16029_door_weld" in label,
+    )
+    door_panel_count = count_rows_where(
+        rows,
+        "Part::Feature",
+        lambda label: "\u50a8\u7269\u67dc\u95e8\u677f" in label or "native_16029_door_panel" in label,
+    )
+    hinge_pin_count = count_rows_where(
+        rows,
+        "Part::Feature",
+        lambda label: "\u95e8\u8f74\u9500" in label or "door_hinge_pin" in label,
+    )
+    lock_hook_pad_count = count_rows(rows, "Part::Feature", "U\u578b\u9501\u94a9\u57ab\u677f")
+    electric_lock_hook_count = count_rows_where(
+        rows,
+        "Part::Feature",
+        lambda label: "\u7535\u63a7U\u578b\u9501\u94a9" in label or "electric_lock_hook" in label,
+    )
+    add_check(checks, "door_weld_subassembly_count", door_weld_count == doors, door_weld_count, doors)
+    add_check(checks, "door_panel_feature_count", door_panel_count == doors, door_panel_count, doors)
+    add_check(checks, "hinge_pin_count", hinge_pin_count == doors, hinge_pin_count, doors)
+    add_check(checks, "lock_hook_pad_count", lock_hook_pad_count == doors, lock_hook_pad_count, doors)
+    add_check(checks, "electric_lock_hook_count", electric_lock_hook_count == doors, electric_lock_hook_count, doors)
+
     shelf_rows = [row for row in rows if row.get("type_id") == "App::Part" and SHELF_LABEL_TOKEN in row_label(row)]
     shelf_clusters = cluster_centers(shelf_rows)
     shelf_pitch = cluster_pitch_deltas(shelf_clusters, expected_pitch)
@@ -507,8 +601,16 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "door_array_result": (door_array_result or {}).get("_path", ""),
         "left_column_placement_count": len(left_placements),
         "right_column_placement_count": len(right_placements),
+        "door_array_transform_summary": transform_summary,
+        "left_column_x_error": rounded(left_x_error),
+        "right_column_x_error": rounded(right_x_error),
         "left_column_pitch": left_pitch,
         "right_column_pitch": right_pitch,
+        "door_weld_count": door_weld_count,
+        "door_panel_feature_count": door_panel_count,
+        "hinge_pin_count": hinge_pin_count,
+        "lock_hook_pad_count": lock_hook_pad_count,
+        "electric_lock_hook_count": electric_lock_hook_count,
         "shelf_count": len(shelf_rows),
         "shelf_levels": shelf_clusters,
         "shelf_pitch": shelf_pitch,
@@ -602,7 +704,10 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
             "",
             "- Root bbox must stay near 1000W x 1917H x 550D.",
             "- Left/right door columns must contain the same row count and aligned Y positions.",
+            "- Each SolidWorks door placement must be added and have its transform applied.",
+            "- Left/right door column X placements must stay at the learned 16029 datum.",
             "- Door pitch must match the configured door height plus 7 mm visual gap.",
+            "- Door weldments, door panels, hinge pins, U-lock hook pads, and electric lock hooks must match the door count.",
             "- Shelf modules and front-frame crossbars must form left/right pairs at each internal level.",
             "- Shelf and front-frame crossbar pitch must match the same row pitch, catching flying or collapsed arrays.",
             "",

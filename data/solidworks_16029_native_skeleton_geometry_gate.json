@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T08:47:50+08:00",
+  "generated_at": "2026-05-22T09:28:42+08:00",
   "status": "PASS",
   "source_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521",
   "target_door_counts": [
@@ -25,7 +25,7 @@
         "z_max": 0.0,
         "z_len": 550.0
       },
-      "check_count": 24,
+      "check_count": 32,
       "failed_error_count": 0,
       "failed_warning_count": 0,
       "checks": [
@@ -130,6 +130,34 @@
           "detail": ""
         },
         {
+          "name": "door_array_all_transforms_applied",
+          "ok": true,
+          "actual": {
+            "total": 10,
+            "ok": 10,
+            "failed_roles": []
+          },
+          "expected": "10 placements with added=true and transformApplied=true",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_x_position",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "-258.5mm +/- 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_x_position",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "258.5mm +/- 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
           "name": "right_column_standard_rotation",
           "ok": true,
           "actual": [
@@ -213,6 +241,46 @@
             "max_error": 0.0
           },
           "expected": 366.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_weld_subassembly_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_panel_feature_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "hinge_pin_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_hook_pad_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "electric_lock_hook_count",
+          "ok": true,
+          "actual": 10,
+          "expected": 10,
           "severity": "error",
           "detail": ""
         },
@@ -334,6 +402,13 @@
         "door_array_result": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_10door_v1_csharp_result.json",
         "left_column_placement_count": 5,
         "right_column_placement_count": 5,
+        "door_array_transform_summary": {
+          "total": 10,
+          "ok": 10,
+          "failed_roles": []
+        },
+        "left_column_x_error": 0.0,
+        "right_column_x_error": 0.0,
         "left_column_pitch": {
           "values": [
             366.0,
@@ -352,6 +427,11 @@
           ],
           "max_error": 0.0
         },
+        "door_weld_count": 10,
+        "door_panel_feature_count": 10,
+        "hinge_pin_count": 10,
+        "lock_hook_pad_count": 10,
+        "electric_lock_hook_count": 10,
         "shelf_count": 8,
         "shelf_levels": [
           {
@@ -425,7 +505,7 @@
         "z_max": 0.0,
         "z_len": 550.0
       },
-      "check_count": 24,
+      "check_count": 32,
       "failed_error_count": 0,
       "failed_warning_count": 0,
       "checks": [
@@ -530,6 +610,34 @@
           "detail": ""
         },
         {
+          "name": "door_array_all_transforms_applied",
+          "ok": true,
+          "actual": {
+            "total": 12,
+            "ok": 12,
+            "failed_roles": []
+          },
+          "expected": "12 placements with added=true and transformApplied=true",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_x_position",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "-258.5mm +/- 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_x_position",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "258.5mm +/- 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
           "name": "right_column_standard_rotation",
           "ok": true,
           "actual": [
@@ -615,6 +723,46 @@
             "max_error": 0.0
           },
           "expected": 305.0,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_weld_subassembly_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_panel_feature_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "hinge_pin_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_hook_pad_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "electric_lock_hook_count",
+          "ok": true,
+          "actual": 12,
+          "expected": 12,
           "severity": "error",
           "detail": ""
         },
@@ -746,6 +894,13 @@
         "door_array_result": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_12door_v1_csharp_result.json",
         "left_column_placement_count": 6,
         "right_column_placement_count": 6,
+        "door_array_transform_summary": {
+          "total": 12,
+          "ok": 12,
+          "failed_roles": []
+        },
+        "left_column_x_error": 0.0,
+        "right_column_x_error": 0.0,
         "left_column_pitch": {
           "values": [
             305.0,
@@ -766,6 +921,11 @@
           ],
           "max_error": 0.0
         },
+        "door_weld_count": 12,
+        "door_panel_feature_count": 12,
+        "hinge_pin_count": 12,
+        "lock_hook_pad_count": 12,
+        "electric_lock_hook_count": 12,
         "shelf_count": 10,
         "shelf_levels": [
           {
@@ -849,7 +1009,7 @@
         "z_max": 0.0,
         "z_len": 550.0
       },
-      "check_count": 24,
+      "check_count": 32,
       "failed_error_count": 0,
       "failed_warning_count": 0,
       "checks": [
@@ -954,6 +1114,34 @@
           "detail": ""
         },
         {
+          "name": "door_array_all_transforms_applied",
+          "ok": true,
+          "actual": {
+            "total": 14,
+            "ok": 14,
+            "failed_roles": []
+          },
+          "expected": "14 placements with added=true and transformApplied=true",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "left_column_x_position",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "-258.5mm +/- 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_x_position",
+          "ok": true,
+          "actual": 0.0,
+          "expected": "258.5mm +/- 0.1mm",
+          "severity": "error",
+          "detail": ""
+        },
+        {
           "name": "right_column_standard_rotation",
           "ok": true,
           "actual": [
@@ -1041,6 +1229,46 @@
             "max_error": 0.0
           },
           "expected": 261.429,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_weld_subassembly_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "door_panel_feature_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "hinge_pin_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "lock_hook_pad_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "electric_lock_hook_count",
+          "ok": true,
+          "actual": 14,
+          "expected": 14,
           "severity": "error",
           "detail": ""
         },
@@ -1182,6 +1410,13 @@
         "door_array_result": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_14door_v1_csharp_result.json",
         "left_column_placement_count": 7,
         "right_column_placement_count": 7,
+        "door_array_transform_summary": {
+          "total": 14,
+          "ok": 14,
+          "failed_roles": []
+        },
+        "left_column_x_error": 0.0,
+        "right_column_x_error": 0.0,
         "left_column_pitch": {
           "values": [
             261.429,
@@ -1204,6 +1439,11 @@
           ],
           "max_error": 0.0
         },
+        "door_weld_count": 14,
+        "door_panel_feature_count": 14,
+        "hinge_pin_count": 14,
+        "lock_hook_pad_count": 14,
+        "electric_lock_hook_count": 14,
         "shelf_count": 12,
         "shelf_levels": [
           {
