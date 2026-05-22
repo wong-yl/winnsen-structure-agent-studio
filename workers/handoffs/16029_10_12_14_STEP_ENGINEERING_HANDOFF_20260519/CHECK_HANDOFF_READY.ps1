@@ -3,6 +3,8 @@ $dependencyCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12
 $qualityCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_quality_summary.csv'
 $packAndGoCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\solidworks_pack_and_go_summary.csv'
 $packAndGoIndependenceCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\solidworks_pack_and_go_independence_summary.csv'
+$verifiedRulePacketJson = 'D:\Winnsen_Structure_Agent_Studio\data\locker_16029_verified_rule_packet.json'
+$verifiedRulePacketCsv = 'D:\Winnsen_Structure_Agent_Studio\data\locker_16029_verified_rule_packet.csv'
 $statusPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\CHECK_HANDOFF_READY.status.txt'
 
 $lines = @()
@@ -64,8 +66,37 @@ if ($packAndGoIndependenceCsv) {
     })
   }
 }
+$verifiedRuleRows = @()
+$verifiedRuleFailures = @()
+if (-not (Test-Path -LiteralPath $verifiedRulePacketJson)) {
+  $verifiedRuleFailures = @([pscustomobject]@{door_count='all'; problem='verified rule packet JSON missing'})
+} elseif (-not (Test-Path -LiteralPath $verifiedRulePacketCsv)) {
+  $verifiedRuleFailures = @([pscustomobject]@{door_count='all'; problem='verified rule packet CSV missing'})
+} else {
+  $verifiedRulePacket = Get-Content -LiteralPath $verifiedRulePacketJson -Raw -Encoding UTF8 | ConvertFrom-Json
+  if ($verifiedRulePacket.status -ne 'PASS') {
+    $verifiedRuleFailures += [pscustomobject]@{door_count='all'; problem="verified rule packet status is $($verifiedRulePacket.status)"}
+  }
+  $verifiedRuleRows = @(Import-Csv -LiteralPath $verifiedRulePacketCsv)
+  if ($verifiedRuleRows.Count -ne 3) {
+    $verifiedRuleFailures += [pscustomobject]@{door_count='all'; problem="verified rule row count is $($verifiedRuleRows.Count), expected 3"}
+  }
+  $verifiedRuleFailures += @($verifiedRuleRows | Where-Object {
+    $_.enabled_for_engineering_handoff -ne 'True' -or
+    $_.right_column_rotation_ok -ne 'yes' -or
+    $_.native_skeleton_status -ne 'PASS' -or
+    [int]$_.native_failed_errors -ne 0 -or
+    $_.handoff_native_validation_ok -ne 'yes' -or
+    [int]$_.dependency_missing_count -ne 0 -or
+    $_.pack_and_go_ok -ne 'True' -or
+    [int]$_.external_top_reference_count -ne 0 -or
+    [int]$_.missing_top_reference_path_count -ne 0
+  } | ForEach-Object {
+    [pscustomobject]@{door_count=$_.door_count; problem='verified rule gate failed'}
+  })
+}
 
-if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0 -or $independenceFailures.Count -gt 0) {
+if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0 -or $independenceFailures.Count -gt 0 -or $verifiedRuleFailures.Count -gt 0) {
   $lines += "FAIL: handoff is not ready."
   $lines += "Missing dependencies: $($missingDependencies.Count)"
   foreach ($row in $missingDependencies) {
@@ -82,6 +113,10 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packA
   $lines += "Pack-and-Go independence failures: $($independenceFailures.Count)"
   foreach ($row in $independenceFailures) {
     $lines += ("  {0}door | ok={1} | external_refs={2} | empty_paths={3}" -f $row.door, $row.ok, $row.external_top_reference_count, $row.missing_top_reference_path_count)
+  }
+  $lines += "Verified rule packet failures: $($verifiedRuleFailures.Count)"
+  foreach ($row in $verifiedRuleFailures) {
+    $lines += ("  {0}door | {1}" -f $row.door_count, $row.problem)
   }
   Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
   exit 1
@@ -102,6 +137,12 @@ if ($independenceRows.Count -gt 0) {
   $lines += "Pack-and-Go independence:"
   foreach ($row in $independenceRows) {
     $lines += ("  {0}door | top_refs={1} | external_refs={2} | empty_paths={3} | cad_files={4}" -f $row.door, $row.top_reference_count, $row.external_top_reference_count, $row.missing_top_reference_path_count, $row.package_cad_file_count)
+  }
+}
+if ($verifiedRuleRows.Count -gt 0) {
+  $lines += "Verified rule packet:"
+  foreach ($row in $verifiedRuleRows) {
+    $lines += ("  {0}door | rows={1} | door_h={2} | pitch={3} | shelves={4} | crossbars={5} | right_mirror={6}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_rotation_ok)
   }
 }
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8

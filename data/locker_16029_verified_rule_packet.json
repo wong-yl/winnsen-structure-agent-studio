@@ -1,0 +1,427 @@
+{
+  "generated_at": "2026-05-22T16:22:18+08:00",
+  "product_family": "16029",
+  "purpose": "Verified rule packet for same-outer-size 16029 locker door-count generation.",
+  "scope": "1000W x 1917H x 550D; currently verified for 10/12/14 doors only.",
+  "status": "PASS",
+  "cabinet_rule": {
+    "product_family": "16029",
+    "nominal_width_mm": 1000.0,
+    "nominal_height_mm": 1917.0,
+    "nominal_depth_mm": 550.0,
+    "door_area_bottom_y_mm": 30.0,
+    "door_area_top_y_mm": 1857.0,
+    "door_area_height_mm": 1827.0,
+    "door_grid_top_gap_mm": 2.0,
+    "door_grid_bottom_gap_mm": 2.0,
+    "visual_gap_mm": 7.0,
+    "door_width_mm": 437.0,
+    "door_flat_width_extra_mm": 38.4,
+    "door_flat_height_extra_mm": 36.4,
+    "hinge_axis_abs_x_mm": 467.0,
+    "lock_center_abs_x_mm": 55.0
+  },
+  "verified_door_counts": [
+    10,
+    12,
+    14
+  ],
+  "formula_candidate_door_counts": [
+    8,
+    16
+  ],
+  "verified_variants": [
+    {
+      "door_count": 10,
+      "verification_level": "solidworks_native_pack_and_go_verified",
+      "output_level": "engineering_reference_model",
+      "enabled_for_engineering_handoff": true,
+      "scope": "16029 1000W x 1917H x 550D same-outer-size door-count variant",
+      "layout_rule": {
+        "rows_per_column": 5,
+        "door_height_mm": 359.0,
+        "door_pitch_mm": 366.0,
+        "left_column_door_count": 5,
+        "right_column_door_count": 5,
+        "door_width_mm": 437.0,
+        "door_flat_estimate_mm": {
+          "width": 475.4,
+          "height": 395.4
+        }
+      },
+      "component_count_rule": {
+        "door_modules": 10,
+        "door_panel_features": 10,
+        "hinge_pins": 10,
+        "lock_hook_pads": 10,
+        "electric_lock_hooks": 10,
+        "shelves": 8,
+        "front_frame_crossbars": 8,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "placement_rule": {
+        "left_and_right_columns_must_have_equal_row_count": true,
+        "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+        "right_column_rotation_matrix": [
+          [
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "door_pitch_drives_shelf_and_crossbar_pitch": true,
+        "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
+        "lock_hinge_and_hook_count_formula": "door_count"
+      },
+      "measured_gate": {
+        "native_skeleton_status": "PASS",
+        "native_skeleton_check_count": 32,
+        "native_skeleton_failed_error_count": 0,
+        "root_bbox_mm": {
+          "x_len": 1000.0,
+          "y_max": 1917.0,
+          "z_len": 550.0
+        },
+        "handoff_native_validation_ok": "yes",
+        "handoff_native_failed_check_count": 0,
+        "dependency_existing_count": 10,
+        "dependency_row_count": 10,
+        "dependency_missing_count": 0,
+        "reported_door_count": 10,
+        "left_column_door_count": 5,
+        "right_column_door_count": 5,
+        "right_column_rotation_ok": "yes",
+        "shelf_count": 8,
+        "crossbar_count": 8
+      },
+      "pack_and_go_handoff": {
+        "ok": "True",
+        "file_count": 72,
+        "sldasm_count": 19,
+        "sldprt_count": 53,
+        "total_mb": 31.628,
+        "package_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_pack_and_go",
+        "top_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_pack_and_go\\16029_1000W_1917H_550D_10door_enriched_v2.SLDASM",
+        "opened_for_independence_check": "True",
+        "external_top_reference_count": 0,
+        "missing_top_reference_path_count": 0,
+        "preview": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\solidworks_pack_and_go_10door_open_check.png"
+      },
+      "source_evidence": {
+        "base_rule_packet_variant": "solidworks_native_10door_skeleton_v2_and_freecad_equal_row_reference",
+        "validation_report": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\solidworks_16029_enriched_10door_matrix_validation.md",
+        "native_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\16029_1000W_1917H_550D_10door_enriched_v2.SLDASM",
+        "open_script": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\10door\\solidworks_native\\open_10door_native_enriched_solidworks.cmd"
+      },
+      "quality_gates": [
+        "native_skeleton_status must be PASS",
+        "handoff_native_validation_ok must be yes",
+        "dependency_missing_count must be 0",
+        "right_column_rotation_ok must be yes",
+        "reported_door_count, lock, hinge and hook counts must equal door_count",
+        "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
+        "Pack-and-Go ok must be True and external_top_reference_count must be 0"
+      ]
+    },
+    {
+      "door_count": 12,
+      "verification_level": "solidworks_native_pack_and_go_verified",
+      "output_level": "engineering_reference_model",
+      "enabled_for_engineering_handoff": true,
+      "scope": "16029 1000W x 1917H x 550D same-outer-size door-count variant",
+      "layout_rule": {
+        "rows_per_column": 6,
+        "door_height_mm": 298.0,
+        "door_pitch_mm": 305.0,
+        "left_column_door_count": 6,
+        "right_column_door_count": 6,
+        "door_width_mm": 437.0,
+        "door_flat_estimate_mm": {
+          "width": 475.4,
+          "height": 334.4
+        }
+      },
+      "component_count_rule": {
+        "door_modules": 12,
+        "door_panel_features": 12,
+        "hinge_pins": 12,
+        "lock_hook_pads": 12,
+        "electric_lock_hooks": 12,
+        "shelves": 10,
+        "front_frame_crossbars": 10,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "placement_rule": {
+        "left_and_right_columns_must_have_equal_row_count": true,
+        "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+        "right_column_rotation_matrix": [
+          [
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "door_pitch_drives_shelf_and_crossbar_pitch": true,
+        "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
+        "lock_hinge_and_hook_count_formula": "door_count"
+      },
+      "measured_gate": {
+        "native_skeleton_status": "PASS",
+        "native_skeleton_check_count": 32,
+        "native_skeleton_failed_error_count": 0,
+        "root_bbox_mm": {
+          "x_len": 1000.0,
+          "y_max": 1917.0,
+          "z_len": 550.0
+        },
+        "handoff_native_validation_ok": "yes",
+        "handoff_native_failed_check_count": 0,
+        "dependency_existing_count": 10,
+        "dependency_row_count": 10,
+        "dependency_missing_count": 0,
+        "reported_door_count": 12,
+        "left_column_door_count": 6,
+        "right_column_door_count": 6,
+        "right_column_rotation_ok": "yes",
+        "shelf_count": 10,
+        "crossbar_count": 10
+      },
+      "pack_and_go_handoff": {
+        "ok": "True",
+        "file_count": 71,
+        "sldasm_count": 18,
+        "sldprt_count": 53,
+        "total_mb": 31.174,
+        "package_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_pack_and_go",
+        "top_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_pack_and_go\\16029_1000W_1917H_550D_12door_enriched_v2.SLDASM",
+        "opened_for_independence_check": "True",
+        "external_top_reference_count": 0,
+        "missing_top_reference_path_count": 0,
+        "preview": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\solidworks_pack_and_go_12door_open_check.png"
+      },
+      "source_evidence": {
+        "base_rule_packet_variant": "solidworks_native_12door_skeleton_v2_and_exact_2_12_panel_source",
+        "validation_report": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\solidworks_16029_enriched_12door_matrix_validation.md",
+        "native_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\16029_1000W_1917H_550D_12door_enriched_v2.SLDASM",
+        "open_script": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\open_12door_native_enriched_solidworks.cmd"
+      },
+      "quality_gates": [
+        "native_skeleton_status must be PASS",
+        "handoff_native_validation_ok must be yes",
+        "dependency_missing_count must be 0",
+        "right_column_rotation_ok must be yes",
+        "reported_door_count, lock, hinge and hook counts must equal door_count",
+        "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
+        "Pack-and-Go ok must be True and external_top_reference_count must be 0"
+      ]
+    },
+    {
+      "door_count": 14,
+      "verification_level": "solidworks_native_pack_and_go_verified",
+      "output_level": "engineering_reference_model",
+      "enabled_for_engineering_handoff": true,
+      "scope": "16029 1000W x 1917H x 550D same-outer-size door-count variant",
+      "layout_rule": {
+        "rows_per_column": 7,
+        "door_height_mm": 254.429,
+        "door_pitch_mm": 261.429,
+        "left_column_door_count": 7,
+        "right_column_door_count": 7,
+        "door_width_mm": 437.0,
+        "door_flat_estimate_mm": {
+          "width": 475.4,
+          "height": 290.829
+        }
+      },
+      "component_count_rule": {
+        "door_modules": 14,
+        "door_panel_features": 14,
+        "hinge_pins": 14,
+        "lock_hook_pads": 14,
+        "electric_lock_hooks": 14,
+        "shelves": 12,
+        "front_frame_crossbars": 12,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "placement_rule": {
+        "left_and_right_columns_must_have_equal_row_count": true,
+        "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+        "right_column_rotation_matrix": [
+          [
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "door_pitch_drives_shelf_and_crossbar_pitch": true,
+        "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
+        "lock_hinge_and_hook_count_formula": "door_count"
+      },
+      "measured_gate": {
+        "native_skeleton_status": "PASS",
+        "native_skeleton_check_count": 32,
+        "native_skeleton_failed_error_count": 0,
+        "root_bbox_mm": {
+          "x_len": 1000.0,
+          "y_max": 1917.0,
+          "z_len": 550.0
+        },
+        "handoff_native_validation_ok": "yes",
+        "handoff_native_failed_check_count": 0,
+        "dependency_existing_count": 10,
+        "dependency_row_count": 10,
+        "dependency_missing_count": 0,
+        "reported_door_count": 14,
+        "left_column_door_count": 7,
+        "right_column_door_count": 7,
+        "right_column_rotation_ok": "yes",
+        "shelf_count": 12,
+        "crossbar_count": 12
+      },
+      "pack_and_go_handoff": {
+        "ok": "True",
+        "file_count": 72,
+        "sldasm_count": 19,
+        "sldprt_count": 53,
+        "total_mb": 31.639,
+        "package_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_pack_and_go",
+        "top_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_pack_and_go\\16029_1000W_1917H_550D_14door_enriched_v2.SLDASM",
+        "opened_for_independence_check": "True",
+        "external_top_reference_count": 0,
+        "missing_top_reference_path_count": 0,
+        "preview": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\solidworks_pack_and_go_14door_open_check.png"
+      },
+      "source_evidence": {
+        "base_rule_packet_variant": "solidworks_native_14door_skeleton_v2_and_freecad_equal_row_reference",
+        "validation_report": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\solidworks_16029_enriched_14door_matrix_validation.md",
+        "native_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\16029_1000W_1917H_550D_14door_enriched_v2.SLDASM",
+        "open_script": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\14door\\solidworks_native\\open_14door_native_enriched_solidworks.cmd"
+      },
+      "quality_gates": [
+        "native_skeleton_status must be PASS",
+        "handoff_native_validation_ok must be yes",
+        "dependency_missing_count must be 0",
+        "right_column_rotation_ok must be yes",
+        "reported_door_count, lock, hinge and hook counts must equal door_count",
+        "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
+        "Pack-and-Go ok must be True and external_top_reference_count must be 0"
+      ]
+    }
+  ],
+  "formula_candidates_not_enabled": [
+    {
+      "door_count": 8,
+      "verification_level": "formula_candidate_only",
+      "output_level": "not_enabled_for_engineering_handoff",
+      "enabled_for_engineering_handoff": false,
+      "layout_rule": {
+        "rows_per_column": 4,
+        "door_height_mm": 450.5,
+        "door_pitch_mm": 457.5,
+        "left_column_door_count": 4,
+        "right_column_door_count": 4,
+        "door_width_mm": 437.0,
+        "door_flat_estimate_mm": {
+          "width": 475.4,
+          "height": 486.9
+        }
+      },
+      "component_count_rule": {
+        "door_modules": 8,
+        "door_panel_features": 8,
+        "hinge_pins": 8,
+        "lock_hook_pads": 8,
+        "electric_lock_hooks": 8,
+        "shelves": 6,
+        "front_frame_crossbars": 6,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "blocked_reason": "formula is available, but this door count has not passed native SolidWorks and Pack-and-Go verification"
+    },
+    {
+      "door_count": 16,
+      "verification_level": "formula_candidate_only",
+      "output_level": "not_enabled_for_engineering_handoff",
+      "enabled_for_engineering_handoff": false,
+      "layout_rule": {
+        "rows_per_column": 8,
+        "door_height_mm": 221.75,
+        "door_pitch_mm": 228.75,
+        "left_column_door_count": 8,
+        "right_column_door_count": 8,
+        "door_width_mm": 437.0,
+        "door_flat_estimate_mm": {
+          "width": 475.4,
+          "height": 258.15
+        }
+      },
+      "component_count_rule": {
+        "door_modules": 16,
+        "door_panel_features": 16,
+        "hinge_pins": 16,
+        "lock_hook_pads": 16,
+        "electric_lock_hooks": 16,
+        "shelves": 14,
+        "front_frame_crossbars": 14,
+        "cabinet_vertical_dividers": 2,
+        "door_frame_vertical_dividers": 2
+      },
+      "blocked_reason": "formula is available, but this door count has not passed native SolidWorks and Pack-and-Go verification"
+    }
+  ],
+  "generator_contract": {
+    "use_this_packet_as_single_source_of_truth": true,
+    "must_not_enable_unverified_door_count_for_engineering_handoff": true,
+    "right_column_doors_must_be_mirrored": true,
+    "shelves_and_crossbars_must_recompute_from_rows_per_column": true,
+    "locks_hinges_hooks_must_recompute_from_door_count": true,
+    "solidworks_native_pack_and_go_is_current_engineering_handoff_route": true
+  },
+  "source_files": {
+    "base_rule_packet": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_rule_packet.json",
+    "solidworks_native_skeleton_gate": "D:\\Winnsen_Structure_Agent_Studio\\data\\solidworks_16029_native_skeleton_geometry_gate.json",
+    "handoff_quality_summary": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\handoff_quality_summary.csv",
+    "pack_and_go_summary": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\solidworks_pack_and_go_summary.csv",
+    "pack_and_go_independence_summary": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\solidworks_pack_and_go_independence_summary.csv"
+  },
+  "output_files": {
+    "json": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_verified_rule_packet.json",
+    "markdown": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_verified_rule_packet.md",
+    "csv": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_verified_rule_packet.csv"
+  },
+  "validation_problems": []
+}
