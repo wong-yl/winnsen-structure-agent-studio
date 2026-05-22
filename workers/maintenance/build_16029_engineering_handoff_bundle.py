@@ -19,6 +19,8 @@ SOLIDWORKS_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_OPEN_VERIFICATION_
 SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260522.md"
 SOLIDWORKS_PACK_AND_GO_PATH = HANDOFF_DIR / "SOLIDWORKS_PACK_AND_GO_20260522.md"
 SOLIDWORKS_PACK_AND_GO_SUMMARY_PATH = HANDOFF_DIR / "solidworks_pack_and_go_summary.csv"
+SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_PATH = HANDOFF_DIR / "SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_20260522.md"
+SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_SUMMARY_PATH = HANDOFF_DIR / "solidworks_pack_and_go_independence_summary.csv"
 HANDOFF_MANIFEST_PATH = Path(
     os.getenv("STUDIO_16029_ENGINEERING_HANDOFF_MANIFEST_JSON", ROOT_DIR / "data" / "locker_16029_engineering_handoff_bundle.json")
 )
@@ -971,6 +973,7 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
         f"- Quality CSV: `{payload.get('quality_summary_csv', '')}`",
         f"- Dependency CSV: `{payload.get('dependency_summary_csv', '')}`",
         f"- Pack-and-Go: `{payload.get('solidworks_pack_and_go') or ''}`",
+        f"- Pack-and-Go independence: `{payload.get('solidworks_pack_and_go_independence') or ''}`",
         "",
         "## 快速结论",
         "",
@@ -1039,10 +1042,16 @@ def write_handoff_ready_preflight(payload: dict[str, Any]) -> dict[str, str]:
     dependency_csv = Path(payload["dependency_summary_csv"])
     quality_csv = Path(payload["quality_summary_csv"])
     pack_and_go_csv = Path(payload["solidworks_pack_and_go_summary"]) if payload.get("solidworks_pack_and_go_summary") else None
+    pack_and_go_independence_csv = (
+        Path(payload["solidworks_pack_and_go_independence_summary"])
+        if payload.get("solidworks_pack_and_go_independence_summary")
+        else None
+    )
     script = f"""$ErrorActionPreference = 'Stop'
 $dependencyCsv = {ps_single_quote(str(dependency_csv))}
 $qualityCsv = {ps_single_quote(str(quality_csv))}
 $packAndGoCsv = {ps_single_quote(str(pack_and_go_csv or ""))}
+$packAndGoIndependenceCsv = {ps_single_quote(str(pack_and_go_independence_csv or ""))}
 $statusPath = {ps_single_quote(str(status_path))}
 
 $lines = @()
@@ -1089,8 +1098,23 @@ if ($packAndGoCsv) {{
     }})
   }}
 }}
+$independenceRows = @()
+$independenceFailures = @()
+if ($packAndGoIndependenceCsv) {{
+  if (-not (Test-Path -LiteralPath $packAndGoIndependenceCsv)) {{
+    $independenceFailures = @([pscustomobject]@{{door='all'; ok='missing_csv'; external_top_reference_count=0; missing_top_reference_path_count=0}})
+  }} else {{
+    $independenceRows = @(Import-Csv -LiteralPath $packAndGoIndependenceCsv)
+    $independenceFailures = @($independenceRows | Where-Object {{
+      $_.ok -ne 'True' -or
+      [int]$_.external_top_reference_count -ne 0 -or
+      [int]$_.missing_top_reference_path_count -ne 0 -or
+      [int]$_.package_cad_file_count -le 0
+    }})
+  }}
+}}
 
-if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0) {{
+if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0 -or $independenceFailures.Count -gt 0) {{
   $lines += "FAIL: handoff is not ready."
   $lines += "Missing dependencies: $($missingDependencies.Count)"
   foreach ($row in $missingDependencies) {{
@@ -1103,6 +1127,10 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packA
   $lines += "Pack-and-Go failures: $($packAndGoFailures.Count)"
   foreach ($row in $packAndGoFailures) {{
     $lines += ("  {{0}}door | ok={{1}} | files={{2}} | documents={{3}}" -f $row.door, $row.ok, $row.file_count, $row.document_count)
+  }}
+  $lines += "Pack-and-Go independence failures: $($independenceFailures.Count)"
+  foreach ($row in $independenceFailures) {{
+    $lines += ("  {{0}}door | ok={{1}} | external_refs={{2}} | empty_paths={{3}}" -f $row.door, $row.ok, $row.external_top_reference_count, $row.missing_top_reference_path_count)
   }}
   Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
   exit 1
@@ -1117,6 +1145,12 @@ if ($packAndGoRows.Count -gt 0) {{
   $lines += "Pack-and-Go:"
   foreach ($row in $packAndGoRows) {{
     $lines += ("  {{0}}door | files={{1}} | assemblies={{2}} | parts={{3}} | total_mb={{4}}" -f $row.door, $row.file_count, $row.sldasm_count, $row.sldprt_count, $row.total_mb)
+  }}
+}}
+if ($independenceRows.Count -gt 0) {{
+  $lines += "Pack-and-Go independence:"
+  foreach ($row in $independenceRows) {{
+    $lines += ("  {{0}}door | top_refs={{1}} | external_refs={{2}} | empty_paths={{3}} | cad_files={{4}}" -f $row.door, $row.top_reference_count, $row.external_top_reference_count, $row.missing_top_reference_path_count, $row.package_cad_file_count)
   }}
 }}
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
@@ -1246,6 +1280,7 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
         f"- 质量 CSV：`{cell(payload.get('quality_summary_csv'))}`",
         f"- 依赖 CSV：`{cell(payload.get('dependency_summary_csv'))}`",
         f"- Pack-and-Go 记录：`{cell(payload.get('solidworks_pack_and_go'))}`",
+        f"- Pack-and-Go 独立性验证：`{cell(payload.get('solidworks_pack_and_go_independence'))}`",
         "",
         "## 可打开模型",
         "",
@@ -1387,8 +1422,10 @@ def write_root_readme(payload: dict[str, Any]) -> None:
             f"- One-click ready check: `{(payload.get('handoff_preflight') or {}).get('cmd', '')}`",
             f"- Quality summary CSV: `{payload.get('quality_summary_csv', '')}`",
             f"- Dependency summary CSV: `{payload.get('dependency_summary_csv', '')}`",
-            f"- Pack-and-Go report: `{payload.get('solidworks_pack_and_go') or ''}`",
-            f"- Pack-and-Go summary CSV: `{payload.get('solidworks_pack_and_go_summary') or ''}`",
+        f"- Pack-and-Go report: `{payload.get('solidworks_pack_and_go') or ''}`",
+        f"- Pack-and-Go summary CSV: `{payload.get('solidworks_pack_and_go_summary') or ''}`",
+        f"- Pack-and-Go independence report: `{payload.get('solidworks_pack_and_go_independence') or ''}`",
+        f"- Pack-and-Go independence CSV: `{payload.get('solidworks_pack_and_go_independence_summary') or ''}`",
             "- Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.",
             "- The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.",
             "",
@@ -1450,6 +1487,8 @@ def build_notes(variants: list[dict[str, Any]]) -> list[str]:
         notes.append("Native SolidWorks 10/12/14 enriched SLDASM open smoke passed; see the native open verification report.")
     if SOLIDWORKS_PACK_AND_GO_PATH.exists():
         notes.append("SolidWorks Pack-and-Go packages are available for moving 10/12/14 references to another workstation.")
+    if SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_PATH.exists():
+        notes.append("SolidWorks Pack-and-Go independence smoke passed for 10/12/14 top-level references.")
     return notes
 
 
@@ -1493,6 +1532,12 @@ def build_payload() -> dict[str, Any]:
         "solidworks_pack_and_go": str(SOLIDWORKS_PACK_AND_GO_PATH) if SOLIDWORKS_PACK_AND_GO_PATH.exists() else None,
         "solidworks_pack_and_go_summary": str(SOLIDWORKS_PACK_AND_GO_SUMMARY_PATH)
         if SOLIDWORKS_PACK_AND_GO_SUMMARY_PATH.exists()
+        else None,
+        "solidworks_pack_and_go_independence": str(SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_PATH)
+        if SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_PATH.exists()
+        else None,
+        "solidworks_pack_and_go_independence_summary": str(SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_SUMMARY_PATH)
+        if SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_SUMMARY_PATH.exists()
         else None,
     }
     payload["root_launchers"] = write_root_launchers(payload)

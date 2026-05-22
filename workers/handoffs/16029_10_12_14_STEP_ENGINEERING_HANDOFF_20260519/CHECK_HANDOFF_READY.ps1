@@ -2,6 +2,7 @@
 $dependencyCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_dependency_summary.csv'
 $qualityCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_quality_summary.csv'
 $packAndGoCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\solidworks_pack_and_go_summary.csv'
+$packAndGoIndependenceCsv = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\solidworks_pack_and_go_independence_summary.csv'
 $statusPath = 'D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\CHECK_HANDOFF_READY.status.txt'
 
 $lines = @()
@@ -48,8 +49,23 @@ if ($packAndGoCsv) {
     })
   }
 }
+$independenceRows = @()
+$independenceFailures = @()
+if ($packAndGoIndependenceCsv) {
+  if (-not (Test-Path -LiteralPath $packAndGoIndependenceCsv)) {
+    $independenceFailures = @([pscustomobject]@{door='all'; ok='missing_csv'; external_top_reference_count=0; missing_top_reference_path_count=0})
+  } else {
+    $independenceRows = @(Import-Csv -LiteralPath $packAndGoIndependenceCsv)
+    $independenceFailures = @($independenceRows | Where-Object {
+      $_.ok -ne 'True' -or
+      [int]$_.external_top_reference_count -ne 0 -or
+      [int]$_.missing_top_reference_path_count -ne 0 -or
+      [int]$_.package_cad_file_count -le 0
+    })
+  }
+}
 
-if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0) {
+if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0 -or $independenceFailures.Count -gt 0) {
   $lines += "FAIL: handoff is not ready."
   $lines += "Missing dependencies: $($missingDependencies.Count)"
   foreach ($row in $missingDependencies) {
@@ -62,6 +78,10 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packA
   $lines += "Pack-and-Go failures: $($packAndGoFailures.Count)"
   foreach ($row in $packAndGoFailures) {
     $lines += ("  {0}door | ok={1} | files={2} | documents={3}" -f $row.door, $row.ok, $row.file_count, $row.document_count)
+  }
+  $lines += "Pack-and-Go independence failures: $($independenceFailures.Count)"
+  foreach ($row in $independenceFailures) {
+    $lines += ("  {0}door | ok={1} | external_refs={2} | empty_paths={3}" -f $row.door, $row.ok, $row.external_top_reference_count, $row.missing_top_reference_path_count)
   }
   Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
   exit 1
@@ -76,6 +96,12 @@ if ($packAndGoRows.Count -gt 0) {
   $lines += "Pack-and-Go:"
   foreach ($row in $packAndGoRows) {
     $lines += ("  {0}door | files={1} | assemblies={2} | parts={3} | total_mb={4}" -f $row.door, $row.file_count, $row.sldasm_count, $row.sldprt_count, $row.total_mb)
+  }
+}
+if ($independenceRows.Count -gt 0) {
+  $lines += "Pack-and-Go independence:"
+  foreach ($row in $independenceRows) {
+    $lines += ("  {0}door | top_refs={1} | external_refs={2} | empty_paths={3} | cad_files={4}" -f $row.door, $row.top_reference_count, $row.external_top_reference_count, $row.missing_top_reference_path_count, $row.package_cad_file_count)
   }
 }
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8

@@ -2,7 +2,7 @@
 
 Output level: engineering reference, not released production drawing.
 
-- Generated at: `2026-05-22T12:45:34+08:00`
+- Generated at: `2026-05-22T15:09:26+08:00`
 - Handoff directory: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519`
 - Source quality matrix: `D:\Winnsen_Structure_Agent_Studio\data\locker_16029_variant_quality_matrix.json`
 
@@ -23,6 +23,8 @@ Output level: engineering reference, not released production drawing.
 - Dependency summary CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_dependency_summary.csv`
 - Pack-and-Go report: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_PACK_AND_GO_20260522.md`
 - Pack-and-Go summary CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\solidworks_pack_and_go_summary.csv`
+- Pack-and-Go independence report: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_20260522.md`
+- Pack-and-Go independence CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\solidworks_pack_and_go_independence_summary.csv`
 - Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.
 - The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.
 

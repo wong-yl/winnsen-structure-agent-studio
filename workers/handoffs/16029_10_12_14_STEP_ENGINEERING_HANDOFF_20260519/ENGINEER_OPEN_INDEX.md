@@ -18,6 +18,7 @@
 - 质量 CSV：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_quality_summary.csv`
 - 依赖 CSV：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_dependency_summary.csv`
 - Pack-and-Go 记录：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_PACK_AND_GO_20260522.md`
+- Pack-and-Go 独立性验证：`D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_PACK_AND_GO_INDEPENDENCE_20260522.md`
 
 ## 可打开模型
 
