@@ -2,7 +2,7 @@
 
 Output level: engineering reference, not released production drawing.
 
-- Generated at: `2026-05-22T10:28:10+08:00`
+- Generated at: `2026-05-22T11:21:50+08:00`
 - Handoff directory: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519`
 - Source quality matrix: `D:\Winnsen_Structure_Agent_Studio\data\locker_16029_variant_quality_matrix.json`
 
@@ -17,12 +17,17 @@ Output level: engineering reference, not released production drawing.
 ## Engineer quick open
 
 - Chinese index: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\ENGINEER_OPEN_INDEX.md`
+- Handoff ready summary: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\HANDOFF_READY_SUMMARY.md`
+- One-click ready check: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\CHECK_HANDOFF_READY.cmd`
+- Quality summary CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_quality_summary.csv`
+- Dependency summary CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_dependency_summary.csv`
 - Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.
 - The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.
 
 ## Software verification
 
 - Native SolidWorks enriched assemblies, STEP exports, and FCStd/STEP quality gates are available for this bundle.
+- Native validation covers door left/right placement, right-door 180 degree rotation, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.
 - This is a native engineering-reference package, not a true independent Pack-and-Go release yet.
 - SolidWorks open verification: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_OPEN_VERIFICATION_20260520.md`
 - Native SolidWorks open verification: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260521.md`

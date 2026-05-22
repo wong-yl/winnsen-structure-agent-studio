@@ -419,6 +419,88 @@ def write_native_dependency_manifest(placements_path: Path, target_path: Path) -
     }
 
 
+def _check_status(checks: list[dict[str, Any]], name: str) -> bool | None:
+    for check in checks:
+        if check.get("name") == name:
+            return bool(check.get("ok"))
+    return None
+
+
+def _pitch_value(summary: Any) -> float | None:
+    if not isinstance(summary, dict):
+        return None
+    values = summary.get("values")
+    if isinstance(values, list) and values:
+        return values[0]
+    return None
+
+
+def read_native_validation_summary(validation_json_path: Path, door_count: int) -> dict[str, Any]:
+    if not validation_json_path.exists():
+        return {
+            "path": str(validation_json_path),
+            "exists": False,
+            "ok": False,
+            "check_count": 0,
+            "failed_check_count": 1,
+            "failed_checks": ["validation_json_missing"],
+        }
+
+    data = read_json(validation_json_path)
+    checks = data.get("checks") or []
+    failed_checks = [check for check in checks if not bool(check.get("ok"))]
+    candidate_matches = data.get("candidate_matches") or []
+    unmatched_candidates = [row for row in candidate_matches if not bool(row.get("matched"))]
+    embedded = data.get("embedded_door_quality") or {}
+    transform_summary = embedded.get("door_array_transform_summary") or {}
+    left_pitch = embedded.get("left_column_pitch") or {}
+    right_pitch = embedded.get("right_column_pitch") or {}
+    shelf_pitch = embedded.get("shelf_pitch") or {}
+    crossbar_pitch = embedded.get("crossbar_pitch") or {}
+    bbox = data.get("combined_bbox_mm") or {}
+    expected_per_column = int(door_count / 2)
+
+    return {
+        "path": str(validation_json_path),
+        "exists": True,
+        "ok": bool(data.get("ok")) and not failed_checks,
+        "check_count": len(checks),
+        "failed_check_count": len(failed_checks),
+        "failed_checks": [str(check.get("name")) for check in failed_checks],
+        "candidate_count": len(candidate_matches),
+        "candidate_matched_count": len(candidate_matches) - len(unmatched_candidates),
+        "candidate_unmatched_roles": [str(row.get("role")) for row in unmatched_candidates],
+        "bbox_x_mm": bbox.get("x_len"),
+        "bbox_y_mm": bbox.get("y_len"),
+        "bbox_z_mm": bbox.get("z_len"),
+        "reported_door_count": embedded.get("door_count"),
+        "expected_door_count": door_count,
+        "left_column_door_count": embedded.get("left_column_door_count"),
+        "right_column_door_count": embedded.get("right_column_door_count"),
+        "expected_column_door_count": expected_per_column,
+        "door_array_transform_total": transform_summary.get("total"),
+        "door_array_transform_ok": transform_summary.get("ok"),
+        "door_array_transform_failed_roles": transform_summary.get("failed_roles") or [],
+        "left_column_pitch_mm": _pitch_value(left_pitch),
+        "left_column_pitch_max_error": left_pitch.get("max_error") if isinstance(left_pitch, dict) else None,
+        "right_column_pitch_mm": _pitch_value(right_pitch),
+        "right_column_pitch_max_error": right_pitch.get("max_error") if isinstance(right_pitch, dict) else None,
+        "right_column_rotation_ok": _check_status(checks, "embedded_right_column_standard_rotation"),
+        "left_right_y_alignment_ok": _check_status(checks, "embedded_left_right_door_y_alignment"),
+        "door_weld_count": embedded.get("door_weld_count"),
+        "door_panel_feature_count": embedded.get("door_panel_feature_count"),
+        "hinge_pin_count": embedded.get("hinge_pin_count"),
+        "lock_hook_pad_count": embedded.get("lock_hook_pad_count"),
+        "electric_lock_hook_count": embedded.get("electric_lock_hook_count"),
+        "shelf_count": embedded.get("shelf_count"),
+        "shelf_pitch_mm": _pitch_value(shelf_pitch),
+        "shelf_pitch_max_error": shelf_pitch.get("max_error") if isinstance(shelf_pitch, dict) else None,
+        "crossbar_count": embedded.get("crossbar_count"),
+        "crossbar_pitch_mm": _pitch_value(crossbar_pitch),
+        "crossbar_pitch_max_error": crossbar_pitch.get("max_error") if isinstance(crossbar_pitch, dict) else None,
+    }
+
+
 def build_native_reference_handoff(door_count: int, target_dir: Path) -> dict[str, Any]:
     sources = native_enriched_sources(door_count)
     native_dir = target_dir / "solidworks_native"
@@ -452,6 +534,7 @@ def build_native_reference_handoff(door_count: int, target_dir: Path) -> dict[st
     )
 
     dependency_manifest = write_native_dependency_manifest(placements_target, native_dir / "native_dependency_manifest.csv")
+    validation_summary = read_native_validation_summary(validation_json_target, door_count)
     launcher = native_dir / f"open_{door_count}door_native_enriched_solidworks.cmd"
     write_native_solidworks_launcher(launcher, assembly_target, Path(dependency_manifest["path"]))
 
@@ -475,6 +558,14 @@ Output level: engineering reference, not released production drawing.
 - Placement TSV: `{placements_target}`
 - Dependency manifest: `{dependency_manifest['path']}`
 
+## Native validation summary
+
+- Result: `{"PASS" if validation_summary.get("ok") else "FAIL"}`
+- Checks: `{validation_summary.get('check_count') - validation_summary.get('failed_check_count')}/{validation_summary.get('check_count')}`
+- Door modules: `{validation_summary.get('reported_door_count')}` total, `{validation_summary.get('left_column_door_count')}` left, `{validation_summary.get('right_column_door_count')}` right
+- Door hardware: weld `{validation_summary.get('door_weld_count')}`, panel `{validation_summary.get('door_panel_feature_count')}`, hinge `{validation_summary.get('hinge_pin_count')}`, lock hook `{validation_summary.get('electric_lock_hook_count')}`
+- Shelf / crossbar: shelf `{validation_summary.get('shelf_count')}`, crossbar `{validation_summary.get('crossbar_count')}`
+
 ## Boundary
 
 - This folder collects the current native enhanced reference and its evidence in one place.
@@ -497,6 +588,7 @@ Output level: engineering reference, not released production drawing.
         "validation_md": str(validation_md_target),
         "validation_csv": str(validation_csv_target),
         "dependency_manifest": dependency_manifest,
+        "validation_summary": validation_summary,
         "transfer": transfers,
         "boundary": "native engineering reference package; not independent Pack-and-Go",
     }
@@ -626,6 +718,20 @@ Output level: engineering reference, not released production drawing.
             "door_pitch_mm": (variant.get("structural_rule_audit") or {}).get("door_pitch_mm"),
             "lock_center_x_abs_mm": (variant.get("structural_rule_audit") or {}).get("lock_center_x_abs_mm"),
             "hinge_axis_x_abs_mm": (variant.get("structural_rule_audit") or {}).get("hinge_axis_x_abs_mm"),
+            "native_validation_ok": native_reference["validation_summary"].get("ok"),
+            "native_validation_check_count": native_reference["validation_summary"].get("check_count"),
+            "native_validation_failed_check_count": native_reference["validation_summary"].get("failed_check_count"),
+            "native_reported_door_count": native_reference["validation_summary"].get("reported_door_count"),
+            "native_left_column_door_count": native_reference["validation_summary"].get("left_column_door_count"),
+            "native_right_column_door_count": native_reference["validation_summary"].get("right_column_door_count"),
+            "native_right_column_rotation_ok": native_reference["validation_summary"].get("right_column_rotation_ok"),
+            "native_door_weld_count": native_reference["validation_summary"].get("door_weld_count"),
+            "native_door_panel_feature_count": native_reference["validation_summary"].get("door_panel_feature_count"),
+            "native_hinge_pin_count": native_reference["validation_summary"].get("hinge_pin_count"),
+            "native_lock_hook_pad_count": native_reference["validation_summary"].get("lock_hook_pad_count"),
+            "native_electric_lock_hook_count": native_reference["validation_summary"].get("electric_lock_hook_count"),
+            "native_shelf_count": native_reference["validation_summary"].get("shelf_count"),
+            "native_crossbar_count": native_reference["validation_summary"].get("crossbar_count"),
         },
     }
 
@@ -651,7 +757,22 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                 "native_assembly",
                 "native_solidworks_launcher",
                 "native_dependency_manifest",
+                "native_dependency_existing_count",
+                "native_dependency_row_count",
                 "native_dependency_missing_count",
+                "native_validation_ok",
+                "native_validation_check_count",
+                "native_validation_failed_check_count",
+                "native_reported_door_count",
+                "native_left_column_door_count",
+                "native_right_column_door_count",
+                "native_right_column_rotation_ok",
+                "native_door_weld_count",
+                "native_door_panel_feature_count",
+                "native_hinge_pin_count",
+                "native_electric_lock_hook_count",
+                "native_shelf_count",
+                "native_crossbar_count",
                 "handoff_dir",
             ],
         )
@@ -675,7 +796,22 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                     "native_assembly": (row.get("native_reference") or {}).get("assembly"),
                     "native_solidworks_launcher": (row.get("native_reference") or {}).get("solidworks_launcher"),
                     "native_dependency_manifest": ((row.get("native_reference") or {}).get("dependency_manifest") or {}).get("path"),
+                    "native_dependency_existing_count": ((row.get("native_reference") or {}).get("dependency_manifest") or {}).get("existing_count"),
+                    "native_dependency_row_count": ((row.get("native_reference") or {}).get("dependency_manifest") or {}).get("row_count"),
                     "native_dependency_missing_count": ((row.get("native_reference") or {}).get("dependency_manifest") or {}).get("missing_count"),
+                    "native_validation_ok": "yes" if metrics.get("native_validation_ok") else "no",
+                    "native_validation_check_count": metrics.get("native_validation_check_count"),
+                    "native_validation_failed_check_count": metrics.get("native_validation_failed_check_count"),
+                    "native_reported_door_count": metrics.get("native_reported_door_count"),
+                    "native_left_column_door_count": metrics.get("native_left_column_door_count"),
+                    "native_right_column_door_count": metrics.get("native_right_column_door_count"),
+                    "native_right_column_rotation_ok": "yes" if metrics.get("native_right_column_rotation_ok") else "no",
+                    "native_door_weld_count": metrics.get("native_door_weld_count"),
+                    "native_door_panel_feature_count": metrics.get("native_door_panel_feature_count"),
+                    "native_hinge_pin_count": metrics.get("native_hinge_pin_count"),
+                    "native_electric_lock_hook_count": metrics.get("native_electric_lock_hook_count"),
+                    "native_shelf_count": metrics.get("native_shelf_count"),
+                    "native_crossbar_count": metrics.get("native_crossbar_count"),
                     "handoff_dir": row["handoff_dir"],
                 }
             )
@@ -704,6 +840,270 @@ call "{solidworks_launcher}"
             }
         )
     return launchers
+
+
+def yes_no(value: Any) -> str:
+    return "yes" if bool(value) else "no"
+
+
+def write_dependency_summary_csv(payload: dict[str, Any]) -> str:
+    path = Path(payload["handoff_dir"]) / "handoff_dependency_summary.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = ["door_count", "role", "source_path", "exists", "size_mb", "package_dir", "manifest"]
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in payload["variants"]:
+            native_reference = row.get("native_reference") or {}
+            manifest_path = Path(((native_reference.get("dependency_manifest") or {}).get("path")) or "")
+            if not manifest_path.exists():
+                writer.writerow(
+                    {
+                        "door_count": row["door_count"],
+                        "role": "dependency_manifest_missing",
+                        "source_path": "",
+                        "exists": "no",
+                        "size_mb": "",
+                        "package_dir": native_reference.get("package_dir", ""),
+                        "manifest": str(manifest_path),
+                    }
+                )
+                continue
+            with manifest_path.open("r", encoding="utf-8-sig", newline="") as manifest_handle:
+                for manifest_row in csv.DictReader(manifest_handle):
+                    source_path = Path(manifest_row.get("source_path") or "")
+                    exists = source_path.exists()
+                    writer.writerow(
+                        {
+                            "door_count": row["door_count"],
+                            "role": manifest_row.get("role", ""),
+                            "source_path": str(source_path),
+                            "exists": "yes" if exists else "no",
+                            "size_mb": file_size_mb(source_path) if exists else "",
+                            "package_dir": native_reference.get("package_dir", ""),
+                            "manifest": str(manifest_path),
+                        }
+                    )
+    return str(path)
+
+
+def write_quality_summary_csv(payload: dict[str, Any]) -> str:
+    path = Path(payload["handoff_dir"]) / "handoff_quality_summary.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = [
+        "door_count",
+        "native_validation_ok",
+        "native_check_count",
+        "native_failed_check_count",
+        "dependency_existing_count",
+        "dependency_row_count",
+        "dependency_missing_count",
+        "bbox_x_mm",
+        "bbox_z_mm",
+        "reported_door_count",
+        "left_column_door_count",
+        "right_column_door_count",
+        "right_column_rotation_ok",
+        "door_weld_count",
+        "door_panel_feature_count",
+        "hinge_pin_count",
+        "lock_hook_pad_count",
+        "electric_lock_hook_count",
+        "shelf_count",
+        "crossbar_count",
+        "candidate_matched_count",
+        "candidate_count",
+        "validation_report",
+        "native_assembly",
+        "open_script",
+    ]
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in payload["variants"]:
+            native_reference = row.get("native_reference") or {}
+            validation = native_reference.get("validation_summary") or {}
+            dependencies = native_reference.get("dependency_manifest") or {}
+            writer.writerow(
+                {
+                    "door_count": row["door_count"],
+                    "native_validation_ok": yes_no(validation.get("ok")),
+                    "native_check_count": validation.get("check_count"),
+                    "native_failed_check_count": validation.get("failed_check_count"),
+                    "dependency_existing_count": dependencies.get("existing_count"),
+                    "dependency_row_count": dependencies.get("row_count"),
+                    "dependency_missing_count": dependencies.get("missing_count"),
+                    "bbox_x_mm": validation.get("bbox_x_mm"),
+                    "bbox_z_mm": validation.get("bbox_z_mm"),
+                    "reported_door_count": validation.get("reported_door_count"),
+                    "left_column_door_count": validation.get("left_column_door_count"),
+                    "right_column_door_count": validation.get("right_column_door_count"),
+                    "right_column_rotation_ok": yes_no(validation.get("right_column_rotation_ok")),
+                    "door_weld_count": validation.get("door_weld_count"),
+                    "door_panel_feature_count": validation.get("door_panel_feature_count"),
+                    "hinge_pin_count": validation.get("hinge_pin_count"),
+                    "lock_hook_pad_count": validation.get("lock_hook_pad_count"),
+                    "electric_lock_hook_count": validation.get("electric_lock_hook_count"),
+                    "shelf_count": validation.get("shelf_count"),
+                    "crossbar_count": validation.get("crossbar_count"),
+                    "candidate_matched_count": validation.get("candidate_matched_count"),
+                    "candidate_count": validation.get("candidate_count"),
+                    "validation_report": native_reference.get("validation_md"),
+                    "native_assembly": native_reference.get("assembly"),
+                    "open_script": native_reference.get("solidworks_launcher"),
+                }
+            )
+    return str(path)
+
+
+def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
+    path = Path(payload["handoff_dir"]) / "HANDOFF_READY_SUMMARY.md"
+    root_launchers = {int(row["door_count"]): row for row in payload.get("root_launchers", [])}
+    lines = [
+        "# 16029 工程交付包打开前检查",
+        "",
+        "用途：在结构工程师打开 SolidWorks 前，先确认 10/12/14 门原生增强装配体的依赖和结构质量门是否通过。",
+        "",
+        f"- Generated at: `{payload['generated_at']}`",
+        f"- One-click check: `{payload.get('handoff_preflight_cmd', '')}`",
+        f"- Quality CSV: `{payload.get('quality_summary_csv', '')}`",
+        f"- Dependency CSV: `{payload.get('dependency_summary_csv', '')}`",
+        "",
+        "## 快速结论",
+        "",
+        "| 门数 | 根目录打开脚本 | 依赖 | 原生验证 | 门模块 | 右门镜像 | 门/铰链/锁 | 层板/横档 | bbox X/Z |",
+        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in payload["variants"]:
+        door_count = int(row["door_count"])
+        native_reference = row.get("native_reference") or {}
+        validation = native_reference.get("validation_summary") or {}
+        dependencies = native_reference.get("dependency_manifest") or {}
+        root_launcher = root_launchers.get(door_count, {}).get("solidworks_launcher", native_reference.get("solidworks_launcher", ""))
+        dep_text = f"{dependencies.get('existing_count')}/{dependencies.get('row_count')} missing={dependencies.get('missing_count')}"
+        validation_text = f"{'PASS' if validation.get('ok') else 'FAIL'} {validation.get('check_count', 0) - validation.get('failed_check_count', 0)}/{validation.get('check_count', 0)}"
+        door_text = (
+            f"{validation.get('reported_door_count')}"
+            f" ({validation.get('left_column_door_count')}/{validation.get('right_column_door_count')})"
+        )
+        hardware_text = (
+            f"weld {validation.get('door_weld_count')}; "
+            f"panel {validation.get('door_panel_feature_count')}; "
+            f"hinge {validation.get('hinge_pin_count')}; "
+            f"lock {validation.get('electric_lock_hook_count')}"
+        )
+        shelf_text = f"shelf {validation.get('shelf_count')}; crossbar {validation.get('crossbar_count')}"
+        bbox_text = f"{validation.get('bbox_x_mm')}/{validation.get('bbox_z_mm')} mm"
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(door_count),
+                    f"`{root_launcher}`",
+                    dep_text,
+                    validation_text,
+                    door_text,
+                    "PASS" if validation.get("right_column_rotation_ok") else "FAIL",
+                    hardware_text,
+                    shelf_text,
+                    bbox_text,
+                ]
+            )
+            + " |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## 当前工程边界",
+            "",
+            "- 这些文件是工程参考模型，用于结构规则复核、门数变化对比和方案沟通。",
+            "- 当前可复核范围是 16029 外形 1000W x 1917H x 550D 的 10/12/14 门。",
+            "- 依赖清单为当前工作站路径校验，不等同于独立 Pack-and-Go 包。",
+            "- 工程图、BOM、DXF、钣金展开仍属于下一阶段工程化输出。",
+            "",
+        ]
+    )
+    write_text(path, "\n".join(lines))
+    return str(path)
+
+
+def write_handoff_ready_preflight(payload: dict[str, Any]) -> dict[str, str]:
+    cmd_path = Path(payload["handoff_dir"]) / "CHECK_HANDOFF_READY.cmd"
+    ps1_path = cmd_path.with_suffix(".ps1")
+    status_path = cmd_path.with_suffix(".status.txt")
+    dependency_csv = Path(payload["dependency_summary_csv"])
+    quality_csv = Path(payload["quality_summary_csv"])
+    script = f"""$ErrorActionPreference = 'Stop'
+$dependencyCsv = {ps_single_quote(str(dependency_csv))}
+$qualityCsv = {ps_single_quote(str(quality_csv))}
+$statusPath = {ps_single_quote(str(status_path))}
+
+$lines = @()
+$lines += "16029 handoff ready check"
+$lines += "Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+$lines += ""
+
+if (-not (Test-Path -LiteralPath $dependencyCsv)) {{
+  $lines += "FAIL: dependency summary CSV missing: $dependencyCsv"
+  Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
+  exit 1
+}}
+if (-not (Test-Path -LiteralPath $qualityCsv)) {{
+  $lines += "FAIL: quality summary CSV missing: $qualityCsv"
+  Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
+  exit 1
+}}
+
+$dependencyRows = @(Import-Csv -LiteralPath $dependencyCsv)
+$missingDependencies = @($dependencyRows | Where-Object {{
+  -not $_.source_path -or
+  $_.exists -ne 'yes' -or
+  -not (Test-Path -LiteralPath $_.source_path)
+}})
+
+$qualityRows = @(Import-Csv -LiteralPath $qualityCsv)
+$qualityFailures = @($qualityRows | Where-Object {{
+  $_.native_validation_ok -ne 'yes' -or
+  [int]$_.native_failed_check_count -ne 0 -or
+  [int]$_.dependency_missing_count -ne 0
+}})
+
+if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0) {{
+  $lines += "FAIL: handoff is not ready."
+  $lines += "Missing dependencies: $($missingDependencies.Count)"
+  foreach ($row in $missingDependencies) {{
+    $lines += ("  {{0}}door | {{1}} | {{2}}" -f $row.door_count, $row.role, $row.source_path)
+  }}
+  $lines += "Quality failures: $($qualityFailures.Count)"
+  foreach ($row in $qualityFailures) {{
+    $lines += ("  {{0}}door | validation={{1}} | failed_checks={{2}} | missing_dependencies={{3}}" -f $row.door_count, $row.native_validation_ok, $row.native_failed_check_count, $row.dependency_missing_count)
+  }}
+  Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
+  exit 1
+}}
+
+$lines += "PASS: 10/12/14 native SolidWorks references are ready for engineering review on this workstation."
+$lines += "Dependency rows: $($dependencyRows.Count)"
+foreach ($row in $qualityRows) {{
+  $lines += ("  {{0}}door | checks={{1}}/{{2}} | dependencies={{3}}/{{4}} | doors={{5}} | shelves={{6}} | crossbars={{7}}" -f $row.door_count, ([int]$row.native_check_count - [int]$row.native_failed_check_count), $row.native_check_count, $row.dependency_existing_count, $row.dependency_row_count, $row.reported_door_count, $row.shelf_count, $row.crossbar_count)
+}}
+Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
+exit 0
+"""
+    write_powershell_script(ps1_path, script)
+    cmd = """@echo off
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dpn0.ps1"
+set EXITCODE=%ERRORLEVEL%
+start "" notepad.exe "%~dpn0.status.txt"
+exit /b %EXITCODE%
+"""
+    write_text(cmd_path, cmd)
+    return {
+        "cmd": str(cmd_path),
+        "ps1": str(ps1_path),
+        "status": str(status_path),
+    }
 
 
 def write_engineer_open_index(payload: dict[str, Any]) -> str:
@@ -801,16 +1201,24 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
         "",
         "## 推荐操作",
         "",
-        "1. 先打开对应门数的根目录脚本，例如 `open_12door_in_solidworks.cmd`。",
-        "2. 脚本会优先打开原生 SolidWorks 增强样机 `.SLDASM`，这是当前给结构工程师复核的主文件。",
-        "3. 如果 API 打开未确认，脚本会在资源管理器中选中原生装配体，由工程师在 SolidWorks 里手动 File > Open。",
-        "4. 只有需要中性格式复核时，再进入对应门数目录打开 `.stp`；需要看 FreeCAD 参考时再打开 `.FCStd`。",
-        "5. 不要再使用历史 direct assembly 逐零件装配任务；该路线已因装配基准 transform 错乱停用。",
+        "1. 先运行 `CHECK_HANDOFF_READY.cmd`，确认依赖和结构质量门都是 PASS。",
+        "2. 再打开对应门数的根目录脚本，例如 `open_12door_in_solidworks.cmd`。",
+        "3. 脚本会优先打开原生 SolidWorks 增强样机 `.SLDASM`，这是当前给结构工程师复核的主文件。",
+        "4. 如果 API 打开未确认，脚本会在资源管理器中选中原生装配体，由工程师在 SolidWorks 里手动 File > Open。",
+        "5. 只有需要中性格式复核时，再进入对应门数目录打开 `.stp`；需要看 FreeCAD 参考时再打开 `.FCStd`。",
+        "6. 不要再使用历史 direct assembly 逐零件装配任务；该路线已因装配基准 transform 错乱停用。",
+        "",
+        "## 打开前检查",
+        "",
+        f"- 一键检查：`{cell((payload.get('handoff_preflight') or {}).get('cmd'))}`",
+        f"- 检查汇总：`{cell(payload.get('handoff_ready_summary'))}`",
+        f"- 质量 CSV：`{cell(payload.get('quality_summary_csv'))}`",
+        f"- 依赖 CSV：`{cell(payload.get('dependency_summary_csv'))}`",
         "",
         "## 可打开模型",
         "",
-        "| 门数 | SolidWorks 安全脚本 | 原生增强装配 | STP 备用 | 门高 mm | 门距 mm | 质量结论 |",
-        "| ---: | --- | --- | --- | ---: | ---: | --- |",
+        "| 门数 | SolidWorks 安全脚本 | 原生增强装配 | STP 备用 | 门高 mm | 门距 mm | 原生验证 | 结构结论 |",
+        "| ---: | --- | --- | --- | ---: | ---: | --- | --- |",
     ]
     root_launchers = {int(row["door_count"]): row for row in payload.get("root_launchers", [])}
     for row in payload["variants"]:
@@ -823,6 +1231,13 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
             f"FCStd {metrics.get('fcstd_integrity_status')}; "
             f"结构 {metrics.get('structural_rule_status')}"
         )
+        native_check_count = metrics.get("native_validation_check_count") or 0
+        native_failed_check_count = metrics.get("native_validation_failed_check_count") or 0
+        native_quality = (
+            f"{'PASS' if metrics.get('native_validation_ok') else 'FAIL'} "
+            f"{native_check_count - native_failed_check_count}"
+            f"/{native_check_count}"
+        )
         lines.append(
             "| "
             + " | ".join(
@@ -833,6 +1248,7 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
                     f"`{cell(row['stp'])}`",
                     cell(metrics.get("door_height_mm")),
                     cell(metrics.get("door_pitch_mm")),
+                    cell(native_quality),
                     cell(quality),
                 ]
             )
@@ -931,17 +1347,22 @@ def write_root_readme(payload: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-            "## Engineer quick open",
-            "",
-            f"- Chinese index: `{payload.get('engineer_open_index', '')}`",
-            "- Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.",
-            "- The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.",
+        "## Engineer quick open",
+        "",
+        f"- Chinese index: `{payload.get('engineer_open_index', '')}`",
+        f"- Handoff ready summary: `{payload.get('handoff_ready_summary', '')}`",
+        f"- One-click ready check: `{(payload.get('handoff_preflight') or {}).get('cmd', '')}`",
+        f"- Quality summary CSV: `{payload.get('quality_summary_csv', '')}`",
+        f"- Dependency summary CSV: `{payload.get('dependency_summary_csv', '')}`",
+        "- Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.",
+        "- The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.",
             "",
             "## Software verification",
             "",
-            "- Native SolidWorks enriched assemblies, STEP exports, and FCStd/STEP quality gates are available for this bundle.",
-            "- This is a native engineering-reference package, not a true independent Pack-and-Go release yet.",
-            f"- SolidWorks open verification: `{solidworks_open_verification or ''}`",
+        "- Native SolidWorks enriched assemblies, STEP exports, and FCStd/STEP quality gates are available for this bundle.",
+        "- Native validation covers door left/right placement, right-door 180 degree rotation, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.",
+        "- This is a native engineering-reference package, not a true independent Pack-and-Go release yet.",
+        f"- SolidWorks open verification: `{solidworks_open_verification or ''}`",
             f"- Native SolidWorks open verification: `{payload.get('solidworks_native_open_verification') or ''}`",
             "",
             "## Use rules",
@@ -1033,6 +1454,11 @@ def build_payload() -> dict[str, Any]:
         else None,
     }
     payload["root_launchers"] = write_root_launchers(payload)
+    payload["dependency_summary_csv"] = write_dependency_summary_csv(payload)
+    payload["quality_summary_csv"] = write_quality_summary_csv(payload)
+    payload["handoff_preflight"] = write_handoff_ready_preflight(payload)
+    payload["handoff_preflight_cmd"] = payload["handoff_preflight"]["cmd"]
+    payload["handoff_ready_summary"] = write_handoff_ready_summary(payload)
     payload["engineer_open_index"] = write_engineer_open_index_clean(payload)
     write_root_readme(payload)
     return payload

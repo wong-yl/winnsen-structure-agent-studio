@@ -17,6 +17,14 @@ Output level: engineering reference, not released production drawing.
 - Placement TSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\10door\solidworks_native\16029_10door_enriched_v2_placements.tsv`
 - Dependency manifest: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\10door\solidworks_native\native_dependency_manifest.csv`
 
+## Native validation summary
+
+- Result: `PASS`
+- Checks: `31/31`
+- Door modules: `10` total, `5` left, `5` right
+- Door hardware: weld `10`, panel `10`, hinge `10`, lock hook `10`
+- Shelf / crossbar: shelf `8`, crossbar `8`
+
 ## Boundary
 
 - This folder collects the current native enhanced reference and its evidence in one place.
