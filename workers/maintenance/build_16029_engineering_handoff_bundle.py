@@ -758,6 +758,87 @@ def write_engineer_open_index(payload: dict[str, Any]) -> str:
     return str(index_path)
 
 
+def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
+    index_path = Path(payload["handoff_dir"]) / "ENGINEER_OPEN_INDEX.md"
+    solidworks_open_verification = payload.get("solidworks_open_verification")
+
+    def cell(value: Any) -> str:
+        return str(value or "").replace("|", "/")
+
+    lines = [
+        "# 16029 工程师打开清单",
+        "",
+        "用途：给结构工程师快速打开 10/12/14 门工程参考模型。这里的模型用于复核结构规则和方案，不是正式生产图纸、BOM 或 DXF。",
+        "",
+        "## 推荐操作",
+        "",
+        "1. 先打开对应门数的根目录脚本，例如 `open_12door_in_solidworks.cmd`。",
+        "2. 脚本会优先打开原生 SolidWorks 增强样机 `.SLDASM`，这是当前给结构工程师复核的主文件。",
+        "3. 如果 API 打开未确认，脚本会在资源管理器中选中原生装配体，由工程师在 SolidWorks 里手动 File > Open。",
+        "4. 只有需要中性格式复核时，再进入对应门数目录打开 `.stp`；需要看 FreeCAD 参考时再打开 `.FCStd`。",
+        "5. 不要再使用历史 direct assembly 逐零件装配任务；该路线已因装配基准 transform 错乱停用。",
+        "",
+        "## 可打开模型",
+        "",
+        "| 门数 | SolidWorks 安全脚本 | 原生增强装配 | STP 备用 | 门高 mm | 门距 mm | 质量结论 |",
+        "| ---: | --- | --- | --- | ---: | ---: | --- |",
+    ]
+    root_launchers = {int(row["door_count"]): row for row in payload.get("root_launchers", [])}
+    for row in payload["variants"]:
+        metrics = row["metrics"]
+        door_count = int(row["door_count"])
+        native_reference = row.get("native_reference") or {}
+        root_launcher = root_launchers.get(door_count, {}).get("solidworks_launcher", row["solidworks_launcher"])
+        quality = (
+            f"STEP {metrics.get('step_geometry_status')}; "
+            f"FCStd {metrics.get('fcstd_integrity_status')}; "
+            f"结构 {metrics.get('structural_rule_status')}"
+        )
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(door_count),
+                    f"`{cell(root_launcher)}`",
+                    f"`{cell(native_reference.get('assembly'))}`",
+                    f"`{cell(row['stp'])}`",
+                    cell(metrics.get("door_height_mm")),
+                    cell(metrics.get("door_pitch_mm")),
+                    cell(quality),
+                ]
+            )
+            + " |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## 软件实测状态",
+            "",
+            "- 已做 SolidWorks 2025 受控打开验证：主程序可启动，原生 SLDASM 是当前优先交付通道。",
+            "- STEP/FCStd 作为中性格式和开源复核备选，不作为当前 SolidWorks 主交付入口。",
+        ]
+    )
+    if solidworks_open_verification:
+        lines.append(f"- 验证记录：`{solidworks_open_verification}`")
+    if payload.get("solidworks_native_open_verification"):
+        lines.append(f"- 原生验证记录：`{payload['solidworks_native_open_verification']}`")
+
+    lines.extend(
+        [
+            "",
+            "## 交付边界",
+            "",
+            "- 当前可靠范围：16029 外形 1000W x 1917H x 550D，10/12/14 门。",
+            "- 当前模型类型：工程参考模型，适合方案复核、规则验证、结构对比。",
+            "- 未完成项：正式 SolidWorks 可编辑装配树、工程图、BOM、DXF、钣金展开仍需后续工程化。",
+            "",
+        ]
+    )
+    write_text(index_path, "\n".join(lines))
+    return str(index_path)
+
+
 def write_root_readme(payload: dict[str, Any]) -> None:
     pending_fcstd = [
         row["door_count"]
@@ -851,8 +932,10 @@ def write_root_readme(payload: dict[str, Any]) -> None:
             + ", ".join(f"{door_count}door" for door_count in pending_fcstd)
             + ".",
         )
-    write_text(Path(payload["handoff_dir"]) / "ENGINEERING_HANDOFF.md", "\n".join(lines))
-    write_text(HANDOFF_MARKDOWN_PATH, "\n".join(lines))
+    root_text = "\n".join(lines)
+    write_text(Path(payload["handoff_dir"]) / "ENGINEERING_HANDOFF.md", root_text)
+    write_text(Path(payload["handoff_dir"]) / "README.md", root_text)
+    write_text(HANDOFF_MARKDOWN_PATH, root_text)
 
 
 def build_notes(variants: list[dict[str, Any]]) -> list[str]:
@@ -921,7 +1004,7 @@ def build_payload() -> dict[str, Any]:
         else None,
     }
     payload["root_launchers"] = write_root_launchers(payload)
-    payload["engineer_open_index"] = write_engineer_open_index(payload)
+    payload["engineer_open_index"] = write_engineer_open_index_clean(payload)
     write_root_readme(payload)
     return payload
 
