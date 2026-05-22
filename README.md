@@ -4,14 +4,11 @@ Winnsen 硬件结构知识与智能钣金模型生成平台。
 
 ## Current MVP
 
-已在 `apps/web` 搭建本地 React/Vite 控制台 MVP，当前包含六个页面：
+已在 `apps/web` 搭建本地 React/Vite 控制台 MVP，当前按三组整理为七个页面：
 
-- `项目总览`
-- `数据录入状态`
-- `规则库成熟度`
-- `可生成模型`
-- `待确认项`
-- `结构 Agent`
+- 工程交付主线：`项目总览`、`模型生成与交接`、`图纸生成与钣金出图`、`待确认项`
+- 证据与规则后台：`数据录入状态`、`规则库成熟度`
+- Agent 控制台：`结构 Agent`
 
 运行方式：
 
@@ -82,12 +79,13 @@ The first version is a local web dashboard, not a full CAD editor.
 
 Current implemented pages:
 
-- Project overview
+- Project overview with a software page map
+- Model generation and SolidWorks/FreeCAD engineering handoff
+- Drawing/image/model intake for sheet-metal reference-model, unfold, dimensioning, and drawing workflow planning
+- Manual review queue
 - Intake pipeline status
 - Rule maturity board
-- Generatable model catalog with a persistent local generation task draft queue
 - Structure Agent console for generation boundaries, rule closure, and next gates
-- Manual review queue
 
 The Structure Agent console is now implemented as a boundary page: it tells the user what can be generated today, what is only a reference, and which evidence gates block arbitrary door-size changes.
 

@@ -95,11 +95,46 @@
 .primary-action,
 .secondary-action,
 .capability-card,
+.page-map-card,
 .runner-action,
 .task-card,
 .scrim {
   border: 0;
   font: inherit;
+}
+
+.nav-section {
+  display: grid;
+  gap: 8px;
+}
+
+.nav-section + .nav-section {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.nav-section-copy {
+  display: grid;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.nav-section-label {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 720;
+  line-height: 1.35;
+}
+
+.nav-section-copy small {
+  color: #aebbd1;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.nav-section-items {
+  display: grid;
+  gap: 5px;
 }
 
 .nav-item {
@@ -264,6 +299,7 @@
 .extraction-card,
 .review-card,
 .capability-card,
+.page-map-card,
 .record-stat,
 .priority-cell {
   border: 1px solid var(--line);
@@ -287,7 +323,8 @@
 .template-card span,
 .axis-card span,
 .extraction-card span,
-.capability-card span {
+.capability-card span,
+.page-map-card span {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.35;
@@ -343,6 +380,73 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
+}
+
+.page-map-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.page-map-card {
+  min-width: 0;
+  min-height: 188px;
+  padding: 15px;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.page-map-card:hover {
+  border-color: rgba(31, 53, 133, 0.32);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.11);
+  transform: translateY(-1px);
+}
+
+.page-map-card:active {
+  transform: translateY(0);
+}
+
+.page-map-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.page-map-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #eef3ff;
+  color: var(--accent);
+}
+
+.page-map-card strong {
+  color: var(--heading);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.page-map-card p,
+.page-map-card small {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.page-map-card small {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  color: #4c5f78;
 }
 
 .project-card {
@@ -4090,6 +4194,7 @@ td strong {
 
   .metric-strip,
   .project-grid,
+  .page-map-grid,
   .rule-grid,
   .template-grid,
   .axis-grid,
@@ -4149,6 +4254,7 @@ td strong {
 
   .metric-strip,
   .project-grid,
+  .page-map-grid,
   .split-grid,
   .rule-grid,
   .template-grid,

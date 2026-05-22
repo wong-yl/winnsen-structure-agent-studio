@@ -52,7 +52,8 @@ import {
   type TemplateAsset,
 } from './data/studioData'
 
-type PageId = 'overview' | 'intake' | 'rules' | 'models' | 'drawings' | 'console' | 'review'
+type PageId = 'overview' | 'models' | 'drawings' | 'review' | 'intake' | 'rules' | 'console'
+type PageSectionId = 'delivery' | 'evidence' | 'control'
 type CadRunner = 'freecad' | 'solidworks'
 type LocalActionMode = 'open' | 'reveal'
 type ParameterValues = Record<string, string>
@@ -760,14 +761,92 @@ const cadRunners: Array<{
   },
 ]
 
-const pages: Array<{ id: PageId; label: string; description: string; icon: typeof Gauge }> = [
-  { id: 'overview', label: '项目总览', description: '项目健康度、证据覆盖和风险入口', icon: Gauge },
-  { id: 'intake', label: '数据录入状态', description: 'BOM / DXF / SolidWorks / STEP / FreeCAD 迁移流水线', icon: Database },
-  { id: 'rules', label: '规则库成熟度', description: '模块规则、来源证据和成熟度分布', icon: ShieldCheck },
-  { id: 'models', label: '可生成模型', description: 'SolidWorks 主线 / FreeCAD 开源替代路线', icon: Boxes },
-  { id: 'drawings', label: '图纸生成与钣金出图', description: '图纸/图片到参考模型、展开、标注与待确认项', icon: ClipboardList },
-  { id: 'console', label: '结构 Agent', description: '生成边界、规则闭环和待确认项', icon: Bot },
-  { id: 'review', label: '待确认项', description: 'P0/P1/P2 队列和规则定标事项', icon: FileWarning },
+const pageSections: Array<{ id: PageSectionId; label: string; helper: string }> = [
+  { id: 'delivery', label: '工程交付主线', helper: '工程师实际拿模型和确认问题的入口' },
+  { id: 'evidence', label: '证据与规则后台', helper: '数据、规则、图纸证据的管理区' },
+  { id: 'control', label: 'Agent 控制台', helper: '边界、风险和下一步推进' },
+]
+
+const pages: Array<{
+  id: PageId
+  label: string
+  navLabel: string
+  description: string
+  section: PageSectionId
+  purpose: string
+  nextAction: string
+  icon: typeof Gauge
+}> = [
+  {
+    id: 'overview',
+    label: '项目总览',
+    navLabel: '总览',
+    description: '项目价值、当前成果、交付入口和风险入口',
+    section: 'delivery',
+    purpose: '给老板或项目负责人快速看当前进度、价值和阻塞。',
+    nextAction: '先看 16029 交付状态，再进入模型生成与交接。',
+    icon: Gauge,
+  },
+  {
+    id: 'models',
+    label: '模型生成与交接',
+    navLabel: '模型生成',
+    description: 'SolidWorks 当前工程主线 / FreeCAD 开源替代路线',
+    section: 'delivery',
+    purpose: '结构工程师需要模型时从这里选择门数、准备任务、运行或打开交接包。',
+    nextAction: '优先使用 16029 10/12/14 门 verified rule packet 和 Pack-and-Go 交接包。',
+    icon: Boxes,
+  },
+  {
+    id: 'drawings',
+    label: '图纸生成与钣金出图',
+    navLabel: '图纸/钣金',
+    description: '图纸/图片/钣金模型到参考模型、展开、标注与规则证据',
+    section: 'delivery',
+    purpose: '把上传的图纸、DXF、STEP、SLDPRT 等转成可复核的钣金规则证据。',
+    nextAction: '先做单件解析和参考展开，正式图纸仍需工程复核。',
+    icon: ClipboardList,
+  },
+  {
+    id: 'review',
+    label: '待确认项',
+    navLabel: '待确认',
+    description: 'P0/P1/P2 队列、规则定标和工程交付风险',
+    section: 'delivery',
+    purpose: '集中看哪些问题会阻塞模型质量和工程交接。',
+    nextAction: '优先关闭 16029 层板、锁具、右门镜像和后侧/电气模块相关问题。',
+    icon: FileWarning,
+  },
+  {
+    id: 'intake',
+    label: '数据录入状态',
+    navLabel: '数据录入',
+    description: 'BOM / DXF / SolidWorks / STEP / FreeCAD 迁移流水线',
+    section: 'evidence',
+    purpose: '看 CAD 资产、模板素材和规则学习样本是否已经进入系统。',
+    nextAction: '新增素材先进入规则学习，不直接当成可生成模型。',
+    icon: Database,
+  },
+  {
+    id: 'rules',
+    label: '规则库成熟度',
+    navLabel: '规则库',
+    description: '模块规则、来源证据、成熟度分布和规则提取入口',
+    section: 'evidence',
+    purpose: '查看哪些钣金/装配规则已经闭环，哪些仍只是候选。',
+    nextAction: '把 verified rule packet 作为 16029 生成器的单一规则源。',
+    icon: ShieldCheck,
+  },
+  {
+    id: 'console',
+    label: '结构 Agent',
+    navLabel: 'Agent',
+    description: '生成边界、规则闭环、风险判断和下一步推进',
+    section: 'control',
+    purpose: '给非工程用户看当前能力边界，避免把参考模型误认为生产图纸。',
+    nextAction: '按验证门槛推进下一轮生成器质量修复。',
+    icon: Bot,
+  },
 ]
 
 const maturityLabels: Record<Maturity, string> = {
@@ -840,24 +919,36 @@ function App() {
         </div>
 
         <nav className="nav-stack" aria-label="主导航">
-          {pages.map((page) => {
-            const Icon = page.icon
-            return (
-              <button
-                key={page.id}
-                type="button"
-                data-page-id={page.id}
-                className={`nav-item ${activePage === page.id ? 'active' : ''}`}
-                onClick={() => {
-                  setActivePage(page.id)
-                  setMobileNavOpen(false)
-                }}
-              >
-                <Icon size={19} />
-                <span>{page.label}</span>
-              </button>
-            )
-          })}
+          {pageSections.map((section) => (
+            <div key={section.id} className="nav-section">
+              <div className="nav-section-copy">
+                <span className="nav-section-label">{section.label}</span>
+                <small>{section.helper}</small>
+              </div>
+              <div className="nav-section-items">
+                {pages
+                  .filter((page) => page.section === section.id)
+                  .map((page) => {
+                    const Icon = page.icon
+                    return (
+                      <button
+                        key={page.id}
+                        type="button"
+                        data-page-id={page.id}
+                        className={`nav-item ${activePage === page.id ? 'active' : ''}`}
+                        onClick={() => {
+                          setActivePage(page.id)
+                          setMobileNavOpen(false)
+                        }}
+                      >
+                        <Icon size={19} />
+                        <span>{page.navLabel}</span>
+                      </button>
+                    )
+                  })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         <div className="sidebar-panel">
@@ -932,6 +1023,8 @@ function OverviewPage({
         ))}
       </section>
 
+      <PageMapSection onNavigate={onNavigate} />
+
       <section className="section-block">
         <div className="section-heading">
           <div>
@@ -998,6 +1091,38 @@ function OverviewPage({
         </article>
       </section>
     </div>
+  )
+}
+
+function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) {
+  return (
+    <section className="section-block">
+      <div className="section-heading">
+        <div>
+          <h2>软件页面地图</h2>
+          <p>把工程师拿模型的入口放前面，数据、规则和 Agent 控制放到后台页面。</p>
+        </div>
+      </div>
+      <div className="page-map-grid">
+        {pages.map((page) => {
+          const Icon = page.icon
+          const section = pageSections.find((item) => item.id === page.section)
+          return (
+            <button key={page.id} type="button" className="page-map-card" onClick={() => onNavigate(page.id)}>
+              <div className="page-map-card-header">
+                <span className="page-map-icon" aria-hidden="true">
+                  <Icon size={18} />
+                </span>
+                <span>{section?.label}</span>
+              </div>
+              <strong>{page.label}</strong>
+              <p>{page.purpose}</p>
+              <small>{page.nextAction}</small>
+            </button>
+          )
+        })}
+      </div>
+    </section>
   )
 }
 
