@@ -2,7 +2,7 @@
 
 用途：在结构工程师打开 SolidWorks 前，先确认 10/12/14 门原生增强装配体的依赖和结构质量门是否通过。
 
-- Generated at: `2026-05-22T11:21:50+08:00`
+- Generated at: `2026-05-22T11:57:45+08:00`
 - One-click check: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\CHECK_HANDOFF_READY.cmd`
 - Quality CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_quality_summary.csv`
 - Dependency CSV: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\handoff_dependency_summary.csv`

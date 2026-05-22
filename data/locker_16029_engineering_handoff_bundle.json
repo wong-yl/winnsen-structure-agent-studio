@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T11:21:50+08:00",
+  "generated_at": "2026-05-22T11:57:45+08:00",
   "product_family": "16029",
   "scope": "1000W x 1917H x 550D 10/12/14 door engineering-reference handoff",
   "source_quality_matrix": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
@@ -415,10 +415,10 @@
     "All included variants have STEP geometry PASS and FCStd integrity PASS.",
     "All included variants have structural rule audit PASS for door grid, lock relation, shelf/frame offsets, L/R symmetry, and bbox X.",
     "SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report.",
-    "Native SolidWorks 10-door enriched SLDASM open smoke passed; see the native open verification report."
+    "Native SolidWorks 10/12/14 enriched SLDASM open smoke passed; see the native open verification report."
   ],
   "solidworks_open_verification": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\SOLIDWORKS_OPEN_VERIFICATION_20260520.md",
-  "solidworks_native_open_verification": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260521.md",
+  "solidworks_native_open_verification": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260522.md",
   "root_launchers": [
     {
       "door_count": 10,

@@ -16,7 +16,7 @@ QUALITY_MATRIX_PATH = Path(
 DEFAULT_HANDOFF_DIR = ROOT_DIR / "workers" / "handoffs" / "16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519"
 HANDOFF_DIR = Path(os.getenv("STUDIO_16029_ENGINEERING_HANDOFF_DIR", DEFAULT_HANDOFF_DIR))
 SOLIDWORKS_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_OPEN_VERIFICATION_20260520.md"
-SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260521.md"
+SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260522.md"
 HANDOFF_MANIFEST_PATH = Path(
     os.getenv("STUDIO_16029_ENGINEERING_HANDOFF_MANIFEST_JSON", ROOT_DIR / "data" / "locker_16029_engineering_handoff_bundle.json")
 )
@@ -1411,7 +1411,7 @@ def build_notes(variants: list[dict[str, Any]]) -> list[str]:
     if SOLIDWORKS_OPEN_VERIFICATION_PATH.exists():
         notes.append("SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report.")
     if SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH.exists():
-        notes.append("Native SolidWorks 10-door enriched SLDASM open smoke passed; see the native open verification report.")
+        notes.append("Native SolidWorks 10/12/14 enriched SLDASM open smoke passed; see the native open verification report.")
     return notes
 
 
