@@ -11,6 +11,7 @@ from typing import Any
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_SERIES_DIR = ROOT_DIR / "workers" / "generated_models" / "SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521"
 SERIES_DIR = Path(os.getenv("STUDIO_16029_NATIVE_SKELETON_SERIES_DIR", DEFAULT_SERIES_DIR))
+DOOR_ARRAY_DIR = ROOT_DIR / "workers" / "generated_models" / "SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521"
 
 DATA_JSON_PATH = Path(
     os.getenv("STUDIO_16029_NATIVE_SKELETON_GEOMETRY_GATE_JSON", ROOT_DIR / "data" / "solidworks_16029_native_skeleton_geometry_gate.json")
@@ -81,6 +82,18 @@ def load_bbox_rows(path: Path) -> list[dict[str, Any]]:
             row["z_center"] = center(row.get("z_min"), row.get("z_max"))
             rows.append(row)
     return rows
+
+
+def load_door_array_result(doors: int) -> dict[str, Any] | None:
+    path = DOOR_ARRAY_DIR / f"native_16029_door_array_{doors}door_v1_csharp_result.json"
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    payload["_path"] = str(path)
+    return payload
 
 
 def center(min_value: float | None, max_value: float | None) -> float | None:
@@ -214,6 +227,66 @@ def max_pair_y_delta(left: list[dict[str, Any]], right: list[dict[str, Any]]) ->
     return max(deltas) if deltas else None
 
 
+def placement_column_rows(result: dict[str, Any] | None, column: str) -> list[dict[str, Any]]:
+    if not result:
+        return []
+    rows: list[dict[str, Any]] = []
+    for placement in result.get("placements") or []:
+        role = str(placement.get("role") or "")
+        marker = f"_{column}"
+        if marker not in role:
+            continue
+        ty = placement.get("tyMm")
+        if not isinstance(ty, (int, float)):
+            continue
+        rows.append(placement)
+    rows.sort(key=lambda row: float(row["tyMm"]))
+    return rows
+
+
+def max_placement_y_delta(left: list[dict[str, Any]], right: list[dict[str, Any]]) -> float | None:
+    if len(left) != len(right) or not left:
+        return None
+    return max(abs(float(left_row["tyMm"]) - float(right_row["tyMm"])) for left_row, right_row in zip(left, right))
+
+
+def placement_visual_y_values(placements: list[dict[str, Any]], door_height: float) -> list[float]:
+    values: list[float] = []
+    half_height = door_height / 2.0
+    for placement in placements:
+        ty = placement.get("tyMm")
+        if isinstance(ty, (int, float)):
+            values.extend([float(ty) - half_height, float(ty) + half_height])
+    return values
+
+
+def placement_pitch_deltas(placements: list[dict[str, Any]], expected_pitch: float) -> dict[str, Any]:
+    centers = sorted(float(row["tyMm"]) for row in placements if isinstance(row.get("tyMm"), (int, float)))
+    pitches = [centers[index + 1] - centers[index] for index in range(len(centers) - 1)]
+    if not pitches:
+        return {"values": [], "max_error": None}
+    return {
+        "values": [rounded(value) for value in pitches],
+        "max_error": rounded(max(abs(value - expected_pitch) for value in pitches)),
+    }
+
+
+def right_column_rotation_ok(placements: list[dict[str, Any]]) -> bool:
+    if not placements:
+        return False
+    for placement in placements:
+        rotation = placement.get("rotation")
+        if not isinstance(rotation, list) or len(rotation) < 9:
+            return False
+        if not (
+            abs(float(rotation[0]) - (-1.0)) <= 1e-6
+            and abs(float(rotation[4]) - (-1.0)) <= 1e-6
+            and abs(float(rotation[8]) - 1.0) <= 1e-6
+        ):
+            return False
+    return True
+
+
 def pitch_deltas(rows: list[dict[str, Any]], expected_pitch: float) -> dict[str, Any]:
     centers = [float(row["y_center"]) for row in rows if isinstance(row.get("y_center"), float)]
     centers.sort()
@@ -313,19 +386,42 @@ def audit_variant(doors: int) -> dict[str, Any]:
 
     door_rows = [row for row in rows if is_door_module_row(row, doors)]
     left_doors, right_doors = split_door_columns(door_rows)
+    door_array_result = load_door_array_result(doors)
+    left_placements = placement_column_rows(door_array_result, "L")
+    right_placements = placement_column_rows(door_array_result, "R")
+    all_placements = left_placements + right_placements
     add_check(checks, "ordinary_door_count", len(door_rows) == doors, len(door_rows), doors)
     add_check(checks, "left_column_door_count", len(left_doors) == rows_per_column, len(left_doors), rows_per_column)
     add_check(checks, "right_column_door_count", len(right_doors) == rows_per_column, len(right_doors), rows_per_column)
-    pair_delta = max_pair_y_delta(left_doors, right_doors)
+    placement_pair_delta = max_placement_y_delta(left_placements, right_placements)
+    pair_delta = placement_pair_delta if placement_pair_delta is not None else max_pair_y_delta(left_doors, right_doors)
+    add_check(
+        checks,
+        "door_array_placement_evidence",
+        len(left_placements) == rows_per_column and len(right_placements) == rows_per_column,
+        {"left": len(left_placements), "right": len(right_placements), "source": (door_array_result or {}).get("_path", "")},
+        f"{rows_per_column} left placements and {rows_per_column} right placements",
+    )
+    add_check(
+        checks,
+        "right_column_standard_rotation",
+        right_column_rotation_ok(right_placements),
+        [row.get("rotation") for row in right_placements[:2]],
+        "right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]",
+    )
     add_check(
         checks,
         "left_right_door_y_alignment",
         isinstance(pair_delta, float) and pair_delta <= TOL_PAIR_MM,
         rounded(pair_delta),
         f"<= {TOL_PAIR_MM}mm",
+        detail="checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric",
     )
 
-    all_door_y_values = [value for row in door_rows for value in (row.get("y_min"), row.get("y_max")) if isinstance(value, float)]
+    placement_y_values = placement_visual_y_values(all_placements, door_height)
+    all_door_y_values = placement_y_values or [
+        value for row in door_rows for value in (row.get("y_min"), row.get("y_max")) if isinstance(value, float)
+    ]
     add_check(
         checks,
         "door_array_bottom_in_range",
@@ -341,8 +437,8 @@ def audit_variant(doors: int) -> dict[str, Any]:
         f"<= {EXPECTED_DOOR_TOP_MAX_Y_MM}mm",
     )
 
-    left_pitch = pitch_deltas(left_doors, expected_pitch)
-    right_pitch = pitch_deltas(right_doors, expected_pitch)
+    left_pitch = placement_pitch_deltas(left_placements, expected_pitch) if left_placements else pitch_deltas(left_doors, expected_pitch)
+    right_pitch = placement_pitch_deltas(right_placements, expected_pitch) if right_placements else pitch_deltas(right_doors, expected_pitch)
     left_pitch_error = left_pitch.get("max_error")
     right_pitch_error = right_pitch.get("max_error")
     add_check(
@@ -408,6 +504,9 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "door_count": len(door_rows),
         "left_column_door_count": len(left_doors),
         "right_column_door_count": len(right_doors),
+        "door_array_result": (door_array_result or {}).get("_path", ""),
+        "left_column_placement_count": len(left_placements),
+        "right_column_placement_count": len(right_placements),
         "left_column_pitch": left_pitch,
         "right_column_pitch": right_pitch,
         "shelf_count": len(shelf_rows),

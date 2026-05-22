@@ -76,17 +76,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 double pitch = doorHeight + 7.0;
                 double[] columns = { -258.5, 258.5 };
                 string[] columnNames = { "L", "R" };
-                // Source door modules are not centered on their local Y origin; mirror placement needs this counter-offset.
-                const double rightMirrorYCorrectionMm = -51.7;
 
                 for (int c = 0; c < columns.Length; c++)
                 {
                     for (int row = 1; row <= rowsPerColumn; row++)
                     {
                         double panelCenterY = bottomPanelYMin + doorHeight / 2.0 + (row - 1) * pitch;
-                        double placementY = panelCenterY + (c == 0 ? 0.0 : rightMirrorYCorrectionMm);
                         string role = "ordinary_door_" + columnNames[c] + row.ToString("00", System.Globalization.CultureInfo.InvariantCulture);
-                        var p = new Placement(role, ordinaryDoorAsm, c == 0 ? Identity() : MirrorX(), columns[c], placementY, 0);
+                        var p = new Placement(role, ordinaryDoorAsm, c == 0 ? Identity() : RotateZ180(), columns[c], panelCenterY, 0);
                         result.Placements.Add(Add(sw, model, asm, math, p));
                     }
                 }
@@ -118,6 +115,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Role = p.Role,
                 Path = p.Path,
                 Exists = File.Exists(p.Path),
+                Rotation = p.Rotation,
                 TxMm = p.TxMm,
                 TyMm = p.TyMm,
                 TzMm = p.TzMm,
@@ -208,9 +206,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             return new[] { 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0 };
         }
 
-        private static double[] MirrorX()
+        private static double[] RotateZ180()
         {
-            return new[] { -1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0 };
+            return new[] { -1.0, 0, 0, 0, -1.0, 0, 0, 0, 1.0 };
         }
 
         private static ISldWorks GetOrCreateSolidWorks()
@@ -269,6 +267,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Prop(sb, "added", p.Added);
                 Prop(sb, "transformCreated", p.TransformCreated);
                 Prop(sb, "transformApplied", p.TransformApplied);
+                ArrayProp(sb, "rotation", p.Rotation);
                 Prop(sb, "txMm", p.TxMm);
                 Prop(sb, "tyMm", p.TyMm);
                 Prop(sb, "tzMm", p.TzMm);
@@ -300,6 +299,20 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         private static void Prop(StringBuilder sb, string name, double value)
         {
             sb.Append(",\"").Append(Escape(name)).Append("\":").Append(value.ToString("0.#########", System.Globalization.CultureInfo.InvariantCulture));
+        }
+
+        private static void ArrayProp(StringBuilder sb, string name, double[] values)
+        {
+            sb.Append(",\"").Append(Escape(name)).Append("\":[");
+            if (values != null)
+            {
+                for (int i = 0; i < values.Length; i++)
+                {
+                    if (i > 0) sb.Append(",");
+                    sb.Append(values[i].ToString("0.#########", System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+            sb.Append("]");
         }
 
         private static string Escape(string value)
@@ -349,6 +362,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string Role = "";
             public string Path = "";
             public bool Exists;
+            public double[] Rotation = new double[0];
             public bool Opened;
             public bool Added;
             public bool TransformCreated;

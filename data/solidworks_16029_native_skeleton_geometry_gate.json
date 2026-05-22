@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T08:20:00+08:00",
+  "generated_at": "2026-05-22T08:47:50+08:00",
   "status": "PASS",
   "source_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521",
   "target_door_counts": [
@@ -25,7 +25,7 @@
         "z_max": 0.0,
         "z_len": 550.0
       },
-      "check_count": 22,
+      "check_count": 24,
       "failed_error_count": 0,
       "failed_warning_count": 0,
       "checks": [
@@ -118,17 +118,60 @@
           "detail": ""
         },
         {
+          "name": "door_array_placement_evidence",
+          "ok": true,
+          "actual": {
+            "left": 5,
+            "right": 5,
+            "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_10door_v1_csharp_result.json"
+          },
+          "expected": "5 left placements and 5 right placements",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_standard_rotation",
+          "ok": true,
+          "actual": [
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              1
+            ]
+          ],
+          "expected": "right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]",
+          "severity": "error",
+          "detail": ""
+        },
+        {
           "name": "left_right_door_y_alignment",
           "ok": true,
           "actual": 0.0,
           "expected": "<= 0.1mm",
           "severity": "error",
-          "detail": ""
+          "detail": "checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric"
         },
         {
           "name": "door_array_bottom_in_range",
           "ok": true,
-          "actual": -21.2,
+          "actual": 32.0,
           "expected": ">= -25.0mm",
           "severity": "error",
           "detail": ""
@@ -136,7 +179,7 @@
         {
           "name": "door_array_top_in_range",
           "ok": true,
-          "actual": 1856.5,
+          "actual": 1855.0,
           "expected": "<= 1857.0mm",
           "severity": "error",
           "detail": ""
@@ -288,6 +331,9 @@
         "door_count": 10,
         "left_column_door_count": 5,
         "right_column_door_count": 5,
+        "door_array_result": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_10door_v1_csharp_result.json",
+        "left_column_placement_count": 5,
+        "right_column_placement_count": 5,
         "left_column_pitch": {
           "values": [
             366.0,
@@ -379,7 +425,7 @@
         "z_max": 0.0,
         "z_len": 550.0
       },
-      "check_count": 22,
+      "check_count": 24,
       "failed_error_count": 0,
       "failed_warning_count": 0,
       "checks": [
@@ -472,17 +518,60 @@
           "detail": ""
         },
         {
+          "name": "door_array_placement_evidence",
+          "ok": true,
+          "actual": {
+            "left": 6,
+            "right": 6,
+            "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_12door_v1_csharp_result.json"
+          },
+          "expected": "6 left placements and 6 right placements",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_standard_rotation",
+          "ok": true,
+          "actual": [
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              1
+            ]
+          ],
+          "expected": "right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]",
+          "severity": "error",
+          "detail": ""
+        },
+        {
           "name": "left_right_door_y_alignment",
           "ok": true,
           "actual": 0.0,
           "expected": "<= 0.1mm",
           "severity": "error",
-          "detail": ""
+          "detail": "checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric"
         },
         {
           "name": "door_array_bottom_in_range",
           "ok": true,
-          "actual": -21.2,
+          "actual": 32.0,
           "expected": ">= -25.0mm",
           "severity": "error",
           "detail": ""
@@ -490,7 +579,7 @@
         {
           "name": "door_array_top_in_range",
           "ok": true,
-          "actual": 1856.5,
+          "actual": 1855.0,
           "expected": "<= 1857.0mm",
           "severity": "error",
           "detail": ""
@@ -654,6 +743,9 @@
         "door_count": 12,
         "left_column_door_count": 6,
         "right_column_door_count": 6,
+        "door_array_result": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_12door_v1_csharp_result.json",
+        "left_column_placement_count": 6,
+        "right_column_placement_count": 6,
         "left_column_pitch": {
           "values": [
             305.0,
@@ -757,7 +849,7 @@
         "z_max": 0.0,
         "z_len": 550.0
       },
-      "check_count": 22,
+      "check_count": 24,
       "failed_error_count": 0,
       "failed_warning_count": 0,
       "checks": [
@@ -850,17 +942,60 @@
           "detail": ""
         },
         {
+          "name": "door_array_placement_evidence",
+          "ok": true,
+          "actual": {
+            "left": 7,
+            "right": 7,
+            "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_14door_v1_csharp_result.json"
+          },
+          "expected": "7 left placements and 7 right placements",
+          "severity": "error",
+          "detail": ""
+        },
+        {
+          "name": "right_column_standard_rotation",
+          "ok": true,
+          "actual": [
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              1
+            ]
+          ],
+          "expected": "right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]",
+          "severity": "error",
+          "detail": ""
+        },
+        {
           "name": "left_right_door_y_alignment",
           "ok": true,
           "actual": 0.0,
           "expected": "<= 0.1mm",
           "severity": "error",
-          "detail": ""
+          "detail": "checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric"
         },
         {
           "name": "door_array_bottom_in_range",
           "ok": true,
-          "actual": -21.2,
+          "actual": 32.0,
           "expected": ">= -25.0mm",
           "severity": "error",
           "detail": ""
@@ -868,7 +1003,7 @@
         {
           "name": "door_array_top_in_range",
           "ok": true,
-          "actual": 1856.503,
+          "actual": 1855.003,
           "expected": "<= 1857.0mm",
           "severity": "error",
           "detail": ""
@@ -1044,6 +1179,9 @@
         "door_count": 14,
         "left_column_door_count": 7,
         "right_column_door_count": 7,
+        "door_array_result": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521\\native_16029_door_array_14door_v1_csharp_result.json",
+        "left_column_placement_count": 7,
+        "right_column_placement_count": 7,
         "left_column_pitch": {
           "values": [
             261.429,
