@@ -76,14 +76,17 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 double pitch = doorHeight + 7.0;
                 double[] columns = { -258.5, 258.5 };
                 string[] columnNames = { "L", "R" };
+                // Source door modules are not centered on their local Y origin; mirror placement needs this counter-offset.
+                const double rightMirrorYCorrectionMm = -51.7;
 
                 for (int c = 0; c < columns.Length; c++)
                 {
                     for (int row = 1; row <= rowsPerColumn; row++)
                     {
                         double panelCenterY = bottomPanelYMin + doorHeight / 2.0 + (row - 1) * pitch;
+                        double placementY = panelCenterY + (c == 0 ? 0.0 : rightMirrorYCorrectionMm);
                         string role = "ordinary_door_" + columnNames[c] + row.ToString("00", System.Globalization.CultureInfo.InvariantCulture);
-                        var p = new Placement(role, ordinaryDoorAsm, Identity(), columns[c], panelCenterY, 0);
+                        var p = new Placement(role, ordinaryDoorAsm, c == 0 ? Identity() : MirrorX(), columns[c], placementY, 0);
                         result.Placements.Add(Add(sw, model, asm, math, p));
                     }
                 }
@@ -203,6 +206,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         private static double[] Identity()
         {
             return new[] { 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0 };
+        }
+
+        private static double[] MirrorX()
+        {
+            return new[] { -1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0 };
         }
 
         private static ISldWorks GetOrCreateSolidWorks()

@@ -151,6 +151,21 @@ def rows_by_prefix(rows: list[dict[str, Any]], type_id: str, prefix: str) -> lis
     return [row for row in rows if row.get("type_id") == type_id and row_label(row).startswith(prefix)]
 
 
+def is_door_module_row(row: dict[str, Any], doors: int) -> bool:
+    if row.get("type_id") != "App::Part":
+        return False
+    label = row_label(row)
+    if label.startswith(f"native_16029_ordinary_door_{doors}door"):
+        return True
+    x_len = row.get("x_len")
+    return (
+        "\u50a8\u7269\u67dc\u95e8" in label
+        and "\u88c5\u914d" in label
+        and isinstance(x_len, float)
+        and abs(x_len - 437.0) <= 0.75
+    )
+
+
 def root_row(rows: list[dict[str, Any]], doors: int) -> dict[str, Any] | None:
     exact = f"native_16029_{doors}door_cabinet_skeleton_v2"
     for row in rows:
@@ -296,7 +311,7 @@ def audit_variant(doors: int) -> dict[str, Any]:
             EXPECTED_CABINET_DEPTH_MM,
         )
 
-    door_rows = rows_by_prefix(rows, "App::Part", f"native_16029_ordinary_door_{doors}door")
+    door_rows = [row for row in rows if is_door_module_row(row, doors)]
     left_doors, right_doors = split_door_columns(door_rows)
     add_check(checks, "ordinary_door_count", len(door_rows) == doors, len(door_rows), doors)
     add_check(checks, "left_column_door_count", len(left_doors) == rows_per_column, len(left_doors), rows_per_column)

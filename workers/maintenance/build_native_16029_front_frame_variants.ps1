@@ -1,3 +1,8 @@
+param(
+  [ValidateSet(10, 12, 14)]
+  [int[]]$DoorCounts = @(10, 12, 14)
+)
+
 $ErrorActionPreference = 'Stop'
 
 $repo = 'D:\Winnsen_Structure_Agent_Studio'
@@ -29,7 +34,7 @@ $variants = @(
   @{ doors = 10; height = 359.0 },
   @{ doors = 12; height = 298.0 },
   @{ doors = 14; height = 254.429 }
-)
+) | Where-Object { $DoorCounts -contains [int]$_.doors }
 
 function Format-Mm([double]$value) {
   return $value.ToString('0.###', [Globalization.CultureInfo]::InvariantCulture)
@@ -46,7 +51,7 @@ function Write-FrontFramePlacements([int]$doors, [double]$doorHeight, [string]$p
   $rowsPerColumn = [int]($doors / 2)
   $pitch = $doorHeight + 7.0
   $bottomPanelYMin = 32.0
-  $standardCrossCenterY = 1547.5
+  $standardCrossCenterY = 1700.0
 
   $lines = [System.Collections.Generic.List[string]]::new()
   $lines.Add("role`tpath`ttx_mm`tty_mm`ttz_mm")
@@ -59,7 +64,7 @@ function Write-FrontFramePlacements([int]$doors, [double]$doorHeight, [string]$p
 
   $levelIndex = 0
   for ($row = $rowsPerColumn - 1; $row -ge 1; $row--) {
-    $targetCenterY = $bottomPanelYMin + $doorHeight - 2.5 + (($row - 1) * $pitch)
+    $targetCenterY = $bottomPanelYMin + $doorHeight + (($pitch - $doorHeight) / 2.0) + (($row - 1) * $pitch)
     $ty = $targetCenterY - $standardCrossCenterY
     Add-Placement $lines ("frame_cross_L_{0:00}" -f $levelIndex) $parts.crossL 0 $ty 0
     Add-Placement $lines ("frame_cross_R_{0:00}" -f $levelIndex) $parts.crossR 0 $ty 0

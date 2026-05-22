@@ -1,3 +1,8 @@
+param(
+  [ValidateSet(10, 12, 14)]
+  [int[]]$DoorCounts = @(10, 12, 14)
+)
+
 $ErrorActionPreference = 'Stop'
 
 $repo = 'D:\Winnsen_Structure_Agent_Studio'
@@ -29,12 +34,14 @@ $parts = @{
   shelfR = Join-Path $source ($bodyPrefix + $shelfPanel + 'R' + $weld + '.SLDASM')
 }
 $shelfLabelPrefix = $bodyPrefix + $shelfPanel
+$doorLabelToken = -join ([char[]](0x50A8,0x7269,0x67DC,0x95E8))
+$assemblyLabelToken = -join ([char[]](0x88C5,0x914D))
 
 $variants = @(
   @{ doors = 10; height = 359.0 },
   @{ doors = 12; height = 298.0 },
   @{ doors = 14; height = 254.429 }
-)
+) | Where-Object { $DoorCounts -contains [int]$_.doors }
 
 function Format-Mm([double]$value) {
   return $value.ToString('0.###', [Globalization.CultureInfo]::InvariantCulture)
@@ -67,8 +74,8 @@ function Write-CabinetPlacements([int]$doors, [double]$doorHeight, [string]$path
   Add-Placement $lines 'top_cover_weld' $parts.topCover 0 0 0
 
   $levelIndex = 0
-  for ($row = $rowsPerColumn; $row -ge 2; $row--) {
-    $targetCenterY = $bottomPanelYMin + ($doorHeight / 2.0) + (($row - 1) * $pitch) - 1.0
+  for ($row = $rowsPerColumn - 1; $row -ge 1; $row--) {
+    $targetCenterY = $bottomPanelYMin + $doorHeight + (($pitch - $doorHeight) / 2.0) + (($row - 1) * $pitch)
     $ty = $targetCenterY - $standardShelfCenterY
     Add-Placement $lines ("shelf_L_{0:00}" -f $levelIndex) $parts.shelfL 0 $ty 0
     Add-Placement $lines ("shelf_R_{0:00}" -f $levelIndex) $parts.shelfR 0 $ty 0
@@ -131,7 +138,13 @@ foreach ($variant in $variants) {
     ([math]::Abs([double]$_.y_min) -lt 1e20) -and
     ([math]::Abs([double]$_.z_min) -lt 1e20)
   }
-  $doorRows = @($bboxRows | Where-Object { ($_.type_id -eq 'App::Part') -and ($_.label -like ("native_16029_ordinary_door_{0}door*" -f $doors)) })
+  $doorRows = @($bboxRows | Where-Object {
+    ($_.type_id -eq 'App::Part') -and
+    (
+      ($_.label -like ("native_16029_ordinary_door_{0}door*" -f $doors)) -or
+      (($_.label -like "*$doorLabelToken*$assemblyLabelToken*") -and ([math]::Abs(([double]$_.x_len) - 437.0) -lt 0.75))
+    )
+  })
   $shelfRows = @($bboxRows | Where-Object { ($_.type_id -eq 'App::Part') -and ($_.label -like ($shelfLabelPrefix + '*')) })
   $crossRows = @($bboxRows | Where-Object {
     ($_.type_id -eq 'Part::Feature') -and

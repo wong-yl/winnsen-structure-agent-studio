@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T12:08:58+08:00",
+  "generated_at": "2026-05-22T08:20:00+08:00",
   "status": "PASS",
   "source_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521",
   "target_door_counts": [
@@ -542,23 +542,23 @@
           "ok": true,
           "actual": [
             {
-              "center": 485.0,
+              "center": 333.5,
               "count": 2
             },
             {
-              "center": 790.0,
+              "center": 638.5,
               "count": 2
             },
             {
-              "center": 1095.0,
+              "center": 943.5,
               "count": 2
             },
             {
-              "center": 1400.0,
+              "center": 1248.5,
               "count": 2
             },
             {
-              "center": 1705.0,
+              "center": 1553.5,
               "count": 2
             }
           ],
@@ -595,23 +595,23 @@
           "ok": true,
           "actual": [
             {
-              "center": 480.0,
+              "center": 333.5,
               "count": 2
             },
             {
-              "center": 785.0,
+              "center": 638.5,
               "count": 2
             },
             {
-              "center": 1090.0,
+              "center": 943.5,
               "count": 2
             },
             {
-              "center": 1395.0,
+              "center": 1248.5,
               "count": 2
             },
             {
-              "center": 1700.0,
+              "center": 1553.5,
               "count": 2
             }
           ],
@@ -677,23 +677,23 @@
         "shelf_count": 10,
         "shelf_levels": [
           {
-            "center": 485.0,
+            "center": 333.5,
             "count": 2
           },
           {
-            "center": 790.0,
+            "center": 638.5,
             "count": 2
           },
           {
-            "center": 1095.0,
+            "center": 943.5,
             "count": 2
           },
           {
-            "center": 1400.0,
+            "center": 1248.5,
             "count": 2
           },
           {
-            "center": 1705.0,
+            "center": 1553.5,
             "count": 2
           }
         ],
@@ -709,23 +709,23 @@
         "crossbar_count": 10,
         "crossbar_levels": [
           {
-            "center": 480.0,
+            "center": 333.5,
             "count": 2
           },
           {
-            "center": 785.0,
+            "center": 638.5,
             "count": 2
           },
           {
-            "center": 1090.0,
+            "center": 943.5,
             "count": 2
           },
           {
-            "center": 1395.0,
+            "center": 1248.5,
             "count": 2
           },
           {
-            "center": 1700.0,
+            "center": 1553.5,
             "count": 2
           }
         ],

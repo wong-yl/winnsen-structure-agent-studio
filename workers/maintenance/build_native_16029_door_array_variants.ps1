@@ -1,13 +1,22 @@
+param(
+  [ValidateSet(10, 12, 14)]
+  [int[]]$DoorCounts = @(10, 12, 14)
+)
+
 $ErrorActionPreference = 'Stop'
 
 $repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $outDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-DOOR-ARRAY-MODULE-20260521'
 $builder = Join-Path $repo 'workers\solidworks_tools\bin\BuildDoorArrayModule.exe'
 $buildBuilder = Join-Path $repo 'workers\solidworks_tools\build_door_array_module.ps1'
-$exporter = 'D:\机械结构工程师智能体\scripts\sw_export_step_ascii.js'
-$freecad = 'D:\软件安装录\freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe'
+$cadRootName = -join ([char[]](0x673A,0x68B0,0x7ED3,0x6784,0x5DE5,0x7A0B,0x5E08,0x667A,0x80FD,0x4F53))
+$softwareInstallDirName = -join ([char[]](0x8F6F,0x4EF6,0x5B89,0x88C5,0x5F55))
+$exporter = Join-Path (Join-Path 'D:\' $cadRootName) 'scripts\sw_export_step_ascii.js'
+$freecad = Join-Path (Join-Path 'D:\' $softwareInstallDirName) 'freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe'
 $bboxWorker = Join-Path $repo 'workers\rule_extractions\RULE-16029-WELD-MODULE-PLACEMENT-20260521\freecad_env_worker_entry.py'
 $ordinaryDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-ORDINARY-DOOR-MODULE-20260521'
+$exactSourceDir = 'C:\sw16029_direct_18door\source'
+$door2Of12AssemblyName = (-join ([char[]](0x50A8,0x7269,0x67DC,0x95E8))) + '2' + ([char]0x2571) + '12' + (-join ([char[]](0x88C5,0x914D))) + '.SLDASM'
 
 $variants = @(
   @{
@@ -18,14 +27,14 @@ $variants = @(
   @{
     Doors = 12
     DoorHeight = 298
-    OrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_12door_v1_csharp.SLDASM'
+    OrdinaryDoor = Join-Path $exactSourceDir $door2Of12AssemblyName
   },
   @{
     Doors = 14
     DoorHeight = 254.429
     OrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_14door_v1_csharp.SLDASM'
   }
-)
+) | Where-Object { $DoorCounts -contains [int]$_.Doors }
 
 if (-not (Test-Path -LiteralPath $builder)) {
   & $buildBuilder | Out-Host
