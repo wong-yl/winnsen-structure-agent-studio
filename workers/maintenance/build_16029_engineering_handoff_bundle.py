@@ -17,6 +17,8 @@ DEFAULT_HANDOFF_DIR = ROOT_DIR / "workers" / "handoffs" / "16029_10_12_14_STEP_E
 HANDOFF_DIR = Path(os.getenv("STUDIO_16029_ENGINEERING_HANDOFF_DIR", DEFAULT_HANDOFF_DIR))
 SOLIDWORKS_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_OPEN_VERIFICATION_20260520.md"
 SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH = HANDOFF_DIR / "SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260522.md"
+SOLIDWORKS_PACK_AND_GO_PATH = HANDOFF_DIR / "SOLIDWORKS_PACK_AND_GO_20260522.md"
+SOLIDWORKS_PACK_AND_GO_SUMMARY_PATH = HANDOFF_DIR / "solidworks_pack_and_go_summary.csv"
 HANDOFF_MANIFEST_PATH = Path(
     os.getenv("STUDIO_16029_ENGINEERING_HANDOFF_MANIFEST_JSON", ROOT_DIR / "data" / "locker_16029_engineering_handoff_bundle.json")
 )
@@ -968,6 +970,7 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
         f"- One-click check: `{payload.get('handoff_preflight_cmd', '')}`",
         f"- Quality CSV: `{payload.get('quality_summary_csv', '')}`",
         f"- Dependency CSV: `{payload.get('dependency_summary_csv', '')}`",
+        f"- Pack-and-Go: `{payload.get('solidworks_pack_and_go') or ''}`",
         "",
         "## 快速结论",
         "",
@@ -1020,6 +1023,7 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
             "- 这些文件是工程参考模型，用于结构规则复核、门数变化对比和方案沟通。",
             "- 当前可复核范围是 16029 外形 1000W x 1917H x 550D 的 10/12/14 门。",
             "- 依赖清单为当前工作站路径校验，不等同于独立 Pack-and-Go 包。",
+            "- 如果要把模型移到其他 Windows 工作站，优先使用每个门数目录下的 `solidworks_pack_and_go` 文件夹。",
             "- 工程图、BOM、DXF、钣金展开仍属于下一阶段工程化输出。",
             "",
         ]
@@ -1034,9 +1038,11 @@ def write_handoff_ready_preflight(payload: dict[str, Any]) -> dict[str, str]:
     status_path = cmd_path.with_suffix(".status.txt")
     dependency_csv = Path(payload["dependency_summary_csv"])
     quality_csv = Path(payload["quality_summary_csv"])
+    pack_and_go_csv = Path(payload["solidworks_pack_and_go_summary"]) if payload.get("solidworks_pack_and_go_summary") else None
     script = f"""$ErrorActionPreference = 'Stop'
 $dependencyCsv = {ps_single_quote(str(dependency_csv))}
 $qualityCsv = {ps_single_quote(str(quality_csv))}
+$packAndGoCsv = {ps_single_quote(str(pack_and_go_csv or ""))}
 $statusPath = {ps_single_quote(str(status_path))}
 
 $lines = @()
@@ -1068,8 +1074,23 @@ $qualityFailures = @($qualityRows | Where-Object {{
   [int]$_.native_failed_check_count -ne 0 -or
   [int]$_.dependency_missing_count -ne 0
 }})
+$packAndGoRows = @()
+$packAndGoFailures = @()
+if ($packAndGoCsv) {{
+  if (-not (Test-Path -LiteralPath $packAndGoCsv)) {{
+    $packAndGoFailures = @([pscustomobject]@{{door='all'; ok='missing_csv'; file_count=0; document_count=0}})
+  }} else {{
+    $packAndGoRows = @(Import-Csv -LiteralPath $packAndGoCsv)
+    $packAndGoFailures = @($packAndGoRows | Where-Object {{
+      $_.ok -ne 'True' -or
+      [int]$_.file_count -le 0 -or
+      [int]$_.sldasm_count -le 0 -or
+      [int]$_.sldprt_count -le 0
+    }})
+  }}
+}}
 
-if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0) {{
+if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0) {{
   $lines += "FAIL: handoff is not ready."
   $lines += "Missing dependencies: $($missingDependencies.Count)"
   foreach ($row in $missingDependencies) {{
@@ -1079,6 +1100,10 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0) {{
   foreach ($row in $qualityFailures) {{
     $lines += ("  {{0}}door | validation={{1}} | failed_checks={{2}} | missing_dependencies={{3}}" -f $row.door_count, $row.native_validation_ok, $row.native_failed_check_count, $row.dependency_missing_count)
   }}
+  $lines += "Pack-and-Go failures: $($packAndGoFailures.Count)"
+  foreach ($row in $packAndGoFailures) {{
+    $lines += ("  {{0}}door | ok={{1}} | files={{2}} | documents={{3}}" -f $row.door, $row.ok, $row.file_count, $row.document_count)
+  }}
   Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
   exit 1
 }}
@@ -1087,6 +1112,12 @@ $lines += "PASS: 10/12/14 native SolidWorks references are ready for engineering
 $lines += "Dependency rows: $($dependencyRows.Count)"
 foreach ($row in $qualityRows) {{
   $lines += ("  {{0}}door | checks={{1}}/{{2}} | dependencies={{3}}/{{4}} | doors={{5}} | shelves={{6}} | crossbars={{7}}" -f $row.door_count, ([int]$row.native_check_count - [int]$row.native_failed_check_count), $row.native_check_count, $row.dependency_existing_count, $row.dependency_row_count, $row.reported_door_count, $row.shelf_count, $row.crossbar_count)
+}}
+if ($packAndGoRows.Count -gt 0) {{
+  $lines += "Pack-and-Go:"
+  foreach ($row in $packAndGoRows) {{
+    $lines += ("  {{0}}door | files={{1}} | assemblies={{2}} | parts={{3}} | total_mb={{4}}" -f $row.door, $row.file_count, $row.sldasm_count, $row.sldprt_count, $row.total_mb)
+  }}
 }}
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
 exit 0
@@ -1214,6 +1245,7 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
         f"- 检查汇总：`{cell(payload.get('handoff_ready_summary'))}`",
         f"- 质量 CSV：`{cell(payload.get('quality_summary_csv'))}`",
         f"- 依赖 CSV：`{cell(payload.get('dependency_summary_csv'))}`",
+        f"- Pack-and-Go 记录：`{cell(payload.get('solidworks_pack_and_go'))}`",
         "",
         "## 可打开模型",
         "",
@@ -1261,7 +1293,8 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
             "## 软件实测状态",
             "",
             "- 已做 SolidWorks 2025 受控打开验证：主程序可启动，原生 SLDASM 是当前优先交付通道。",
-            "- STEP/FCStd 作为中性格式和开源复核备选，不作为当前 SolidWorks 主交付入口。",
+        "- STEP/FCStd 作为中性格式和开源复核备选，不作为当前 SolidWorks 主交付入口。",
+        "- 需要移动到其他电脑时，优先使用每个门数目录中的 `solidworks_pack_and_go` 文件夹。",
         ]
     )
     if solidworks_open_verification:
@@ -1347,32 +1380,35 @@ def write_root_readme(payload: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-        "## Engineer quick open",
-        "",
-        f"- Chinese index: `{payload.get('engineer_open_index', '')}`",
-        f"- Handoff ready summary: `{payload.get('handoff_ready_summary', '')}`",
-        f"- One-click ready check: `{(payload.get('handoff_preflight') or {}).get('cmd', '')}`",
-        f"- Quality summary CSV: `{payload.get('quality_summary_csv', '')}`",
-        f"- Dependency summary CSV: `{payload.get('dependency_summary_csv', '')}`",
-        "- Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.",
-        "- The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.",
+            "## Engineer quick open",
+            "",
+            f"- Chinese index: `{payload.get('engineer_open_index', '')}`",
+            f"- Handoff ready summary: `{payload.get('handoff_ready_summary', '')}`",
+            f"- One-click ready check: `{(payload.get('handoff_preflight') or {}).get('cmd', '')}`",
+            f"- Quality summary CSV: `{payload.get('quality_summary_csv', '')}`",
+            f"- Dependency summary CSV: `{payload.get('dependency_summary_csv', '')}`",
+            f"- Pack-and-Go report: `{payload.get('solidworks_pack_and_go') or ''}`",
+            f"- Pack-and-Go summary CSV: `{payload.get('solidworks_pack_and_go_summary') or ''}`",
+            "- Root launchers are available as `open_10door_in_solidworks.cmd`, `open_12door_in_solidworks.cmd`, and `open_14door_in_solidworks.cmd`.",
+            "- The launchers start the SolidWorks main window first, try API open on the native enriched `.SLDASM`, and fall back to selecting the native assembly in Explorer.",
             "",
             "## Software verification",
             "",
-        "- Native SolidWorks enriched assemblies, STEP exports, and FCStd/STEP quality gates are available for this bundle.",
-        "- Native validation covers door left/right placement, right-door 180 degree rotation, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.",
-        "- This is a native engineering-reference package, not a true independent Pack-and-Go release yet.",
-        f"- SolidWorks open verification: `{solidworks_open_verification or ''}`",
+            "- Native SolidWorks enriched assemblies, STEP exports, Pack-and-Go folders, and FCStd/STEP quality gates are available for this bundle.",
+            "- Native validation covers door left/right placement, right-door 180 degree rotation, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.",
+            "- Native folders are workstation references; `solidworks_pack_and_go` folders are the safer transfer packages.",
+            f"- SolidWorks open verification: `{solidworks_open_verification or ''}`",
             f"- Native SolidWorks open verification: `{payload.get('solidworks_native_open_verification') or ''}`",
             "",
             "## Use rules",
             "",
             "- Prefer the native enriched `.SLDASM` files for SolidWorks engineering review on this workstation.",
-            "- Keep the listed source dependency paths available until true Pack-and-Go is implemented.",
+            "- Prefer each door folder's `solidworks_pack_and_go` package when moving models to another SolidWorks workstation.",
+            "- Keep the listed source dependency paths available when using the non-packaged native SLDASM launchers.",
             "- Use `.stp` files when a neutral exchange file is required.",
             "- Use `.FCStd` as FreeCAD reference after confirming the FCStd integrity status is PASS.",
             "- Do not treat these files as production drawings or released BOM/DXF.",
-        "",
+            "",
         ]
     )
     if pending_fcstd:
@@ -1412,6 +1448,8 @@ def build_notes(variants: list[dict[str, Any]]) -> list[str]:
         notes.append("SolidWorks visual-open automation is tracked separately; see the SolidWorks open verification report.")
     if SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH.exists():
         notes.append("Native SolidWorks 10/12/14 enriched SLDASM open smoke passed; see the native open verification report.")
+    if SOLIDWORKS_PACK_AND_GO_PATH.exists():
+        notes.append("SolidWorks Pack-and-Go packages are available for moving 10/12/14 references to another workstation.")
     return notes
 
 
@@ -1451,6 +1489,10 @@ def build_payload() -> dict[str, Any]:
         else None,
         "solidworks_native_open_verification": str(SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH)
         if SOLIDWORKS_NATIVE_OPEN_VERIFICATION_PATH.exists()
+        else None,
+        "solidworks_pack_and_go": str(SOLIDWORKS_PACK_AND_GO_PATH) if SOLIDWORKS_PACK_AND_GO_PATH.exists() else None,
+        "solidworks_pack_and_go_summary": str(SOLIDWORKS_PACK_AND_GO_SUMMARY_PATH)
+        if SOLIDWORKS_PACK_AND_GO_SUMMARY_PATH.exists()
         else None,
     }
     payload["root_launchers"] = write_root_launchers(payload)
