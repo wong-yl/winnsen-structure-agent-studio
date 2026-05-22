@@ -436,8 +436,9 @@ def audit_variant(doors: int) -> dict[str, Any]:
     add_check(checks, "ordinary_door_count", len(door_rows) == doors, len(door_rows), doors)
     add_check(checks, "left_column_door_count", len(left_doors) == rows_per_column, len(left_doors), rows_per_column)
     add_check(checks, "right_column_door_count", len(right_doors) == rows_per_column, len(right_doors), rows_per_column)
+    bbox_pair_delta = max_pair_y_delta(left_doors, right_doors)
     placement_pair_delta = max_placement_y_delta(left_placements, right_placements)
-    pair_delta = placement_pair_delta if placement_pair_delta is not None else max_pair_y_delta(left_doors, right_doors)
+    pair_delta = bbox_pair_delta if bbox_pair_delta is not None else placement_pair_delta
     add_check(
         checks,
         "door_array_placement_evidence",
@@ -481,7 +482,7 @@ def audit_variant(doors: int) -> dict[str, Any]:
         isinstance(pair_delta, float) and pair_delta <= TOL_PAIR_MM,
         rounded(pair_delta),
         f"<= {TOL_PAIR_MM}mm",
-        detail="checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric",
+        detail="checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row",
     )
 
     placement_y_values = placement_visual_y_values(all_placements, door_height)
@@ -604,6 +605,8 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "door_array_transform_summary": transform_summary,
         "left_column_x_error": rounded(left_x_error),
         "right_column_x_error": rounded(right_x_error),
+        "left_right_door_bbox_y_delta": rounded(bbox_pair_delta),
+        "left_right_door_placement_y_delta": rounded(placement_pair_delta),
         "left_column_pitch": left_pitch,
         "right_column_pitch": right_pitch,
         "door_weld_count": door_weld_count,

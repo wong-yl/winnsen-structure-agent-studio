@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T16:22:18+08:00",
+  "generated_at": "2026-05-23T00:04:51+08:00",
   "product_family": "16029",
   "purpose": "Verified rule packet for same-outer-size 16029 locker door-count generation.",
   "scope": "1000W x 1917H x 550D; currently verified for 10/12/14 doors only.",
@@ -62,7 +62,7 @@
       },
       "placement_rule": {
         "left_and_right_columns_must_have_equal_row_count": true,
-        "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+        "right_column_mirror_rule": "right door column must use 180deg Z rotation plus source-origin Y compensation, not a copied left-door orientation",
         "right_column_rotation_matrix": [
           [
             -1,
@@ -80,6 +80,8 @@
             1
           ]
         ],
+        "right_column_mirror_y_compensation_mm": -51.7,
+        "left_right_exported_door_bbox_y_delta_max_mm": 0.1,
         "door_pitch_drives_shelf_and_crossbar_pitch": true,
         "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
         "lock_hinge_and_hook_count_formula": "door_count"
@@ -102,6 +104,9 @@
         "left_column_door_count": 5,
         "right_column_door_count": 5,
         "right_column_rotation_ok": "yes",
+        "left_right_y_alignment_ok": "yes",
+        "left_right_door_bbox_y_delta": 0.0,
+        "left_right_door_placement_y_delta": 0.0,
         "shelf_count": 8,
         "crossbar_count": 8
       },
@@ -129,6 +134,7 @@
         "handoff_native_validation_ok must be yes",
         "dependency_missing_count must be 0",
         "right_column_rotation_ok must be yes",
+        "left_right_y_alignment_ok must be yes and left_right_door_bbox_y_delta must be <= 0.1",
         "reported_door_count, lock, hinge and hook counts must equal door_count",
         "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
         "Pack-and-Go ok must be True and external_top_reference_count must be 0"
@@ -165,7 +171,7 @@
       },
       "placement_rule": {
         "left_and_right_columns_must_have_equal_row_count": true,
-        "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+        "right_column_mirror_rule": "right door column must use 180deg Z rotation plus source-origin Y compensation, not a copied left-door orientation",
         "right_column_rotation_matrix": [
           [
             -1,
@@ -183,6 +189,8 @@
             1
           ]
         ],
+        "right_column_mirror_y_compensation_mm": -51.7,
+        "left_right_exported_door_bbox_y_delta_max_mm": 0.1,
         "door_pitch_drives_shelf_and_crossbar_pitch": true,
         "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
         "lock_hinge_and_hook_count_formula": "door_count"
@@ -205,6 +213,9 @@
         "left_column_door_count": 6,
         "right_column_door_count": 6,
         "right_column_rotation_ok": "yes",
+        "left_right_y_alignment_ok": "yes",
+        "left_right_door_bbox_y_delta": 0.0,
+        "left_right_door_placement_y_delta": 51.7,
         "shelf_count": 10,
         "crossbar_count": 10
       },
@@ -232,6 +243,7 @@
         "handoff_native_validation_ok must be yes",
         "dependency_missing_count must be 0",
         "right_column_rotation_ok must be yes",
+        "left_right_y_alignment_ok must be yes and left_right_door_bbox_y_delta must be <= 0.1",
         "reported_door_count, lock, hinge and hook counts must equal door_count",
         "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
         "Pack-and-Go ok must be True and external_top_reference_count must be 0"
@@ -268,7 +280,7 @@
       },
       "placement_rule": {
         "left_and_right_columns_must_have_equal_row_count": true,
-        "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+        "right_column_mirror_rule": "right door column must use 180deg Z rotation plus source-origin Y compensation, not a copied left-door orientation",
         "right_column_rotation_matrix": [
           [
             -1,
@@ -286,6 +298,8 @@
             1
           ]
         ],
+        "right_column_mirror_y_compensation_mm": -51.7,
+        "left_right_exported_door_bbox_y_delta_max_mm": 0.1,
         "door_pitch_drives_shelf_and_crossbar_pitch": true,
         "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
         "lock_hinge_and_hook_count_formula": "door_count"
@@ -308,6 +322,9 @@
         "left_column_door_count": 7,
         "right_column_door_count": 7,
         "right_column_rotation_ok": "yes",
+        "left_right_y_alignment_ok": "yes",
+        "left_right_door_bbox_y_delta": 0.0,
+        "left_right_door_placement_y_delta": 0.0,
         "shelf_count": 12,
         "crossbar_count": 12
       },
@@ -335,6 +352,7 @@
         "handoff_native_validation_ok must be yes",
         "dependency_missing_count must be 0",
         "right_column_rotation_ok must be yes",
+        "left_right_y_alignment_ok must be yes and left_right_door_bbox_y_delta must be <= 0.1",
         "reported_door_count, lock, hinge and hook counts must equal door_count",
         "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
         "Pack-and-Go ok must be True and external_top_reference_count must be 0"

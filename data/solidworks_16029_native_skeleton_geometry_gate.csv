@@ -15,7 +15,7 @@
 10,PASS,left_column_x_position,True,error,0.0,"""-258.5mm +/- 0.1mm""",
 10,PASS,right_column_x_position,True,error,0.0,"""258.5mm +/- 0.1mm""",
 10,PASS,right_column_standard_rotation,True,error,"[[-1, 0, 0, 0, -1, 0, 0, 0, 1], [-1, 0, 0, 0, -1, 0, 0, 0, 1]]","""right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]""",
-10,PASS,left_right_door_y_alignment,True,error,0.0,"""<= 0.1mm""",checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric
+10,PASS,left_right_door_y_alignment,True,error,0.0,"""<= 0.1mm""",checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row
 10,PASS,door_array_bottom_in_range,True,error,32.0,""">= -25.0mm""",
 10,PASS,door_array_top_in_range,True,error,1855.0,"""<= 1857.0mm""",
 10,PASS,left_column_pitch,True,error,"{""values"": [366.0, 366.0, 366.0, 366.0], ""max_error"": 0.0}",366.0,
@@ -47,8 +47,8 @@
 12,PASS,left_column_x_position,True,error,0.0,"""-258.5mm +/- 0.1mm""",
 12,PASS,right_column_x_position,True,error,0.0,"""258.5mm +/- 0.1mm""",
 12,PASS,right_column_standard_rotation,True,error,"[[-1, 0, 0, 0, -1, 0, 0, 0, 1], [-1, 0, 0, 0, -1, 0, 0, 0, 1]]","""right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]""",
-12,PASS,left_right_door_y_alignment,True,error,0.0,"""<= 0.1mm""",checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric
-12,PASS,door_array_bottom_in_range,True,error,32.0,""">= -25.0mm""",
+12,PASS,left_right_door_y_alignment,True,error,0.0,"""<= 0.1mm""",checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row
+12,PASS,door_array_bottom_in_range,True,error,-19.7,""">= -25.0mm""",
 12,PASS,door_array_top_in_range,True,error,1855.0,"""<= 1857.0mm""",
 12,PASS,left_column_pitch,True,error,"{""values"": [305.0, 305.0, 305.0, 305.0, 305.0], ""max_error"": 0.0}",305.0,
 12,PASS,right_column_pitch,True,error,"{""values"": [305.0, 305.0, 305.0, 305.0, 305.0], ""max_error"": 0.0}",305.0,
@@ -79,7 +79,7 @@
 14,PASS,left_column_x_position,True,error,0.0,"""-258.5mm +/- 0.1mm""",
 14,PASS,right_column_x_position,True,error,0.0,"""258.5mm +/- 0.1mm""",
 14,PASS,right_column_standard_rotation,True,error,"[[-1, 0, 0, 0, -1, 0, 0, 0, 1], [-1, 0, 0, 0, -1, 0, 0, 0, 1]]","""right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]""",
-14,PASS,left_right_door_y_alignment,True,error,0.0,"""<= 0.1mm""",checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric
+14,PASS,left_right_door_y_alignment,True,error,0.0,"""<= 0.1mm""",checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row
 14,PASS,door_array_bottom_in_range,True,error,32.0,""">= -25.0mm""",
 14,PASS,door_array_top_in_range,True,error,1855.003,"""<= 1857.0mm""",
 14,PASS,left_column_pitch,True,error,"{""values"": [261.429, 261.429, 261.429, 261.429, 261.429, 261.429], ""max_error"": 0.0}",261.429,

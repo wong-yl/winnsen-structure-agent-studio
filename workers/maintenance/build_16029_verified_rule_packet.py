@@ -60,6 +60,7 @@ CABINET_RULES = {
 }
 
 RIGHT_COLUMN_ROTATION_Z_180 = [[-1, 0, 0], [0, -1, 0], [0, 0, 1]]
+RIGHT_COLUMN_MIRROR_Y_COMPENSATION_MM = -51.7
 
 
 def now_local_iso() -> str:
@@ -173,8 +174,10 @@ def build_verified_variant(
         "component_count_rule": counts,
         "placement_rule": {
             "left_and_right_columns_must_have_equal_row_count": True,
-            "right_column_mirror_rule": "right door column must use the 180deg Z rotation evidence, not a copied left-door orientation",
+            "right_column_mirror_rule": "right door column must use 180deg Z rotation plus source-origin Y compensation, not a copied left-door orientation",
             "right_column_rotation_matrix": RIGHT_COLUMN_ROTATION_Z_180,
+            "right_column_mirror_y_compensation_mm": RIGHT_COLUMN_MIRROR_Y_COMPENSATION_MM,
+            "left_right_exported_door_bbox_y_delta_max_mm": 0.1,
             "door_pitch_drives_shelf_and_crossbar_pitch": True,
             "shelf_and_crossbar_count_formula": "(rows_per_column - 1) * 2",
             "lock_hinge_and_hook_count_formula": "door_count",
@@ -197,6 +200,9 @@ def build_verified_variant(
             "left_column_door_count": as_int(quality_row.get("left_column_door_count")),
             "right_column_door_count": as_int(quality_row.get("right_column_door_count")),
             "right_column_rotation_ok": quality_row.get("right_column_rotation_ok"),
+            "left_right_y_alignment_ok": quality_row.get("left_right_y_alignment_ok"),
+            "left_right_door_bbox_y_delta": as_float(quality_row.get("left_right_door_bbox_y_delta")),
+            "left_right_door_placement_y_delta": as_float(quality_row.get("left_right_door_placement_y_delta")),
             "shelf_count": as_int(quality_row.get("shelf_count")),
             "crossbar_count": as_int(quality_row.get("crossbar_count")),
         },
@@ -224,6 +230,7 @@ def build_verified_variant(
             "handoff_native_validation_ok must be yes",
             "dependency_missing_count must be 0",
             "right_column_rotation_ok must be yes",
+            "left_right_y_alignment_ok must be yes and left_right_door_bbox_y_delta must be <= 0.1",
             "reported_door_count, lock, hinge and hook counts must equal door_count",
             "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
             "Pack-and-Go ok must be True and external_top_reference_count must be 0",
@@ -259,6 +266,10 @@ def validate_payload(payload: dict[str, Any]) -> list[str]:
             problems.append(f"{door_count}door has missing dependencies")
         if measured["right_column_rotation_ok"] != "yes":
             problems.append(f"{door_count}door right column mirror/rotation is not verified")
+        if measured["left_right_y_alignment_ok"] != "yes":
+            problems.append(f"{door_count}door left/right exported door bbox Y alignment is not verified")
+        if measured["left_right_door_bbox_y_delta"] > 0.1:
+            problems.append(f"{door_count}door left/right exported door bbox Y delta is over 0.1mm")
         if measured["reported_door_count"] != door_count:
             problems.append(f"{door_count}door measured door count mismatch")
         if measured["left_column_door_count"] != layout["rows_per_column"]:
@@ -359,6 +370,9 @@ def write_csv(payload: dict[str, Any]) -> None:
                 "lock_hook_pads": counts["lock_hook_pads"],
                 "electric_lock_hooks": counts["electric_lock_hooks"],
                 "right_column_rotation_ok": measured["right_column_rotation_ok"],
+                "left_right_y_alignment_ok": measured["left_right_y_alignment_ok"],
+                "left_right_door_bbox_y_delta": measured["left_right_door_bbox_y_delta"],
+                "left_right_door_placement_y_delta": measured["left_right_door_placement_y_delta"],
                 "native_skeleton_status": measured["native_skeleton_status"],
                 "native_failed_errors": measured["native_skeleton_failed_error_count"],
                 "handoff_native_validation_ok": measured["handoff_native_validation_ok"],
@@ -414,7 +428,7 @@ def write_markdown(payload: dict[str, Any]) -> None:
                     str(counts["shelves"]),
                     str(counts["front_frame_crossbars"]),
                     str(counts["electric_lock_hooks"]),
-                    measured["right_column_rotation_ok"] or "",
+                    f"{measured['right_column_rotation_ok'] or ''}; bbox_d={measured['left_right_door_bbox_y_delta']}mm",
                     pack["ok"] or "",
                     str(pack["external_top_reference_count"]),
                 ]
@@ -431,7 +445,7 @@ def write_markdown(payload: dict[str, Any]) -> None:
             "- `door_pitch = door_height + 7`，层板和门框横隔板必须跟随同一 pitch。",
             "- 层板数和门框横隔板数必须等于 `(rows_per_column - 1) * 2`。",
             "- 门模块、门板特征、合页销、锁钩垫、电控 U 型锁钩数量必须等于 `door_count`。",
-            "- 右侧门列必须使用 180deg Z 旋转镜像规则，不能把左门同向复制到右侧。",
+            "- 右侧门列必须使用 180deg Z 旋转 + source-origin Y compensation，且左右门导出 bbox Y delta <= 0.1mm。",
             "- Pack-and-Go 交接包必须外部顶层引用为 0 才能交给工程师。",
             "",
             "## 暂不放开的公式候选",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T09:28:42+08:00",
+  "generated_at": "2026-05-22T23:22:43+08:00",
   "status": "PASS",
   "source_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521",
   "target_door_counts": [
@@ -194,7 +194,7 @@
           "actual": 0.0,
           "expected": "<= 0.1mm",
           "severity": "error",
-          "detail": "checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric"
+          "detail": "checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row"
         },
         {
           "name": "door_array_bottom_in_range",
@@ -409,6 +409,8 @@
         },
         "left_column_x_error": 0.0,
         "right_column_x_error": 0.0,
+        "left_right_door_bbox_y_delta": 0.0,
+        "left_right_door_placement_y_delta": 0.0,
         "left_column_pitch": {
           "values": [
             366.0,
@@ -674,12 +676,12 @@
           "actual": 0.0,
           "expected": "<= 0.1mm",
           "severity": "error",
-          "detail": "checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric"
+          "detail": "checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row"
         },
         {
           "name": "door_array_bottom_in_range",
           "ok": true,
-          "actual": 32.0,
+          "actual": -19.7,
           "expected": ">= -25.0mm",
           "severity": "error",
           "detail": ""
@@ -901,6 +903,8 @@
         },
         "left_column_x_error": 0.0,
         "right_column_x_error": 0.0,
+        "left_right_door_bbox_y_delta": 0.0,
+        "left_right_door_placement_y_delta": 51.7,
         "left_column_pitch": {
           "values": [
             305.0,
@@ -1178,7 +1182,7 @@
           "actual": 0.0,
           "expected": "<= 0.1mm",
           "severity": "error",
-          "detail": "checked against SolidWorks placement Ty because mirrored door hardware makes whole-assembly bbox asymmetric"
+          "detail": "checked against exported top-level door bboxes so right-column mirror compensation cannot hide a dropped door row"
         },
         {
           "name": "door_array_bottom_in_range",
@@ -1417,6 +1421,8 @@
         },
         "left_column_x_error": 0.0,
         "right_column_x_error": 0.0,
+        "left_right_door_bbox_y_delta": 0.0,
+        "left_right_door_placement_y_delta": 0.0,
         "left_column_pitch": {
           "values": [
             261.429,

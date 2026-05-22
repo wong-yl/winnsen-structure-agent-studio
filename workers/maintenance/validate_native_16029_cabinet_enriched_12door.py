@@ -24,6 +24,7 @@ from validate_native_16029_cabinet_skeleton_geometry import (
     is_crossbar,
     is_door_module_row,
     load_door_array_result,
+    max_pair_y_delta,
     placement_column_rows,
     placement_pitch_deltas,
     placement_transform_summary,
@@ -325,11 +326,13 @@ def build_payload() -> dict[str, Any]:
     right_pitch = placement_pitch_deltas(right_placements, expected_pitch)
     left_pitch_error = left_pitch.get("max_error")
     right_pitch_error = right_pitch.get("max_error")
+    bbox_pair_delta = max_pair_y_delta(left_doors, right_doors)
     placement_pair_delta = (
         max(abs(float(left["tyMm"]) - float(right["tyMm"])) for left, right in zip(left_placements, right_placements))
         if len(left_placements) == len(right_placements) and left_placements
         else None
     )
+    pair_delta = bbox_pair_delta if bbox_pair_delta is not None else placement_pair_delta
 
     add_check(checks, "embedded_ordinary_door_count", len(door_rows) == DOOR_COUNT, len(door_rows), DOOR_COUNT)
     add_check(checks, "embedded_left_column_door_count", len(left_doors) == rows_per_column, len(left_doors), rows_per_column)
@@ -365,8 +368,8 @@ def build_payload() -> dict[str, Any]:
     add_check(
         checks,
         "embedded_left_right_door_y_alignment",
-        isinstance(placement_pair_delta, (int, float)) and float(placement_pair_delta) <= TOL_PAIR_MM,
-        rounded(placement_pair_delta),
+        isinstance(pair_delta, (int, float)) and float(pair_delta) <= TOL_PAIR_MM,
+        rounded(pair_delta),
         f"<= {TOL_PAIR_MM}mm",
     )
     add_check(
@@ -484,6 +487,8 @@ def build_payload() -> dict[str, Any]:
             "door_array_transform_summary": transform_summary,
             "left_column_pitch": left_pitch,
             "right_column_pitch": right_pitch,
+            "left_right_door_bbox_y_delta": rounded(bbox_pair_delta),
+            "left_right_door_placement_y_delta": rounded(placement_pair_delta),
             "door_weld_count": door_weld_count,
             "door_panel_feature_count": door_panel_count,
             "hinge_pin_count": hinge_pin_count,

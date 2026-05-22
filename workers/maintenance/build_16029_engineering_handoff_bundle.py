@@ -27,6 +27,12 @@ HANDOFF_MANIFEST_PATH = Path(
 HANDOFF_MARKDOWN_PATH = Path(
     os.getenv("STUDIO_16029_ENGINEERING_HANDOFF_MD", ROOT_DIR / "data" / "locker_16029_engineering_handoff_bundle.md")
 )
+VERIFIED_RULE_PACKET_JSON_PATH = Path(
+    os.getenv("STUDIO_16029_VERIFIED_RULE_PACKET_JSON", ROOT_DIR / "data" / "locker_16029_verified_rule_packet.json")
+)
+VERIFIED_RULE_PACKET_CSV_PATH = Path(
+    os.getenv("STUDIO_16029_VERIFIED_RULE_PACKET_CSV", ROOT_DIR / "data" / "locker_16029_verified_rule_packet.csv")
+)
 SOLIDWORKS_SHORTCUT = Path(os.getenv("STUDIO_SOLIDWORKS_SHORTCUT", r"C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk"))
 SOLIDWORKS_EXE = Path(
     os.getenv("STUDIO_SOLIDWORKS_EXE", r"D:\软件安装录\soildworks\SOLIDWORKS\SLDWORKS.exe")
@@ -430,6 +436,13 @@ def _check_status(checks: list[dict[str, Any]], name: str) -> bool | None:
     return None
 
 
+def _check_actual(checks: list[dict[str, Any]], name: str) -> Any:
+    for check in checks:
+        if check.get("name") == name:
+            return check.get("actual")
+    return None
+
+
 def _pitch_value(summary: Any) -> float | None:
     if not isinstance(summary, dict):
         return None
@@ -461,6 +474,9 @@ def read_native_validation_summary(validation_json_path: Path, door_count: int) 
     right_pitch = embedded.get("right_column_pitch") or {}
     shelf_pitch = embedded.get("shelf_pitch") or {}
     crossbar_pitch = embedded.get("crossbar_pitch") or {}
+    left_right_bbox_delta = embedded.get("left_right_door_bbox_y_delta")
+    if left_right_bbox_delta is None:
+        left_right_bbox_delta = _check_actual(checks, "embedded_left_right_door_y_alignment")
     bbox = data.get("combined_bbox_mm") or {}
     expected_per_column = int(door_count / 2)
 
@@ -491,6 +507,8 @@ def read_native_validation_summary(validation_json_path: Path, door_count: int) 
         "right_column_pitch_max_error": right_pitch.get("max_error") if isinstance(right_pitch, dict) else None,
         "right_column_rotation_ok": _check_status(checks, "embedded_right_column_standard_rotation"),
         "left_right_y_alignment_ok": _check_status(checks, "embedded_left_right_door_y_alignment"),
+        "left_right_door_bbox_y_delta": left_right_bbox_delta,
+        "left_right_door_placement_y_delta": embedded.get("left_right_door_placement_y_delta"),
         "door_weld_count": embedded.get("door_weld_count"),
         "door_panel_feature_count": embedded.get("door_panel_feature_count"),
         "hinge_pin_count": embedded.get("hinge_pin_count"),
@@ -729,6 +747,9 @@ Output level: engineering reference, not released production drawing.
             "native_left_column_door_count": native_reference["validation_summary"].get("left_column_door_count"),
             "native_right_column_door_count": native_reference["validation_summary"].get("right_column_door_count"),
             "native_right_column_rotation_ok": native_reference["validation_summary"].get("right_column_rotation_ok"),
+            "native_left_right_y_alignment_ok": native_reference["validation_summary"].get("left_right_y_alignment_ok"),
+            "native_left_right_door_bbox_y_delta": native_reference["validation_summary"].get("left_right_door_bbox_y_delta"),
+            "native_left_right_door_placement_y_delta": native_reference["validation_summary"].get("left_right_door_placement_y_delta"),
             "native_door_weld_count": native_reference["validation_summary"].get("door_weld_count"),
             "native_door_panel_feature_count": native_reference["validation_summary"].get("door_panel_feature_count"),
             "native_hinge_pin_count": native_reference["validation_summary"].get("hinge_pin_count"),
@@ -771,6 +792,9 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                 "native_left_column_door_count",
                 "native_right_column_door_count",
                 "native_right_column_rotation_ok",
+                "native_left_right_y_alignment_ok",
+                "native_left_right_door_bbox_y_delta",
+                "native_left_right_door_placement_y_delta",
                 "native_door_weld_count",
                 "native_door_panel_feature_count",
                 "native_hinge_pin_count",
@@ -810,6 +834,9 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                     "native_left_column_door_count": metrics.get("native_left_column_door_count"),
                     "native_right_column_door_count": metrics.get("native_right_column_door_count"),
                     "native_right_column_rotation_ok": "yes" if metrics.get("native_right_column_rotation_ok") else "no",
+                    "native_left_right_y_alignment_ok": "yes" if metrics.get("native_left_right_y_alignment_ok") else "no",
+                    "native_left_right_door_bbox_y_delta": metrics.get("native_left_right_door_bbox_y_delta"),
+                    "native_left_right_door_placement_y_delta": metrics.get("native_left_right_door_placement_y_delta"),
                     "native_door_weld_count": metrics.get("native_door_weld_count"),
                     "native_door_panel_feature_count": metrics.get("native_door_panel_feature_count"),
                     "native_hinge_pin_count": metrics.get("native_hinge_pin_count"),
@@ -908,6 +935,9 @@ def write_quality_summary_csv(payload: dict[str, Any]) -> str:
         "left_column_door_count",
         "right_column_door_count",
         "right_column_rotation_ok",
+        "left_right_y_alignment_ok",
+        "left_right_door_bbox_y_delta",
+        "left_right_door_placement_y_delta",
         "door_weld_count",
         "door_panel_feature_count",
         "hinge_pin_count",
@@ -943,6 +973,9 @@ def write_quality_summary_csv(payload: dict[str, Any]) -> str:
                     "left_column_door_count": validation.get("left_column_door_count"),
                     "right_column_door_count": validation.get("right_column_door_count"),
                     "right_column_rotation_ok": yes_no(validation.get("right_column_rotation_ok")),
+                    "left_right_y_alignment_ok": yes_no(validation.get("left_right_y_alignment_ok")),
+                    "left_right_door_bbox_y_delta": validation.get("left_right_door_bbox_y_delta"),
+                    "left_right_door_placement_y_delta": validation.get("left_right_door_placement_y_delta"),
                     "door_weld_count": validation.get("door_weld_count"),
                     "door_panel_feature_count": validation.get("door_panel_feature_count"),
                     "hinge_pin_count": validation.get("hinge_pin_count"),
@@ -1000,6 +1033,8 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
         )
         shelf_text = f"shelf {validation.get('shelf_count')}; crossbar {validation.get('crossbar_count')}"
         bbox_text = f"{validation.get('bbox_x_mm')}/{validation.get('bbox_z_mm')} mm"
+        mirror_ok = bool(validation.get("right_column_rotation_ok")) and bool(validation.get("left_right_y_alignment_ok"))
+        mirror_text = f"{'PASS' if mirror_ok else 'FAIL'} bbox_d={validation.get('left_right_door_bbox_y_delta')}mm"
         lines.append(
             "| "
             + " | ".join(
@@ -1009,7 +1044,7 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
                     dep_text,
                     validation_text,
                     door_text,
-                    "PASS" if validation.get("right_column_rotation_ok") else "FAIL",
+                    mirror_text,
                     hardware_text,
                     shelf_text,
                     bbox_text,
@@ -1047,11 +1082,15 @@ def write_handoff_ready_preflight(payload: dict[str, Any]) -> dict[str, str]:
         if payload.get("solidworks_pack_and_go_independence_summary")
         else None
     )
+    verified_rule_packet_json = VERIFIED_RULE_PACKET_JSON_PATH
+    verified_rule_packet_csv = VERIFIED_RULE_PACKET_CSV_PATH
     script = f"""$ErrorActionPreference = 'Stop'
 $dependencyCsv = {ps_single_quote(str(dependency_csv))}
 $qualityCsv = {ps_single_quote(str(quality_csv))}
 $packAndGoCsv = {ps_single_quote(str(pack_and_go_csv or ""))}
 $packAndGoIndependenceCsv = {ps_single_quote(str(pack_and_go_independence_csv or ""))}
+$verifiedRulePacketJson = {ps_single_quote(str(verified_rule_packet_json))}
+$verifiedRulePacketCsv = {ps_single_quote(str(verified_rule_packet_csv))}
 $statusPath = {ps_single_quote(str(status_path))}
 
 $lines = @()
@@ -1113,8 +1152,39 @@ if ($packAndGoIndependenceCsv) {{
     }})
   }}
 }}
+$verifiedRuleRows = @()
+$verifiedRuleFailures = @()
+if (-not (Test-Path -LiteralPath $verifiedRulePacketJson)) {{
+  $verifiedRuleFailures = @([pscustomobject]@{{door_count='all'; problem='verified rule packet JSON missing'}})
+}} elseif (-not (Test-Path -LiteralPath $verifiedRulePacketCsv)) {{
+  $verifiedRuleFailures = @([pscustomobject]@{{door_count='all'; problem='verified rule packet CSV missing'}})
+}} else {{
+  $verifiedRulePacket = Get-Content -LiteralPath $verifiedRulePacketJson -Raw -Encoding UTF8 | ConvertFrom-Json
+  if ($verifiedRulePacket.status -ne 'PASS') {{
+    $verifiedRuleFailures += [pscustomobject]@{{door_count='all'; problem="verified rule packet status is $($verifiedRulePacket.status)"}}
+  }}
+  $verifiedRuleRows = @(Import-Csv -LiteralPath $verifiedRulePacketCsv)
+  if ($verifiedRuleRows.Count -ne 3) {{
+    $verifiedRuleFailures += [pscustomobject]@{{door_count='all'; problem="verified rule row count is $($verifiedRuleRows.Count), expected 3"}}
+  }}
+  $verifiedRuleFailures += @($verifiedRuleRows | Where-Object {{
+    $_.enabled_for_engineering_handoff -ne 'True' -or
+    $_.right_column_rotation_ok -ne 'yes' -or
+    $_.left_right_y_alignment_ok -ne 'yes' -or
+    [double]$_.left_right_door_bbox_y_delta -gt 0.1 -or
+    $_.native_skeleton_status -ne 'PASS' -or
+    [int]$_.native_failed_errors -ne 0 -or
+    $_.handoff_native_validation_ok -ne 'yes' -or
+    [int]$_.dependency_missing_count -ne 0 -or
+    $_.pack_and_go_ok -ne 'True' -or
+    [int]$_.external_top_reference_count -ne 0 -or
+    [int]$_.missing_top_reference_path_count -ne 0
+  }} | ForEach-Object {{
+    [pscustomobject]@{{door_count=$_.door_count; problem='verified rule gate failed'}}
+  }})
+}}
 
-if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0 -or $independenceFailures.Count -gt 0) {{
+if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packAndGoFailures.Count -gt 0 -or $independenceFailures.Count -gt 0 -or $verifiedRuleFailures.Count -gt 0) {{
   $lines += "FAIL: handoff is not ready."
   $lines += "Missing dependencies: $($missingDependencies.Count)"
   foreach ($row in $missingDependencies) {{
@@ -1131,6 +1201,10 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packA
   $lines += "Pack-and-Go independence failures: $($independenceFailures.Count)"
   foreach ($row in $independenceFailures) {{
     $lines += ("  {{0}}door | ok={{1}} | external_refs={{2}} | empty_paths={{3}}" -f $row.door, $row.ok, $row.external_top_reference_count, $row.missing_top_reference_path_count)
+  }}
+  $lines += "Verified rule packet failures: $($verifiedRuleFailures.Count)"
+  foreach ($row in $verifiedRuleFailures) {{
+    $lines += ("  {{0}}door | {{1}}" -f $row.door_count, $row.problem)
   }}
   Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
   exit 1
@@ -1151,6 +1225,12 @@ if ($independenceRows.Count -gt 0) {{
   $lines += "Pack-and-Go independence:"
   foreach ($row in $independenceRows) {{
     $lines += ("  {{0}}door | top_refs={{1}} | external_refs={{2}} | empty_paths={{3}} | cad_files={{4}}" -f $row.door, $row.top_reference_count, $row.external_top_reference_count, $row.missing_top_reference_path_count, $row.package_cad_file_count)
+  }}
+}}
+if ($verifiedRuleRows.Count -gt 0) {{
+  $lines += "Verified rule packet:"
+  foreach ($row in $verifiedRuleRows) {{
+    $lines += ("  {{0}}door | rows={{1}} | door_h={{2}} | pitch={{3}} | shelves={{4}} | crossbars={{5}} | mirror={{6}} | bbox_d={{7}}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_rotation_ok, $row.left_right_door_bbox_y_delta)
   }}
 }}
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8

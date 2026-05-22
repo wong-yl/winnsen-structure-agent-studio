@@ -10,6 +10,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 {
     internal static class BuildDoorArrayModule
     {
+        private const double RightColumnMirrorYCompensationMm = -51.7;
+
         [STAThread]
         private static int Main(string[] args)
         {
@@ -32,6 +34,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 DoorCount = doorCount,
                 DoorHeightMm = doorHeight,
                 BottomPanelYMinMm = bottomPanelYMin,
+                RightColumnMirrorYCompensationMm = RightColumnMirrorYCompensationMm,
             };
 
             try
@@ -82,8 +85,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     for (int row = 1; row <= rowsPerColumn; row++)
                     {
                         double panelCenterY = bottomPanelYMin + doorHeight / 2.0 + (row - 1) * pitch;
+                        double compensatedCenterY = panelCenterY + (c == 0 ? 0.0 : RightColumnMirrorYCompensationMm);
                         string role = "ordinary_door_" + columnNames[c] + row.ToString("00", System.Globalization.CultureInfo.InvariantCulture);
-                        var p = new Placement(role, ordinaryDoorAsm, c == 0 ? Identity() : RotateZ180(), columns[c], panelCenterY, 0);
+                        var p = new Placement(role, ordinaryDoorAsm, c == 0 ? Identity() : RotateZ180(), columns[c], compensatedCenterY, 0);
                         result.Placements.Add(Add(sw, model, asm, math, p));
                     }
                 }
@@ -249,6 +253,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "doorHeightMm", r.DoorHeightMm);
             Prop(sb, "pitchMm", r.PitchMm);
             Prop(sb, "bottomPanelYMinMm", r.BottomPanelYMinMm);
+            Prop(sb, "rightColumnMirrorYCompensationMm", r.RightColumnMirrorYCompensationMm);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
             Prop(sb, "saved", r.Saved);
@@ -349,6 +354,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public double DoorHeightMm;
             public double PitchMm;
             public double BottomPanelYMinMm;
+            public double RightColumnMirrorYCompensationMm;
             public bool NewAssembly;
             public bool Rebuilt;
             public bool Saved;

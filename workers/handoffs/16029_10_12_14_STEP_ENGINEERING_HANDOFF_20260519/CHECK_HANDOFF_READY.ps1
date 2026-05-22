@@ -84,6 +84,8 @@ if (-not (Test-Path -LiteralPath $verifiedRulePacketJson)) {
   $verifiedRuleFailures += @($verifiedRuleRows | Where-Object {
     $_.enabled_for_engineering_handoff -ne 'True' -or
     $_.right_column_rotation_ok -ne 'yes' -or
+    $_.left_right_y_alignment_ok -ne 'yes' -or
+    [double]$_.left_right_door_bbox_y_delta -gt 0.1 -or
     $_.native_skeleton_status -ne 'PASS' -or
     [int]$_.native_failed_errors -ne 0 -or
     $_.handoff_native_validation_ok -ne 'yes' -or
@@ -142,7 +144,7 @@ if ($independenceRows.Count -gt 0) {
 if ($verifiedRuleRows.Count -gt 0) {
   $lines += "Verified rule packet:"
   foreach ($row in $verifiedRuleRows) {
-    $lines += ("  {0}door | rows={1} | door_h={2} | pitch={3} | shelves={4} | crossbars={5} | right_mirror={6}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_rotation_ok)
+    $lines += ("  {0}door | rows={1} | door_h={2} | pitch={3} | shelves={4} | crossbars={5} | mirror={6} | bbox_d={7}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_rotation_ok, $row.left_right_door_bbox_y_delta)
   }
 }
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
