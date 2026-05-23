@@ -37,8 +37,10 @@ EXPECTED_DOOR_BOTTOM_MIN_Y_MM = -25.0
 EXPECTED_LEFT_DOOR_COLUMN_X_MM = -258.5
 EXPECTED_RIGHT_DOOR_COLUMN_X_MM = 258.5
 VISUAL_GAP_MM = 7.0
+SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM = 2.0
 SHELF_LABEL_TOKEN = "\u6a2a\u5c42\u677f"
 TOL_COUNT_PITCH_MM = 0.15
+TOL_BOUNDARY_OFFSET_MM = 0.15
 TOL_BBOX_MM = 0.5
 TOL_PAIR_MM = 0.1
 TOL_PLACEMENT_X_MM = 0.1
@@ -372,6 +374,86 @@ def count_ok_cluster_pairs(clusters: list[dict[str, Any]], expected_count: int) 
     return len(clusters) == expected_count and all(item.get("count") == 2 for item in clusters)
 
 
+def split_by_x_center(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    left = [row for row in rows if isinstance(row.get("x_center"), float) and row["x_center"] < 0]
+    right = [row for row in rows if isinstance(row.get("x_center"), float) and row["x_center"] > 0]
+    left.sort(key=lambda row: float(row["y_center"] or 0))
+    right.sort(key=lambda row: float(row["y_center"] or 0))
+    return left, right
+
+
+def boundary_offset_summary(
+    left_doors: list[dict[str, Any]],
+    right_doors: list[dict[str, Any]],
+    driven_rows: list[dict[str, Any]],
+    rows_per_column: int,
+    expected_offset: float = SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM,
+) -> dict[str, Any]:
+    expected_per_column = max(rows_per_column - 1, 0)
+    driven_by_column = {
+        "L": split_by_x_center(driven_rows)[0],
+        "R": split_by_x_center(driven_rows)[1],
+    }
+    doors_by_column = {"L": left_doors, "R": right_doors}
+    rows: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+
+    for column, column_doors in doors_by_column.items():
+        column_driven = driven_by_column[column]
+        if len(column_driven) != expected_per_column:
+            errors.append(
+                {
+                    "column": column,
+                    "reason": "driven row count mismatch",
+                    "actual": len(column_driven),
+                    "expected": expected_per_column,
+                }
+            )
+        if len(column_doors) != rows_per_column:
+            errors.append(
+                {
+                    "column": column,
+                    "reason": "door row count mismatch",
+                    "actual": len(column_doors),
+                    "expected": rows_per_column,
+                }
+            )
+
+        for index in range(min(expected_per_column, len(column_doors), len(column_driven))):
+            lower_door = column_doors[index]
+            driven = column_driven[index]
+            door_y_max = lower_door.get("y_max")
+            driven_center = driven.get("y_center")
+            delta = (
+                float(driven_center) - float(door_y_max)
+                if isinstance(door_y_max, float) and isinstance(driven_center, float)
+                else None
+            )
+            max_error = abs(delta - expected_offset) if isinstance(delta, float) else None
+            row = {
+                "column": column,
+                "boundary_after_row": index + 1,
+                "door_y_max": rounded(door_y_max),
+                "driven_center_y": rounded(driven_center),
+                "delta": rounded(delta),
+                "error": rounded(max_error),
+                "driven_label": row_label(driven),
+            }
+            rows.append(row)
+            if max_error is None or max_error > TOL_BOUNDARY_OFFSET_MM:
+                errors.append(row)
+
+    max_error_values = [float(row["error"]) for row in rows if isinstance(row.get("error"), (int, float))]
+    return {
+        "ok": not errors,
+        "expected_delta": expected_offset,
+        "tolerance": TOL_BOUNDARY_OFFSET_MM,
+        "max_error": rounded(max(max_error_values) if max_error_values else None),
+        "rows": rows,
+        "errors": errors,
+    }
+
+
 def audit_variant(doors: int) -> dict[str, Any]:
     rows_per_column = doors // 2
     door_height = DOOR_HEIGHT_BY_COUNT[doors]
@@ -564,6 +646,14 @@ def audit_variant(doors: int) -> dict[str, Any]:
         shelf_pitch,
         expected_pitch,
     )
+    shelf_boundary = boundary_offset_summary(left_doors, right_doors, shelf_rows, rows_per_column)
+    add_check(
+        checks,
+        "shelf_driven_from_lower_door_boundary",
+        bool(shelf_boundary.get("ok")),
+        shelf_boundary,
+        f"center_y = lower door y_max + {SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM}mm",
+    )
 
     crossbar_rows = [row for row in rows if is_crossbar(row)]
     crossbar_clusters = cluster_centers(crossbar_rows)
@@ -589,6 +679,14 @@ def audit_variant(doors: int) -> dict[str, Any]:
         isinstance(crossbar_pitch_error, (int, float)) and float(crossbar_pitch_error) <= TOL_COUNT_PITCH_MM,
         crossbar_pitch,
         expected_pitch,
+    )
+    crossbar_boundary = boundary_offset_summary(left_doors, right_doors, crossbar_rows, rows_per_column)
+    add_check(
+        checks,
+        "front_frame_crossbar_driven_from_lower_door_boundary",
+        bool(crossbar_boundary.get("ok")),
+        crossbar_boundary,
+        f"center_y = lower door y_max + {SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM}mm",
     )
 
     metrics = {
@@ -617,9 +715,11 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "shelf_count": len(shelf_rows),
         "shelf_levels": shelf_clusters,
         "shelf_pitch": shelf_pitch,
+        "shelf_boundary_offset": shelf_boundary,
         "crossbar_count": len(crossbar_rows),
         "crossbar_levels": crossbar_clusters,
         "crossbar_pitch": crossbar_pitch,
+        "crossbar_boundary_offset": crossbar_boundary,
     }
     return build_variant_payload(doors, rows_per_column, door_height, expected_pitch, bbox_payload(root), checks, metrics)
 

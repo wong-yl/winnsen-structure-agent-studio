@@ -15,6 +15,8 @@ from validate_native_16029_cabinet_skeleton_geometry import (
     TOL_PAIR_MM,
     TOL_PLACEMENT_X_MM,
     VISUAL_GAP_MM,
+    SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM,
+    boundary_offset_summary,
     center,
     cluster_centers,
     cluster_pitch_deltas,
@@ -440,6 +442,14 @@ def build_payload() -> dict[str, Any]:
         shelf_pitch,
         expected_pitch,
     )
+    shelf_boundary = boundary_offset_summary(left_doors, right_doors, shelf_rows, rows_per_column)
+    add_check(
+        checks,
+        "embedded_shelf_driven_from_lower_door_boundary",
+        bool(shelf_boundary.get("ok")),
+        shelf_boundary,
+        f"center_y = lower door y_max + {SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM}mm",
+    )
 
     crossbar_rows = [row for row in valid_rows if is_crossbar(row)]
     crossbar_clusters = cluster_centers(crossbar_rows)
@@ -465,6 +475,14 @@ def build_payload() -> dict[str, Any]:
         isinstance(crossbar_pitch_error, (int, float)) and float(crossbar_pitch_error) <= TOL_COUNT_PITCH_MM,
         crossbar_pitch,
         expected_pitch,
+    )
+    crossbar_boundary = boundary_offset_summary(left_doors, right_doors, crossbar_rows, rows_per_column)
+    add_check(
+        checks,
+        "embedded_front_frame_crossbar_driven_from_lower_door_boundary",
+        bool(crossbar_boundary.get("ok")),
+        crossbar_boundary,
+        f"center_y = lower door y_max + {SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM}mm",
     )
 
     ok = all(item["ok"] or item["severity"] != "error" for item in checks)
@@ -497,9 +515,11 @@ def build_payload() -> dict[str, Any]:
             "shelf_count": len(shelf_rows),
             "shelf_levels": shelf_clusters,
             "shelf_pitch": shelf_pitch,
+            "shelf_boundary_offset": shelf_boundary,
             "crossbar_count": len(crossbar_rows),
             "crossbar_levels": crossbar_clusters,
             "crossbar_pitch": crossbar_pitch,
+            "crossbar_boundary_offset": crossbar_boundary,
         },
         "checks": checks,
     }

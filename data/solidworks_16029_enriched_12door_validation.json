@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T14:37:01+08:00",
+  "generated_at": "2026-05-23T19:46:28+08:00",
   "ok": true,
   "out_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521",
   "mode": "identity",
@@ -69,6 +69,305 @@
       "type_id": "Part::Feature"
     }
   ],
+  "embedded_door_quality": {
+    "door_count": 12,
+    "left_column_door_count": 6,
+    "right_column_door_count": 6,
+    "door_array_transform_summary": {
+      "total": 12,
+      "ok": 12,
+      "failed_roles": []
+    },
+    "left_column_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "right_column_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "left_right_door_bbox_y_delta": 0.0,
+    "left_right_door_placement_y_delta": 51.7,
+    "door_weld_count": 12,
+    "door_panel_feature_count": 12,
+    "hinge_pin_count": 12,
+    "lock_hook_pad_count": 12,
+    "electric_lock_hook_count": 12,
+    "shelf_count": 10,
+    "shelf_levels": [
+      {
+        "center": 333.5,
+        "count": 2
+      },
+      {
+        "center": 638.5,
+        "count": 2
+      },
+      {
+        "center": 943.5,
+        "count": 2
+      },
+      {
+        "center": 1248.5,
+        "count": 2
+      },
+      {
+        "center": 1553.5,
+        "count": 2
+      }
+    ],
+    "shelf_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "shelf_boundary_offset": {
+      "ok": true,
+      "expected_delta": 2.0,
+      "tolerance": 0.15,
+      "max_error": 0.0,
+      "rows": [
+        {
+          "column": "L",
+          "boundary_after_row": 1,
+          "door_y_max": 331.5,
+          "driven_center_y": 333.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板L焊接004"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 2,
+          "door_y_max": 636.5,
+          "driven_center_y": 638.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板L焊接003"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 3,
+          "door_y_max": 941.5,
+          "driven_center_y": 943.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板L焊接002"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 4,
+          "door_y_max": 1246.5,
+          "driven_center_y": 1248.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板L焊接001"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 5,
+          "door_y_max": 1551.5,
+          "driven_center_y": 1553.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板L焊接"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 1,
+          "door_y_max": 331.5,
+          "driven_center_y": 333.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板R焊接004"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 2,
+          "door_y_max": 636.5,
+          "driven_center_y": 638.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板R焊接003"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 3,
+          "door_y_max": 941.5,
+          "driven_center_y": 943.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板R焊接002"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 4,
+          "door_y_max": 1246.5,
+          "driven_center_y": 1248.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板R焊接001"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 5,
+          "door_y_max": 1551.5,
+          "driven_center_y": 1553.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "箱体横层板R焊接"
+        }
+      ],
+      "errors": []
+    },
+    "crossbar_count": 10,
+    "crossbar_levels": [
+      {
+        "center": 333.5,
+        "count": 2
+      },
+      {
+        "center": 638.5,
+        "count": 2
+      },
+      {
+        "center": 943.5,
+        "count": 2
+      },
+      {
+        "center": 1248.5,
+        "count": 2
+      },
+      {
+        "center": 1553.5,
+        "count": 2
+      }
+    ],
+    "crossbar_pitch": {
+      "values": [
+        305.0,
+        305.0,
+        305.0,
+        305.0
+      ],
+      "max_error": 0.0
+    },
+    "crossbar_boundary_offset": {
+      "ok": true,
+      "expected_delta": 2.0,
+      "tolerance": 0.15,
+      "max_error": 0.0,
+      "rows": [
+        {
+          "column": "L",
+          "boundary_after_row": 1,
+          "door_y_max": 331.5,
+          "driven_center_y": 333.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板004"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 2,
+          "door_y_max": 636.5,
+          "driven_center_y": 638.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板003"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 3,
+          "door_y_max": 941.5,
+          "driven_center_y": 943.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板002"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 4,
+          "door_y_max": 1246.5,
+          "driven_center_y": 1248.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板001"
+        },
+        {
+          "column": "L",
+          "boundary_after_row": 5,
+          "door_y_max": 1551.5,
+          "driven_center_y": 1553.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 1,
+          "door_y_max": 331.5,
+          "driven_center_y": 333.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板R004"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 2,
+          "door_y_max": 636.5,
+          "driven_center_y": 638.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板R003"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 3,
+          "door_y_max": 941.5,
+          "driven_center_y": 943.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板R002"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 4,
+          "door_y_max": 1246.5,
+          "driven_center_y": 1248.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板R001"
+        },
+        {
+          "column": "R",
+          "boundary_after_row": 5,
+          "door_y_max": 1551.5,
+          "driven_center_y": 1553.5,
+          "delta": 2.0,
+          "error": 0.0,
+          "driven_label": "门框 横隔板R"
+        }
+      ],
+      "errors": []
+    }
+  },
   "checks": [
     {
       "name": "assembly_exists",
@@ -138,6 +437,466 @@
       "ok": true,
       "actual": "3/3 matched",
       "expected": "3 candidate bboxes match within 0.75 mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_ordinary_door_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_column_door_count",
+      "ok": true,
+      "actual": 6,
+      "expected": 6,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_door_count",
+      "ok": true,
+      "actual": 6,
+      "expected": 6,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_array_all_transforms_applied",
+      "ok": true,
+      "actual": {
+        "total": 12,
+        "ok": 12,
+        "failed_roles": []
+      },
+      "expected": "12 placements with added=true and transformApplied=true",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_column_x_position",
+      "ok": true,
+      "actual": 0.0,
+      "expected": "-258.5mm +/- 0.1mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_x_position",
+      "ok": true,
+      "actual": 0.0,
+      "expected": "258.5mm +/- 0.1mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_standard_rotation",
+      "ok": true,
+      "actual": [
+        [
+          -1,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "expected": "right door placements use 180deg Z rotation",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_right_door_y_alignment",
+      "ok": true,
+      "actual": 0.0,
+      "expected": "<= 0.1mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_left_column_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_weld_subassembly_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_panel_feature_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_hinge_pin_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_lock_hook_pad_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_electric_lock_hook_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_module_count",
+      "ok": true,
+      "actual": 10,
+      "expected": 10,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_level_pairs",
+      "ok": true,
+      "actual": [
+        {
+          "center": 333.5,
+          "count": 2
+        },
+        {
+          "center": 638.5,
+          "count": 2
+        },
+        {
+          "center": 943.5,
+          "count": 2
+        },
+        {
+          "center": 1248.5,
+          "count": 2
+        },
+        {
+          "center": 1553.5,
+          "count": 2
+        }
+      ],
+      "expected": "5 levels x 2",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_shelf_driven_from_lower_door_boundary",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "expected_delta": 2.0,
+        "tolerance": 0.15,
+        "max_error": 0.0,
+        "rows": [
+          {
+            "column": "L",
+            "boundary_after_row": 1,
+            "door_y_max": 331.5,
+            "driven_center_y": 333.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板L焊接004"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 2,
+            "door_y_max": 636.5,
+            "driven_center_y": 638.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板L焊接003"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 3,
+            "door_y_max": 941.5,
+            "driven_center_y": 943.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板L焊接002"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 4,
+            "door_y_max": 1246.5,
+            "driven_center_y": 1248.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板L焊接001"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 5,
+            "door_y_max": 1551.5,
+            "driven_center_y": 1553.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板L焊接"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 1,
+            "door_y_max": 331.5,
+            "driven_center_y": 333.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板R焊接004"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 2,
+            "door_y_max": 636.5,
+            "driven_center_y": 638.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板R焊接003"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 3,
+            "door_y_max": 941.5,
+            "driven_center_y": 943.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板R焊接002"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 4,
+            "door_y_max": 1246.5,
+            "driven_center_y": 1248.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板R焊接001"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 5,
+            "door_y_max": 1551.5,
+            "driven_center_y": 1553.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "箱体横层板R焊接"
+          }
+        ],
+        "errors": []
+      },
+      "expected": "center_y = lower door y_max + 2.0mm",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_count",
+      "ok": true,
+      "actual": 10,
+      "expected": 10,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_level_pairs",
+      "ok": true,
+      "actual": [
+        {
+          "center": 333.5,
+          "count": 2
+        },
+        {
+          "center": 638.5,
+          "count": 2
+        },
+        {
+          "center": 943.5,
+          "count": 2
+        },
+        {
+          "center": 1248.5,
+          "count": 2
+        },
+        {
+          "center": 1553.5,
+          "count": 2
+        }
+      ],
+      "expected": "5 levels x 2",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_pitch",
+      "ok": true,
+      "actual": {
+        "values": [
+          305.0,
+          305.0,
+          305.0,
+          305.0
+        ],
+        "max_error": 0.0
+      },
+      "expected": 305.0,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_front_frame_crossbar_driven_from_lower_door_boundary",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "expected_delta": 2.0,
+        "tolerance": 0.15,
+        "max_error": 0.0,
+        "rows": [
+          {
+            "column": "L",
+            "boundary_after_row": 1,
+            "door_y_max": 331.5,
+            "driven_center_y": 333.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板004"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 2,
+            "door_y_max": 636.5,
+            "driven_center_y": 638.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板003"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 3,
+            "door_y_max": 941.5,
+            "driven_center_y": 943.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板002"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 4,
+            "door_y_max": 1246.5,
+            "driven_center_y": 1248.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板001"
+          },
+          {
+            "column": "L",
+            "boundary_after_row": 5,
+            "door_y_max": 1551.5,
+            "driven_center_y": 1553.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 1,
+            "door_y_max": 331.5,
+            "driven_center_y": 333.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板R004"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 2,
+            "door_y_max": 636.5,
+            "driven_center_y": 638.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板R003"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 3,
+            "door_y_max": 941.5,
+            "driven_center_y": 943.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板R002"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 4,
+            "door_y_max": 1246.5,
+            "driven_center_y": 1248.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板R001"
+          },
+          {
+            "column": "R",
+            "boundary_after_row": 5,
+            "door_y_max": 1551.5,
+            "driven_center_y": 1553.5,
+            "delta": 2.0,
+            "error": 0.0,
+            "driven_label": "门框 横隔板R"
+          }
+        ],
+        "errors": []
+      },
+      "expected": "center_y = lower door y_max + 2.0mm",
       "severity": "error"
     }
   ]

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T00:04:51+08:00",
+  "generated_at": "2026-05-23T19:49:23+08:00",
   "product_family": "16029",
   "purpose": "Verified rule packet for same-outer-size 16029 locker door-count generation.",
   "scope": "1000W x 1917H x 550D; currently verified for 10/12/14 doors only.",
@@ -88,7 +88,7 @@
       },
       "measured_gate": {
         "native_skeleton_status": "PASS",
-        "native_skeleton_check_count": 32,
+        "native_skeleton_check_count": 34,
         "native_skeleton_failed_error_count": 0,
         "root_bbox_mm": {
           "x_len": 1000.0,
@@ -197,7 +197,7 @@
       },
       "measured_gate": {
         "native_skeleton_status": "PASS",
-        "native_skeleton_check_count": 32,
+        "native_skeleton_check_count": 34,
         "native_skeleton_failed_error_count": 0,
         "root_bbox_mm": {
           "x_len": 1000.0,
@@ -306,7 +306,7 @@
       },
       "measured_gate": {
         "native_skeleton_status": "PASS",
-        "native_skeleton_check_count": 32,
+        "native_skeleton_check_count": 34,
         "native_skeleton_failed_error_count": 0,
         "root_bbox_mm": {
           "x_len": 1000.0,

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T00:04:01+08:00",
+  "generated_at": "2026-05-23T19:49:23+08:00",
   "product_family": "16029",
   "scope": "1000W x 1917H x 550D 10/12/14 door engineering-reference handoff",
   "source_quality_matrix": "D:\\Winnsen_Structure_Agent_Studio\\data\\locker_16029_variant_quality_matrix.json",
@@ -184,7 +184,7 @@
           "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\12door\\solidworks_native\\solidworks_16029_enriched_12door_matrix_validation.json",
           "exists": true,
           "ok": true,
-          "check_count": 31,
+          "check_count": 33,
           "failed_check_count": 0,
           "failed_checks": [],
           "candidate_count": 9,
@@ -223,7 +223,7 @@
         },
         "transfer": {
           "assembly": "existing",
-          "step": "existing",
+          "step": "hardlink",
           "placements": "existing",
           "result_json": "existing",
           "bbox_json": "existing",
@@ -268,7 +268,7 @@
           "spread": 0.0
         },
         "native_validation_ok": true,
-        "native_validation_check_count": 31,
+        "native_validation_check_count": 33,
         "native_validation_failed_check_count": 0,
         "native_reported_door_count": 12,
         "native_left_column_door_count": 6,

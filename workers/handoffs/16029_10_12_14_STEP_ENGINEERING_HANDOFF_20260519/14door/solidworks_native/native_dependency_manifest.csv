@@ -1,11 +1,11 @@
 ﻿role,source_path,exists,size_mb,note
-cabinet_skeleton_14door_v2,D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\native_16029_14door_cabinet_skeleton_v2.SLDASM,yes,1.576,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
-maintenance_door_lock_hole,C:\sw16029_standard_ascii\维护门锁孔.SLDPRT,yes,0.174,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
-maintenance_door_panel,C:\sw16029_standard_ascii\应急维护门.SLDPRT,yes,0.254,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
+cabinet_skeleton_14door_v2,D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521\native_16029_14door_cabinet_skeleton_v2.SLDASM,yes,1.56,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
+maintenance_door_lock_hole,C:\sw16029_standard_ascii\维护门锁孔.SLDPRT,yes,0.175,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
+maintenance_door_panel,C:\sw16029_standard_ascii\应急维护门.SLDPRT,yes,0.255,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
 auto_lock_latch,C:\sw16029_standard_ascii\自动锁闭插销(索科斯D-3016Z-2).SLDPRT,yes,0.15,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
 push_latch_mount_plate,C:\sw16029_standard_ascii\按钮插销固定板.SLDPRT,yes,0.359,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
-electronics_board_bracket,C:\sw16029_standard_ascii\电路板支架.SLDPRT,yes,0.291,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
-lock_control_board_24ch,C:\sw16029_standard_ascii\LK-4-6-V2.0 24口锁控板.SLDPRT,yes,1.017,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
+electronics_board_bracket,C:\sw16029_standard_ascii\电路板支架.SLDPRT,yes,0.292,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
+lock_control_board_24ch,C:\sw16029_standard_ascii\LK-4-6-V2.0 24口锁控板.SLDPRT,yes,1.018,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
 m9_v11_board,C:\sw16029_standard_ascii\M9 V1.1.SLDPRT,yes,0.104,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
 switching_power_supply_assembly,C:\sw16029_standard_ascii\开关模式电源 装配.SLDASM,yes,0.31,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
 wifi_serial_server,C:\sw16029_standard_ascii\WIFI串口服务器(USR-WIFI232-610).SLDPRT,yes,0.165,top-level placement reference; true independent delivery still needs SolidWorks Pack-and-Go
