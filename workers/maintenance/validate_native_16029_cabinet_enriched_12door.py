@@ -23,17 +23,27 @@ from validate_native_16029_cabinet_skeleton_geometry import (
     count_ok_cluster_pairs,
     count_rows,
     count_rows_where,
+    door_instance_groups,
+    feature_global_mirror_summary,
+    is_door_panel_feature,
+    is_electric_lock_hook_feature,
+    is_hinge_pin_feature,
+    is_lock_hook_pad_feature,
     is_crossbar,
     is_door_module_row,
     load_door_array_result,
+    local_door_feature_summary,
+    local_feature_baseline,
     max_pair_y_delta,
     placement_column_rows,
     placement_pitch_deltas,
     placement_transform_summary,
     placement_x_error,
-    right_column_rotation_ok,
+    placement_identity_rotation_ok,
+    right_column_uses_right_handed_module,
     row_label,
     split_door_columns,
+    split_group_columns,
     valid_geometry,
 )
 
@@ -317,6 +327,8 @@ def build_payload() -> dict[str, Any]:
     valid_rows = [row for row in rows if valid_geometry(row)]
     door_rows = [row for row in valid_rows if is_door_module_row(row, DOOR_COUNT)]
     left_doors, right_doors = split_door_columns(door_rows)
+    door_groups = door_instance_groups(valid_rows, DOOR_COUNT)
+    left_door_groups, right_door_groups = split_group_columns(door_groups)
     door_array_result = load_door_array_result(DOOR_COUNT)
     left_placements = placement_column_rows(door_array_result, "L")
     right_placements = placement_column_rows(door_array_result, "R")
@@ -362,10 +374,24 @@ def build_payload() -> dict[str, Any]:
     )
     add_check(
         checks,
-        "embedded_right_column_standard_rotation",
-        right_column_rotation_ok(right_placements),
+        "embedded_left_column_identity_transform",
+        placement_identity_rotation_ok(left_placements),
+        [row.get("rotation") for row in left_placements[:2]],
+        "left door placements use identity rotation",
+    )
+    add_check(
+        checks,
+        "embedded_right_column_identity_transform",
+        placement_identity_rotation_ok(right_placements),
         [row.get("rotation") for row in right_placements[:2]],
-        "right door placements use 180deg Z rotation",
+        "right door placements use identity rotation because the right-hand door module is pre-mirrored",
+    )
+    add_check(
+        checks,
+        "embedded_right_column_uses_right_handed_module",
+        right_column_uses_right_handed_module(right_placements),
+        [Path(str(row.get("path") or "")).name for row in right_placements[:2]],
+        "right door placements reference *_right.SLDASM modules",
     )
     add_check(
         checks,
@@ -400,22 +426,92 @@ def build_payload() -> dict[str, Any]:
         "Part::Feature",
         lambda label: "\u50a8\u7269\u67dc\u95e8\u677f" in label or "native_16029_door_panel" in label,
     )
-    hinge_pin_count = count_rows_where(
-        valid_rows,
-        "Part::Feature",
-        lambda label: "\u95e8\u8f74\u9500" in label or "door_hinge_pin" in label,
+    hinge_pin_count = sum(1 for row in valid_rows if is_hinge_pin_feature(row))
+    lock_hook_pad_count = sum(1 for row in valid_rows if is_lock_hook_pad_feature(row))
+    electric_lock_hook_count = sum(1 for row in valid_rows if is_electric_lock_hook_feature(row))
+    local_feature_summary = local_door_feature_summary(door_groups, door_height)
+    hinge_pin_local_baseline = local_feature_baseline(local_feature_summary, "hinge_pin")
+    lock_hook_pad_local_baseline = local_feature_baseline(local_feature_summary, "lock_hook_pad")
+    electric_lock_hook_local_baseline = local_feature_baseline(local_feature_summary, "electric_lock_hook")
+    hinge_global_summary = feature_global_mirror_summary(
+        left_door_groups,
+        right_door_groups,
+        left_placements,
+        right_placements,
+        "hinge_pin",
+        is_hinge_pin_feature,
     )
-    lock_hook_pad_count = count_rows(valid_rows, "Part::Feature", "U\u578b\u9501\u94a9\u57ab\u677f")
-    electric_lock_hook_count = count_rows_where(
-        valid_rows,
-        "Part::Feature",
-        lambda label: "\u7535\u63a7U\u578b\u9501\u94a9" in label or "electric_lock_hook" in label,
+    lock_pad_global_summary = feature_global_mirror_summary(
+        left_door_groups,
+        right_door_groups,
+        left_placements,
+        right_placements,
+        "lock_hook_pad",
+        is_lock_hook_pad_feature,
+    )
+    electric_hook_global_summary = feature_global_mirror_summary(
+        left_door_groups,
+        right_door_groups,
+        left_placements,
+        right_placements,
+        "electric_lock_hook",
+        is_electric_lock_hook_feature,
     )
     add_check(checks, "embedded_door_weld_subassembly_count", door_weld_count == DOOR_COUNT, door_weld_count, DOOR_COUNT)
     add_check(checks, "embedded_door_panel_feature_count", door_panel_count == DOOR_COUNT, door_panel_count, DOOR_COUNT)
     add_check(checks, "embedded_hinge_pin_count", hinge_pin_count == DOOR_COUNT, hinge_pin_count, DOOR_COUNT)
     add_check(checks, "embedded_lock_hook_pad_count", lock_hook_pad_count == DOOR_COUNT, lock_hook_pad_count, DOOR_COUNT)
     add_check(checks, "embedded_electric_lock_hook_count", electric_lock_hook_count == DOOR_COUNT, electric_lock_hook_count, DOOR_COUNT)
+    add_check(checks, "embedded_door_feature_group_count", len(door_groups) == DOOR_COUNT, len(door_groups), DOOR_COUNT)
+    add_check(
+        checks,
+        "embedded_door_local_feature_geometry",
+        bool(local_feature_summary.get("ok")),
+        local_feature_summary,
+        "each door has panel, hinge pin, lock hook pad, and electric lock hook at door-height-driven local positions",
+    )
+    add_check(
+        checks,
+        "embedded_hinge_pin_local_x_baseline",
+        bool(hinge_pin_local_baseline.get("ok")),
+        hinge_pin_local_baseline,
+        "left X=-208.5mm, right X=208.5mm, Y=-(door_height/2+9.7)",
+    )
+    add_check(
+        checks,
+        "embedded_lock_hook_pad_local_x_baseline",
+        bool(lock_hook_pad_local_baseline.get("ok")),
+        lock_hook_pad_local_baseline,
+        "left X=204.9mm, right X=-204.9mm, Y=0; guards right-hand hookPadTx datum",
+    )
+    add_check(
+        checks,
+        "embedded_electric_lock_hook_local_x_baseline",
+        bool(electric_lock_hook_local_baseline.get("ok")),
+        electric_lock_hook_local_baseline,
+        "left X=203.5mm, right X=-203.5mm, Y=0",
+    )
+    add_check(
+        checks,
+        "embedded_hinge_pin_global_mirror_alignment",
+        bool(hinge_global_summary.get("ok")),
+        hinge_global_summary,
+        "left/right hinge pins mirror in X and align in Y/Z after placement transform",
+    )
+    add_check(
+        checks,
+        "embedded_lock_hook_pad_global_mirror_alignment",
+        bool(lock_pad_global_summary.get("ok")),
+        lock_pad_global_summary,
+        "left/right lock hook pads mirror in X and align in Y/Z after placement transform",
+    )
+    add_check(
+        checks,
+        "embedded_electric_lock_hook_global_mirror_alignment",
+        bool(electric_hook_global_summary.get("ok")),
+        electric_hook_global_summary,
+        "left/right electric lock hooks mirror in X and align in Y/Z after placement transform",
+    )
 
     shelf_rows = [row for row in valid_rows if row.get("type_id") == "App::Part" and "\u6a2a\u5c42\u677f" in row_label(row)]
     shelf_clusters = cluster_centers(shelf_rows)
@@ -507,11 +603,19 @@ def build_payload() -> dict[str, Any]:
             "right_column_pitch": right_pitch,
             "left_right_door_bbox_y_delta": rounded(bbox_pair_delta),
             "left_right_door_placement_y_delta": rounded(placement_pair_delta),
+            "door_feature_group_count": len(door_groups),
             "door_weld_count": door_weld_count,
             "door_panel_feature_count": door_panel_count,
             "hinge_pin_count": hinge_pin_count,
             "lock_hook_pad_count": lock_hook_pad_count,
             "electric_lock_hook_count": electric_lock_hook_count,
+            "door_local_feature_geometry": local_feature_summary,
+            "hinge_pin_local_x_baseline": hinge_pin_local_baseline,
+            "lock_hook_pad_local_x_baseline": lock_hook_pad_local_baseline,
+            "electric_lock_hook_local_x_baseline": electric_lock_hook_local_baseline,
+            "hinge_pin_global_mirror_alignment": hinge_global_summary,
+            "lock_hook_pad_global_mirror_alignment": lock_pad_global_summary,
+            "electric_lock_hook_global_mirror_alignment": electric_hook_global_summary,
             "shelf_count": len(shelf_rows),
             "shelf_levels": shelf_clusters,
             "shelf_pitch": shelf_pitch,

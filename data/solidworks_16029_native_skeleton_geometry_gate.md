@@ -1,6 +1,6 @@
 # 16029 native SolidWorks cabinet skeleton geometry gate
 
-- generated_at: `2026-05-23T19:09:35+08:00`
+- generated_at: `2026-05-24T09:42:28+08:00`
 - status: `PASS`
 - source_dir: `D:\Winnsen_Structure_Agent_Studio\workers\generated_models\SW-NATIVE-16029-CABINET-SKELETON-SERIES-20260521`
 
@@ -20,6 +20,7 @@
 - Left/right door column X placements must stay at the learned 16029 datum.
 - Door pitch must match the configured door height plus 7 mm visual gap.
 - Door weldments, door panels, hinge pins, U-lock hook pads, and electric lock hooks must match the door count.
+- Hinge pin, U-lock hook pad, and electric lock hook local X signs must match the left/right handed door module rule.
 - Shelf modules and front-frame crossbars must form left/right pairs at each internal level.
 - Shelf and front-frame crossbar pitch must match the same row pitch, catching flying or collapsed arrays.
 

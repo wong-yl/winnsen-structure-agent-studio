@@ -20,7 +20,7 @@ Output level: engineering reference, not released production drawing.
 ## Native validation summary
 
 - Result: `PASS`
-- Checks: `31/31`
+- Checks: `43/43`
 - Door modules: `14` total, `7` left, `7` right
 - Door hardware: weld `14`, panel `14`, hinge `14`, lock hook `14`
 - Shelf / crossbar: shelf `12`, crossbar `12`

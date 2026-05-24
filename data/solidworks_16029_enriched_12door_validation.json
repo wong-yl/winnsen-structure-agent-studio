@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T19:46:28+08:00",
+  "generated_at": "2026-05-24T09:42:47+08:00",
   "ok": true,
   "out_dir": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\SW-NATIVE-16029-CABINET-ENRICHED-12DOOR-20260521",
   "mode": "identity",
@@ -99,12 +99,1112 @@
       "max_error": 0.0
     },
     "left_right_door_bbox_y_delta": 0.0,
-    "left_right_door_placement_y_delta": 51.7,
+    "left_right_door_placement_y_delta": 0.0,
+    "door_feature_group_count": 12,
     "door_weld_count": 12,
     "door_panel_feature_count": 12,
     "hinge_pin_count": 12,
     "lock_hook_pad_count": 12,
     "electric_lock_hook_count": 12,
+    "door_local_feature_geometry": {
+      "ok": true,
+      "door_group_count": 12,
+      "tolerance": 0.25,
+      "feature_baselines": {
+        "door_panel": {
+          "ok": true,
+          "feature": "door_panel",
+          "row_count": 12,
+          "tolerance": 0.25,
+          "max_x_error": 0.0,
+          "max_y_error": 0.0,
+          "errors": []
+        },
+        "hinge_pin": {
+          "ok": true,
+          "feature": "hinge_pin",
+          "row_count": 12,
+          "tolerance": 0.25,
+          "max_x_error": 0.0,
+          "max_y_error": 0.0,
+          "errors": []
+        },
+        "lock_hook_pad": {
+          "ok": true,
+          "feature": "lock_hook_pad",
+          "row_count": 12,
+          "tolerance": 0.25,
+          "max_x_error": 0.0,
+          "max_y_error": 0.0,
+          "errors": []
+        },
+        "electric_lock_hook": {
+          "ok": true,
+          "feature": "electric_lock_hook",
+          "row_count": 12,
+          "tolerance": 0.25,
+          "max_x_error": 0.0,
+          "max_y_error": 0.0,
+          "errors": []
+        }
+      },
+      "rows": [
+        {
+          "door_index": 1,
+          "column": "L",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H298",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 1,
+          "column": "L",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin",
+          "x_center": -208.5,
+          "y_center": -158.7,
+          "expected_x_center": -208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 1,
+          "column": "L",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板",
+          "x_center": 204.9,
+          "y_center": 0.0,
+          "expected_x_center": 204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 1,
+          "column": "L",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s500",
+          "x_center": 203.5,
+          "y_center": 0.0,
+          "expected_x_center": 203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 2,
+          "column": "L",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H299",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 2,
+          "column": "L",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin001",
+          "x_center": -208.5,
+          "y_center": -158.7,
+          "expected_x_center": -208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 2,
+          "column": "L",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板001",
+          "x_center": 204.9,
+          "y_center": 0.0,
+          "expected_x_center": 204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 2,
+          "column": "L",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s501",
+          "x_center": 203.5,
+          "y_center": 0.0,
+          "expected_x_center": 203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 3,
+          "column": "L",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H300",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 3,
+          "column": "L",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin002",
+          "x_center": -208.5,
+          "y_center": -158.7,
+          "expected_x_center": -208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 3,
+          "column": "L",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板002",
+          "x_center": 204.9,
+          "y_center": 0.0,
+          "expected_x_center": 204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 3,
+          "column": "L",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s502",
+          "x_center": 203.5,
+          "y_center": 0.0,
+          "expected_x_center": 203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 4,
+          "column": "L",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H301",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 4,
+          "column": "L",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin003",
+          "x_center": -208.5,
+          "y_center": -158.7,
+          "expected_x_center": -208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 4,
+          "column": "L",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板003",
+          "x_center": 204.9,
+          "y_center": 0.0,
+          "expected_x_center": 204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 4,
+          "column": "L",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s503",
+          "x_center": 203.5,
+          "y_center": 0.0,
+          "expected_x_center": 203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 5,
+          "column": "L",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H302",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 5,
+          "column": "L",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin004",
+          "x_center": -208.5,
+          "y_center": -158.7,
+          "expected_x_center": -208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 5,
+          "column": "L",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板004",
+          "x_center": 204.9,
+          "y_center": 0.0,
+          "expected_x_center": 204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 5,
+          "column": "L",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s504",
+          "x_center": 203.5,
+          "y_center": 0.0,
+          "expected_x_center": 203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 6,
+          "column": "L",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H303",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 6,
+          "column": "L",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin005",
+          "x_center": -208.5,
+          "y_center": -158.7,
+          "expected_x_center": -208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 6,
+          "column": "L",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板005",
+          "x_center": 204.9,
+          "y_center": 0.0,
+          "expected_x_center": 204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 6,
+          "column": "L",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s505",
+          "x_center": 203.5,
+          "y_center": 0.0,
+          "expected_x_center": 203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 7,
+          "column": "R",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H304",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 7,
+          "column": "R",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin006",
+          "x_center": 208.5,
+          "y_center": -158.7,
+          "expected_x_center": 208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 7,
+          "column": "R",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板006",
+          "x_center": -204.9,
+          "y_center": 0.0,
+          "expected_x_center": -204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 7,
+          "column": "R",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s506",
+          "x_center": -203.5,
+          "y_center": 0.0,
+          "expected_x_center": -203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 8,
+          "column": "R",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H305",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 8,
+          "column": "R",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin007",
+          "x_center": 208.5,
+          "y_center": -158.7,
+          "expected_x_center": 208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 8,
+          "column": "R",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板007",
+          "x_center": -204.9,
+          "y_center": 0.0,
+          "expected_x_center": -204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 8,
+          "column": "R",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s507",
+          "x_center": -203.5,
+          "y_center": 0.0,
+          "expected_x_center": -203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 9,
+          "column": "R",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H306",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 9,
+          "column": "R",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin008",
+          "x_center": 208.5,
+          "y_center": -158.7,
+          "expected_x_center": 208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 9,
+          "column": "R",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板008",
+          "x_center": -204.9,
+          "y_center": 0.0,
+          "expected_x_center": -204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 9,
+          "column": "R",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s508",
+          "x_center": -203.5,
+          "y_center": 0.0,
+          "expected_x_center": -203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 10,
+          "column": "R",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H307",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 10,
+          "column": "R",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin009",
+          "x_center": 208.5,
+          "y_center": -158.7,
+          "expected_x_center": 208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 10,
+          "column": "R",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板009",
+          "x_center": -204.9,
+          "y_center": 0.0,
+          "expected_x_center": -204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 10,
+          "column": "R",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s509",
+          "x_center": -203.5,
+          "y_center": 0.0,
+          "expected_x_center": -203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 11,
+          "column": "R",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H308",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 11,
+          "column": "R",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin010",
+          "x_center": 208.5,
+          "y_center": -158.7,
+          "expected_x_center": 208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 11,
+          "column": "R",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板010",
+          "x_center": -204.9,
+          "y_center": 0.0,
+          "expected_x_center": -204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 11,
+          "column": "R",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s510",
+          "x_center": -203.5,
+          "y_center": 0.0,
+          "expected_x_center": -203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 12,
+          "column": "R",
+          "feature": "door_panel",
+          "count": 1,
+          "label": "native_16029_door_panel_12door_H309",
+          "x_center": 0.0,
+          "y_center": 0.0,
+          "expected_x_center": 0.0,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0,
+          "y_len": 298.0,
+          "expected_y_len": 298.0,
+          "y_len_error": 0.0
+        },
+        {
+          "door_index": 12,
+          "column": "R",
+          "feature": "hinge_pin",
+          "count": 1,
+          "label": "door_hinge_pin011",
+          "x_center": 208.5,
+          "y_center": -158.7,
+          "expected_x_center": 208.5,
+          "expected_y_center": -158.7,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 12,
+          "column": "R",
+          "feature": "lock_hook_pad",
+          "count": 1,
+          "label": "U型锁钩垫板011",
+          "x_center": -204.9,
+          "y_center": 0.0,
+          "expected_x_center": -204.9,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        },
+        {
+          "door_index": 12,
+          "column": "R",
+          "feature": "electric_lock_hook",
+          "count": 1,
+          "label": "electric_lock_hook_zja_s511",
+          "x_center": -203.5,
+          "y_center": 0.0,
+          "expected_x_center": -203.5,
+          "expected_y_center": 0.0,
+          "x_error": 0.0,
+          "y_error": 0.0
+        }
+      ],
+      "errors": []
+    },
+    "hinge_pin_local_x_baseline": {
+      "ok": true,
+      "feature": "hinge_pin",
+      "row_count": 12,
+      "tolerance": 0.25,
+      "max_x_error": 0.0,
+      "max_y_error": 0.0,
+      "errors": []
+    },
+    "lock_hook_pad_local_x_baseline": {
+      "ok": true,
+      "feature": "lock_hook_pad",
+      "row_count": 12,
+      "tolerance": 0.25,
+      "max_x_error": 0.0,
+      "max_y_error": 0.0,
+      "errors": []
+    },
+    "electric_lock_hook_local_x_baseline": {
+      "ok": true,
+      "feature": "electric_lock_hook",
+      "row_count": 12,
+      "tolerance": 0.25,
+      "max_x_error": 0.0,
+      "max_y_error": 0.0,
+      "errors": []
+    },
+    "hinge_pin_global_mirror_alignment": {
+      "ok": true,
+      "pair_count": 6,
+      "tolerance": 0.25,
+      "rows": [
+        {
+          "row": 1,
+          "feature": "hinge_pin",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -467.0,
+            "y": 22.3,
+            "z": -7.0
+          },
+          "right_global": {
+            "x": 467.0,
+            "y": 22.3,
+            "z": -7.0
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 2,
+          "feature": "hinge_pin",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -467.0,
+            "y": 327.3,
+            "z": -7.0
+          },
+          "right_global": {
+            "x": 467.0,
+            "y": 327.3,
+            "z": -7.0
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 3,
+          "feature": "hinge_pin",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -467.0,
+            "y": 632.3,
+            "z": -7.0
+          },
+          "right_global": {
+            "x": 467.0,
+            "y": 632.3,
+            "z": -7.0
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 4,
+          "feature": "hinge_pin",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -467.0,
+            "y": 937.3,
+            "z": -7.0
+          },
+          "right_global": {
+            "x": 467.0,
+            "y": 937.3,
+            "z": -7.0
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 5,
+          "feature": "hinge_pin",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -467.0,
+            "y": 1242.3,
+            "z": -7.0
+          },
+          "right_global": {
+            "x": 467.0,
+            "y": 1242.3,
+            "z": -7.0
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 6,
+          "feature": "hinge_pin",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -467.0,
+            "y": 1547.3,
+            "z": -7.0
+          },
+          "right_global": {
+            "x": 467.0,
+            "y": 1547.3,
+            "z": -7.0
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        }
+      ],
+      "errors": []
+    },
+    "lock_hook_pad_global_mirror_alignment": {
+      "ok": true,
+      "pair_count": 6,
+      "tolerance": 0.25,
+      "rows": [
+        {
+          "row": 1,
+          "feature": "lock_hook_pad",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -53.6,
+            "y": 181.0,
+            "z": -6.05
+          },
+          "right_global": {
+            "x": 53.6,
+            "y": 181.0,
+            "z": -6.05
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 2,
+          "feature": "lock_hook_pad",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -53.6,
+            "y": 486.0,
+            "z": -6.05
+          },
+          "right_global": {
+            "x": 53.6,
+            "y": 486.0,
+            "z": -6.05
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 3,
+          "feature": "lock_hook_pad",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -53.6,
+            "y": 791.0,
+            "z": -6.05
+          },
+          "right_global": {
+            "x": 53.6,
+            "y": 791.0,
+            "z": -6.05
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 4,
+          "feature": "lock_hook_pad",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -53.6,
+            "y": 1096.0,
+            "z": -6.05
+          },
+          "right_global": {
+            "x": 53.6,
+            "y": 1096.0,
+            "z": -6.05
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 5,
+          "feature": "lock_hook_pad",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -53.6,
+            "y": 1401.0,
+            "z": -6.05
+          },
+          "right_global": {
+            "x": 53.6,
+            "y": 1401.0,
+            "z": -6.05
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 6,
+          "feature": "lock_hook_pad",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -53.6,
+            "y": 1706.0,
+            "z": -6.05
+          },
+          "right_global": {
+            "x": 53.6,
+            "y": 1706.0,
+            "z": -6.05
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        }
+      ],
+      "errors": []
+    },
+    "electric_lock_hook_global_mirror_alignment": {
+      "ok": true,
+      "pair_count": 6,
+      "tolerance": 0.25,
+      "rows": [
+        {
+          "row": 1,
+          "feature": "electric_lock_hook",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -55.0,
+            "y": 181.0,
+            "z": -25.944
+          },
+          "right_global": {
+            "x": 55.0,
+            "y": 181.0,
+            "z": -25.944
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 2,
+          "feature": "electric_lock_hook",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -55.0,
+            "y": 486.0,
+            "z": -25.944
+          },
+          "right_global": {
+            "x": 55.0,
+            "y": 486.0,
+            "z": -25.944
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 3,
+          "feature": "electric_lock_hook",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -55.0,
+            "y": 791.0,
+            "z": -25.944
+          },
+          "right_global": {
+            "x": 55.0,
+            "y": 791.0,
+            "z": -25.944
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 4,
+          "feature": "electric_lock_hook",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -55.0,
+            "y": 1096.0,
+            "z": -25.944
+          },
+          "right_global": {
+            "x": 55.0,
+            "y": 1096.0,
+            "z": -25.944
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 5,
+          "feature": "electric_lock_hook",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -55.0,
+            "y": 1401.0,
+            "z": -25.944
+          },
+          "right_global": {
+            "x": 55.0,
+            "y": 1401.0,
+            "z": -25.944
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        },
+        {
+          "row": 6,
+          "feature": "electric_lock_hook",
+          "left_count": 1,
+          "right_count": 1,
+          "left_global": {
+            "x": -55.0,
+            "y": 1706.0,
+            "z": -25.944
+          },
+          "right_global": {
+            "x": 55.0,
+            "y": 1706.0,
+            "z": -25.944
+          },
+          "x_mirror_error": 0.0,
+          "y_error": 0.0,
+          "z_error": 0.0
+        }
+      ],
+      "errors": []
+    },
     "shelf_count": 10,
     "shelf_levels": [
       {
@@ -486,33 +1586,73 @@
       "severity": "error"
     },
     {
-      "name": "embedded_right_column_standard_rotation",
+      "name": "embedded_left_column_identity_transform",
       "ok": true,
       "actual": [
         [
-          -1,
+          1,
           0,
           0,
           0,
-          -1,
+          1,
           0,
           0,
           0,
           1
         ],
         [
-          -1,
+          1,
           0,
           0,
           0,
-          -1,
+          1,
           0,
           0,
           0,
           1
         ]
       ],
-      "expected": "right door placements use 180deg Z rotation",
+      "expected": "left door placements use identity rotation",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_identity_transform",
+      "ok": true,
+      "actual": [
+        [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "expected": "right door placements use identity rotation because the right-hand door module is pre-mirrored",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_right_column_uses_right_handed_module",
+      "ok": true,
+      "actual": [
+        "native_16029_ordinary_door_12door_v1_csharp_right.SLDASM",
+        "native_16029_ordinary_door_12door_v1_csharp_right.SLDASM"
+      ],
+      "expected": "right door placements reference *_right.SLDASM modules",
       "severity": "error"
     },
     {
@@ -587,6 +1727,1154 @@
       "ok": true,
       "actual": 12,
       "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_feature_group_count",
+      "ok": true,
+      "actual": 12,
+      "expected": 12,
+      "severity": "error"
+    },
+    {
+      "name": "embedded_door_local_feature_geometry",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "door_group_count": 12,
+        "tolerance": 0.25,
+        "feature_baselines": {
+          "door_panel": {
+            "ok": true,
+            "feature": "door_panel",
+            "row_count": 12,
+            "tolerance": 0.25,
+            "max_x_error": 0.0,
+            "max_y_error": 0.0,
+            "errors": []
+          },
+          "hinge_pin": {
+            "ok": true,
+            "feature": "hinge_pin",
+            "row_count": 12,
+            "tolerance": 0.25,
+            "max_x_error": 0.0,
+            "max_y_error": 0.0,
+            "errors": []
+          },
+          "lock_hook_pad": {
+            "ok": true,
+            "feature": "lock_hook_pad",
+            "row_count": 12,
+            "tolerance": 0.25,
+            "max_x_error": 0.0,
+            "max_y_error": 0.0,
+            "errors": []
+          },
+          "electric_lock_hook": {
+            "ok": true,
+            "feature": "electric_lock_hook",
+            "row_count": 12,
+            "tolerance": 0.25,
+            "max_x_error": 0.0,
+            "max_y_error": 0.0,
+            "errors": []
+          }
+        },
+        "rows": [
+          {
+            "door_index": 1,
+            "column": "L",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H298",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 1,
+            "column": "L",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin",
+            "x_center": -208.5,
+            "y_center": -158.7,
+            "expected_x_center": -208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 1,
+            "column": "L",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板",
+            "x_center": 204.9,
+            "y_center": 0.0,
+            "expected_x_center": 204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 1,
+            "column": "L",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s500",
+            "x_center": 203.5,
+            "y_center": 0.0,
+            "expected_x_center": 203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 2,
+            "column": "L",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H299",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 2,
+            "column": "L",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin001",
+            "x_center": -208.5,
+            "y_center": -158.7,
+            "expected_x_center": -208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 2,
+            "column": "L",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板001",
+            "x_center": 204.9,
+            "y_center": 0.0,
+            "expected_x_center": 204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 2,
+            "column": "L",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s501",
+            "x_center": 203.5,
+            "y_center": 0.0,
+            "expected_x_center": 203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 3,
+            "column": "L",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H300",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 3,
+            "column": "L",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin002",
+            "x_center": -208.5,
+            "y_center": -158.7,
+            "expected_x_center": -208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 3,
+            "column": "L",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板002",
+            "x_center": 204.9,
+            "y_center": 0.0,
+            "expected_x_center": 204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 3,
+            "column": "L",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s502",
+            "x_center": 203.5,
+            "y_center": 0.0,
+            "expected_x_center": 203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 4,
+            "column": "L",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H301",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 4,
+            "column": "L",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin003",
+            "x_center": -208.5,
+            "y_center": -158.7,
+            "expected_x_center": -208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 4,
+            "column": "L",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板003",
+            "x_center": 204.9,
+            "y_center": 0.0,
+            "expected_x_center": 204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 4,
+            "column": "L",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s503",
+            "x_center": 203.5,
+            "y_center": 0.0,
+            "expected_x_center": 203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 5,
+            "column": "L",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H302",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 5,
+            "column": "L",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin004",
+            "x_center": -208.5,
+            "y_center": -158.7,
+            "expected_x_center": -208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 5,
+            "column": "L",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板004",
+            "x_center": 204.9,
+            "y_center": 0.0,
+            "expected_x_center": 204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 5,
+            "column": "L",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s504",
+            "x_center": 203.5,
+            "y_center": 0.0,
+            "expected_x_center": 203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 6,
+            "column": "L",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H303",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 6,
+            "column": "L",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin005",
+            "x_center": -208.5,
+            "y_center": -158.7,
+            "expected_x_center": -208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 6,
+            "column": "L",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板005",
+            "x_center": 204.9,
+            "y_center": 0.0,
+            "expected_x_center": 204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 6,
+            "column": "L",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s505",
+            "x_center": 203.5,
+            "y_center": 0.0,
+            "expected_x_center": 203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 7,
+            "column": "R",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H304",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 7,
+            "column": "R",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin006",
+            "x_center": 208.5,
+            "y_center": -158.7,
+            "expected_x_center": 208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 7,
+            "column": "R",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板006",
+            "x_center": -204.9,
+            "y_center": 0.0,
+            "expected_x_center": -204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 7,
+            "column": "R",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s506",
+            "x_center": -203.5,
+            "y_center": 0.0,
+            "expected_x_center": -203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 8,
+            "column": "R",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H305",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 8,
+            "column": "R",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin007",
+            "x_center": 208.5,
+            "y_center": -158.7,
+            "expected_x_center": 208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 8,
+            "column": "R",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板007",
+            "x_center": -204.9,
+            "y_center": 0.0,
+            "expected_x_center": -204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 8,
+            "column": "R",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s507",
+            "x_center": -203.5,
+            "y_center": 0.0,
+            "expected_x_center": -203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 9,
+            "column": "R",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H306",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 9,
+            "column": "R",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin008",
+            "x_center": 208.5,
+            "y_center": -158.7,
+            "expected_x_center": 208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 9,
+            "column": "R",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板008",
+            "x_center": -204.9,
+            "y_center": 0.0,
+            "expected_x_center": -204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 9,
+            "column": "R",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s508",
+            "x_center": -203.5,
+            "y_center": 0.0,
+            "expected_x_center": -203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 10,
+            "column": "R",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H307",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 10,
+            "column": "R",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin009",
+            "x_center": 208.5,
+            "y_center": -158.7,
+            "expected_x_center": 208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 10,
+            "column": "R",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板009",
+            "x_center": -204.9,
+            "y_center": 0.0,
+            "expected_x_center": -204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 10,
+            "column": "R",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s509",
+            "x_center": -203.5,
+            "y_center": 0.0,
+            "expected_x_center": -203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 11,
+            "column": "R",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H308",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 11,
+            "column": "R",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin010",
+            "x_center": 208.5,
+            "y_center": -158.7,
+            "expected_x_center": 208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 11,
+            "column": "R",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板010",
+            "x_center": -204.9,
+            "y_center": 0.0,
+            "expected_x_center": -204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 11,
+            "column": "R",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s510",
+            "x_center": -203.5,
+            "y_center": 0.0,
+            "expected_x_center": -203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 12,
+            "column": "R",
+            "feature": "door_panel",
+            "count": 1,
+            "label": "native_16029_door_panel_12door_H309",
+            "x_center": 0.0,
+            "y_center": 0.0,
+            "expected_x_center": 0.0,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0,
+            "y_len": 298.0,
+            "expected_y_len": 298.0,
+            "y_len_error": 0.0
+          },
+          {
+            "door_index": 12,
+            "column": "R",
+            "feature": "hinge_pin",
+            "count": 1,
+            "label": "door_hinge_pin011",
+            "x_center": 208.5,
+            "y_center": -158.7,
+            "expected_x_center": 208.5,
+            "expected_y_center": -158.7,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 12,
+            "column": "R",
+            "feature": "lock_hook_pad",
+            "count": 1,
+            "label": "U型锁钩垫板011",
+            "x_center": -204.9,
+            "y_center": 0.0,
+            "expected_x_center": -204.9,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          },
+          {
+            "door_index": 12,
+            "column": "R",
+            "feature": "electric_lock_hook",
+            "count": 1,
+            "label": "electric_lock_hook_zja_s511",
+            "x_center": -203.5,
+            "y_center": 0.0,
+            "expected_x_center": -203.5,
+            "expected_y_center": 0.0,
+            "x_error": 0.0,
+            "y_error": 0.0
+          }
+        ],
+        "errors": []
+      },
+      "expected": "each door has panel, hinge pin, lock hook pad, and electric lock hook at door-height-driven local positions",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_hinge_pin_local_x_baseline",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "feature": "hinge_pin",
+        "row_count": 12,
+        "tolerance": 0.25,
+        "max_x_error": 0.0,
+        "max_y_error": 0.0,
+        "errors": []
+      },
+      "expected": "left X=-208.5mm, right X=208.5mm, Y=-(door_height/2+9.7)",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_lock_hook_pad_local_x_baseline",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "feature": "lock_hook_pad",
+        "row_count": 12,
+        "tolerance": 0.25,
+        "max_x_error": 0.0,
+        "max_y_error": 0.0,
+        "errors": []
+      },
+      "expected": "left X=204.9mm, right X=-204.9mm, Y=0; guards right-hand hookPadTx datum",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_electric_lock_hook_local_x_baseline",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "feature": "electric_lock_hook",
+        "row_count": 12,
+        "tolerance": 0.25,
+        "max_x_error": 0.0,
+        "max_y_error": 0.0,
+        "errors": []
+      },
+      "expected": "left X=203.5mm, right X=-203.5mm, Y=0",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_hinge_pin_global_mirror_alignment",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "pair_count": 6,
+        "tolerance": 0.25,
+        "rows": [
+          {
+            "row": 1,
+            "feature": "hinge_pin",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -467.0,
+              "y": 22.3,
+              "z": -7.0
+            },
+            "right_global": {
+              "x": 467.0,
+              "y": 22.3,
+              "z": -7.0
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 2,
+            "feature": "hinge_pin",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -467.0,
+              "y": 327.3,
+              "z": -7.0
+            },
+            "right_global": {
+              "x": 467.0,
+              "y": 327.3,
+              "z": -7.0
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 3,
+            "feature": "hinge_pin",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -467.0,
+              "y": 632.3,
+              "z": -7.0
+            },
+            "right_global": {
+              "x": 467.0,
+              "y": 632.3,
+              "z": -7.0
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 4,
+            "feature": "hinge_pin",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -467.0,
+              "y": 937.3,
+              "z": -7.0
+            },
+            "right_global": {
+              "x": 467.0,
+              "y": 937.3,
+              "z": -7.0
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 5,
+            "feature": "hinge_pin",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -467.0,
+              "y": 1242.3,
+              "z": -7.0
+            },
+            "right_global": {
+              "x": 467.0,
+              "y": 1242.3,
+              "z": -7.0
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 6,
+            "feature": "hinge_pin",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -467.0,
+              "y": 1547.3,
+              "z": -7.0
+            },
+            "right_global": {
+              "x": 467.0,
+              "y": 1547.3,
+              "z": -7.0
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          }
+        ],
+        "errors": []
+      },
+      "expected": "left/right hinge pins mirror in X and align in Y/Z after placement transform",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_lock_hook_pad_global_mirror_alignment",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "pair_count": 6,
+        "tolerance": 0.25,
+        "rows": [
+          {
+            "row": 1,
+            "feature": "lock_hook_pad",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -53.6,
+              "y": 181.0,
+              "z": -6.05
+            },
+            "right_global": {
+              "x": 53.6,
+              "y": 181.0,
+              "z": -6.05
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 2,
+            "feature": "lock_hook_pad",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -53.6,
+              "y": 486.0,
+              "z": -6.05
+            },
+            "right_global": {
+              "x": 53.6,
+              "y": 486.0,
+              "z": -6.05
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 3,
+            "feature": "lock_hook_pad",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -53.6,
+              "y": 791.0,
+              "z": -6.05
+            },
+            "right_global": {
+              "x": 53.6,
+              "y": 791.0,
+              "z": -6.05
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 4,
+            "feature": "lock_hook_pad",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -53.6,
+              "y": 1096.0,
+              "z": -6.05
+            },
+            "right_global": {
+              "x": 53.6,
+              "y": 1096.0,
+              "z": -6.05
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 5,
+            "feature": "lock_hook_pad",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -53.6,
+              "y": 1401.0,
+              "z": -6.05
+            },
+            "right_global": {
+              "x": 53.6,
+              "y": 1401.0,
+              "z": -6.05
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 6,
+            "feature": "lock_hook_pad",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -53.6,
+              "y": 1706.0,
+              "z": -6.05
+            },
+            "right_global": {
+              "x": 53.6,
+              "y": 1706.0,
+              "z": -6.05
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          }
+        ],
+        "errors": []
+      },
+      "expected": "left/right lock hook pads mirror in X and align in Y/Z after placement transform",
+      "severity": "error"
+    },
+    {
+      "name": "embedded_electric_lock_hook_global_mirror_alignment",
+      "ok": true,
+      "actual": {
+        "ok": true,
+        "pair_count": 6,
+        "tolerance": 0.25,
+        "rows": [
+          {
+            "row": 1,
+            "feature": "electric_lock_hook",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -55.0,
+              "y": 181.0,
+              "z": -25.944
+            },
+            "right_global": {
+              "x": 55.0,
+              "y": 181.0,
+              "z": -25.944
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 2,
+            "feature": "electric_lock_hook",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -55.0,
+              "y": 486.0,
+              "z": -25.944
+            },
+            "right_global": {
+              "x": 55.0,
+              "y": 486.0,
+              "z": -25.944
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 3,
+            "feature": "electric_lock_hook",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -55.0,
+              "y": 791.0,
+              "z": -25.944
+            },
+            "right_global": {
+              "x": 55.0,
+              "y": 791.0,
+              "z": -25.944
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 4,
+            "feature": "electric_lock_hook",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -55.0,
+              "y": 1096.0,
+              "z": -25.944
+            },
+            "right_global": {
+              "x": 55.0,
+              "y": 1096.0,
+              "z": -25.944
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 5,
+            "feature": "electric_lock_hook",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -55.0,
+              "y": 1401.0,
+              "z": -25.944
+            },
+            "right_global": {
+              "x": 55.0,
+              "y": 1401.0,
+              "z": -25.944
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          },
+          {
+            "row": 6,
+            "feature": "electric_lock_hook",
+            "left_count": 1,
+            "right_count": 1,
+            "left_global": {
+              "x": -55.0,
+              "y": 1706.0,
+              "z": -25.944
+            },
+            "right_global": {
+              "x": 55.0,
+              "y": 1706.0,
+              "z": -25.944
+            },
+            "x_mirror_error": 0.0,
+            "y_error": 0.0,
+            "z_error": 0.0
+          }
+        ],
+        "errors": []
+      },
+      "expected": "left/right electric lock hooks mirror in X and align in Y/Z after placement transform",
       "severity": "error"
     },
     {

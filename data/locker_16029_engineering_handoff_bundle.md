@@ -2,7 +2,7 @@
 
 Output level: engineering reference, not released production drawing.
 
-- Generated at: `2026-05-23T19:49:23+08:00`
+- Generated at: `2026-05-24T09:59:20+08:00`
 - Handoff directory: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519`
 - Source quality matrix: `D:\Winnsen_Structure_Agent_Studio\data\locker_16029_variant_quality_matrix.json`
 
@@ -31,7 +31,7 @@ Output level: engineering reference, not released production drawing.
 ## Software verification
 
 - Native SolidWorks enriched assemblies, STEP exports, Pack-and-Go folders, and FCStd/STEP quality gates are available for this bundle.
-- Native validation covers door left/right placement, right-door 180 degree rotation, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.
+- Native validation covers door left/right placement, right-hand door module identity placement, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.
 - Native folders are workstation references; `solidworks_pack_and_go` folders are the safer transfer packages.
 - SolidWorks open verification: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_OPEN_VERIFICATION_20260520.md`
 - Native SolidWorks open verification: `D:\Winnsen_Structure_Agent_Studio\workers\handoffs\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\SOLIDWORKS_NATIVE_OPEN_VERIFICATION_20260522.md`

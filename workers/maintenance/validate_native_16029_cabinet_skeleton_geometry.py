@@ -39,11 +39,18 @@ EXPECTED_RIGHT_DOOR_COLUMN_X_MM = 258.5
 VISUAL_GAP_MM = 7.0
 SHELF_AND_CROSSBAR_FROM_LOWER_DOOR_Y_MAX_MM = 2.0
 SHELF_LABEL_TOKEN = "\u6a2a\u5c42\u677f"
+FEATURE_LOCAL_X_BY_COLUMN_MM = {
+    "hinge_pin": {"L": -208.5, "R": 208.5},
+    "lock_hook_pad": {"L": 204.9, "R": -204.9},
+    "electric_lock_hook": {"L": 203.5, "R": -203.5},
+}
 TOL_COUNT_PITCH_MM = 0.15
 TOL_BOUNDARY_OFFSET_MM = 0.15
 TOL_BBOX_MM = 0.5
 TOL_PAIR_MM = 0.1
 TOL_PLACEMENT_X_MM = 0.1
+TOL_DOOR_FEATURE_LOCAL_MM = 0.25
+TOL_DOOR_FEATURE_GLOBAL_MM = 0.25
 
 
 def now_iso() -> str:
@@ -315,7 +322,7 @@ def placement_pitch_deltas(placements: list[dict[str, Any]], expected_pitch: flo
     }
 
 
-def right_column_rotation_ok(placements: list[dict[str, Any]]) -> bool:
+def placement_identity_rotation_ok(placements: list[dict[str, Any]]) -> bool:
     if not placements:
         return False
     for placement in placements:
@@ -323,12 +330,317 @@ def right_column_rotation_ok(placements: list[dict[str, Any]]) -> bool:
         if not isinstance(rotation, list) or len(rotation) < 9:
             return False
         if not (
-            abs(float(rotation[0]) - (-1.0)) <= 1e-6
-            and abs(float(rotation[4]) - (-1.0)) <= 1e-6
+            abs(float(rotation[0]) - 1.0) <= 1e-6
+            and abs(float(rotation[4]) - 1.0) <= 1e-6
             and abs(float(rotation[8]) - 1.0) <= 1e-6
         ):
             return False
     return True
+
+
+def right_column_uses_right_handed_module(placements: list[dict[str, Any]]) -> bool:
+    if not placements:
+        return False
+    return all("_right.sldasm" in str(placement.get("path") or "").lower() for placement in placements)
+
+
+def is_door_panel_feature(row: dict[str, Any]) -> bool:
+    label = row_label(row)
+    return row.get("type_id") == "Part::Feature" and (
+        "\u50a8\u7269\u67dc\u95e8\u677f" in label or "native_16029_door_panel" in label
+    )
+
+
+def is_hinge_pin_feature(row: dict[str, Any]) -> bool:
+    label = row_label(row)
+    return row.get("type_id") == "Part::Feature" and ("\u95e8\u8f74\u9500" in label or "door_hinge_pin" in label)
+
+
+def is_lock_hook_pad_feature(row: dict[str, Any]) -> bool:
+    return row.get("type_id") == "Part::Feature" and "U\u578b\u9501\u94a9\u57ab\u677f" in row_label(row)
+
+
+def is_electric_lock_hook_feature(row: dict[str, Any]) -> bool:
+    label = row_label(row)
+    return row.get("type_id") == "Part::Feature" and (
+        "\u7535\u63a7U\u578b\u9501\u94a9" in label or "electric_lock_hook" in label
+    )
+
+
+def is_door_weld_part(row: dict[str, Any]) -> bool:
+    label = row_label(row)
+    return row.get("type_id") == "App::Part" and (
+        ("\u50a8\u7269\u67dc\u95e8" in label and "\u710a\u63a5" in label) or "native_16029_door_weld" in label
+    )
+
+
+def door_instance_groups(rows: list[dict[str, Any]], doors: int) -> list[dict[str, Any]]:
+    groups: list[dict[str, Any]] = []
+    pending_features: list[dict[str, Any]] = []
+    for row in rows:
+        if row.get("type_id") == "Part::Feature":
+            pending_features.append(row)
+            continue
+        if row.get("type_id") != "App::Part":
+            continue
+        if is_door_module_row(row, doors):
+            groups.append({"door": row, "features": pending_features})
+            pending_features = []
+        elif is_door_weld_part(row):
+            continue
+        else:
+            pending_features = []
+    return groups
+
+
+def group_feature_rows(group: dict[str, Any], predicate) -> list[dict[str, Any]]:
+    return [row for row in group.get("features", []) if predicate(row)]
+
+
+def group_column(group: dict[str, Any]) -> str | None:
+    x_center = group.get("door", {}).get("x_center")
+    if not isinstance(x_center, float):
+        return None
+    return "L" if x_center < 0 else "R" if x_center > 0 else None
+
+
+def local_feature_baseline(summary: dict[str, Any], feature_name: str) -> dict[str, Any]:
+    rows = [row for row in summary.get("rows", []) if row.get("feature") == feature_name]
+    errors = [
+        row
+        for row in rows
+        if row.get("count") != 1
+        or row.get("x_error") is None
+        or float(row.get("x_error")) > TOL_DOOR_FEATURE_LOCAL_MM
+        or row.get("y_error") is None
+        or float(row.get("y_error")) > TOL_DOOR_FEATURE_LOCAL_MM
+    ]
+    x_errors = [float(row["x_error"]) for row in rows if isinstance(row.get("x_error"), (int, float))]
+    y_errors = [float(row["y_error"]) for row in rows if isinstance(row.get("y_error"), (int, float))]
+    return {
+        "ok": bool(rows) and not errors,
+        "feature": feature_name,
+        "row_count": len(rows),
+        "tolerance": TOL_DOOR_FEATURE_LOCAL_MM,
+        "max_x_error": rounded(max(x_errors) if x_errors else None),
+        "max_y_error": rounded(max(y_errors) if y_errors else None),
+        "errors": errors,
+    }
+
+
+def local_door_feature_summary(groups: list[dict[str, Any]], door_height: float) -> dict[str, Any]:
+    checks = [
+        {
+            "name": "door_panel",
+            "predicate": is_door_panel_feature,
+            "expected_y_center": 0.0,
+            "expected_y_len": door_height,
+            "expected_x_center": 0.0,
+        },
+        {
+            "name": "hinge_pin",
+            "predicate": is_hinge_pin_feature,
+            "expected_y_center": -(door_height / 2.0 + 9.7),
+            "expected_x_center": -208.5,
+        },
+        {
+            "name": "lock_hook_pad",
+            "predicate": is_lock_hook_pad_feature,
+            "expected_y_center": 0.0,
+            "expected_x_center": 204.9,
+        },
+        {
+            "name": "electric_lock_hook",
+            "predicate": is_electric_lock_hook_feature,
+            "expected_y_center": 0.0,
+            "expected_x_center": 203.5,
+        },
+    ]
+    errors: list[dict[str, Any]] = []
+    rows: list[dict[str, Any]] = []
+    for group_index, group in enumerate(groups, start=1):
+        column = group_column(group)
+        for spec in checks:
+            matched = group_feature_rows(group, spec["predicate"])
+            item: dict[str, Any] = {
+                "door_index": group_index,
+                "column": column,
+                "feature": spec["name"],
+                "count": len(matched),
+            }
+            if len(matched) == 1:
+                feature = matched[0]
+                x_center = feature.get("x_center")
+                y_center = feature.get("y_center")
+                y_len = feature.get("y_len")
+                expected_x_center = spec["expected_x_center"]
+                if spec["name"] in FEATURE_LOCAL_X_BY_COLUMN_MM and column in ("L", "R"):
+                    expected_x_center = FEATURE_LOCAL_X_BY_COLUMN_MM[spec["name"]][column]
+                x_error = (
+                    abs(float(x_center) - float(expected_x_center)) if isinstance(x_center, float) else None
+                )
+                y_error = (
+                    abs(float(y_center) - float(spec["expected_y_center"])) if isinstance(y_center, float) else None
+                )
+                item.update(
+                    {
+                        "label": row_label(feature),
+                        "x_center": rounded(x_center),
+                        "y_center": rounded(y_center),
+                        "expected_x_center": rounded(float(expected_x_center)),
+                        "expected_y_center": rounded(float(spec["expected_y_center"])),
+                        "x_error": rounded(x_error),
+                        "y_error": rounded(y_error),
+                    }
+                )
+                if "expected_y_len" in spec:
+                    y_len_error = abs(float(y_len) - float(spec["expected_y_len"])) if isinstance(y_len, float) else None
+                    item.update(
+                        {
+                            "y_len": rounded(y_len),
+                            "expected_y_len": rounded(float(spec["expected_y_len"])),
+                            "y_len_error": rounded(y_len_error),
+                        }
+                    )
+                    if y_len_error is None or y_len_error > TOL_DOOR_FEATURE_LOCAL_MM:
+                        errors.append(item)
+                if x_error is None or x_error > TOL_DOOR_FEATURE_LOCAL_MM or y_error is None or y_error > TOL_DOOR_FEATURE_LOCAL_MM:
+                    errors.append(item)
+            else:
+                errors.append(item)
+            rows.append(item)
+    return {
+        "ok": not errors,
+        "door_group_count": len(groups),
+        "tolerance": TOL_DOOR_FEATURE_LOCAL_MM,
+        "feature_baselines": {
+            spec["name"]: local_feature_baseline({"rows": rows}, spec["name"])
+            for spec in checks
+        },
+        "rows": rows,
+        "errors": errors,
+    }
+
+
+def split_group_columns(groups: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    left = [
+        group
+        for group in groups
+        if isinstance(group.get("door", {}).get("x_center"), float) and group["door"]["x_center"] < 0
+    ]
+    right = [
+        group
+        for group in groups
+        if isinstance(group.get("door", {}).get("x_center"), float) and group["door"]["x_center"] > 0
+    ]
+    left.sort(key=lambda group: float(group["door"].get("y_center") or 0))
+    right.sort(key=lambda group: float(group["door"].get("y_center") or 0))
+    return left, right
+
+
+def transform_feature_center(feature: dict[str, Any], placement: dict[str, Any]) -> dict[str, float | None]:
+    rotation = placement.get("rotation")
+    tx = placement.get("txMm")
+    ty = placement.get("tyMm")
+    tz = placement.get("tzMm")
+    x = feature.get("x_center")
+    y = feature.get("y_center")
+    z = feature.get("z_center")
+    if (
+        not isinstance(rotation, list)
+        or len(rotation) < 9
+        or not isinstance(tx, (int, float))
+        or not isinstance(ty, (int, float))
+        or not isinstance(tz, (int, float))
+        or not isinstance(x, float)
+        or not isinstance(y, float)
+        or not isinstance(z, float)
+    ):
+        return {"x": None, "y": None, "z": None}
+    return {
+        "x": float(rotation[0]) * x + float(rotation[1]) * y + float(rotation[2]) * z + float(tx),
+        "y": float(rotation[3]) * x + float(rotation[4]) * y + float(rotation[5]) * z + float(ty),
+        "z": float(rotation[6]) * x + float(rotation[7]) * y + float(rotation[8]) * z + float(tz),
+    }
+
+
+def feature_global_mirror_summary(
+    left_groups: list[dict[str, Any]],
+    right_groups: list[dict[str, Any]],
+    left_placements: list[dict[str, Any]],
+    right_placements: list[dict[str, Any]],
+    feature_name: str,
+    predicate,
+) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    pair_count = min(len(left_groups), len(right_groups), len(left_placements), len(right_placements))
+    for index in range(pair_count):
+        left_matches = group_feature_rows(left_groups[index], predicate)
+        right_matches = group_feature_rows(right_groups[index], predicate)
+        item: dict[str, Any] = {
+            "row": index + 1,
+            "feature": feature_name,
+            "left_count": len(left_matches),
+            "right_count": len(right_matches),
+        }
+        if len(left_matches) == 1 and len(right_matches) == 1:
+            left_global = transform_feature_center(left_matches[0], left_placements[index])
+            right_global = transform_feature_center(right_matches[0], right_placements[index])
+            x_mirror_error = (
+                abs(float(left_global["x"]) + float(right_global["x"]))
+                if isinstance(left_global.get("x"), float) and isinstance(right_global.get("x"), float)
+                else None
+            )
+            y_error = (
+                abs(float(left_global["y"]) - float(right_global["y"]))
+                if isinstance(left_global.get("y"), float) and isinstance(right_global.get("y"), float)
+                else None
+            )
+            z_error = (
+                abs(float(left_global["z"]) - float(right_global["z"]))
+                if isinstance(left_global.get("z"), float) and isinstance(right_global.get("z"), float)
+                else None
+            )
+            item.update(
+                {
+                    "left_global": {key: rounded(value) for key, value in left_global.items()},
+                    "right_global": {key: rounded(value) for key, value in right_global.items()},
+                    "x_mirror_error": rounded(x_mirror_error),
+                    "y_error": rounded(y_error),
+                    "z_error": rounded(z_error),
+                }
+            )
+            if (
+                x_mirror_error is None
+                or x_mirror_error > TOL_DOOR_FEATURE_GLOBAL_MM
+                or y_error is None
+                or y_error > TOL_DOOR_FEATURE_GLOBAL_MM
+                or z_error is None
+                or z_error > TOL_DOOR_FEATURE_GLOBAL_MM
+            ):
+                errors.append(item)
+        else:
+            errors.append(item)
+        rows.append(item)
+    if pair_count != len(left_groups) or pair_count != len(right_groups):
+        errors.append(
+            {
+                "feature": feature_name,
+                "reason": "door group or placement pair count mismatch",
+                "left_groups": len(left_groups),
+                "right_groups": len(right_groups),
+                "left_placements": len(left_placements),
+                "right_placements": len(right_placements),
+            }
+        )
+    return {
+        "ok": not errors,
+        "pair_count": pair_count,
+        "tolerance": TOL_DOOR_FEATURE_GLOBAL_MM,
+        "rows": rows,
+        "errors": errors,
+    }
 
 
 def pitch_deltas(rows: list[dict[str, Any]], expected_pitch: float) -> dict[str, Any]:
@@ -510,6 +822,8 @@ def audit_variant(doors: int) -> dict[str, Any]:
 
     door_rows = [row for row in rows if is_door_module_row(row, doors)]
     left_doors, right_doors = split_door_columns(door_rows)
+    door_groups = door_instance_groups(rows, doors)
+    left_door_groups, right_door_groups = split_group_columns(door_groups)
     door_array_result = load_door_array_result(doors)
     left_placements = placement_column_rows(door_array_result, "L")
     right_placements = placement_column_rows(door_array_result, "R")
@@ -553,10 +867,24 @@ def audit_variant(doors: int) -> dict[str, Any]:
     )
     add_check(
         checks,
-        "right_column_standard_rotation",
-        right_column_rotation_ok(right_placements),
+        "left_column_identity_transform",
+        placement_identity_rotation_ok(left_placements),
+        [row.get("rotation") for row in left_placements[:2]],
+        "left door placements use identity rotation",
+    )
+    add_check(
+        checks,
+        "right_column_identity_transform",
+        placement_identity_rotation_ok(right_placements),
         [row.get("rotation") for row in right_placements[:2]],
-        "right door placements use 180deg Z rotation [-1,0,0;0,-1,0;0,0,1]",
+        "right door placements use identity rotation because the right-hand door module is pre-mirrored",
+    )
+    add_check(
+        checks,
+        "right_column_uses_right_handed_module",
+        right_column_uses_right_handed_module(right_placements),
+        [Path(str(row.get("path") or "")).name for row in right_placements[:2]],
+        "right door placements reference *_right.SLDASM modules",
     )
     add_check(
         checks,
@@ -616,22 +944,92 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "Part::Feature",
         lambda label: "\u50a8\u7269\u67dc\u95e8\u677f" in label or "native_16029_door_panel" in label,
     )
-    hinge_pin_count = count_rows_where(
-        rows,
-        "Part::Feature",
-        lambda label: "\u95e8\u8f74\u9500" in label or "door_hinge_pin" in label,
+    hinge_pin_count = sum(1 for row in rows if is_hinge_pin_feature(row))
+    lock_hook_pad_count = sum(1 for row in rows if is_lock_hook_pad_feature(row))
+    electric_lock_hook_count = sum(1 for row in rows if is_electric_lock_hook_feature(row))
+    local_feature_summary = local_door_feature_summary(door_groups, door_height)
+    hinge_pin_local_baseline = local_feature_baseline(local_feature_summary, "hinge_pin")
+    lock_hook_pad_local_baseline = local_feature_baseline(local_feature_summary, "lock_hook_pad")
+    electric_lock_hook_local_baseline = local_feature_baseline(local_feature_summary, "electric_lock_hook")
+    hinge_global_summary = feature_global_mirror_summary(
+        left_door_groups,
+        right_door_groups,
+        left_placements,
+        right_placements,
+        "hinge_pin",
+        is_hinge_pin_feature,
     )
-    lock_hook_pad_count = count_rows(rows, "Part::Feature", "U\u578b\u9501\u94a9\u57ab\u677f")
-    electric_lock_hook_count = count_rows_where(
-        rows,
-        "Part::Feature",
-        lambda label: "\u7535\u63a7U\u578b\u9501\u94a9" in label or "electric_lock_hook" in label,
+    lock_pad_global_summary = feature_global_mirror_summary(
+        left_door_groups,
+        right_door_groups,
+        left_placements,
+        right_placements,
+        "lock_hook_pad",
+        is_lock_hook_pad_feature,
+    )
+    electric_hook_global_summary = feature_global_mirror_summary(
+        left_door_groups,
+        right_door_groups,
+        left_placements,
+        right_placements,
+        "electric_lock_hook",
+        is_electric_lock_hook_feature,
     )
     add_check(checks, "door_weld_subassembly_count", door_weld_count == doors, door_weld_count, doors)
     add_check(checks, "door_panel_feature_count", door_panel_count == doors, door_panel_count, doors)
     add_check(checks, "hinge_pin_count", hinge_pin_count == doors, hinge_pin_count, doors)
     add_check(checks, "lock_hook_pad_count", lock_hook_pad_count == doors, lock_hook_pad_count, doors)
     add_check(checks, "electric_lock_hook_count", electric_lock_hook_count == doors, electric_lock_hook_count, doors)
+    add_check(checks, "door_feature_group_count", len(door_groups) == doors, len(door_groups), doors)
+    add_check(
+        checks,
+        "door_local_feature_geometry",
+        bool(local_feature_summary.get("ok")),
+        local_feature_summary,
+        "each door has panel, hinge pin, lock hook pad, and electric lock hook at door-height-driven local positions",
+    )
+    add_check(
+        checks,
+        "hinge_pin_local_x_baseline",
+        bool(hinge_pin_local_baseline.get("ok")),
+        hinge_pin_local_baseline,
+        "left X=-208.5mm, right X=208.5mm, Y=-(door_height/2+9.7)",
+    )
+    add_check(
+        checks,
+        "lock_hook_pad_local_x_baseline",
+        bool(lock_hook_pad_local_baseline.get("ok")),
+        lock_hook_pad_local_baseline,
+        "left X=204.9mm, right X=-204.9mm, Y=0; guards right-hand hookPadTx datum",
+    )
+    add_check(
+        checks,
+        "electric_lock_hook_local_x_baseline",
+        bool(electric_lock_hook_local_baseline.get("ok")),
+        electric_lock_hook_local_baseline,
+        "left X=203.5mm, right X=-203.5mm, Y=0",
+    )
+    add_check(
+        checks,
+        "hinge_pin_global_mirror_alignment",
+        bool(hinge_global_summary.get("ok")),
+        hinge_global_summary,
+        "left/right hinge pins mirror in X and align in Y/Z after placement transform",
+    )
+    add_check(
+        checks,
+        "lock_hook_pad_global_mirror_alignment",
+        bool(lock_pad_global_summary.get("ok")),
+        lock_pad_global_summary,
+        "left/right lock hook pads mirror in X and align in Y/Z after placement transform",
+    )
+    add_check(
+        checks,
+        "electric_lock_hook_global_mirror_alignment",
+        bool(electric_hook_global_summary.get("ok")),
+        electric_hook_global_summary,
+        "left/right electric lock hooks mirror in X and align in Y/Z after placement transform",
+    )
 
     shelf_rows = [row for row in rows if row.get("type_id") == "App::Part" and SHELF_LABEL_TOKEN in row_label(row)]
     shelf_clusters = cluster_centers(shelf_rows)
@@ -700,6 +1098,7 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "door_array_result": (door_array_result or {}).get("_path", ""),
         "left_column_placement_count": len(left_placements),
         "right_column_placement_count": len(right_placements),
+        "door_feature_group_count": len(door_groups),
         "door_array_transform_summary": transform_summary,
         "left_column_x_error": rounded(left_x_error),
         "right_column_x_error": rounded(right_x_error),
@@ -712,6 +1111,13 @@ def audit_variant(doors: int) -> dict[str, Any]:
         "hinge_pin_count": hinge_pin_count,
         "lock_hook_pad_count": lock_hook_pad_count,
         "electric_lock_hook_count": electric_lock_hook_count,
+        "door_local_feature_geometry": local_feature_summary,
+        "hinge_pin_local_x_baseline": hinge_pin_local_baseline,
+        "lock_hook_pad_local_x_baseline": lock_hook_pad_local_baseline,
+        "electric_lock_hook_local_x_baseline": electric_lock_hook_local_baseline,
+        "hinge_pin_global_mirror_alignment": hinge_global_summary,
+        "lock_hook_pad_global_mirror_alignment": lock_pad_global_summary,
+        "electric_lock_hook_global_mirror_alignment": electric_hook_global_summary,
         "shelf_count": len(shelf_rows),
         "shelf_levels": shelf_clusters,
         "shelf_pitch": shelf_pitch,
@@ -811,6 +1217,7 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
             "- Left/right door column X placements must stay at the learned 16029 datum.",
             "- Door pitch must match the configured door height plus 7 mm visual gap.",
             "- Door weldments, door panels, hinge pins, U-lock hook pads, and electric lock hooks must match the door count.",
+            "- Hinge pin, U-lock hook pad, and electric lock hook local X signs must match the left/right handed door module rule.",
             "- Shelf modules and front-frame crossbars must form left/right pairs at each internal level.",
             "- Shelf and front-frame crossbar pitch must match the same row pitch, catching flying or collapsed arrays.",
             "",

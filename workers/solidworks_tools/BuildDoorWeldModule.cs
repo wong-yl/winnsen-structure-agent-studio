@@ -15,7 +15,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 7)
             {
-                Console.Error.WriteLine("Usage: BuildDoorWeldModule.exe <out-asm> <out-json> <door-height-mm> <panel> <stiffener> <latch-plate> <hook-pad>");
+                Console.Error.WriteLine("Usage: BuildDoorWeldModule.exe <out-asm> <out-json> <door-height-mm> <panel> <stiffener> <latch-plate> <hook-pad> [left|right]");
                 return 2;
             }
 
@@ -26,11 +26,19 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             string stiffener = Path.GetFullPath(args[4]);
             string latch = Path.GetFullPath(args[5]);
             string hook = Path.GetFullPath(args[6]);
+            string handedness = args.Length >= 8 ? args[7].Trim().ToLowerInvariant() : "left";
+            if (handedness != "left" && handedness != "right")
+            {
+                Console.Error.WriteLine("handedness must be 'left' or 'right'");
+                return 2;
+            }
+            double side = handedness == "right" ? -1.0 : 1.0;
 
             var result = new BuildResult
             {
                 OutAsmPath = outAsm,
                 DoorHeightMm = doorHeight,
+                Handedness = handedness,
             };
 
             try
@@ -67,13 +75,15 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 double latchTopTy = doorHeight / 2.0 - 0.8;
                 double latchBottomTy = -doorHeight / 2.0 + 28.8;
 
+                double hookPadTx = handedness == "right" ? -203.5 : 206.3;
+
                 var placements = new[]
                 {
                     new Placement("door_panel_rule_part", panel, Identity(), 0, 0, 0),
                     new Placement("door_stiffener_rule_part", stiffener, Identity(), 0, 0, -14.8),
-                    new Placement("latch_plate_top", latch, RotateX90(), -208.5, latchTopTy, -14.0),
-                    new Placement("latch_plate_bottom", latch, RotateX90(), -208.5, latchBottomTy, -14.0),
-                    new Placement("u_hook_pad", hook, Identity(), 206.3, 0, -1.6),
+                    new Placement("latch_plate_top", latch, RotateX90(), -208.5 * side, latchTopTy, -14.0),
+                    new Placement("latch_plate_bottom", latch, RotateX90(), -208.5 * side, latchBottomTy, -14.0),
+                    new Placement("u_hook_pad", hook, Identity(), hookPadTx, 0, -1.6),
                 };
 
                 foreach (Placement p in placements)
@@ -235,6 +245,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             sb.Append("{");
             Prop(sb, "outAsmPath", r.OutAsmPath, true);
             Prop(sb, "doorHeightMm", r.DoorHeightMm);
+            Prop(sb, "handedness", r.Handedness);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
             Prop(sb, "saved", r.Saved);
@@ -316,6 +327,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             public string OutAsmPath = "";
             public double DoorHeightMm;
+            public string Handedness = "left";
             public bool NewAssembly;
             public bool Rebuilt;
             public bool Saved;

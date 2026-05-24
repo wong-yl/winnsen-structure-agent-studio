@@ -479,6 +479,11 @@ def read_native_validation_summary(validation_json_path: Path, door_count: int) 
         left_right_bbox_delta = _check_actual(checks, "embedded_left_right_door_y_alignment")
     bbox = data.get("combined_bbox_mm") or {}
     expected_per_column = int(door_count / 2)
+    right_column_identity_transform_ok = _check_status(checks, "embedded_right_column_identity_transform")
+    right_column_uses_right_handed_module = _check_status(checks, "embedded_right_column_uses_right_handed_module")
+    right_column_mirror_route_ok = (
+        bool(right_column_identity_transform_ok) and bool(right_column_uses_right_handed_module)
+    )
 
     return {
         "path": str(validation_json_path),
@@ -505,10 +510,17 @@ def read_native_validation_summary(validation_json_path: Path, door_count: int) 
         "left_column_pitch_max_error": left_pitch.get("max_error") if isinstance(left_pitch, dict) else None,
         "right_column_pitch_mm": _pitch_value(right_pitch),
         "right_column_pitch_max_error": right_pitch.get("max_error") if isinstance(right_pitch, dict) else None,
-        "right_column_rotation_ok": _check_status(checks, "embedded_right_column_standard_rotation"),
+        "right_column_identity_transform_ok": right_column_identity_transform_ok,
+        "right_column_uses_right_handed_module": right_column_uses_right_handed_module,
+        "right_column_mirror_route_ok": right_column_mirror_route_ok,
+        "right_column_route": "right_handed_module_identity_transform",
+        "right_column_rotation_ok": right_column_mirror_route_ok,
         "left_right_y_alignment_ok": _check_status(checks, "embedded_left_right_door_y_alignment"),
         "left_right_door_bbox_y_delta": left_right_bbox_delta,
         "left_right_door_placement_y_delta": embedded.get("left_right_door_placement_y_delta"),
+        "hinge_pin_local_x_baseline_ok": _check_status(checks, "embedded_hinge_pin_local_x_baseline"),
+        "lock_hook_pad_local_x_baseline_ok": _check_status(checks, "embedded_lock_hook_pad_local_x_baseline"),
+        "electric_lock_hook_local_x_baseline_ok": _check_status(checks, "embedded_electric_lock_hook_local_x_baseline"),
         "door_weld_count": embedded.get("door_weld_count"),
         "door_panel_feature_count": embedded.get("door_panel_feature_count"),
         "hinge_pin_count": embedded.get("hinge_pin_count"),
@@ -746,10 +758,16 @@ Output level: engineering reference, not released production drawing.
             "native_reported_door_count": native_reference["validation_summary"].get("reported_door_count"),
             "native_left_column_door_count": native_reference["validation_summary"].get("left_column_door_count"),
             "native_right_column_door_count": native_reference["validation_summary"].get("right_column_door_count"),
+            "native_right_column_identity_transform_ok": native_reference["validation_summary"].get("right_column_identity_transform_ok"),
+            "native_right_column_uses_right_handed_module": native_reference["validation_summary"].get("right_column_uses_right_handed_module"),
+            "native_right_column_mirror_route_ok": native_reference["validation_summary"].get("right_column_mirror_route_ok"),
             "native_right_column_rotation_ok": native_reference["validation_summary"].get("right_column_rotation_ok"),
             "native_left_right_y_alignment_ok": native_reference["validation_summary"].get("left_right_y_alignment_ok"),
             "native_left_right_door_bbox_y_delta": native_reference["validation_summary"].get("left_right_door_bbox_y_delta"),
             "native_left_right_door_placement_y_delta": native_reference["validation_summary"].get("left_right_door_placement_y_delta"),
+            "native_hinge_pin_local_x_baseline_ok": native_reference["validation_summary"].get("hinge_pin_local_x_baseline_ok"),
+            "native_lock_hook_pad_local_x_baseline_ok": native_reference["validation_summary"].get("lock_hook_pad_local_x_baseline_ok"),
+            "native_electric_lock_hook_local_x_baseline_ok": native_reference["validation_summary"].get("electric_lock_hook_local_x_baseline_ok"),
             "native_door_weld_count": native_reference["validation_summary"].get("door_weld_count"),
             "native_door_panel_feature_count": native_reference["validation_summary"].get("door_panel_feature_count"),
             "native_hinge_pin_count": native_reference["validation_summary"].get("hinge_pin_count"),
@@ -791,10 +809,16 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                 "native_reported_door_count",
                 "native_left_column_door_count",
                 "native_right_column_door_count",
+                "native_right_column_identity_transform_ok",
+                "native_right_column_uses_right_handed_module",
+                "native_right_column_mirror_route_ok",
                 "native_right_column_rotation_ok",
                 "native_left_right_y_alignment_ok",
                 "native_left_right_door_bbox_y_delta",
                 "native_left_right_door_placement_y_delta",
+                "native_hinge_pin_local_x_baseline_ok",
+                "native_lock_hook_pad_local_x_baseline_ok",
+                "native_electric_lock_hook_local_x_baseline_ok",
                 "native_door_weld_count",
                 "native_door_panel_feature_count",
                 "native_hinge_pin_count",
@@ -833,10 +857,16 @@ def write_manifest_csv(rows: list[dict[str, Any]], path: Path) -> None:
                     "native_reported_door_count": metrics.get("native_reported_door_count"),
                     "native_left_column_door_count": metrics.get("native_left_column_door_count"),
                     "native_right_column_door_count": metrics.get("native_right_column_door_count"),
+                    "native_right_column_identity_transform_ok": "yes" if metrics.get("native_right_column_identity_transform_ok") else "no",
+                    "native_right_column_uses_right_handed_module": "yes" if metrics.get("native_right_column_uses_right_handed_module") else "no",
+                    "native_right_column_mirror_route_ok": "yes" if metrics.get("native_right_column_mirror_route_ok") else "no",
                     "native_right_column_rotation_ok": "yes" if metrics.get("native_right_column_rotation_ok") else "no",
                     "native_left_right_y_alignment_ok": "yes" if metrics.get("native_left_right_y_alignment_ok") else "no",
                     "native_left_right_door_bbox_y_delta": metrics.get("native_left_right_door_bbox_y_delta"),
                     "native_left_right_door_placement_y_delta": metrics.get("native_left_right_door_placement_y_delta"),
+                    "native_hinge_pin_local_x_baseline_ok": "yes" if metrics.get("native_hinge_pin_local_x_baseline_ok") else "no",
+                    "native_lock_hook_pad_local_x_baseline_ok": "yes" if metrics.get("native_lock_hook_pad_local_x_baseline_ok") else "no",
+                    "native_electric_lock_hook_local_x_baseline_ok": "yes" if metrics.get("native_electric_lock_hook_local_x_baseline_ok") else "no",
                     "native_door_weld_count": metrics.get("native_door_weld_count"),
                     "native_door_panel_feature_count": metrics.get("native_door_panel_feature_count"),
                     "native_hinge_pin_count": metrics.get("native_hinge_pin_count"),
@@ -934,10 +964,16 @@ def write_quality_summary_csv(payload: dict[str, Any]) -> str:
         "reported_door_count",
         "left_column_door_count",
         "right_column_door_count",
+        "right_column_identity_transform_ok",
+        "right_column_uses_right_handed_module",
+        "right_column_mirror_route_ok",
         "right_column_rotation_ok",
         "left_right_y_alignment_ok",
         "left_right_door_bbox_y_delta",
         "left_right_door_placement_y_delta",
+        "hinge_pin_local_x_baseline_ok",
+        "lock_hook_pad_local_x_baseline_ok",
+        "electric_lock_hook_local_x_baseline_ok",
         "door_weld_count",
         "door_panel_feature_count",
         "hinge_pin_count",
@@ -972,10 +1008,16 @@ def write_quality_summary_csv(payload: dict[str, Any]) -> str:
                     "reported_door_count": validation.get("reported_door_count"),
                     "left_column_door_count": validation.get("left_column_door_count"),
                     "right_column_door_count": validation.get("right_column_door_count"),
+                    "right_column_identity_transform_ok": yes_no(validation.get("right_column_identity_transform_ok")),
+                    "right_column_uses_right_handed_module": yes_no(validation.get("right_column_uses_right_handed_module")),
+                    "right_column_mirror_route_ok": yes_no(validation.get("right_column_mirror_route_ok")),
                     "right_column_rotation_ok": yes_no(validation.get("right_column_rotation_ok")),
                     "left_right_y_alignment_ok": yes_no(validation.get("left_right_y_alignment_ok")),
                     "left_right_door_bbox_y_delta": validation.get("left_right_door_bbox_y_delta"),
                     "left_right_door_placement_y_delta": validation.get("left_right_door_placement_y_delta"),
+                    "hinge_pin_local_x_baseline_ok": yes_no(validation.get("hinge_pin_local_x_baseline_ok")),
+                    "lock_hook_pad_local_x_baseline_ok": yes_no(validation.get("lock_hook_pad_local_x_baseline_ok")),
+                    "electric_lock_hook_local_x_baseline_ok": yes_no(validation.get("electric_lock_hook_local_x_baseline_ok")),
                     "door_weld_count": validation.get("door_weld_count"),
                     "door_panel_feature_count": validation.get("door_panel_feature_count"),
                     "hinge_pin_count": validation.get("hinge_pin_count"),
@@ -1010,7 +1052,7 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
         "",
         "## 快速结论",
         "",
-        "| 门数 | 根目录打开脚本 | 依赖 | 原生验证 | 门模块 | 右门镜像 | 门/铰链/锁 | 层板/横档 | bbox X/Z |",
+        "| 门数 | 根目录打开脚本 | 依赖 | 原生验证 | 门模块 | 右门路线 | 门/铰链/锁 | 层板/横档 | bbox X/Z |",
         "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for row in payload["variants"]:
@@ -1033,8 +1075,11 @@ def write_handoff_ready_summary(payload: dict[str, Any]) -> str:
         )
         shelf_text = f"shelf {validation.get('shelf_count')}; crossbar {validation.get('crossbar_count')}"
         bbox_text = f"{validation.get('bbox_x_mm')}/{validation.get('bbox_z_mm')} mm"
-        mirror_ok = bool(validation.get("right_column_rotation_ok")) and bool(validation.get("left_right_y_alignment_ok"))
-        mirror_text = f"{'PASS' if mirror_ok else 'FAIL'} bbox_d={validation.get('left_right_door_bbox_y_delta')}mm"
+        mirror_ok = bool(validation.get("right_column_mirror_route_ok")) and bool(validation.get("left_right_y_alignment_ok"))
+        mirror_text = (
+            f"{'PASS' if mirror_ok else 'FAIL'} "
+            f"right-module identity; bbox_d={validation.get('left_right_door_bbox_y_delta')}mm"
+        )
         lines.append(
             "| "
             + " | ".join(
@@ -1120,7 +1165,13 @@ $qualityRows = @(Import-Csv -LiteralPath $qualityCsv)
 $qualityFailures = @($qualityRows | Where-Object {{
   $_.native_validation_ok -ne 'yes' -or
   [int]$_.native_failed_check_count -ne 0 -or
-  [int]$_.dependency_missing_count -ne 0
+  [int]$_.dependency_missing_count -ne 0 -or
+  $_.right_column_mirror_route_ok -ne 'yes' -or
+  $_.hinge_pin_local_x_baseline_ok -ne 'yes' -or
+  $_.lock_hook_pad_local_x_baseline_ok -ne 'yes' -or
+  $_.electric_lock_hook_local_x_baseline_ok -ne 'yes' -or
+  $_.left_right_y_alignment_ok -ne 'yes' -or
+  [double]$_.left_right_door_bbox_y_delta -gt 0.1
 }})
 $packAndGoRows = @()
 $packAndGoFailures = @()
@@ -1169,7 +1220,9 @@ if (-not (Test-Path -LiteralPath $verifiedRulePacketJson)) {{
   }}
   $verifiedRuleFailures += @($verifiedRuleRows | Where-Object {{
     $_.enabled_for_engineering_handoff -ne 'True' -or
-    $_.right_column_rotation_ok -ne 'yes' -or
+    $_.right_column_identity_transform_ok -ne 'yes' -or
+    $_.right_column_uses_right_handed_module -ne 'yes' -or
+    $_.right_column_mirror_route_ok -ne 'yes' -or
     $_.left_right_y_alignment_ok -ne 'yes' -or
     [double]$_.left_right_door_bbox_y_delta -gt 0.1 -or
     $_.native_skeleton_status -ne 'PASS' -or
@@ -1192,7 +1245,7 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packA
   }}
   $lines += "Quality failures: $($qualityFailures.Count)"
   foreach ($row in $qualityFailures) {{
-    $lines += ("  {{0}}door | validation={{1}} | failed_checks={{2}} | missing_dependencies={{3}}" -f $row.door_count, $row.native_validation_ok, $row.native_failed_check_count, $row.dependency_missing_count)
+    $lines += ("  {{0}}door | validation={{1}} | failed_checks={{2}} | missing_dependencies={{3}} | right_route={{4}} | hinge={{5}} | hook_pad={{6}} | lock_hook={{7}} | y_align={{8}}" -f $row.door_count, $row.native_validation_ok, $row.native_failed_check_count, $row.dependency_missing_count, $row.right_column_mirror_route_ok, $row.hinge_pin_local_x_baseline_ok, $row.lock_hook_pad_local_x_baseline_ok, $row.electric_lock_hook_local_x_baseline_ok, $row.left_right_y_alignment_ok)
   }}
   $lines += "Pack-and-Go failures: $($packAndGoFailures.Count)"
   foreach ($row in $packAndGoFailures) {{
@@ -1230,7 +1283,7 @@ if ($independenceRows.Count -gt 0) {{
 if ($verifiedRuleRows.Count -gt 0) {{
   $lines += "Verified rule packet:"
   foreach ($row in $verifiedRuleRows) {{
-    $lines += ("  {{0}}door | rows={{1}} | door_h={{2}} | pitch={{3}} | shelves={{4}} | crossbars={{5}} | mirror={{6}} | bbox_d={{7}}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_rotation_ok, $row.left_right_door_bbox_y_delta)
+    $lines += ("  {{0}}door | rows={{1}} | door_h={{2}} | pitch={{3}} | shelves={{4}} | crossbars={{5}} | right_route={{6}} | bbox_d={{7}}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_mirror_route_ok, $row.left_right_door_bbox_y_delta)
   }}
 }}
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8
@@ -1512,7 +1565,7 @@ def write_root_readme(payload: dict[str, Any]) -> None:
             "## Software verification",
             "",
             "- Native SolidWorks enriched assemblies, STEP exports, Pack-and-Go folders, and FCStd/STEP quality gates are available for this bundle.",
-            "- Native validation covers door left/right placement, right-door 180 degree rotation, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.",
+            "- Native validation covers door left/right placement, right-hand door module identity placement, door module counts, hinge/lock counts, shelf levels, front-frame crossbars, fixed-module bbox matching, and source dependency presence.",
             "- Native folders are workstation references; `solidworks_pack_and_go` folders are the safer transfer packages.",
             f"- SolidWorks open verification: `{solidworks_open_verification or ''}`",
             f"- Native SolidWorks open verification: `{payload.get('solidworks_native_open_verification') or ''}`",

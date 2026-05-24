@@ -15,7 +15,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 8)
             {
-                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook>");
+                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook> [left|right]");
                 return 2;
             }
 
@@ -27,11 +27,19 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             string hingePin = Path.GetFullPath(args[5]);
             string circlip = Path.GetFullPath(args[6]);
             string lockHook = Path.GetFullPath(args[7]);
+            string handedness = args.Length >= 9 ? args[8].Trim().ToLowerInvariant() : "left";
+            if (handedness != "left" && handedness != "right")
+            {
+                Console.Error.WriteLine("handedness must be 'left' or 'right'");
+                return 2;
+            }
+            double side = handedness == "right" ? -1.0 : 1.0;
 
             var result = new BuildResult
             {
                 OutAsmPath = outAsm,
                 DoorHeightMm = doorHeight,
+                Handedness = handedness,
             };
 
             try
@@ -66,7 +74,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 double half = doorHeight / 2.0;
-                const double hingeX = -208.5;
+                double hingeX = -208.5 * side;
                 const double hingeZ = -7.0;
                 double bushingTopTy = half - 5.5;
                 double bushingBottomTy = -half - 1.5;
@@ -84,7 +92,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     new Placement("door_hinge_pin", hingePin, Identity(), hingeX, hingePinTy, hingeZ),
                     new Placement("circlip_top", circlip, RotateX90(), hingeX, circlipTopTy, circlipTz),
                     new Placement("circlip_bottom", circlip, RotateX90(), hingeX, circlipBottomTy, circlipTz),
-                    new Placement("electric_lock_hook", lockHook, Identity(), 203.5, 0, lockHookTz),
+                    new Placement("electric_lock_hook", lockHook, Identity(), 203.5 * side, 0, lockHookTz),
                 };
 
                 foreach (Placement p in placements)
@@ -246,6 +254,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             sb.Append("{");
             Prop(sb, "outAsmPath", r.OutAsmPath, true);
             Prop(sb, "doorHeightMm", r.DoorHeightMm);
+            Prop(sb, "handedness", r.Handedness);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
             Prop(sb, "saved", r.Saved);
@@ -327,6 +336,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             public string OutAsmPath = "";
             public double DoorHeightMm;
+            public string Handedness = "left";
             public bool NewAssembly;
             public bool Rebuilt;
             public bool Saved;

@@ -4,14 +4,18 @@ $repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $outDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-DOOR-WELD-MODULE-20260521'
 $builder = Join-Path $repo 'workers\solidworks_tools\bin\BuildDoorWeldModule.exe'
 $buildBuilder = Join-Path $repo 'workers\solidworks_tools\build_door_weld_module.ps1'
-$exporter = 'D:\机械结构工程师智能体\scripts\sw_export_step_ascii.js'
-$freecad = 'D:\软件安装录\freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe'
+$exporter = Join-Path $repo 'workers\solidworks_tools\sw_export_step_ascii.js'
+$softwareInstallDirName = -join ([char[]](0x8F6F,0x4EF6,0x5B89,0x88C5,0x5F55))
+$freecad = Join-Path (Join-Path 'D:\' $softwareInstallDirName) 'freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe'
 $bboxWorker = Join-Path $repo 'workers\rule_extractions\RULE-16029-WELD-MODULE-PLACEMENT-20260521\freecad_env_worker_entry.py'
 
 $panelDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-DOOR-PANEL-SERIES-20260521'
 $stiffenerDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-DOOR-STIFFENER-SERIES-20260521'
-$latchPlate = 'C:\sw16029_standard_ascii\插销固定板.SLDPRT'
-$hookPad = 'C:\sw16029_standard_ascii\U型锁钩垫板.SLDPRT'
+$standardRoot = 'C:\sw16029_standard_ascii'
+$latchPlateName = (-join ([char[]](0x63D2,0x9500,0x56FA,0x5B9A,0x677F))) + '.SLDPRT'
+$hookPadName = 'U' + (-join ([char[]](0x578B,0x9501,0x94A9,0x57AB,0x677F))) + '.SLDPRT'
+$latchPlate = Join-Path $standardRoot $latchPlateName
+$hookPad = Join-Path $standardRoot $hookPadName
 
 $variants = @(
   @{
@@ -54,39 +58,43 @@ foreach ($variant in $variants) {
     }
   }
 
-  $base = "native_16029_door_weld_5part_$($variant.Doors)door_v6_csharp"
-  $asm = Join-Path $outDir ($base + '.SLDASM')
-  $resultJson = Join-Path $outDir ($base + '_result.json')
-  $step = Join-Path $outDir ($base + '.step')
-  $bboxJson = Join-Path $outDir ($base + '_step_bbox.json')
-  $bboxCsv = Join-Path $outDir ($base + '_step_bbox.csv')
+  foreach ($hand in @('left', 'right')) {
+    $suffix = $(if ($hand -eq 'left') { '' } else { '_right' })
+    $base = "native_16029_door_weld_5part_$($variant.Doors)door_v6_csharp$suffix"
+    $asm = Join-Path $outDir ($base + '.SLDASM')
+    $resultJson = Join-Path $outDir ($base + '_result.json')
+    $step = Join-Path $outDir ($base + '.step')
+    $bboxJson = Join-Path $outDir ($base + '_step_bbox.json')
+    $bboxCsv = Join-Path $outDir ($base + '_step_bbox.csv')
 
-  & $builder $asm $resultJson ([string]$variant.DoorHeight) $variant.Panel $variant.Stiffener $latchPlate $hookPad | Out-Host
-  if ($LASTEXITCODE -ne 0) {
-    throw "SolidWorks assembly generation failed for $($variant.Doors)-door variant"
-  }
+    & $builder $asm $resultJson ([string]$variant.DoorHeight) $variant.Panel $variant.Stiffener $latchPlate $hookPad $hand | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+      throw "SolidWorks assembly generation failed for $($variant.Doors)-door $hand variant"
+    }
 
-  & cscript.exe //Nologo $exporter $asm $step | Out-Host
-  if ($LASTEXITCODE -ne 0) {
-    throw "SolidWorks STEP export failed for $($variant.Doors)-door variant"
-  }
+    & cscript.exe //Nologo $exporter $asm $step | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+      throw "SolidWorks STEP export failed for $($variant.Doors)-door $hand variant"
+    }
 
-  $env:STEP_PATH = $step
-  $env:JSON_OUT = $bboxJson
-  $env:CSV_OUT = $bboxCsv
-  & $freecad $bboxWorker | Out-Host
-  if ($LASTEXITCODE -ne 0) {
-    throw "FreeCAD bbox inspection failed for $($variant.Doors)-door variant"
-  }
+    $env:STEP_PATH = $step
+    $env:JSON_OUT = $bboxJson
+    $env:CSV_OUT = $bboxCsv
+    & $freecad $bboxWorker | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+      throw "FreeCAD bbox inspection failed for $($variant.Doors)-door $hand variant"
+    }
 
-  $parts = Import-Csv -LiteralPath $bboxCsv | Where-Object { $_.type_id -eq 'Part::Feature' }
-  $summary += [pscustomobject]@{
-    Doors = $variant.Doors
-    DoorHeightMm = $variant.DoorHeight
-    Assembly = $asm
-    Step = $step
-    BboxCsv = $bboxCsv
-    PartFeatureCount = @($parts).Count
+    $parts = Import-Csv -LiteralPath $bboxCsv | Where-Object { $_.type_id -eq 'Part::Feature' }
+    $summary += [pscustomobject]@{
+      Doors = $variant.Doors
+      Handedness = $hand
+      DoorHeightMm = $variant.DoorHeight
+      Assembly = $asm
+      Step = $step
+      BboxCsv = $bboxCsv
+      PartFeatureCount = @($parts).Count
+    }
   }
 }
 

@@ -9,9 +9,8 @@ $repo = 'D:\Winnsen_Structure_Agent_Studio'
 $outDir = Join-Path $repo 'workers\generated_models\SW-NATIVE-16029-FRONT-FRAME-MODULE-20260521'
 $toolBuild = Join-Path $repo 'workers\solidworks_tools\build_placed_components_module.ps1'
 $builder = Join-Path $repo 'workers\solidworks_tools\bin\BuildPlacedComponentsModule.exe'
-$cadRootName = -join ([char[]](0x673A,0x68B0,0x7ED3,0x6784,0x5DE5,0x7A0B,0x5E08,0x667A,0x80FD,0x4F53))
 $softwareInstallDirName = -join ([char[]](0x8F6F,0x4EF6,0x5B89,0x88C5,0x5F55))
-$exporter = Join-Path (Join-Path 'D:\' $cadRootName) 'scripts\sw_export_step_ascii.js'
+$exporter = Join-Path $repo 'workers\solidworks_tools\sw_export_step_ascii.js'
 $freecad = Join-Path (Join-Path 'D:\' $softwareInstallDirName) 'freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe'
 $freecadEntry = Join-Path $repo 'workers\rule_extractions\RULE-16029-WELD-MODULE-PLACEMENT-20260521\freecad_env_worker_entry.py'
 

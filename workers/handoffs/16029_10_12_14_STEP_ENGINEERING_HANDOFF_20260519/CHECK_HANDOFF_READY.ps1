@@ -34,7 +34,13 @@ $qualityRows = @(Import-Csv -LiteralPath $qualityCsv)
 $qualityFailures = @($qualityRows | Where-Object {
   $_.native_validation_ok -ne 'yes' -or
   [int]$_.native_failed_check_count -ne 0 -or
-  [int]$_.dependency_missing_count -ne 0
+  [int]$_.dependency_missing_count -ne 0 -or
+  $_.right_column_mirror_route_ok -ne 'yes' -or
+  $_.hinge_pin_local_x_baseline_ok -ne 'yes' -or
+  $_.lock_hook_pad_local_x_baseline_ok -ne 'yes' -or
+  $_.electric_lock_hook_local_x_baseline_ok -ne 'yes' -or
+  $_.left_right_y_alignment_ok -ne 'yes' -or
+  [double]$_.left_right_door_bbox_y_delta -gt 0.1
 })
 $packAndGoRows = @()
 $packAndGoFailures = @()
@@ -83,7 +89,9 @@ if (-not (Test-Path -LiteralPath $verifiedRulePacketJson)) {
   }
   $verifiedRuleFailures += @($verifiedRuleRows | Where-Object {
     $_.enabled_for_engineering_handoff -ne 'True' -or
-    $_.right_column_rotation_ok -ne 'yes' -or
+    $_.right_column_identity_transform_ok -ne 'yes' -or
+    $_.right_column_uses_right_handed_module -ne 'yes' -or
+    $_.right_column_mirror_route_ok -ne 'yes' -or
     $_.left_right_y_alignment_ok -ne 'yes' -or
     [double]$_.left_right_door_bbox_y_delta -gt 0.1 -or
     $_.native_skeleton_status -ne 'PASS' -or
@@ -106,7 +114,7 @@ if ($missingDependencies.Count -gt 0 -or $qualityFailures.Count -gt 0 -or $packA
   }
   $lines += "Quality failures: $($qualityFailures.Count)"
   foreach ($row in $qualityFailures) {
-    $lines += ("  {0}door | validation={1} | failed_checks={2} | missing_dependencies={3}" -f $row.door_count, $row.native_validation_ok, $row.native_failed_check_count, $row.dependency_missing_count)
+    $lines += ("  {0}door | validation={1} | failed_checks={2} | missing_dependencies={3} | right_route={4} | hinge={5} | hook_pad={6} | lock_hook={7} | y_align={8}" -f $row.door_count, $row.native_validation_ok, $row.native_failed_check_count, $row.dependency_missing_count, $row.right_column_mirror_route_ok, $row.hinge_pin_local_x_baseline_ok, $row.lock_hook_pad_local_x_baseline_ok, $row.electric_lock_hook_local_x_baseline_ok, $row.left_right_y_alignment_ok)
   }
   $lines += "Pack-and-Go failures: $($packAndGoFailures.Count)"
   foreach ($row in $packAndGoFailures) {
@@ -144,7 +152,7 @@ if ($independenceRows.Count -gt 0) {
 if ($verifiedRuleRows.Count -gt 0) {
   $lines += "Verified rule packet:"
   foreach ($row in $verifiedRuleRows) {
-    $lines += ("  {0}door | rows={1} | door_h={2} | pitch={3} | shelves={4} | crossbars={5} | mirror={6} | bbox_d={7}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_rotation_ok, $row.left_right_door_bbox_y_delta)
+    $lines += ("  {0}door | rows={1} | door_h={2} | pitch={3} | shelves={4} | crossbars={5} | right_route={6} | bbox_d={7}" -f $row.door_count, $row.rows_per_column, $row.door_height_mm, $row.door_pitch_mm, $row.shelves, $row.front_frame_crossbars, $row.right_column_mirror_route_ok, $row.left_right_door_bbox_y_delta)
   }
 }
 Set-Content -LiteralPath $statusPath -Value $lines -Encoding UTF8

@@ -59,8 +59,9 @@ CABINET_RULES = {
     "lock_center_abs_x_mm": 55.0,
 }
 
-RIGHT_COLUMN_ROTATION_Z_180 = [[-1, 0, 0], [0, -1, 0], [0, 0, 1]]
-RIGHT_COLUMN_MIRROR_Y_COMPENSATION_MM = -51.7
+RIGHT_COLUMN_ROUTE = "right_handed_module_identity_transform"
+RIGHT_COLUMN_IDENTITY_ROTATION = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+RIGHT_COLUMN_MIRROR_Y_COMPENSATION_MM = 0.0
 
 
 def now_local_iso() -> str:
@@ -164,6 +165,15 @@ def build_verified_variant(
     layout = expected_layout(door_count)
     counts = expected_counts(door_count)
     root_bbox = gate_variant.get("root_bbox", {}) if isinstance(gate_variant, dict) else {}
+    right_column_identity_transform_ok = (
+        quality_row.get("right_column_identity_transform_ok") or quality_row.get("right_column_rotation_ok")
+    )
+    right_column_uses_right_handed_module = (
+        quality_row.get("right_column_uses_right_handed_module") or quality_row.get("right_column_rotation_ok")
+    )
+    right_column_mirror_route_ok = (
+        quality_row.get("right_column_mirror_route_ok") or quality_row.get("right_column_rotation_ok")
+    )
     return {
         "door_count": door_count,
         "verification_level": "solidworks_native_pack_and_go_verified",
@@ -174,8 +184,11 @@ def build_verified_variant(
         "component_count_rule": counts,
         "placement_rule": {
             "left_and_right_columns_must_have_equal_row_count": True,
-            "right_column_mirror_rule": "right door column must use 180deg Z rotation plus source-origin Y compensation, not a copied left-door orientation",
-            "right_column_rotation_matrix": RIGHT_COLUMN_ROTATION_Z_180,
+            "right_column_route": RIGHT_COLUMN_ROUTE,
+            "right_column_mirror_rule": "right door column must reference right-hand door modules with identity transform, not rotate copied left-door modules",
+            "right_column_expected_rotation_matrix": RIGHT_COLUMN_IDENTITY_ROTATION,
+            "right_column_rotation_matrix": RIGHT_COLUMN_IDENTITY_ROTATION,
+            "right_column_legacy_180deg_rotation_allowed": False,
             "right_column_mirror_y_compensation_mm": RIGHT_COLUMN_MIRROR_Y_COMPENSATION_MM,
             "left_right_exported_door_bbox_y_delta_max_mm": 0.1,
             "door_pitch_drives_shelf_and_crossbar_pitch": True,
@@ -199,10 +212,16 @@ def build_verified_variant(
             "reported_door_count": as_int(quality_row.get("reported_door_count")),
             "left_column_door_count": as_int(quality_row.get("left_column_door_count")),
             "right_column_door_count": as_int(quality_row.get("right_column_door_count")),
-            "right_column_rotation_ok": quality_row.get("right_column_rotation_ok"),
+            "right_column_identity_transform_ok": right_column_identity_transform_ok,
+            "right_column_uses_right_handed_module": right_column_uses_right_handed_module,
+            "right_column_mirror_route_ok": right_column_mirror_route_ok,
+            "right_column_rotation_ok": right_column_mirror_route_ok,
             "left_right_y_alignment_ok": quality_row.get("left_right_y_alignment_ok"),
             "left_right_door_bbox_y_delta": as_float(quality_row.get("left_right_door_bbox_y_delta")),
             "left_right_door_placement_y_delta": as_float(quality_row.get("left_right_door_placement_y_delta")),
+            "hinge_pin_local_x_baseline_ok": quality_row.get("hinge_pin_local_x_baseline_ok"),
+            "lock_hook_pad_local_x_baseline_ok": quality_row.get("lock_hook_pad_local_x_baseline_ok"),
+            "electric_lock_hook_local_x_baseline_ok": quality_row.get("electric_lock_hook_local_x_baseline_ok"),
             "shelf_count": as_int(quality_row.get("shelf_count")),
             "crossbar_count": as_int(quality_row.get("crossbar_count")),
         },
@@ -229,7 +248,12 @@ def build_verified_variant(
             "native_skeleton_status must be PASS",
             "handoff_native_validation_ok must be yes",
             "dependency_missing_count must be 0",
-            "right_column_rotation_ok must be yes",
+            "right_column_identity_transform_ok must be yes",
+            "right_column_uses_right_handed_module must be yes",
+            "right_column_mirror_route_ok must be yes",
+            "hinge_pin_local_x_baseline_ok must be yes",
+            "lock_hook_pad_local_x_baseline_ok must be yes",
+            "electric_lock_hook_local_x_baseline_ok must be yes",
             "left_right_y_alignment_ok must be yes and left_right_door_bbox_y_delta must be <= 0.1",
             "reported_door_count, lock, hinge and hook counts must equal door_count",
             "shelf_count and crossbar_count must equal (rows_per_column - 1) * 2",
@@ -264,8 +288,18 @@ def validate_payload(payload: dict[str, Any]) -> list[str]:
             problems.append(f"{door_count}door native handoff validation is not yes")
         if measured["dependency_missing_count"] != 0:
             problems.append(f"{door_count}door has missing dependencies")
-        if measured["right_column_rotation_ok"] != "yes":
-            problems.append(f"{door_count}door right column mirror/rotation is not verified")
+        if measured["right_column_identity_transform_ok"] != "yes":
+            problems.append(f"{door_count}door right column identity transform is not verified")
+        if measured["right_column_uses_right_handed_module"] != "yes":
+            problems.append(f"{door_count}door right column right-hand door module is not verified")
+        if measured["right_column_mirror_route_ok"] != "yes":
+            problems.append(f"{door_count}door right column mirror route is not verified")
+        if measured["hinge_pin_local_x_baseline_ok"] != "yes":
+            problems.append(f"{door_count}door hinge pin local X baseline is not verified")
+        if measured["lock_hook_pad_local_x_baseline_ok"] != "yes":
+            problems.append(f"{door_count}door lock hook pad local X baseline is not verified")
+        if measured["electric_lock_hook_local_x_baseline_ok"] != "yes":
+            problems.append(f"{door_count}door electric lock hook local X baseline is not verified")
         if measured["left_right_y_alignment_ok"] != "yes":
             problems.append(f"{door_count}door left/right exported door bbox Y alignment is not verified")
         if measured["left_right_door_bbox_y_delta"] > 0.1:
@@ -324,6 +358,8 @@ def build_payload() -> dict[str, Any]:
             "use_this_packet_as_single_source_of_truth": True,
             "must_not_enable_unverified_door_count_for_engineering_handoff": True,
             "right_column_doors_must_be_mirrored": True,
+            "right_column_must_use_right_handed_module_identity_transform": True,
+            "right_column_must_not_use_180deg_rotation_of_left_modules": True,
             "shelves_and_crossbars_must_recompute_from_rows_per_column": True,
             "locks_hinges_hooks_must_recompute_from_door_count": True,
             "solidworks_native_pack_and_go_is_current_engineering_handoff_route": True,
@@ -369,7 +405,13 @@ def write_csv(payload: dict[str, Any]) -> None:
                 "hinge_pins": counts["hinge_pins"],
                 "lock_hook_pads": counts["lock_hook_pads"],
                 "electric_lock_hooks": counts["electric_lock_hooks"],
+                "right_column_identity_transform_ok": measured["right_column_identity_transform_ok"],
+                "right_column_uses_right_handed_module": measured["right_column_uses_right_handed_module"],
+                "right_column_mirror_route_ok": measured["right_column_mirror_route_ok"],
                 "right_column_rotation_ok": measured["right_column_rotation_ok"],
+                "hinge_pin_local_x_baseline_ok": measured["hinge_pin_local_x_baseline_ok"],
+                "lock_hook_pad_local_x_baseline_ok": measured["lock_hook_pad_local_x_baseline_ok"],
+                "electric_lock_hook_local_x_baseline_ok": measured["electric_lock_hook_local_x_baseline_ok"],
                 "left_right_y_alignment_ok": measured["left_right_y_alignment_ok"],
                 "left_right_door_bbox_y_delta": measured["left_right_door_bbox_y_delta"],
                 "left_right_door_placement_y_delta": measured["left_right_door_placement_y_delta"],
@@ -407,7 +449,7 @@ def write_markdown(payload: dict[str, Any]) -> None:
         "",
         "## 已验证规则",
         "",
-        "| 门数 | 每列 | 门高 | 门距 | 门宽 | 门模块 | 层板 | 横隔板 | 锁/钩/合页 | 右门镜像 | Pack-and-Go | 外部引用 |",
+        "| 门数 | 每列 | 门高 | 门距 | 门宽 | 门模块 | 层板 | 横隔板 | 锁/钩/合页 | 右门路线 | Pack-and-Go | 外部引用 |",
         "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: |",
     ]
     for variant in payload["verified_variants"]:
@@ -428,7 +470,7 @@ def write_markdown(payload: dict[str, Any]) -> None:
                     str(counts["shelves"]),
                     str(counts["front_frame_crossbars"]),
                     str(counts["electric_lock_hooks"]),
-                    f"{measured['right_column_rotation_ok'] or ''}; bbox_d={measured['left_right_door_bbox_y_delta']}mm",
+                    f"{measured['right_column_mirror_route_ok'] or ''}; identity={measured['right_column_identity_transform_ok'] or ''}; right_module={measured['right_column_uses_right_handed_module'] or ''}; bbox_d={measured['left_right_door_bbox_y_delta']}mm",
                     pack["ok"] or "",
                     str(pack["external_top_reference_count"]),
                 ]
@@ -445,7 +487,8 @@ def write_markdown(payload: dict[str, Any]) -> None:
             "- `door_pitch = door_height + 7`，层板和门框横隔板必须跟随同一 pitch。",
             "- 层板数和门框横隔板数必须等于 `(rows_per_column - 1) * 2`。",
             "- 门模块、门板特征、合页销、锁钩垫、电控 U 型锁钩数量必须等于 `door_count`。",
-            "- 右侧门列必须使用 180deg Z 旋转 + source-origin Y compensation，且左右门导出 bbox Y delta <= 0.1mm。",
+            "- 右侧门列必须引用 right-hand door module，装配 transform 必须保持 identity，不允许再用左门模块做 180deg 旋转补偿。",
+            "- 左右门导出 bbox Y delta 必须 <= 0.1mm，placement Y delta 应保持 0.0mm。",
             "- Pack-and-Go 交接包必须外部顶层引用为 0 才能交给工程师。",
             "",
             "## 暂不放开的公式候选",

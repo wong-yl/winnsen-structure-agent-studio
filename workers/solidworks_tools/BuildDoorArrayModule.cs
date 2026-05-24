@@ -10,14 +10,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 {
     internal static class BuildDoorArrayModule
     {
-        private const double RightColumnMirrorYCompensationMm = -51.7;
+        private const double RightColumnMirrorYCompensationMm = 0.0;
 
         [STAThread]
         private static int Main(string[] args)
         {
             if (args.Length < 6)
             {
-                Console.Error.WriteLine("Usage: BuildDoorArrayModule.exe <out-asm> <out-json> <door-count> <door-height-mm> <ordinary-door-asm> <bottom-panel-y-min-mm>");
+                Console.Error.WriteLine("Usage: BuildDoorArrayModule.exe <out-asm> <out-json> <door-count> <door-height-mm> <left-door-asm> <bottom-panel-y-min-mm> [right-door-asm]");
                 return 2;
             }
 
@@ -25,8 +25,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             string outJson = Path.GetFullPath(args[1]);
             int doorCount = int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture);
             double doorHeight = double.Parse(args[3], System.Globalization.CultureInfo.InvariantCulture);
-            string ordinaryDoorAsm = Path.GetFullPath(args[4]);
+            string leftDoorAsm = Path.GetFullPath(args[4]);
             double bottomPanelYMin = double.Parse(args[5], System.Globalization.CultureInfo.InvariantCulture);
+            string rightDoorAsm = args.Length >= 7 ? Path.GetFullPath(args[6]) : leftDoorAsm;
 
             var result = new BuildResult
             {
@@ -87,7 +88,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                         double panelCenterY = bottomPanelYMin + doorHeight / 2.0 + (row - 1) * pitch;
                         double compensatedCenterY = panelCenterY + (c == 0 ? 0.0 : RightColumnMirrorYCompensationMm);
                         string role = "ordinary_door_" + columnNames[c] + row.ToString("00", System.Globalization.CultureInfo.InvariantCulture);
-                        var p = new Placement(role, ordinaryDoorAsm, c == 0 ? Identity() : RotateZ180(), columns[c], compensatedCenterY, 0);
+                        string doorAsm = c == 0 ? leftDoorAsm : rightDoorAsm;
+                        var p = new Placement(role, doorAsm, Identity(), columns[c], compensatedCenterY, 0);
                         result.Placements.Add(Add(sw, model, asm, math, p));
                     }
                 }
@@ -208,11 +210,6 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         private static double[] Identity()
         {
             return new[] { 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0 };
-        }
-
-        private static double[] RotateZ180()
-        {
-            return new[] { -1.0, 0, 0, 0, -1.0, 0, 0, 0, 1.0 };
         }
 
         private static ISldWorks GetOrCreateSolidWorks()
