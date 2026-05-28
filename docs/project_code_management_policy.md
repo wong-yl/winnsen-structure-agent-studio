@@ -11,6 +11,13 @@ This repository is managed as an engineering workflow, not as a dump folder. The
 - Gap rule: 2 + 3 + 2 = 7
 - Current gate: PASS, 60 checks, 0 failed
 
+Gold/source reference baseline:
+
+- 1000W x 1917H x 550D / 10/12/14 is the verified source baseline for rule extraction and geometry comparison.
+- It may appear in internal source evidence, scripts, manifests, and traceability docs.
+- It must not be listed as a current engineer-facing review package for the 800W handoff.
+- It must not be mislabeled as a trial route or waste line.
+
 ## Management Rules
 
 ### Keep In Current Code
@@ -45,14 +52,21 @@ These are not deleted automatically, but they are not current delivery sources:
 - `16029_WIDTH_CANDIDATE*`
 - `16029_HEIGHT_CANDIDATE*`
 - `16029_800W_*RULE_REVIEW*`
-- `16029_10_12_14*`
 - R3/R4/R5/R6/R7 feedback repair branches
 - SolidWorks 2025 environment traces
 - FreeCAD-only screenshots or layout-only packages
 
+### Keep As Gold Source Reference
+
+These are kept for source traceability and rule extraction, but not shown as current engineer-facing handoff packages:
+
+- `16029_10_12_14*`
+- 1000W x 1917H x 550D source assembly, DXF, BOM, STEP, and supporting evidence
+
 ### Never Reintroduce As Current Mainline
 
-- 1200W / 1000W / 2117H / W537 trial routes
+- 1200W / 2117H / W537 trial routes
+- 1000W / 10/12/14 mislabeled as current handoff or waste; it is gold/source reference only
 - Lightweight rule-review packages as formal engineer handoff
 - SolidWorks 2025 as current CAD mainline
 - Screenshot-only proof without SolidWorks 2020 open JSON evidence

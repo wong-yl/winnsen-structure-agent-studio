@@ -36,8 +36,6 @@ $blockedTerms = @(
     "1200W",
     "2117H",
     "W537",
-    "1000W",
-    "10/12/14",
     "rule-review",
     "RULE_REVIEW",
     "DUAL_RULE_REVIEW",
@@ -45,6 +43,11 @@ $blockedTerms = @(
     "earlier",
     "SOLIDWORKS 2025",
     "SolidWorks 2025"
+)
+
+$goldSourceReferenceTerms = @(
+    "1000W",
+    "10/12/14"
 )
 
 $checks = New-Object System.Collections.Generic.List[object]
@@ -148,6 +151,9 @@ foreach ($relativeZip in $approvedZips) {
 foreach ($term in $blockedTerms) {
     Add-Check -Name "download_catalog_excludes:$term" -Ok (-not $catalogText.Contains($term)) -Actual $term -Expected "not in review_download_catalog"
 }
+foreach ($term in $goldSourceReferenceTerms) {
+    Add-Check -Name "download_catalog_excludes_gold_source_reference:$term" -Ok (-not $catalogText.Contains($term)) -Actual $term -Expected "not listed as current review package; gold/source reference only"
+}
 
 $appPath = Join-Path $Root "apps\web\src\App.tsx"
 $appText = Read-TextFile $appPath
@@ -167,6 +173,9 @@ Add-Check -Name "review_login_portal_current_round" -Ok (
 ) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "current 800W gold-variable review round and three packages"
 foreach ($term in $blockedTerms) {
     Add-Check -Name "review_login_portal_excludes:$term" -Ok (-not $reviewPortalText.Contains($term)) -Actual $term -Expected "not in review login portal"
+}
+foreach ($term in $goldSourceReferenceTerms) {
+    Add-Check -Name "review_login_portal_excludes_gold_source_reference:$term" -Ok (-not $reviewPortalText.Contains($term)) -Actual $term -Expected "not listed as current review package; gold/source reference only"
 }
 
 $configPath = Join-Path $Root "services\api\app\config.py"
@@ -203,7 +212,7 @@ foreach ($endpoint in $legacyApiEndpoints) {
     else {
         ""
     }
-    Add-Check -Name "legacy_api_marked:$endpoint" -Ok ($block.Contains("mark_locker_16029_legacy_response") -and $apiText.Contains("legacy_evidence_only")) -Actual $endpoint -Expected "returns marked legacy_evidence_only response"
+    Add-Check -Name "reference_api_marked:$endpoint" -Ok ($block.Contains("mark_locker_16029_reference_response") -and $apiText.Contains("gold_source_reference_only")) -Actual $endpoint -Expected "returns marked gold_source_reference_only response"
 }
 
 $manifestJsonPath = Join-Path $Root "data\locker_16029_project_route_manifest.json"
@@ -232,7 +241,10 @@ Add-Check -Name "frontend_current_16029_capability_sw2020_verified" -Ok (
 ) -Actual "current capability block" -Expected "current capability uses SolidWorks 2020 evidence gate and fixed gold-variable generator"
 foreach ($legacyCapabilityId in @("locker_16029_regression", "locker_16029_door_panel")) {
     $legacyBlock = Get-ObjectBlockAfter -Text $studioDataText -Needle "id: '$legacyCapabilityId'"
-    Add-Check -Name "frontend_legacy_capability_reference_only:$legacyCapabilityId" -Ok ($legacyBlock.Contains("status: 'reference_only'") -and $legacyBlock.Contains("legacy evidence")) -Actual $legacyCapabilityId -Expected "reference_only legacy evidence"
+    Add-Check -Name "frontend_reference_capability_not_current_handoff:$legacyCapabilityId" -Ok (
+        $legacyBlock.Contains("status: 'reference_only'") -and
+        ($legacyBlock.Contains("legacy evidence") -or $legacyBlock.Contains("gold/source"))
+    ) -Actual $legacyCapabilityId -Expected "reference_only; legacy evidence or gold/source reference"
 }
 $generatable16029Blocks = New-Object System.Collections.Generic.List[string]
 $searchFrom = 0
@@ -268,12 +280,18 @@ Add-Check -Name "frontend_generatable_16029_no_legacy_terms" -Ok ($badGeneratabl
 $obsoletePatterns = @(
     "16029_WIDTH_CANDIDATE*",
     "16029_HEIGHT_CANDIDATE*",
-    "16029_800W_*RULE_REVIEW*",
+    "16029_800W_*RULE_REVIEW*"
+)
+$goldSourceReferencePatterns = @(
     "16029_10_12_14*"
 )
 $obsoleteCounts = @{}
 foreach ($pattern in $obsoletePatterns) {
     $obsoleteCounts[$pattern] = @(Get-ChildItem -LiteralPath (Join-Path $Root "workers\handoffs") -Filter $pattern -Force -ErrorAction SilentlyContinue).Count
+}
+$goldSourceReferenceCounts = @{}
+foreach ($pattern in $goldSourceReferencePatterns) {
+    $goldSourceReferenceCounts[$pattern] = @(Get-ChildItem -LiteralPath (Join-Path $Root "workers\handoffs") -Filter $pattern -Force -ErrorAction SilentlyContinue).Count
 }
 
 $failed = @($checks | Where-Object { -not $_.ok -and $_.severity -eq "error" })
@@ -284,7 +302,9 @@ $gate = [ordered]@{
     approved_zips = $approvedZips
     legacy_api_endpoints = $legacyApiEndpoints
     blocked_terms = $blockedTerms
+    gold_source_reference_terms = $goldSourceReferenceTerms
     obsolete_handoff_inventory = $obsoleteCounts
+    gold_source_reference_inventory = $goldSourceReferenceCounts
     checks_total = $checks.Count
     checks_failed = $failed.Count
     zip_findings = $zipFindings
@@ -313,10 +333,16 @@ foreach ($zip in $approvedZips) {
     $lines.Add(('- `{0}`' -f $zip))
 }
 $lines.Add("")
-$lines.Add("## Historical handoff inventory")
+$lines.Add("## Historical/trial handoff inventory")
 $lines.Add("")
 foreach ($pattern in $obsoletePatterns) {
     $lines.Add(('- `{0}`: {1} present as history, not engineer-facing catalog' -f $pattern, $obsoleteCounts[$pattern]))
+}
+$lines.Add("")
+$lines.Add("## Gold source reference inventory")
+$lines.Add("")
+foreach ($pattern in $goldSourceReferencePatterns) {
+    $lines.Add(('- `{0}`: {1} present as gold/source reference, not current engineer-facing catalog' -f $pattern, $goldSourceReferenceCounts[$pattern]))
 }
 $lines.Add("")
 $lines.Add("## Checks")

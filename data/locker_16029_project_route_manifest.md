@@ -16,6 +16,12 @@
 
 SolidWorks 2025 is historical environment evidence only; it is not the current engineer-facing CAD mainline.
 
+## Gold Source Reference
+
+- Baseline: 16029 1000W x 1917H x 550D / 10/12/14
+- Role: gold/source reference for rule extraction, source geometry comparison, and traceability
+- Engineer-facing decision: not a current LMS/SML handoff package, but not obsolete and not a trial waste line
+
 ## Current Engineer-Facing Package Candidates
 
 Current gate status on 2026-05-28: PASS. These packages are the current review candidates for the engineer workflow; LMS and SML both have SolidWorks 2020 open screenshot evidence and the current handoff scope gate passes.
@@ -41,7 +47,7 @@ Each current engineer-facing variant must include STEP, self-review preview, ver
 | `16029_WIDTH_CANDIDATE*` | legacy feedback evidence only | Keep for traceability; do not use as current engineer handoff. |
 | `16029_HEIGHT_CANDIDATE*` | legacy feedback evidence only | Keep for traceability; do not use as current 1917H route. |
 | `16029_800W_*RULE_REVIEW*` | legacy layout review only | Useful for layout explanation, not formal assembly review. |
-| `16029_10_12_14*` | legacy same-size reference only | Background evidence only; superseded for this handoff by gold-variable. |
+| `16029_10_12_14*` | gold/source same-size reference | Keep as source baseline for rule extraction; do not list as current 800W LMS/SML review package. |
 
 ## API Boundary
 
@@ -50,14 +56,14 @@ Current engineer-facing endpoints:
 - `/api/review-downloads`
 - `/api/locker-16029-current-handoff-scope`
 
-Legacy evidence endpoints:
+Gold/source reference evidence endpoints:
 
 - `/api/locker-16029-variant-rule-packet`
 - `/api/locker-16029-verified-rule-packet`
 - `/api/locker-16029-variant-quality-matrix`
 - `/api/locker-16029-engineering-handoff-bundle`
 
-The legacy endpoints must return `current_delivery_role = legacy_evidence_only` and `engineer_facing = false`.
+The reference endpoints must return `current_delivery_role = gold_source_reference_only` and `engineer_facing = false`.
 
 ## Decision Rules
 

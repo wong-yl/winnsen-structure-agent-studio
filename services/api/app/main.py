@@ -3077,13 +3077,14 @@ CURRENT_16029_ENGINEER_HANDOFF_ZIPS = [
 CURRENT_16029_HANDOFF_SCOPE_GATE_PATH = ROOT_DIR / "data" / "locker_16029_current_handoff_scope_gate.json"
 
 
-def mark_locker_16029_legacy_response(payload: dict[str, Any], endpoint: str, legacy_reason: str) -> dict[str, Any]:
+def mark_locker_16029_reference_response(payload: dict[str, Any], endpoint: str, reference_reason: str) -> dict[str, Any]:
     marked = dict(payload)
-    marked["current_delivery_role"] = "legacy_evidence_only"
+    marked["current_delivery_role"] = "gold_source_reference_only"
     marked["engineer_facing"] = False
-    marked["endpoint_scope"] = "historical 16029 evidence, not the current engineer handoff catalog"
-    marked["legacy_reason"] = legacy_reason
-    marked["superseded_by"] = {
+    marked["endpoint_scope"] = "gold/source 16029 reference evidence, not the current engineer handoff catalog"
+    marked["reference_reason"] = reference_reason
+    marked["legacy_reason"] = reference_reason
+    marked["current_review_route"] = {
         "current_route": "16029 800W gold-variable LMS/SML",
         "download_endpoint": "/api/review-downloads",
         "scope_gate": str(CURRENT_16029_HANDOFF_SCOPE_GATE_PATH),
@@ -4095,37 +4096,37 @@ def get_sheetmetal_rule_evidence_16029() -> dict[str, Any]:
 
 @app.get("/api/locker-16029-variant-rule-packet")
 def get_locker_16029_variant_rule_packet() -> dict[str, Any]:
-    return mark_locker_16029_legacy_response(
+    return mark_locker_16029_reference_response(
         read_locker_16029_variant_rule_packet(),
         "/api/locker-16029-variant-rule-packet",
-        "Door-count rule learning evidence is historical and must not drive the current 800W gold-variable engineering handoff.",
+        "Door-count rule learning evidence is the 1000W 10/12/14 gold/source reference and must not be listed as the current 800W engineering handoff.",
     )
 
 
 @app.get("/api/locker-16029-verified-rule-packet")
 def get_locker_16029_verified_rule_packet() -> dict[str, Any]:
-    return mark_locker_16029_legacy_response(
+    return mark_locker_16029_reference_response(
         read_locker_16029_verified_rule_packet(),
         "/api/locker-16029-verified-rule-packet",
-        "Verified same-size reference packet remains evidence only; current engineering handoff is the 800W gold-variable LMS/SML route.",
+        "Verified same-size reference packet remains the gold/source baseline; current engineering handoff is the 800W gold-variable LMS/SML route.",
     )
 
 
 @app.get("/api/locker-16029-variant-quality-matrix")
 def get_locker_16029_variant_quality_matrix() -> dict[str, Any]:
-    return mark_locker_16029_legacy_response(
+    return mark_locker_16029_reference_response(
         read_locker_16029_variant_quality_matrix(),
         "/api/locker-16029-variant-quality-matrix",
-        "Variant quality matrix is a historical regression reference and is not an approved engineer-facing download catalog.",
+        "Variant quality matrix is gold/source regression evidence and is not an approved engineer-facing download catalog.",
     )
 
 
 @app.get("/api/locker-16029-engineering-handoff-bundle")
 def get_locker_16029_engineering_handoff_bundle() -> dict[str, Any]:
-    return mark_locker_16029_legacy_response(
+    return mark_locker_16029_reference_response(
         read_locker_16029_engineering_handoff_bundle(),
         "/api/locker-16029-engineering-handoff-bundle",
-        "Old engineering handoff bundle is superseded by the current 800W LMS/SML/DUAL gold-variable review packages.",
+        "The 1000W 10/12/14 handoff bundle is source-reference evidence only; current engineer review downloads are the 800W LMS/SML/DUAL gold-variable packages.",
     )
 
 
