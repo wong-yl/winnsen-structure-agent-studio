@@ -100,19 +100,21 @@ Current behavior:
 - `blocked` and `queued` capabilities stay disabled until evidence gates close.
 - New template assets first enter the rule-learning queue. Copying a top-level `.SLDASM` is not treated as parametric generation.
 - The model-generation panel has two CAD entry buttons:
-  - SOLIDWORKS 2025: `C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk`
+  - SOLIDWORKS 2020: `C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk`
   - FreeCAD 1.1.1: `C:\Users\Administrator\Desktop\FreeCAD 1.1.1.lnk`
 - Task drafts store CAD runner, capability, editable parameters, evidence, maturity, output level, and the expected worker command.
-- The 16029 SolidWorks generation entry currently exposes the verified 10/12/14-door native enriched reference assemblies inside the 1000 W × 1917 H × 550 D envelope. The previous direct part-insertion route is blocked because visual QA showed datum/transform misalignment.
-- The API dry-run enforces that the 16029 SolidWorks/FreeCAD mainline stays on the verified rule packet, currently `door_count=10/12/14`, `cabinet_width=1000`, and `geometry_source=auto`. It checks the selected native assembly, verified rule packet, right-door mirror evidence, Pack-and-Go independence, and one-run SolidWorks guard before a run is allowed. Other door counts and width-rule experiments stay in the rule-learning route until evidence is closed.
-- Arbitrary door width/height changes under the same 1000×1917 outer size remain blocked until door-frame divider, lock, hinge, BOM, and DXF formula evidence is closed.
+- The 16029 current engineer-facing route is the 800 W × 1917 H × 550 D gold-variable handoff, with door width W337 and the internal gap rule 2 + 3 + 2 = 7.
+- The only current 16029 generation entry is `workers\maintenance\generate_16029_800w_gold_variable_model_freecad.py`; the only finalize entry is `workers\maintenance\finalize_16029_800w_gold_variable_handoff.py`.
+- The current variants change only `variant_token` and `row_units`: LMS = large 6/12, medium 4/12, small 2/12; SML = small 2/12, medium 4/12, large 6/12.
+- The approved engineer-facing outputs are exactly the LMS, SML, and DUAL gold-variable review zips under `workers\handoffs`; layout-only packages and older width/height candidates are legacy evidence only.
+- Historical 16029 routes such as same-size reference assemblies, width candidates, and height candidates remain in the repository for traceability, but they are not the current handoff source and must not be offered through current engineer-facing download or review screens.
 - Task details can run a dry-run preflight that checks the selected CAD shortcut, executable, generator script path, parameters, evidence, and output boundary.
 - SolidWorks is the current engineering-mainline runner; its manual package produces native assembly output when the local SolidWorks session and license are available.
 - SolidWorks tasks can run the generated package directly through the API via PowerShell; the `.ps1` file is kept for inspection and fallback, not as the primary user action. A lock file under `workers\generation_logs\solidworks-run.lock` prevents repeated clicks or parallel jobs from starting multiple SolidWorks automation sessions.
-- SolidWorks direct-component diagnostics remain available for transform experiments, but the 16029 10/12-door template clone route skips the expensive component-tree walk by default to avoid long SolidWorks sessions. The 10-door template clone has a native-save smoke output under `workers\manual_runs\QA-16029-10DOOR-FAST-CLONE-20260519073300`.
+- SolidWorks direct-component diagnostics remain available for transform experiments, but the 16029 current route is governed by the gold-variable model gate, STEP bbox gate, and current handoff scope gate.
 - FreeCAD tasks can execute through the local `FreeCADCmd.exe` worker after dry-run passes as the open-source migration route.
 - FreeCAD engineering-reference outputs are written under `workers\generated_models\<task_id>`.
-- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. The 16029 template runner cleans reference-plane/sketch/origin display before saving the cloned `.SLDASM`, writes build and validation reports, and the current 10/12/14-door engineering handoff also has local Pack-and-Go packages with zero external top-level references.
+- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. For the current 16029 review, the engineer-facing package is the complete audit zip: STEP, FCStd, self-review preview, verify CSV, model gate, STEP bbox gate, and handoff manifest.
 - Dry-run and execution metadata write logs under `workers\generation_logs`.
 - The API does not create production drawings or mark any output as production-released.
 

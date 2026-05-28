@@ -17,6 +17,7 @@ from typing import Any, Literal
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from .config import (
@@ -98,6 +99,25 @@ class DryRunResult(BaseModel):
     checks: list[DryRunCheck]
     log_path: str
     checked_at: str
+
+
+class ReviewDownloadAsset(BaseModel):
+    id: str
+    title: str
+    category: str
+    description: str
+    status: str
+    file_name: str
+    size_bytes: int | None
+    modified_at: str | None
+    available: bool
+    download_url: str
+
+
+class ReviewDownloadIndex(BaseModel):
+    generated_at: str
+    scope: str
+    assets: list[ReviewDownloadAsset]
 
 
 class SolidWorksRunSummary(BaseModel):
@@ -325,6 +345,7 @@ allowed_origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=os.getenv("STUDIO_CORS_ORIGIN_REGEX", r"http://(127\.0\.0\.1|localhost):\d+"),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -2671,7 +2692,7 @@ def write_solidworks_handoff_files(task: GenerationTask, output_dir: Path) -> No
             [
                 "# SolidWorks opening notes",
                 "",
-                "- Open `*_solidworks_import.stp` in SolidWorks 2025 for the FreeCAD-generated engineering reference.",
+                "- Open `*_solidworks_import.stp` in SolidWorks 2020 for the FreeCAD-generated engineering reference.",
                 "- `.FCStd` is FreeCAD native and is not a SolidWorks file.",
                 "- `.step` and `.stp` contain the same neutral geometry; `.stp` is provided to match common SolidWorks import filters.",
                 "- SolidWorks-native `.SLDPRT/.SLDASM` output is only produced by the separate SolidWorks manual automation package.",
@@ -2999,6 +3020,94 @@ def summarize_rule_extraction_output(output_dir: Path) -> None:
             encoding="utf-8",
             errors="replace",
         )
+
+
+def review_download_catalog() -> dict[str, dict[str, str | Path]]:
+    return {
+        "16029-800w-lms-gold-variable-review-zip": {
+            "title": "16029 800W LMS 审核包",
+            "category": "当前审核包",
+            "description": "LMS 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。",
+            "status": "ready_for_engineering_review",
+            "path": HANDOFF_DIR / "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
+            "file_name": "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
+        },
+        "16029-800w-sml-gold-variable-review-zip": {
+            "title": "16029 800W SML 审核包",
+            "category": "当前审核包",
+            "description": "SML 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。",
+            "status": "ready_for_engineering_review",
+            "path": HANDOFF_DIR / "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
+            "file_name": "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
+        },
+        "16029-800w-dual-gold-variable-review-zip": {
+            "title": "16029 800W LMS/SML 总审核包",
+            "category": "当前汇总包",
+            "description": "双方案合包，用于 LMS/SML 对比审核和归档；不是第三个结构方案，也不是生产图纸释放包。",
+            "status": "ready_for_engineering_comparison",
+            "path": HANDOFF_DIR / "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
+            "file_name": "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
+        },
+    }
+
+
+def review_download_asset(asset_id: str, meta: dict[str, str | Path]) -> ReviewDownloadAsset:
+    path = Path(meta["path"])
+    available = path.exists() and path.is_file()
+    stat = path.stat() if available else None
+    return ReviewDownloadAsset(
+        id=asset_id,
+        title=str(meta["title"]),
+        category=str(meta["category"]),
+        description=str(meta["description"]),
+        status=str(meta["status"]),
+        file_name=str(meta["file_name"]),
+        size_bytes=stat.st_size if stat else None,
+        modified_at=datetime.fromtimestamp(stat.st_mtime, timezone.utc).isoformat() if stat else None,
+        available=available,
+        download_url=f"/api/review-downloads/{asset_id}",
+    )
+
+
+CURRENT_16029_ENGINEER_HANDOFF_ZIPS = [
+    "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
+    "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
+    "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
+]
+CURRENT_16029_HANDOFF_SCOPE_GATE_PATH = ROOT_DIR / "data" / "locker_16029_current_handoff_scope_gate.json"
+
+
+def mark_locker_16029_legacy_response(payload: dict[str, Any], endpoint: str, legacy_reason: str) -> dict[str, Any]:
+    marked = dict(payload)
+    marked["current_delivery_role"] = "legacy_evidence_only"
+    marked["engineer_facing"] = False
+    marked["endpoint_scope"] = "historical 16029 evidence, not the current engineer handoff catalog"
+    marked["legacy_reason"] = legacy_reason
+    marked["superseded_by"] = {
+        "current_route": "16029 800W gold-variable LMS/SML",
+        "download_endpoint": "/api/review-downloads",
+        "scope_gate": str(CURRENT_16029_HANDOFF_SCOPE_GATE_PATH),
+        "approved_zips": CURRENT_16029_ENGINEER_HANDOFF_ZIPS,
+    }
+    marked["endpoint"] = endpoint
+    return marked
+
+
+def read_current_16029_handoff_scope_gate() -> dict[str, Any]:
+    if not CURRENT_16029_HANDOFF_SCOPE_GATE_PATH.exists():
+        return {
+            "generated_at": None,
+            "status": "MISSING_OUTPUT",
+            "scope": "16029 800W gold-variable engineer-facing handoff scope",
+            "approved_zips": CURRENT_16029_ENGINEER_HANDOFF_ZIPS,
+            "notes": [
+                "Run workers\\maintenance\\validate_16029_current_handoff_scope.ps1 before handing files to engineering."
+            ],
+        }
+    try:
+        return json.loads(CURRENT_16029_HANDOFF_SCOPE_GATE_PATH.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=500, detail=f"16029 current handoff scope gate JSON is invalid: {exc}") from exc
 
 
 def run_rule_extraction_step_bbox_postprocess(result: RuleExtractionResult, output_dir: Path) -> None:
@@ -3558,7 +3667,7 @@ def build_solidworks_manual_result(task: GenerationTask) -> WorkerExecutionResul
                 "# SolidWorks manual run notes",
                 "",
                 f"- Door count requested by this task: `{task.parameters.get('door_count', '18')}`.",
-                "- Run `run-solidworks-worker.ps1` from a desktop PowerShell session after confirming the SolidWorks 2025 license/session is available.",
+                "- Run `run-solidworks-worker.ps1` from a desktop PowerShell session after confirming the SolidWorks 2020 license/session is available.",
                 "- The script creates a SolidWorks-native `.SLDASM`, component manifest, build report, and validation report in this folder.",
                 "- After native assembly creation, the runner hides reference planes, sketches, origins, and reference labels, then saves the cleaned first-open view.",
                 "- 16029 native skeleton save-as skips the expensive quality diagnostic by default to avoid long SolidWorks sessions.",
@@ -3850,6 +3959,33 @@ def health() -> dict[str, str]:
     return {"status": "ok", "database": str(DB_PATH)}
 
 
+@app.get("/api/review-downloads", response_model=ReviewDownloadIndex)
+def list_review_downloads() -> ReviewDownloadIndex:
+    catalog = review_download_catalog()
+    return ReviewDownloadIndex(
+        generated_at=datetime.now(timezone.utc).isoformat(),
+        scope="16029 800W gold-variable engineer review bundles; scope gate is expected to pass before engineering review, while production release still requires structural signoff",
+        assets=[review_download_asset(asset_id, meta) for asset_id, meta in catalog.items()],
+    )
+
+
+@app.get("/api/review-downloads/{asset_id}")
+def download_review_asset(asset_id: str) -> FileResponse:
+    catalog = review_download_catalog()
+    meta = catalog.get(asset_id)
+    if meta is None:
+        raise HTTPException(status_code=404, detail="Review download asset is not in the current candidate catalog.")
+    path = Path(meta["path"])
+    if not path.exists() or not path.is_file():
+        raise HTTPException(status_code=404, detail=f"Review download asset is missing: {asset_id}")
+    return FileResponse(path=path, filename=str(meta["file_name"]))
+
+
+@app.get("/api/locker-16029-current-handoff-scope")
+def get_locker_16029_current_handoff_scope() -> dict[str, Any]:
+    return read_current_16029_handoff_scope_gate()
+
+
 @app.get("/api/template-assets")
 def get_template_assets() -> dict[str, object]:
     return read_template_asset_catalog()
@@ -3959,22 +4095,38 @@ def get_sheetmetal_rule_evidence_16029() -> dict[str, Any]:
 
 @app.get("/api/locker-16029-variant-rule-packet")
 def get_locker_16029_variant_rule_packet() -> dict[str, Any]:
-    return read_locker_16029_variant_rule_packet()
+    return mark_locker_16029_legacy_response(
+        read_locker_16029_variant_rule_packet(),
+        "/api/locker-16029-variant-rule-packet",
+        "Door-count rule learning evidence is historical and must not drive the current 800W gold-variable engineering handoff.",
+    )
 
 
 @app.get("/api/locker-16029-verified-rule-packet")
 def get_locker_16029_verified_rule_packet() -> dict[str, Any]:
-    return read_locker_16029_verified_rule_packet()
+    return mark_locker_16029_legacy_response(
+        read_locker_16029_verified_rule_packet(),
+        "/api/locker-16029-verified-rule-packet",
+        "Verified same-size reference packet remains evidence only; current engineering handoff is the 800W gold-variable LMS/SML route.",
+    )
 
 
 @app.get("/api/locker-16029-variant-quality-matrix")
 def get_locker_16029_variant_quality_matrix() -> dict[str, Any]:
-    return read_locker_16029_variant_quality_matrix()
+    return mark_locker_16029_legacy_response(
+        read_locker_16029_variant_quality_matrix(),
+        "/api/locker-16029-variant-quality-matrix",
+        "Variant quality matrix is a historical regression reference and is not an approved engineer-facing download catalog.",
+    )
 
 
 @app.get("/api/locker-16029-engineering-handoff-bundle")
 def get_locker_16029_engineering_handoff_bundle() -> dict[str, Any]:
-    return read_locker_16029_engineering_handoff_bundle()
+    return mark_locker_16029_legacy_response(
+        read_locker_16029_engineering_handoff_bundle(),
+        "/api/locker-16029-engineering-handoff-bundle",
+        "Old engineering handoff bundle is superseded by the current 800W LMS/SML/DUAL gold-variable review packages.",
+    )
 
 
 @app.post("/api/drawing-sheetmetal-intake", response_model=DrawingSheetMetalIntakeRecord, status_code=201)

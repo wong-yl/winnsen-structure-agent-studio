@@ -139,11 +139,11 @@ FREECAD_EXE = Path(
         r"D:\软件安装录\freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCAD.exe",
     )
 )
-SOLIDWORKS_SHORTCUT = Path(os.getenv("STUDIO_SOLIDWORKS_SHORTCUT", r"C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk"))
+SOLIDWORKS_SHORTCUT = Path(os.getenv("STUDIO_SOLIDWORKS_SHORTCUT", r"C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk"))
 SOLIDWORKS_EXE = Path(
     os.getenv(
         "STUDIO_SOLIDWORKS_EXE",
-        r"D:\软件安装录\soildworks\SOLIDWORKS\SLDWORKS.exe",
+        r"D:\soildworks2020\SOLIDWORKS\SLDWORKS.exe",
     )
 )
 

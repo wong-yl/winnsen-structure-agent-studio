@@ -16,12 +16,15 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: StepOpenProbe.exe <step-path> <status-json-path> [--close-after] [--auto-repair-dialog] [--silent-only]");
+                Console.Error.WriteLine("Usage: StepOpenProbe.exe <step-path> <status-json-path> [preview-png-path] [--close-after] [--auto-repair-dialog] [--silent-only]");
                 return 2;
             }
 
             string stepPath = Path.GetFullPath(args[0]);
             string statusPath = Path.GetFullPath(args[1]);
+            string previewPath = (args.Length >= 3 && !args[2].StartsWith("--", StringComparison.OrdinalIgnoreCase))
+                ? Path.GetFullPath(args[2])
+                : "";
             bool closeAfter = Array.Exists(args, arg => string.Equals(arg, "--close-after", StringComparison.OrdinalIgnoreCase));
             bool autoRepairDialog = Array.Exists(args, arg => string.Equals(arg, "--auto-repair-dialog", StringComparison.OrdinalIgnoreCase));
             bool silentOnly = Array.Exists(args, arg => string.Equals(arg, "--silent-only", StringComparison.OrdinalIgnoreCase));
@@ -30,6 +33,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             {
                 StepPath = stepPath,
                 StatusPath = statusPath,
+                PreviewPath = previewPath,
                 CloseAfter = closeAfter,
                 AutoRepairDialog = autoRepairDialog,
                 SilentOnly = silentOnly,
@@ -57,6 +61,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 TrySetVisible(sw, result);
+                result.SolidWorksRevision = SafeString(() => sw.RevisionNumber());
+                result.SolidWorksExecutable = FindSolidWorksExecutable();
                 if (autoRepairDialog)
                 {
                     responder = DialogResponder.Start(result, stepPath);
@@ -86,6 +92,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 ModelDoc2 activeDoc = sw.ActiveDoc as ModelDoc2;
                 result.ActiveTitle = SafeString(() => activeDoc == null ? null : activeDoc.GetTitle());
                 result.ActivePath = SafeString(() => activeDoc == null ? null : activeDoc.GetPathName());
+
+                if (!string.IsNullOrWhiteSpace(previewPath) && activeDoc != null)
+                {
+                    result.PreviewSaved = SavePreview(activeDoc, previewPath, result);
+                }
 
                 if (closeAfter && !string.IsNullOrWhiteSpace(result.ActiveTitle))
                 {
@@ -361,6 +372,70 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             catch (Exception ex) { result.Diagnostics.Add(new MethodResult(label, false, ex.Message)); }
         }
 
+        private static bool TryBool(Func<bool> read, ProbeResult result, string label)
+        {
+            try { return read(); }
+            catch (Exception ex)
+            {
+                result.Diagnostics.Add(new MethodResult(label, false, ex.Message));
+                return false;
+            }
+        }
+
+        private static bool SavePreview(ModelDoc2 activeDoc, string previewPath, ProbeResult result)
+        {
+            try
+            {
+                string previewDir = Path.GetDirectoryName(previewPath);
+                if (!string.IsNullOrWhiteSpace(previewDir))
+                {
+                    Directory.CreateDirectory(previewDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Diagnostics.Add(new MethodResult("CreatePreviewDirectory", false, ex.Message));
+                return false;
+            }
+
+            TryAction(() => activeDoc.ShowNamedView2("*Isometric", 7), result, "ShowNamedView2_isometric");
+            TryAction(() => activeDoc.ViewZoomtofit2(), result, "ViewZoomtofit2");
+            TryAction(() => activeDoc.GraphicsRedraw2(), result, "GraphicsRedraw2");
+            Thread.Sleep(1500);
+
+            bool saved = TryBool(() => activeDoc.SaveAs(previewPath), result, "SaveAsPreview");
+            if (!saved)
+            {
+                result.Diagnostics.Add(new MethodResult("SaveAsPreview", false, "SaveAs returned false"));
+            }
+            return saved && File.Exists(previewPath);
+        }
+
+        private static string FindSolidWorksExecutable()
+        {
+            try
+            {
+                foreach (Process process in Process.GetProcessesByName("SLDWORKS"))
+                {
+                    try
+                    {
+                        string fileName = process.MainModule == null ? "" : process.MainModule.FileName;
+                        if (!string.IsNullOrWhiteSpace(fileName))
+                        {
+                            return fileName;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return "";
+        }
+
         private static void WriteResult(string statusPath, ProbeResult result)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(statusPath));
@@ -376,6 +451,12 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 string.Format("  \"message\": \"{0}\",", Escape(result.Message)),
                 string.Format("  \"step_path\": \"{0}\",", Escape(result.StepPath)),
                 string.Format("  \"status_path\": \"{0}\",", Escape(result.StatusPath)),
+                string.Format("  \"preview_path\": \"{0}\",", Escape(result.PreviewPath)),
+                string.Format("  \"requested_mainline\": \"{0}\",", Escape(result.RequestedMainline)),
+                string.Format("  \"solidworks_revision\": \"{0}\",", Escape(result.SolidWorksRevision)),
+                string.Format("  \"solidworks_executable\": \"{0}\",", Escape(result.SolidWorksExecutable)),
+                string.Format("  \"opened\": {0},", Bool(string.Equals(result.Status, "opened", StringComparison.OrdinalIgnoreCase))),
+                string.Format("  \"preview_saved\": {0},", Bool(result.PreviewSaved)),
                 string.Format("  \"attach_mode\": \"{0}\",", Escape(result.AttachMode)),
                 string.Format("  \"visible_set\": {0},", Bool(result.VisibleSet)),
                 string.Format("  \"close_after\": {0},", Bool(result.CloseAfter)),
@@ -465,6 +546,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         public string Message = "";
         public string StepPath = "";
         public string StatusPath = "";
+        public string PreviewPath = "";
+        public string RequestedMainline = "SolidWorks 2020";
+        public string SolidWorksRevision = "";
+        public string SolidWorksExecutable = "";
+        public bool PreviewSaved;
         public string AttachMode = "";
         public bool VisibleSet;
         public bool CloseAfter;

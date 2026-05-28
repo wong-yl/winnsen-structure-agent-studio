@@ -7,6 +7,7 @@ import {
   ChevronRight,
   ClipboardList,
   Database,
+  Download,
   FileWarning,
   FolderOpen,
   Gauge,
@@ -52,7 +53,7 @@ import {
   type TemplateAsset,
 } from './data/studioData'
 
-type PageId = 'overview' | 'models' | 'drawings' | 'review' | 'intake' | 'rules' | 'console'
+type PageId = 'overview' | 'models' | 'handoff' | 'drawings' | 'review' | 'intake' | 'rules' | 'console'
 type PageSectionId = 'delivery' | 'evidence' | 'control'
 type CadRunner = 'freecad' | 'solidworks'
 type LocalActionMode = 'open' | 'reveal'
@@ -81,6 +82,38 @@ type DryRunResult = {
   checks: DryRunCheck[]
   log_path: string
   checked_at: string
+}
+
+type ReviewDownloadAsset = {
+  id: string
+  title: string
+  category: string
+  description: string
+  status: string
+  file_name: string
+  size_bytes: number | null
+  modified_at: string | null
+  available: boolean
+  download_url: string
+}
+
+type ReviewDownloadIndex = {
+  generated_at: string
+  scope: string
+  assets: ReviewDownloadAsset[]
+}
+
+type CurrentHandoffScopeGate = {
+  generated_at?: string
+  status?: string
+  checks_total?: number
+  checks_failed?: number
+  checks?: Array<{
+    name: string
+    ok: boolean
+    actual?: unknown
+    expected?: string
+  }>
 }
 
 type SolidWorksRunSummary = {
@@ -697,11 +730,15 @@ type GenerationTask = {
   updated_at: string
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000').replace(/\/$/, '')
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+const API_BASE_URL = (
+  configuredApiBaseUrl ||
+  (typeof window === 'undefined' ? 'http://127.0.0.1:8000' : `${window.location.protocol}//${window.location.hostname}:8000`)
+).replace(/\/$/, '')
 const BRAND_MARK_SRC = '/brand/winnsen-mark.png'
 const FREECAD_CMD = 'D:\\软件安装录\\freecad\\FreeCAD_1.1.1\\FreeCAD_1.1.1-Windows-x86_64-py311\\FreeCADCmd.exe'
 const FREECAD_SHORTCUT = 'C:\\Users\\Administrator\\Desktop\\FreeCAD 1.1.1.lnk'
-const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2025.lnk'
+const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2020.lnk'
 const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_regression'
 const LOCKER_16038_RULE_BINDING_CAPABILITY_ID = 'locker_16038_variant_template'
 const LOCKER_16038_RULE_BINDING_ID = 'STEP-VARIANT-16038-4-7-8-12'
@@ -749,8 +786,8 @@ const cadRunners: Array<{
 }> = [
   {
     id: 'solidworks',
-    label: 'SOLIDWORKS 2025',
-    detail: '当前工程复核工具 / 原生文件优先',
+    label: 'SOLIDWORKS 2020',
+    detail: '当前 CAD 主线 / 原生文件优先',
     shortcut: SOLIDWORKS_SHORTCUT,
   },
   {
@@ -781,21 +818,31 @@ const pages: Array<{
     id: 'overview',
     label: '项目总览',
     navLabel: '总览',
-    description: '项目价值、当前成果、交付入口和风险入口',
+    description: '16029 800W gold-variable / LMS-SML 双方案 / 当前只看审核包',
     section: 'delivery',
-    purpose: '给老板或项目负责人快速看当前进度、价值和阻塞。',
-    nextAction: '先看 16029 交付状态，再进入模型生成与交接。',
+    purpose: '给工程师和项目负责人快速看当前主线、门数规则和交付包。',
+    nextAction: '先看当前审核包，再进入模型或待确认项。',
     icon: Gauge,
   },
   {
     id: 'models',
     label: '模型生成与交接',
     navLabel: '模型生成',
-    description: 'SolidWorks 当前工程主线 / FreeCAD 开源替代路线',
+    description: '只保留 16029 800W gold-variable 生成边界',
     section: 'delivery',
-    purpose: '结构工程师需要模型时从这里选择门数、准备任务、运行或打开交接包。',
-    nextAction: '优先使用 16029 10/12/14 门 verified rule packet 和 Pack-and-Go 交接包。',
+    purpose: '结构工程师需要模型时从这里查看当前门数边界与验证门槛。',
+    nextAction: '只看当前 800W gold-variable 线，不再把旧候选当成主入口。',
     icon: Boxes,
+  },
+  {
+    id: 'handoff',
+    label: '审核包下载',
+    navLabel: '审核包',
+    description: 'LMS / SML / DUAL 候选审核包下载入口',
+    section: 'delivery',
+    purpose: '给结构工程师直接下载当前 gold-variable 候选审核包。',
+    nextAction: '发给工程师局域网地址；当前 scope gate 已通过，后续重点是结构签核而不是重新找文件。',
+    icon: Archive,
   },
   {
     id: 'drawings',
@@ -811,10 +858,10 @@ const pages: Array<{
     id: 'review',
     label: '待确认项',
     navLabel: '待确认',
-    description: 'P0/P1/P2 队列、规则定标和工程交付风险',
+    description: '仅保留当前需要工程确认的少量事项',
     section: 'delivery',
-    purpose: '集中看哪些问题会阻塞模型质量和工程交接。',
-    nextAction: '优先关闭 16029 层板、锁具、右门镜像和后侧/电气模块相关问题。',
+    purpose: '集中看当前主线里仍要补证据或修门槛的问题。',
+    nextAction: '优先关闭 16029 相关的门数、门宽和 bbox 门槛。',
     icon: FileWarning,
   },
   {
@@ -849,6 +896,22 @@ const pages: Array<{
   },
 ]
 
+const PRIMARY_NAV_PAGE_IDS = new Set<PageId>(['overview', 'handoff', 'review'])
+
+function isPageId(value: string): value is PageId {
+  return pages.some((page) => page.id === value)
+}
+
+function normalizePrimaryPageId(value: string): PageId {
+  return isPageId(value) && PRIMARY_NAV_PAGE_IDS.has(value) ? value : 'overview'
+}
+
+function initialPageFromHash(): PageId {
+  if (typeof window === 'undefined') return 'overview'
+  const value = window.location.hash.replace(/^#/, '')
+  return normalizePrimaryPageId(value)
+}
+
 const maturityLabels: Record<Maturity, string> = {
   raw_imported: 'raw',
   mapped: 'mapped',
@@ -875,32 +938,58 @@ const evidenceTone: Record<string, string> = {
 }
 
 function App() {
-  const [activePage, setActivePage] = useState<PageId>('overview')
-  const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id)
+  const [activePage, setActivePage] = useState<PageId>(() => initialPageFromHash())
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [query, setQuery] = useState('')
 
-  const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? projects[0]
+  const visibleProjects = projects.filter((project) => project.id.includes('16029'))
+  const visibleReviewItems = reviewItems.filter((item) => item.project === '16029 800W gold-variable')
+  const selectedProject = visibleProjects[0] ?? projects[0]
   const currentPage = pages.find((page) => page.id === activePage) ?? pages[0]
+
+  const navigateToPage = useCallback((pageId: PageId) => {
+    const nextPageId = normalizePrimaryPageId(pageId)
+    setActivePage(nextPageId)
+    if (typeof window !== 'undefined') {
+      const nextHash = `#${nextPageId}`
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, '', nextHash)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const pageId = initialPageFromHash()
+      setActivePage(pageId)
+      const nextHash = `#${pageId}`
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, '', nextHash)
+      }
+    }
+    handleHashChange()
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
 
   const reviewCounts = useMemo(
     () =>
-      reviewItems.reduce<Record<string, number>>((acc, item) => {
+      visibleReviewItems.reduce<Record<string, number>>((acc, item) => {
         acc[item.priority] = (acc[item.priority] ?? 0) + 1
         return acc
       }, {}),
-    [],
+    [visibleReviewItems],
   )
 
   const filteredReviewItems = useMemo(() => {
     const term = query.trim().toLowerCase()
-    if (!term) return reviewItems
-    return reviewItems.filter((item) =>
+    if (!term) return visibleReviewItems
+    return visibleReviewItems.filter((item) =>
       [item.id, item.project, item.module, item.issue, item.nextAction].some((value) =>
         value.toLowerCase().includes(term),
       ),
     )
-  }, [query])
+  }, [query, visibleReviewItems])
 
   return (
     <div className="app-shell">
@@ -919,16 +1008,19 @@ function App() {
         </div>
 
         <nav className="nav-stack" aria-label="主导航">
-          {pageSections.map((section) => (
-            <div key={section.id} className="nav-section">
-              <div className="nav-section-copy">
-                <span className="nav-section-label">{section.label}</span>
-                <small>{section.helper}</small>
-              </div>
-              <div className="nav-section-items">
-                {pages
-                  .filter((page) => page.section === section.id)
-                  .map((page) => {
+          {pageSections.map((section) => {
+            const sectionPages = pages.filter(
+              (page) => page.section === section.id && PRIMARY_NAV_PAGE_IDS.has(page.id),
+            )
+            if (!sectionPages.length) return null
+            return (
+              <div key={section.id} className="nav-section">
+                <div className="nav-section-copy">
+                  <span className="nav-section-label">{section.label}</span>
+                  <small>{section.helper}</small>
+                </div>
+                <div className="nav-section-items">
+                  {sectionPages.map((page) => {
                     const Icon = page.icon
                     return (
                       <button
@@ -937,7 +1029,7 @@ function App() {
                         data-page-id={page.id}
                         className={`nav-item ${activePage === page.id ? 'active' : ''}`}
                         onClick={() => {
-                          setActivePage(page.id)
+                          navigateToPage(page.id)
                           setMobileNavOpen(false)
                         }}
                       >
@@ -946,15 +1038,16 @@ function App() {
                       </button>
                     )
                   })}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </nav>
 
         <div className="sidebar-panel">
-          <span className="panel-label">当前数据资产</span>
-          <strong>{sourcePaths.cadWorkspace}</strong>
-          <small>新增模板素材：{sourcePaths.parametricTemplateRoot}</small>
+          <span className="panel-label">当前交付口径</span>
+          <strong>只看 16029 800W</strong>
+          <small>LMS / SML / DUAL 三个审核包；CAD 主线按 SolidWorks 2020。</small>
         </div>
       </aside>
 
@@ -971,28 +1064,29 @@ function App() {
             <p>{currentPage.description}</p>
           </div>
           <div className="topbar-actions">
-            <label className="project-switcher">
-              <span>当前项目</span>
-              <select value={selectedProjectId} onChange={(event) => setSelectedProjectId(event.target.value)}>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div className="project-switcher">
+              <span>当前主线</span>
+              <strong>16029 800W gold-variable</strong>
+              <small>LMS / SML 双方案，SolidWorks 2020 复核</small>
+            </div>
           </div>
         </header>
 
         {activePage === 'overview' && (
-          <OverviewPage selectedProject={selectedProject} reviewCounts={reviewCounts} onNavigate={setActivePage} />
+          <OverviewPage
+            selectedProject={selectedProject}
+            projectCards={visibleProjects}
+            reviewCounts={reviewCounts}
+            onNavigate={navigateToPage}
+          />
         )}
         {activePage === 'intake' && <IntakePage selectedProject={selectedProject} />}
         {activePage === 'rules' && <RulesPage />}
         {activePage === 'models' && <ModelsPage />}
+        {activePage === 'handoff' && <ReviewDownloadPage />}
         {activePage === 'drawings' && <DrawingSheetMetalPage />}
         {activePage === 'console' && (
-          <AgentConsolePage selectedProject={selectedProject} reviewCounts={reviewCounts} onNavigate={setActivePage} />
+          <AgentConsolePage selectedProject={selectedProject} reviewCounts={reviewCounts} onNavigate={navigateToPage} />
         )}
         {activePage === 'review' && (
           <ReviewPage query={query} setQuery={setQuery} filteredReviewItems={filteredReviewItems} />
@@ -1004,10 +1098,12 @@ function App() {
 
 function OverviewPage({
   selectedProject,
+  projectCards,
   reviewCounts,
   onNavigate,
 }: {
   selectedProject: Project
+  projectCards: Project[]
   reviewCounts: Record<string, number>
   onNavigate: (page: PageId) => void
 }) {
@@ -1028,8 +1124,8 @@ function OverviewPage({
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>项目健康度总览</h2>
-            <p>按照工程参考、生产候选、阻塞项分开呈现，避免生成结果和生产图纸混淆。</p>
+            <h2>当前工程主线</h2>
+              <p>只显示 16029 800W gold-variable 当前线；当前是候选审核阶段，不是正式通过交付。</p>
           </div>
           <button className="ghost-button" type="button" onClick={() => onNavigate('review')}>
             查看待确认项
@@ -1037,8 +1133,8 @@ function OverviewPage({
           </button>
         </div>
 
-        <div className="project-grid">
-          {projects.map((project) => (
+        <div className={projectCards.length === 1 ? 'project-grid project-grid-single' : 'project-grid'}>
+          {projectCards.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
@@ -1049,9 +1145,9 @@ function OverviewPage({
           <div className="section-heading">
             <div>
               <h2>当前项目焦点</h2>
-              <p>{selectedProject.sourceRoot}</p>
+              <p>工程师只看当前 3 个候选 ZIP；源目录和历史证据留在后台追溯。</p>
             </div>
-            <StatusPill tone={selectedProject.statusTone}>{selectedProject.status}</StatusPill>
+            <StatusPill tone={selectedProject.statusTone}>当前主线</StatusPill>
           </div>
           <div className="focus-layout">
             <ProgressDial value={selectedProject.progress} />
@@ -1084,9 +1180,10 @@ function OverviewPage({
             ))}
           </div>
           <div className="source-paths">
-            <span>关键状态文档</span>
-            <code>{sourcePaths.intakeStatus}</code>
-            <code>{sourcePaths.outdoorGate}</code>
+            <span>当前审核包</span>
+            <code>16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip</code>
+            <code>16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip</code>
+            <code>16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip</code>
           </div>
         </article>
       </section>
@@ -1099,28 +1196,30 @@ function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) 
     <section className="section-block">
       <div className="section-heading">
         <div>
-          <h2>软件页面地图</h2>
-          <p>把工程师拿模型的入口放前面，数据、规则和 Agent 控制放到后台页面。</p>
+          <h2>工程师入口</h2>
+          <p>只放当前主线相关入口，后台页不再在这一层展开。</p>
         </div>
       </div>
       <div className="page-map-grid">
-        {pages.map((page) => {
-          const Icon = page.icon
-          const section = pageSections.find((item) => item.id === page.section)
-          return (
-            <button key={page.id} type="button" className="page-map-card" onClick={() => onNavigate(page.id)}>
-              <div className="page-map-card-header">
-                <span className="page-map-icon" aria-hidden="true">
-                  <Icon size={18} />
-                </span>
-                <span>{section?.label}</span>
-              </div>
-              <strong>{page.label}</strong>
-              <p>{page.purpose}</p>
-              <small>{page.nextAction}</small>
-            </button>
-          )
-        })}
+        {pages
+          .filter((page) => PRIMARY_NAV_PAGE_IDS.has(page.id))
+          .map((page) => {
+            const Icon = page.icon
+            const section = pageSections.find((item) => item.id === page.section)
+            return (
+              <button key={page.id} type="button" className="page-map-card" onClick={() => onNavigate(page.id)}>
+                <div className="page-map-card-header">
+                  <span className="page-map-icon" aria-hidden="true">
+                    <Icon size={18} />
+                  </span>
+                  <span>{section?.label}</span>
+                </div>
+                <strong>{page.label}</strong>
+                <p>{page.purpose}</p>
+                <small>{page.nextAction}</small>
+              </button>
+            )
+          })}
       </div>
     </section>
   )
@@ -4114,6 +4213,143 @@ function formatBytes(value: number) {
   return `${gb.toFixed(gb >= 100 ? 0 : 1)} GB`
 }
 
+function ReviewDownloadPage() {
+  const [downloadIndex, setDownloadIndex] = useState<ReviewDownloadIndex | null>(null)
+  const [scopeGate, setScopeGate] = useState<CurrentHandoffScopeGate | null>(null)
+  const [downloadStatus, setDownloadStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [downloadMessage, setDownloadMessage] = useState('')
+  const publicUrl =
+    typeof window === 'undefined' ? 'http://127.0.0.1:5173/#handoff' : `${window.location.origin}${window.location.pathname}#handoff`
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadDownloads() {
+      setDownloadStatus('loading')
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/review-downloads`)
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        const data = (await response.json()) as ReviewDownloadIndex
+        const gateResponse = await fetch(`${API_BASE_URL}/api/locker-16029-current-handoff-scope`)
+        const gateData = gateResponse.ok ? ((await gateResponse.json()) as CurrentHandoffScopeGate) : null
+        if (!cancelled) {
+          setDownloadIndex(data)
+          setScopeGate(gateData)
+          setDownloadStatus('ready')
+          setDownloadMessage(`下载接口已连接：${API_BASE_URL}`)
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setDownloadStatus('error')
+          setDownloadMessage(error instanceof Error ? error.message : 'download API unavailable')
+        }
+      }
+    }
+    loadDownloads()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const assets = downloadIndex?.assets ?? []
+  const availableAssets = assets.filter((asset) => asset.available)
+  const gateStatus = scopeGate?.status ?? 'UNKNOWN'
+  const gateTone: StatusTone = gateStatus === 'PASS' ? 'good' : gateStatus === 'FAIL' ? 'risk' : 'warn'
+  const failedGateChecks = (scopeGate?.checks ?? []).filter((check) => !check.ok).slice(0, 4)
+
+  return (
+    <div className="page-grid handoff-page">
+      <section className="section-block handoff-hero">
+        <div className="section-heading">
+          <div>
+            <h2>当前候选审核包下载</h2>
+            <p>这里只列出 16029 800W gold-variable 的 LMS / SML / DUAL 三个候选包；CAD 复核主线为 SolidWorks 2020。</p>
+          </div>
+          <div className="status-stack">
+            <StatusPill tone={downloadStatus === 'ready' ? 'good' : downloadStatus === 'error' ? 'risk' : 'warn'}>
+              {downloadStatus === 'ready' ? `${availableAssets.length} files` : downloadStatus}
+            </StatusPill>
+            <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+          </div>
+        </div>
+        <div className="handoff-share-box">
+          <div>
+            <span>给结构工程师的访问地址</span>
+            <strong>{publicUrl}</strong>
+            <p>{downloadMessage}</p>
+          </div>
+          <a className="secondary-action" href={publicUrl}>
+            <Archive size={16} />
+            打开下载页
+          </a>
+        </div>
+      </section>
+
+      <section className={`handoff-gate-panel gate-${gateStatus.toLowerCase()}`}>
+        <div>
+          <span>当前放行状态</span>
+          <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 证据已通过' : '候选包未正式放行'}</strong>
+          <p>
+            {gateStatus === 'PASS'
+              ? 'LMS/SML/DUAL 可以进入正式工程交付口径。'
+              : '当前可以下载给工程师继续审核结构问题，但不能标记为已验证交付。'}
+          </p>
+        </div>
+        <div className="handoff-gate-checks">
+          <span>{scopeGate ? `${scopeGate.checks_failed ?? 0}/${scopeGate.checks_total ?? 0} checks failed` : 'gate loading'}</span>
+          {failedGateChecks.length ? (
+            failedGateChecks.map((check) => (
+              <small key={check.name}>{check.name.replace(/^solidworks_2020_/, 'SW2020 ')}</small>
+            ))
+          ) : (
+            <small>{scopeGate ? '没有失败项。' : '正在读取 scope gate。'}</small>
+          )}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>16029 800W gold-variable 审核文件</h2>
+            <p>LMS: 大 6/12，中 4/12，小 2/12；SML: 小 2/12，中 4/12，大 6/12；统一规则 800W × 1917H × 550D；SolidWorks 2020 为当前复核环境。</p>
+          </div>
+          <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+        </div>
+
+        <div className="download-grid">
+          {assets.map((asset) => (
+            <article key={asset.id} className={`download-card ${asset.available ? '' : 'download-card-missing'}`}>
+              <div className="download-card-top">
+                <div>
+                  <span>{asset.category}</span>
+                  <strong>{asset.title}</strong>
+                </div>
+                <StatusPill tone={asset.available ? 'warn' : 'risk'}>{asset.available ? '候选可下载' : '缺失'}</StatusPill>
+              </div>
+              <p>{asset.description}</p>
+              <div className="download-meta">
+                <DetailLine label="文件名" value={asset.file_name} />
+                <DetailLine label="大小" value={asset.size_bytes === null ? 'missing' : formatBytes(asset.size_bytes)} />
+                <DetailLine label="更新时间" value={asset.modified_at ? formatTaskTime(asset.modified_at) : 'missing'} />
+              </div>
+              {asset.available ? (
+                <a className="primary-action download-link" href={`${API_BASE_URL}${asset.download_url}`}>
+                  <Download size={16} />
+                  下载
+                </a>
+              ) : (
+                <button className="secondary-action download-link" type="button" disabled>
+                  <Download size={16} />
+                  文件缺失
+                </button>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}
+
 function ReviewPage({
   query,
   setQuery,
@@ -5526,7 +5762,7 @@ function solidworksComponentTreeLabel(summary: SolidWorksRunSummary) {
 }
 
 function cadRunnerLabel(cadRunner: CadRunner) {
-  return cadRunner === 'solidworks' ? 'SOLIDWORKS 2025' : 'FreeCAD 1.1.1'
+  return cadRunner === 'solidworks' ? 'SOLIDWORKS 2020' : 'FreeCAD 1.1.1'
 }
 
 function variantQualityStatusLabel(status: string) {
@@ -5592,7 +5828,7 @@ function runnerButtonLabel(cadRunner: CadRunner, capabilityId?: string) {
   if (capabilityId === 'locker_16029_regression' && cadRunner === 'freecad') {
     return '生成规则 STEP / FCStd'
   }
-  return cadRunner === 'solidworks' ? '一键运行 SOLIDWORKS 2025' : '创建 FreeCAD 任务草稿'
+  return cadRunner === 'solidworks' ? '一键运行 SOLIDWORKS 2020' : '创建 FreeCAD 任务草稿'
 }
 
 function runnerButtonDetail(cadRunner: CadRunner, fallback: string, capabilityId?: string) {

@@ -27,8 +27,8 @@ relevant same-size variation rule have been extracted.
 
 ## CAD Entries
 
-- SOLIDWORKS 2025 shortcut: `C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk`
-- SOLIDWORKS target: `C:\WINDOWS\Installer\{DB2C3F1B-3025-4743-AAA8-1B5E20047E34}\i386_SldWorks.exe`
+- SOLIDWORKS 2020 shortcut: `C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk`
+- SOLIDWORKS target: `D:\soildworks2020\SOLIDWORKS\SLDWORKS.exe`
 - FreeCAD 1.1.1 shortcut: `C:\Users\Administrator\Desktop\FreeCAD 1.1.1.lnk`
 - FreeCAD target: `D:\软件安装录\freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCAD.exe`
 - FreeCAD command target: `D:\软件安装录\freecad\FreeCAD_1.1.1\FreeCAD_1.1.1-Windows-x86_64-py311\FreeCADCmd.exe`
