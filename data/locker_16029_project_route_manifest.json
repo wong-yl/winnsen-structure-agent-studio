@@ -68,6 +68,18 @@
       }
     ]
   },
+  "gold_source_reference": {
+    "name": "16029 1000W baseline 10/12/14",
+    "outer_size_mm": {
+      "width": 1000,
+      "height": 1917,
+      "depth": 550
+    },
+    "door_counts": [10, 12, 14],
+    "role": "gold_source_reference_for_rule_extraction_and_geometry_comparison",
+    "engineer_facing_current_handoff": false,
+    "decision": "retain as source baseline; do not classify as trial waste"
+  },
   "legacy_routes": [
     {
       "pattern": "16029_WIDTH_CANDIDATE*",
@@ -86,8 +98,8 @@
     },
     {
       "pattern": "16029_10_12_14*",
-      "role": "legacy_same-size_reference_only",
-      "reason": "Same-size door-count work remains background evidence and is superseded for this handoff by the 800W gold-variable route."
+      "role": "gold_source_same_size_reference",
+      "reason": "Same-size 1000W 10/12/14 work remains the gold/source baseline for rule extraction and geometry comparison; it is not a current 800W LMS/SML engineer-facing package."
     }
   ],
   "legacy_api_endpoints": [

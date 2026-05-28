@@ -1145,7 +1145,7 @@ function OverviewPage({
           <div className="section-heading">
             <div>
               <h2>当前项目焦点</h2>
-              <p>工程师只看当前 3 个候选 ZIP；源目录和历史证据留在后台追溯。</p>
+              <p>工程师只看当前 3 个候选 ZIP；1000W/10-12-14 gold/source 参考和历史证据留在后台追溯。</p>
             </div>
             <StatusPill tone={selectedProject.statusTone}>当前主线</StatusPill>
           </div>
