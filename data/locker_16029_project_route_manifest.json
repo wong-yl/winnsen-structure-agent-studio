@@ -1,0 +1,109 @@
+{
+  "generated_at": "2026-05-28T08:15:00+08:00",
+  "project": "16029 indoor locker",
+  "current_route": {
+    "name": "16029 800W gold-variable LMS/SML",
+    "status": "current_engineer_review_route",
+    "outer_size_mm": {
+      "width": 800,
+      "height": 1917,
+      "depth": 550
+    },
+    "door_width": "W337",
+    "internal_gap_rule": "2 + 3 + 2 = 7",
+    "cad_mainline": {
+      "primary_cad": "SolidWorks 2020",
+      "solidworks_shortcut": "C:\\Users\\Public\\Desktop\\SOLIDWORKS 2020.lnk",
+      "solidworks_exe": "D:\\soildworks2020\\SOLIDWORKS\\SLDWORKS.exe",
+      "legacy_cad_versions": [
+        "SolidWorks 2025"
+      ]
+    },
+    "variants": [
+      {
+        "token": "LMS",
+        "row_units_bottom_to_top": [6, 4, 2],
+        "handoff_zip": "workers/handoffs/16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip"
+      },
+      {
+        "token": "SML",
+        "row_units_bottom_to_top": [2, 4, 6],
+        "handoff_zip": "workers/handoffs/16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip"
+      },
+      {
+        "token": "DUAL",
+        "handoff_zip": "workers/handoffs/16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip"
+      }
+    ],
+    "required_outputs_per_variant": [
+      "STEP",
+      "self-review preview",
+      "verify CSV",
+      "model gate",
+      "STEP bbox gate",
+      "SolidWorks 2020 open screenshot evidence",
+      "handoff zip"
+    ],
+    "single_generation_entry": "workers/maintenance/generate_16029_800w_gold_variable_model_freecad.py",
+    "single_finalize_entry": "workers/maintenance/finalize_16029_800w_gold_variable_handoff.py",
+    "scope_gate": "workers/maintenance/validate_16029_current_handoff_scope.ps1",
+    "scope_gate_status": {
+      "last_run": "2026-05-28T12:52:42+08:00",
+      "status": "PASS",
+      "checks_total": 60,
+      "checks_failed": 0
+    },
+    "solidworks_2020_open_evidence": [
+      {
+        "variant": "LMS",
+        "screenshot": "workers/generation_logs/cad_open_screenshots/solidworks2020_lms_step_open.png",
+        "json": "workers/generation_logs/cad_open_screenshots/solidworks2020_lms_step_open.png.json",
+        "solidworks_revision": "28.5.0"
+      },
+      {
+        "variant": "SML",
+        "screenshot": "workers/generation_logs/cad_open_screenshots/solidworks2020_sml_step_open.png",
+        "json": "workers/generation_logs/cad_open_screenshots/solidworks2020_sml_step_open.png.json",
+        "solidworks_revision": "28.5.0"
+      }
+    ]
+  },
+  "legacy_routes": [
+    {
+      "pattern": "16029_WIDTH_CANDIDATE*",
+      "role": "legacy_feedback_evidence_only",
+      "reason": "Width candidate work was an exploration line and is not the current engineer handoff route."
+    },
+    {
+      "pattern": "16029_HEIGHT_CANDIDATE*",
+      "role": "legacy_feedback_evidence_only",
+      "reason": "Height candidate work is historical and must not be used for the current 1917H line."
+    },
+    {
+      "pattern": "16029_800W_*RULE_REVIEW*",
+      "role": "legacy_layout_review_only",
+      "reason": "Rule-review packages can explain layout intent but are not accepted as formal assembly review packages."
+    },
+    {
+      "pattern": "16029_10_12_14*",
+      "role": "legacy_same-size_reference_only",
+      "reason": "Same-size door-count work remains background evidence and is superseded for this handoff by the 800W gold-variable route."
+    }
+  ],
+  "legacy_api_endpoints": [
+    "/api/locker-16029-variant-rule-packet",
+    "/api/locker-16029-verified-rule-packet",
+    "/api/locker-16029-variant-quality-matrix",
+    "/api/locker-16029-engineering-handoff-bundle"
+  ],
+  "current_api_endpoints": [
+    "/api/review-downloads",
+    "/api/locker-16029-current-handoff-scope"
+  ],
+  "decision_rules": [
+    "Engineer-facing downloads come only from /api/review-downloads.",
+    "Legacy endpoints may be inspected for evidence but must not be treated as current deliverables.",
+    "New 16029 variants must change only the variant token and row_units, then pass model gate, STEP bbox gate, and handoff scope gate.",
+    "Do not hand off screenshots or preview-only packages as formal structure review output."
+  ]
+}

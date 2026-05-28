@@ -1,4 +1,5 @@
 import {
+  Bot,
   AlertTriangle,
   Archive,
   Boxes,
@@ -6,15 +7,21 @@ import {
   ChevronRight,
   ClipboardList,
   Database,
+  Download,
   FileWarning,
   FolderOpen,
   Gauge,
   Layers3,
+  ListChecks,
   Menu,
+  MessageSquareMore,
   Play,
+  RefreshCw,
+  Route,
   Search,
   Settings2,
   ShieldCheck,
+  Upload,
   Wrench,
   X,
 } from 'lucide-react'
@@ -22,6 +29,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import './App.css'
 import {
   capabilities,
+  drawingSheetMetalBatchRun,
+  drawingSheetMetalOutputs,
+  drawingSheetMetalRisks,
+  drawingSheetMetalRoadmap,
+  drawingSheetMetalSources,
   maturityDistribution,
   metricCards,
   pipelineRows,
@@ -31,6 +43,7 @@ import {
   ruleFamilies,
   sourcePaths,
   templateAssets,
+  type Capability,
   type Evidence,
   type Maturity,
   type Project,
@@ -40,7 +53,8 @@ import {
   type TemplateAsset,
 } from './data/studioData'
 
-type PageId = 'overview' | 'intake' | 'rules' | 'models' | 'review'
+type PageId = 'overview' | 'models' | 'handoff' | 'drawings' | 'review' | 'intake' | 'rules' | 'console'
+type PageSectionId = 'delivery' | 'evidence' | 'control'
 type CadRunner = 'freecad' | 'solidworks'
 type LocalActionMode = 'open' | 'reveal'
 type ParameterValues = Record<string, string>
@@ -70,12 +84,46 @@ type DryRunResult = {
   checked_at: string
 }
 
+type ReviewDownloadAsset = {
+  id: string
+  title: string
+  category: string
+  description: string
+  status: string
+  file_name: string
+  size_bytes: number | null
+  modified_at: string | null
+  available: boolean
+  download_url: string
+}
+
+type ReviewDownloadIndex = {
+  generated_at: string
+  scope: string
+  assets: ReviewDownloadAsset[]
+}
+
+type CurrentHandoffScopeGate = {
+  generated_at?: string
+  status?: string
+  checks_total?: number
+  checks_failed?: number
+  checks?: Array<{
+    name: string
+    ok: boolean
+    actual?: unknown
+    expected?: string
+  }>
+}
+
 type SolidWorksRunSummary = {
   generation_mode: string
   interpretation: string
   source_assembly: string | null
   source_folder: string | null
   door_count: string | null
+  layout_units: string | null
+  layout_rule_status: string | null
   variant_label: string | null
   component_manifest_path: string | null
   component_manifest_rows: number | null
@@ -115,13 +163,342 @@ type WorkerExecutionResult = {
   solidworks_quality_status?: string | null
   solidworks_quality_summary?: string | null
   solidworks_run_summary?: SolidWorksRunSummary | null
+  freecad_quality_status?: string | null
+  freecad_quality_summary?: string | null
+  freecad_quality_report?: string | null
   message: string
+}
+
+type Locker16029VariantQuality = {
+  door_count: number
+  status: string
+  task_id: string | null
+  output_dir: string | null
+  verify_bbox_x_len: number | null
+  verify_rows: number
+  fcstd_mb: number | null
+  step_mb: number | null
+  step_geometry_check?: {
+    status: string
+    invalid_shape_count?: number | null
+    bbox_x_len?: number | null
+  }
+  geometry_integrity: {
+    status: string
+    invalid_shape_objects?: number | null
+    center_vertical_signature_failures?: number | null
+  }
+  structural_rule_audit?: {
+    status: string
+    failed_checks?: number | null
+    door_height_mm?: number | null
+    door_pitch_mm?: number | null
+    door_width_mm?: number | null
+    lock_center_x_abs_mm?: {
+      min?: number | null
+      max?: number | null
+      spread?: number | null
+    } | null
+    hinge_axis_x_abs_mm?: {
+      min?: number | null
+      max?: number | null
+      spread?: number | null
+    } | null
+  }
+}
+
+type Locker16029VariantQualityMatrix = {
+  generated_at: string | null
+  summary: {
+    pass_ready_count: number
+    pass_step_geometry_needs_fcstd_audit_count?: number
+    pass_rule_counts_needs_fcstd_audit_count: number
+    fail_count: number
+    missing_output_count: number
+  }
+  variants: Locker16029VariantQuality[]
+}
+
+type Locker16029EngineeringHandoffBundle = {
+  generated_at: string | null
+  handoff_dir: string
+  manifest_csv?: string
+  engineer_open_index?: string
+  handoff_dir_exists?: boolean
+  manifest_csv_exists?: boolean
+  engineer_open_index_exists?: boolean
+  solidworks_open_verification_exists?: boolean
+  readiness_summary?: {
+    target_door_counts: number[]
+    variant_count: number
+    ready_count: number
+    model_file_ready_count?: number
+    blocked_count: number
+    missing_file_count: number
+    ready_door_counts: number[]
+    blocked_door_counts: number[]
+    missing_files: {
+      door_count?: number | null
+      key: string
+      path?: string | null
+    }[]
+    solidworks_open_verified?: boolean
+    solidworks_open_status?: string | null
+    solidworks_open_message?: string | null
+    all_ready: boolean
+  }
+  root_launchers?: {
+    door_count: number
+    solidworks_launcher: string
+    target_launcher?: string
+    stp?: string
+    file_status?: {
+      solidworks_launcher?: boolean
+      target_launcher?: boolean
+      stp?: boolean
+    }
+  }[]
+  variants: {
+    door_count: number
+    status_label: string
+    handoff_dir?: string
+    status?: string
+    step?: string | null
+    stp: string
+    fcstd?: string | null
+    solidworks_launcher: string
+    freecad_launcher?: string | null
+    report_md?: string | null
+    verify_csv?: string | null
+    step_geometry_check_json?: string | null
+    fcstd_integrity_md?: string | null
+    structural_rule_audit_md?: string | null
+    handoff_files_ready?: boolean
+    file_status?: {
+      handoff_dir?: boolean
+      step?: boolean
+      stp?: boolean
+      fcstd?: boolean
+      root_solidworks_launcher?: boolean | null
+      solidworks_launcher?: boolean
+      freecad_launcher?: boolean
+      report_md?: boolean
+      verify_csv?: boolean
+      step_geometry_check_json?: boolean
+      fcstd_integrity_md?: boolean
+      structural_rule_audit_md?: boolean
+    }
+    metrics?: {
+      bbox_x_mm?: number | null
+      step_invalid_shape_count?: number | null
+      door_height_mm?: number | null
+      door_pitch_mm?: number | null
+      door_width_mm?: number | null
+      structural_rule_status?: string | null
+      fcstd_integrity_status?: string | null
+      step_geometry_status?: string | null
+      step_mb?: number | null
+      fcstd_mb?: number | null
+      lock_center_x_abs_mm?: {
+        min?: number | null
+        max?: number | null
+        spread?: number | null
+      } | null
+      hinge_axis_x_abs_mm?: {
+        min?: number | null
+        max?: number | null
+        spread?: number | null
+      } | null
+    }
+  }[]
+}
+
+type Locker16029VerifiedRulePacket = {
+  generated_at: string | null
+  status: string
+  scope: string
+  verified_door_counts: number[]
+  formula_candidate_door_counts?: number[]
+  verified_variants: {
+    door_count: number
+    layout_rule: {
+      rows_per_column: number
+      door_height_mm: number
+      door_pitch_mm: number
+      door_width_mm: number
+    }
+    component_count_rule: {
+      shelves: number
+      front_frame_crossbars: number
+      electric_lock_hooks: number
+    }
+    measured_gate: {
+      right_column_rotation_ok: string
+    }
+    pack_and_go_handoff: {
+      ok: string
+      file_count: number
+      external_top_reference_count: number
+    }
+  }[]
 }
 
 type LocalActionResult = {
   status: string
   path: string
   message: string
+}
+
+type DrawingSheetMetalIntakeFileRecord = {
+  file_name: string
+  saved_path: string
+  size_bytes: number
+  suffix: string
+  source_category: string
+}
+
+type DrawingSheetMetalExtractionFileResult = {
+  file_name: string
+  status: 'completed' | 'failed'
+  output_dir: string
+  summary_path: string | null
+  card_path: string | null
+  quality_status: string | null
+  role_guess: string | null
+  manufacturing_bbox_mm: Record<string, number | null>
+  circle_count: number | null
+  closed_loop_count: number | null
+  message: string
+}
+
+type DrawingSheetMetalExtractionSummary = {
+  status: 'not_started' | 'not_applicable' | 'completed' | 'partial_failed' | 'failed'
+  updated_at: string | null
+  output_dir: string | null
+  processed_files: number
+  failed_files: number
+  rule_seed_candidates: number
+  quality_status_counts: Record<string, number>
+  results: DrawingSheetMetalExtractionFileResult[]
+  message: string
+}
+
+type DrawingSheetMetalCadCheckFileResult = {
+  file_name: string
+  status: 'completed' | 'failed'
+  output_dir: string
+  summary_path: string | null
+  report_path: string | null
+  quality_status: string | null
+  model_type: string | null
+  assembly_bbox_mm: Record<string, number | null>
+  shape_object_count: number | null
+  solid_count: number | null
+  invalid_shape_count: number | null
+  message: string
+}
+
+type DrawingSheetMetalCadCheckSummary = {
+  status: 'not_started' | 'not_applicable' | 'completed' | 'partial_failed' | 'failed'
+  updated_at: string | null
+  output_dir: string | null
+  processed_files: number
+  failed_files: number
+  pass_files: number
+  quality_status_counts: Record<string, number>
+  results: DrawingSheetMetalCadCheckFileResult[]
+  message: string
+}
+
+type DrawingSheetMetalIntakeRecord = {
+  id: string
+  status: 'intake_received' | 'blocked_unsupported_file'
+  created_at: string
+  source_type: string
+  notes: string
+  output_dir: string
+  files: DrawingSheetMetalIntakeFileRecord[]
+  next_action: string
+  dxf_extraction: DrawingSheetMetalExtractionSummary
+  cad_check: DrawingSheetMetalCadCheckSummary
+}
+
+type SheetMetalRuleEvidenceSample = {
+  file_name: string
+  quality_status?: string
+  source_path?: string
+  bbox_mm?: Record<string, number | null>
+  flat_width_mm?: number
+  flat_height_mm?: number
+  door_index?: number
+}
+
+type SheetMetalRuleEvidenceFormula = {
+  id: string
+  title: string
+  role: string
+  evidence_level: string
+  confidence: string
+  formula_text: string
+  dimensions_mm: Record<string, number | null>
+  sample_count: number
+  samples: SheetMetalRuleEvidenceSample[]
+  usage_note: string
+}
+
+type SheetMetalRuleCandidate = {
+  id: string
+  title: string
+  role: string
+  evidence_level: string
+  confidence: string
+  dimensions_mm: {
+    long?: number | null
+    short?: number | null
+  }
+  source_files_count: number
+  accepted_source_files_count: number
+  blocked_source_files_count: number
+  rule_seed: string
+  notes: string
+  source_examples: SheetMetalRuleEvidenceSample[]
+}
+
+type SheetMetalRuleEvidence16029 = {
+  generated_at: string | null
+  product_family: string
+  source_batch: {
+    run_id?: string
+    source_root?: string
+    batch_dir?: string
+    manifest_path?: string
+    summary_csv_path?: string
+  }
+  summary: {
+    file_count: number
+    main_source_file_count: number
+    accepted_rule_seed_file_count: number
+    formula_count: number
+    candidate_count: number
+    quality_status_counts: Record<string, number>
+    role_counts: Record<string, number>
+  }
+  formulas: SheetMetalRuleEvidenceFormula[]
+  rule_candidates: SheetMetalRuleCandidate[]
+  blocked_evidence_summary: {
+    blocked_count: number
+    quality_status_counts: Record<string, number>
+    large_bbox_noise_count: number
+  }
+  generator_guidance: string[]
+  output_paths: Record<string, string>
+}
+
+type DrawingUploadMessage = {
+  tone: 'good' | 'warn' | 'risk'
+  title: string
+  detail: string
+  outputDir?: string
 }
 
 type TemplateCatalog = {
@@ -353,13 +730,53 @@ type GenerationTask = {
   updated_at: string
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000').replace(/\/$/, '')
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+const API_BASE_URL = (
+  configuredApiBaseUrl ||
+  (typeof window === 'undefined' ? 'http://127.0.0.1:8000' : `${window.location.protocol}//${window.location.hostname}:8000`)
+).replace(/\/$/, '')
 const BRAND_MARK_SRC = '/brand/winnsen-mark.png'
 const FREECAD_CMD = 'D:\\软件安装录\\freecad\\FreeCAD_1.1.1\\FreeCAD_1.1.1-Windows-x86_64-py311\\FreeCADCmd.exe'
 const FREECAD_SHORTCUT = 'C:\\Users\\Administrator\\Desktop\\FreeCAD 1.1.1.lnk'
-const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2025.lnk'
-const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16038_variant_template'
+const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2020.lnk'
+const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_regression'
+const LOCKER_16038_RULE_BINDING_CAPABILITY_ID = 'locker_16038_variant_template'
 const LOCKER_16038_RULE_BINDING_ID = 'STEP-VARIANT-16038-4-7-8-12'
+const LOCKER_16029_OUTER_SIZE = '1000 W × 1917 H × 550 D'
+const LOCKER_16029_UNIT_HEIGHT_MM = 152.5
+const LOCKER_16029_DOOR_GAP_MM = 7
+const LOCKER_16029_DOOR_AREA_HEIGHT_MM = 1827
+const LOCKER_16029_GRID_EDGE_GAP_MM = 2
+const LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS = [10, 12, 14]
+const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [10, 12, 14]
+const LOCKER_16029_SUPPORTED_RULE_COUNTS = Array.from(
+  new Set([...LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS, ...LOCKER_16029_SUPPORTED_FREECAD_COUNTS]),
+)
+const LOCKER_16029_ENRICHED_REFERENCES = [10, 12, 14].map((doorCount) => ({
+  doorCount,
+  title: `${doorCount} 门增强矩阵样机 v2`,
+  outputDir: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native`,
+  assembly: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\open_${doorCount}door_in_solidworks.cmd`,
+  step: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\16029_1000W_1917H_550D_${doorCount}door_enriched_v2.step`,
+  validationReport: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\solidworks_16029_enriched_${doorCount}door_matrix_validation.md`,
+  validationData: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\solidworks_16029_enriched_${doorCount}door_matrix_validation.csv`,
+  candidateMap: `D:\\Winnsen_Structure_Agent_Studio\\workers\\handoffs\\16029_10_12_14_STEP_ENGINEERING_HANDOFF_20260519\\${doorCount}door\\solidworks_native\\native_dependency_manifest.csv`,
+}))
+const DRAWING_UPLOAD_ACCEPT = [
+  '.dxf',
+  '.dwg',
+  '.pdf',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.step',
+  '.stp',
+  '.sldprt',
+  '.sldasm',
+  '.slddrw',
+  '.fcstd',
+].join(',')
+const DRAWING_UPLOAD_MAX_BYTES = 80 * 1024 * 1024
 
 const cadRunners: Array<{
   id: CadRunner
@@ -369,8 +786,8 @@ const cadRunners: Array<{
 }> = [
   {
     id: 'solidworks',
-    label: 'SOLIDWORKS 2025',
-    detail: '当前工程主线 / SLDASM 原生输出',
+    label: 'SOLIDWORKS 2020',
+    detail: '当前 CAD 主线 / 原生文件优先',
     shortcut: SOLIDWORKS_SHORTCUT,
   },
   {
@@ -381,13 +798,119 @@ const cadRunners: Array<{
   },
 ]
 
-const pages: Array<{ id: PageId; label: string; description: string; icon: typeof Gauge }> = [
-  { id: 'overview', label: '项目总览', description: '项目健康度、证据覆盖和风险入口', icon: Gauge },
-  { id: 'intake', label: '数据录入状态', description: 'BOM / DXF / SolidWorks / STEP / FreeCAD 迁移流水线', icon: Database },
-  { id: 'rules', label: '规则库成熟度', description: '模块规则、来源证据和成熟度分布', icon: ShieldCheck },
-  { id: 'models', label: '可生成模型', description: 'SolidWorks 主线 / FreeCAD 开源替代路线', icon: Boxes },
-  { id: 'review', label: '待确认项', description: 'P0/P1/P2 队列和规则定标事项', icon: FileWarning },
+const pageSections: Array<{ id: PageSectionId; label: string; helper: string }> = [
+  { id: 'delivery', label: '工程交付主线', helper: '工程师实际拿模型和确认问题的入口' },
+  { id: 'evidence', label: '证据与规则后台', helper: '数据、规则、图纸证据的管理区' },
+  { id: 'control', label: 'Agent 控制台', helper: '边界、风险和下一步推进' },
 ]
+
+const pages: Array<{
+  id: PageId
+  label: string
+  navLabel: string
+  description: string
+  section: PageSectionId
+  purpose: string
+  nextAction: string
+  icon: typeof Gauge
+}> = [
+  {
+    id: 'overview',
+    label: '项目总览',
+    navLabel: '总览',
+    description: '16029 800W gold-variable / LMS-SML 双方案 / 当前只看审核包',
+    section: 'delivery',
+    purpose: '给工程师和项目负责人快速看当前主线、门数规则和交付包。',
+    nextAction: '先看当前审核包，再进入模型或待确认项。',
+    icon: Gauge,
+  },
+  {
+    id: 'models',
+    label: '模型生成与交接',
+    navLabel: '模型生成',
+    description: '只保留 16029 800W gold-variable 生成边界',
+    section: 'delivery',
+    purpose: '结构工程师需要模型时从这里查看当前门数边界与验证门槛。',
+    nextAction: '只看当前 800W gold-variable 线，不再把旧候选当成主入口。',
+    icon: Boxes,
+  },
+  {
+    id: 'handoff',
+    label: '审核包下载',
+    navLabel: '审核包',
+    description: 'LMS / SML / DUAL 候选审核包下载入口',
+    section: 'delivery',
+    purpose: '给结构工程师直接下载当前 gold-variable 候选审核包。',
+    nextAction: '发给工程师局域网地址；当前 scope gate 已通过，后续重点是结构签核而不是重新找文件。',
+    icon: Archive,
+  },
+  {
+    id: 'drawings',
+    label: '图纸生成与钣金出图',
+    navLabel: '图纸/钣金',
+    description: '图纸/图片/钣金模型到参考模型、展开、标注与规则证据',
+    section: 'delivery',
+    purpose: '把上传的图纸、DXF、STEP、SLDPRT 等转成可复核的钣金规则证据。',
+    nextAction: '先做单件解析和参考展开，正式图纸仍需工程复核。',
+    icon: ClipboardList,
+  },
+  {
+    id: 'review',
+    label: '待确认项',
+    navLabel: '待确认',
+    description: '仅保留当前需要工程确认的少量事项',
+    section: 'delivery',
+    purpose: '集中看当前主线里仍要补证据或修门槛的问题。',
+    nextAction: '优先关闭 16029 相关的门数、门宽和 bbox 门槛。',
+    icon: FileWarning,
+  },
+  {
+    id: 'intake',
+    label: '数据录入状态',
+    navLabel: '数据录入',
+    description: 'BOM / DXF / SolidWorks / STEP / FreeCAD 迁移流水线',
+    section: 'evidence',
+    purpose: '看 CAD 资产、模板素材和规则学习样本是否已经进入系统。',
+    nextAction: '新增素材先进入规则学习，不直接当成可生成模型。',
+    icon: Database,
+  },
+  {
+    id: 'rules',
+    label: '规则库成熟度',
+    navLabel: '规则库',
+    description: '模块规则、来源证据、成熟度分布和规则提取入口',
+    section: 'evidence',
+    purpose: '查看哪些钣金/装配规则已经闭环，哪些仍只是候选。',
+    nextAction: '把 verified rule packet 作为 16029 生成器的单一规则源。',
+    icon: ShieldCheck,
+  },
+  {
+    id: 'console',
+    label: '结构 Agent',
+    navLabel: 'Agent',
+    description: '生成边界、规则闭环、风险判断和下一步推进',
+    section: 'control',
+    purpose: '给非工程用户看当前能力边界，避免把参考模型误认为生产图纸。',
+    nextAction: '按验证门槛推进下一轮生成器质量修复。',
+    icon: Bot,
+  },
+]
+
+const PRIMARY_NAV_PAGE_IDS = new Set<PageId>(['overview', 'handoff', 'review'])
+
+function isPageId(value: string): value is PageId {
+  return pages.some((page) => page.id === value)
+}
+
+function normalizePrimaryPageId(value: string): PageId {
+  return isPageId(value) && PRIMARY_NAV_PAGE_IDS.has(value) ? value : 'overview'
+}
+
+function initialPageFromHash(): PageId {
+  if (typeof window === 'undefined') return 'overview'
+  const value = window.location.hash.replace(/^#/, '')
+  return normalizePrimaryPageId(value)
+}
 
 const maturityLabels: Record<Maturity, string> = {
   raw_imported: 'raw',
@@ -415,32 +938,58 @@ const evidenceTone: Record<string, string> = {
 }
 
 function App() {
-  const [activePage, setActivePage] = useState<PageId>('overview')
-  const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id)
+  const [activePage, setActivePage] = useState<PageId>(() => initialPageFromHash())
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [query, setQuery] = useState('')
 
-  const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? projects[0]
+  const visibleProjects = projects.filter((project) => project.id.includes('16029'))
+  const visibleReviewItems = reviewItems.filter((item) => item.project === '16029 800W gold-variable')
+  const selectedProject = visibleProjects[0] ?? projects[0]
   const currentPage = pages.find((page) => page.id === activePage) ?? pages[0]
+
+  const navigateToPage = useCallback((pageId: PageId) => {
+    const nextPageId = normalizePrimaryPageId(pageId)
+    setActivePage(nextPageId)
+    if (typeof window !== 'undefined') {
+      const nextHash = `#${nextPageId}`
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, '', nextHash)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const pageId = initialPageFromHash()
+      setActivePage(pageId)
+      const nextHash = `#${pageId}`
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, '', nextHash)
+      }
+    }
+    handleHashChange()
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
 
   const reviewCounts = useMemo(
     () =>
-      reviewItems.reduce<Record<string, number>>((acc, item) => {
+      visibleReviewItems.reduce<Record<string, number>>((acc, item) => {
         acc[item.priority] = (acc[item.priority] ?? 0) + 1
         return acc
       }, {}),
-    [],
+    [visibleReviewItems],
   )
 
   const filteredReviewItems = useMemo(() => {
     const term = query.trim().toLowerCase()
-    if (!term) return reviewItems
-    return reviewItems.filter((item) =>
+    if (!term) return visibleReviewItems
+    return visibleReviewItems.filter((item) =>
       [item.id, item.project, item.module, item.issue, item.nextAction].some((value) =>
         value.toLowerCase().includes(term),
       ),
     )
-  }, [query])
+  }, [query, visibleReviewItems])
 
   return (
     <div className="app-shell">
@@ -459,30 +1008,46 @@ function App() {
         </div>
 
         <nav className="nav-stack" aria-label="主导航">
-          {pages.map((page) => {
-            const Icon = page.icon
+          {pageSections.map((section) => {
+            const sectionPages = pages.filter(
+              (page) => page.section === section.id && PRIMARY_NAV_PAGE_IDS.has(page.id),
+            )
+            if (!sectionPages.length) return null
             return (
-              <button
-                key={page.id}
-                type="button"
-                data-page-id={page.id}
-                className={`nav-item ${activePage === page.id ? 'active' : ''}`}
-                onClick={() => {
-                  setActivePage(page.id)
-                  setMobileNavOpen(false)
-                }}
-              >
-                <Icon size={19} />
-                <span>{page.label}</span>
-              </button>
+              <div key={section.id} className="nav-section">
+                <div className="nav-section-copy">
+                  <span className="nav-section-label">{section.label}</span>
+                  <small>{section.helper}</small>
+                </div>
+                <div className="nav-section-items">
+                  {sectionPages.map((page) => {
+                    const Icon = page.icon
+                    return (
+                      <button
+                        key={page.id}
+                        type="button"
+                        data-page-id={page.id}
+                        className={`nav-item ${activePage === page.id ? 'active' : ''}`}
+                        onClick={() => {
+                          navigateToPage(page.id)
+                          setMobileNavOpen(false)
+                        }}
+                      >
+                        <Icon size={19} />
+                        <span>{page.navLabel}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
             )
           })}
         </nav>
 
         <div className="sidebar-panel">
-          <span className="panel-label">当前数据资产</span>
-          <strong>{sourcePaths.cadWorkspace}</strong>
-          <small>新增模板素材：{sourcePaths.parametricTemplateRoot}</small>
+          <span className="panel-label">当前交付口径</span>
+          <strong>只看 16029 800W</strong>
+          <small>LMS / SML / DUAL 三个审核包；CAD 主线按 SolidWorks 2020。</small>
         </div>
       </aside>
 
@@ -499,25 +1064,30 @@ function App() {
             <p>{currentPage.description}</p>
           </div>
           <div className="topbar-actions">
-            <label className="project-switcher">
-              <span>当前项目</span>
-              <select value={selectedProjectId} onChange={(event) => setSelectedProjectId(event.target.value)}>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div className="project-switcher">
+              <span>当前主线</span>
+              <strong>16029 800W gold-variable</strong>
+              <small>LMS / SML 双方案，SolidWorks 2020 复核</small>
+            </div>
           </div>
         </header>
 
         {activePage === 'overview' && (
-          <OverviewPage selectedProject={selectedProject} reviewCounts={reviewCounts} onNavigate={setActivePage} />
+          <OverviewPage
+            selectedProject={selectedProject}
+            projectCards={visibleProjects}
+            reviewCounts={reviewCounts}
+            onNavigate={navigateToPage}
+          />
         )}
         {activePage === 'intake' && <IntakePage selectedProject={selectedProject} />}
         {activePage === 'rules' && <RulesPage />}
         {activePage === 'models' && <ModelsPage />}
+        {activePage === 'handoff' && <ReviewDownloadPage />}
+        {activePage === 'drawings' && <DrawingSheetMetalPage />}
+        {activePage === 'console' && (
+          <AgentConsolePage selectedProject={selectedProject} reviewCounts={reviewCounts} onNavigate={navigateToPage} />
+        )}
         {activePage === 'review' && (
           <ReviewPage query={query} setQuery={setQuery} filteredReviewItems={filteredReviewItems} />
         )}
@@ -528,10 +1098,12 @@ function App() {
 
 function OverviewPage({
   selectedProject,
+  projectCards,
   reviewCounts,
   onNavigate,
 }: {
   selectedProject: Project
+  projectCards: Project[]
   reviewCounts: Record<string, number>
   onNavigate: (page: PageId) => void
 }) {
@@ -547,11 +1119,13 @@ function OverviewPage({
         ))}
       </section>
 
+      <PageMapSection onNavigate={onNavigate} />
+
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>项目健康度总览</h2>
-            <p>按照工程参考、生产候选、阻塞项分开呈现，避免生成结果和生产图纸混淆。</p>
+            <h2>当前工程主线</h2>
+              <p>只显示 16029 800W gold-variable 当前线；当前是候选审核阶段，不是正式通过交付。</p>
           </div>
           <button className="ghost-button" type="button" onClick={() => onNavigate('review')}>
             查看待确认项
@@ -559,8 +1133,8 @@ function OverviewPage({
           </button>
         </div>
 
-        <div className="project-grid">
-          {projects.map((project) => (
+        <div className={projectCards.length === 1 ? 'project-grid project-grid-single' : 'project-grid'}>
+          {projectCards.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
@@ -571,9 +1145,9 @@ function OverviewPage({
           <div className="section-heading">
             <div>
               <h2>当前项目焦点</h2>
-              <p>{selectedProject.sourceRoot}</p>
+              <p>工程师只看当前 3 个候选 ZIP；源目录和历史证据留在后台追溯。</p>
             </div>
-            <StatusPill tone={selectedProject.statusTone}>{selectedProject.status}</StatusPill>
+            <StatusPill tone={selectedProject.statusTone}>当前主线</StatusPill>
           </div>
           <div className="focus-layout">
             <ProgressDial value={selectedProject.progress} />
@@ -606,13 +1180,48 @@ function OverviewPage({
             ))}
           </div>
           <div className="source-paths">
-            <span>关键状态文档</span>
-            <code>{sourcePaths.intakeStatus}</code>
-            <code>{sourcePaths.outdoorGate}</code>
+            <span>当前审核包</span>
+            <code>16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip</code>
+            <code>16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip</code>
+            <code>16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip</code>
           </div>
         </article>
       </section>
     </div>
+  )
+}
+
+function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) {
+  return (
+    <section className="section-block">
+      <div className="section-heading">
+        <div>
+          <h2>工程师入口</h2>
+          <p>只放当前主线相关入口，后台页不再在这一层展开。</p>
+        </div>
+      </div>
+      <div className="page-map-grid">
+        {pages
+          .filter((page) => PRIMARY_NAV_PAGE_IDS.has(page.id))
+          .map((page) => {
+            const Icon = page.icon
+            const section = pageSections.find((item) => item.id === page.section)
+            return (
+              <button key={page.id} type="button" className="page-map-card" onClick={() => onNavigate(page.id)}>
+                <div className="page-map-card-header">
+                  <span className="page-map-icon" aria-hidden="true">
+                    <Icon size={18} />
+                  </span>
+                  <span>{section?.label}</span>
+                </div>
+                <strong>{page.label}</strong>
+                <p>{page.purpose}</p>
+                <small>{page.nextAction}</small>
+              </button>
+            )
+          })}
+      </div>
+    </section>
   )
 }
 
@@ -1282,6 +1891,13 @@ function ModelsPage() {
   const [localActionBusy, setLocalActionBusy] = useState<string | null>(null)
   const [quantityFormulaCatalog, setQuantityFormulaCatalog] = useState<RuleSeedQuantityFormulaCatalog | null>(null)
   const [quantityFormulaMessage, setQuantityFormulaMessage] = useState('正在读取 16038 规则绑定证据...')
+  const [variantQualityMatrix, setVariantQualityMatrix] = useState<Locker16029VariantQualityMatrix | null>(null)
+  const [variantQualityMessage, setVariantQualityMessage] = useState('正在读取 16029 质量矩阵...')
+  const [verifiedRulePacket, setVerifiedRulePacket] = useState<Locker16029VerifiedRulePacket | null>(null)
+  const [verifiedRulePacketMessage, setVerifiedRulePacketMessage] = useState('正在读取 16029 已验证规则包...')
+  const [engineeringHandoffBundle, setEngineeringHandoffBundle] =
+    useState<Locker16029EngineeringHandoffBundle | null>(null)
+  const [engineeringHandoffMessage, setEngineeringHandoffMessage] = useState('正在读取 16029 工程交接包...')
   const activeCapability = capabilities.find((capability) => capability.id === activeCapabilityId) ?? capabilities[0]
   const parameterValues = useMemo(
     () => ({
@@ -1303,12 +1919,36 @@ function ModelsPage() {
   const activeDoorCountPresets = doorCountPresetsFor(activeCapability.id)
   const canSubmitTask = canCreateTask && queueOnline && queueState !== 'saving' && !parameterIssue
   const prioritizedGenerationTasks = prioritizeGenerationTasks(generationTasks, activeCapability.id, normalizedParameterValues)
-  const activeTaskCount = prioritizedGenerationTasks.filter((task) => task.capability_id === activeCapability.id).length
+  const nonLegacyActiveTasks = prioritizedGenerationTasks.filter(
+    (task) => task.capability_id === activeCapability.id && !isLegacySolidWorksDirectAssemblyTask(task),
+  )
+  const primaryVisibleGenerationTasks = nonLegacyActiveTasks.filter((task) =>
+    taskMatchesPrimaryParameters(task, activeCapability.id, normalizedParameterValues),
+  )
+  const visibleGenerationTaskPool = primaryVisibleGenerationTasks.length
+    ? primaryVisibleGenerationTasks
+    : activeCapability.id === 'locker_16029_regression'
+      ? []
+      : nonLegacyActiveTasks
+  const visibleGenerationTasks = visibleGenerationTaskPool.slice(0, 6)
+  const hiddenTaskCount = Math.max(
+    0,
+    generationTasks.filter(
+      (task) =>
+        task.capability_id !== activeCapability.id ||
+        isLegacySolidWorksDirectAssemblyTask(task) ||
+        !taskMatchesPrimaryParameters(task, activeCapability.id, normalizedParameterValues),
+    ).length,
+  )
+  const activeTaskCount = nonLegacyActiveTasks.length
   const exactTaskCount = prioritizedGenerationTasks.filter(
-    (task) => task.capability_id === activeCapability.id && taskMatchesActiveParameters(task, normalizedParameterValues),
+    (task) =>
+      task.capability_id === activeCapability.id &&
+      taskMatchesPrimaryParameters(task, activeCapability.id, normalizedParameterValues) &&
+      !isLegacySolidWorksDirectAssemblyTask(task),
   ).length
   const activeRuleBinding = useMemo(() => {
-    if (activeCapability.id !== DEFAULT_MODEL_CAPABILITY_ID) return null
+    if (activeCapability.id !== LOCKER_16038_RULE_BINDING_CAPABILITY_ID) return null
     return quantityFormulaCatalog?.items.find((item) => item.id === LOCKER_16038_RULE_BINDING_ID) ?? null
   }, [activeCapability.id, quantityFormulaCatalog])
 
@@ -1362,6 +2002,91 @@ function ModelsPage() {
     }
 
     loadQuantityFormulas()
+    return () => {
+      active = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadVariantQualityMatrix() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/locker-16029-variant-quality-matrix`)
+        if (!response.ok) throw new Error(await response.text())
+        const matrix = (await response.json()) as Locker16029VariantQualityMatrix
+        if (!active) return
+        setVariantQualityMatrix(matrix)
+        setVariantQualityMessage(
+          `10/12/14 质量矩阵已读取：可复核 ${matrix.summary.pass_ready_count}，待完整性审计 ${matrix.summary.pass_rule_counts_needs_fcstd_audit_count}。`,
+        )
+      } catch (error) {
+        if (!active) return
+        setVariantQualityMatrix(null)
+        setVariantQualityMessage(`16029 质量矩阵读取失败: ${error instanceof Error ? error.message : 'unknown error'}`)
+        console.warn('16029 quality matrix unavailable', error)
+      }
+    }
+
+    loadVariantQualityMatrix()
+    return () => {
+      active = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadVerifiedRulePacket() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/locker-16029-verified-rule-packet`)
+        if (!response.ok) throw new Error(await response.text())
+        const packet = (await response.json()) as Locker16029VerifiedRulePacket
+        if (!active) return
+        setVerifiedRulePacket(packet)
+        setVerifiedRulePacketMessage(
+          packet.status === 'PASS'
+            ? `已验证规则包 PASS：${packet.verified_door_counts.join('/')} 门可进入工程交接。`
+            : `已验证规则包状态：${packet.status}。`,
+        )
+      } catch (error) {
+        if (!active) return
+        setVerifiedRulePacket(null)
+        setVerifiedRulePacketMessage(`16029 已验证规则包读取失败: ${error instanceof Error ? error.message : 'unknown error'}`)
+        console.warn('16029 verified rule packet unavailable', error)
+      }
+    }
+
+    loadVerifiedRulePacket()
+    return () => {
+      active = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadEngineeringHandoffBundle() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/locker-16029-engineering-handoff-bundle`)
+        if (!response.ok) throw new Error(await response.text())
+        const bundle = (await response.json()) as Locker16029EngineeringHandoffBundle
+        if (!active) return
+        setEngineeringHandoffBundle(bundle)
+        setEngineeringHandoffMessage(
+          bundle.variants.length
+            ? `工程交接包已整理：${bundle.variants.map((variant) => `${variant.door_count}门`).join(' / ')}。`
+            : '尚未生成 16029 工程交接包。',
+        )
+      } catch (error) {
+        if (!active) return
+        setEngineeringHandoffBundle(null)
+        setEngineeringHandoffMessage(`16029 工程交接包读取失败: ${error instanceof Error ? error.message : 'unknown error'}`)
+        console.warn('16029 engineering handoff bundle unavailable', error)
+      }
+    }
+
+    loadEngineeringHandoffBundle()
     return () => {
       active = false
     }
@@ -1633,6 +2358,12 @@ function ModelsPage() {
             </div>
           <StatusPill tone="warn">production_candidate = 0</StatusPill>
         </div>
+        <CurrentSolidWorksGenerationPanel
+          activeCapabilityId={activeCapability.id}
+          currentDoorCount={normalizedParameterValues.door_count ?? '-'}
+          solidWorksIssue={runnerIssueById.solidworks}
+          freeCadIssue={runnerIssueById.freecad}
+        />
         <div className="capability-grid">
           {capabilities.map((capability) => (
             <button
@@ -1739,6 +2470,23 @@ function ModelsPage() {
               {parameterIssue ?? parameterHintFor(activeCapability.id)}
             </p>
           </div>
+          {activeCapability.id === 'locker_16029_regression' && (
+            <>
+              <Locker16029DoorLayoutPanel
+                doorCount={parameterValues.door_count}
+                verifiedRulePacket={verifiedRulePacket}
+                message={verifiedRulePacketMessage}
+              />
+              <Locker16029QualityMatrixPanel
+                matrix={variantQualityMatrix}
+                message={variantQualityMessage}
+                handoffBundle={engineeringHandoffBundle}
+                handoffMessage={engineeringHandoffMessage}
+                handoffBusy={Boolean(localActionBusy)}
+                onOpenHandoff={(path, mode) => openLocalPath(path, mode)}
+              />
+            </>
+          )}
         </article>
       </section>
 
@@ -1766,7 +2514,7 @@ function ModelsPage() {
               </StatusPill>
               <span>{parameterIssue ?? firstRunnerIssue ?? activeCapability.limitation}</span>
             </div>
-            {activeCapability.id === DEFAULT_MODEL_CAPABILITY_ID && (
+            {activeCapability.id === LOCKER_16038_RULE_BINDING_CAPABILITY_ID && (
               <GeneratorRuleBindingPanel item={activeRuleBinding} message={quantityFormulaMessage} />
             )}
             <div className="queue-meta" data-queue-state={queueState}>
@@ -1874,15 +2622,9 @@ function ModelsPage() {
               </div>
             )}
             <div className="command-preview">
-              <span>按所选 CAD 生成器预期命令</span>
+              <span>任务命令预览（不是推荐交接入口）</span>
               {cadRunners.map((runner) => (
-                <code key={runner.id}>
-                  {activeCapability.generator === 'not_enabled'
-                    ? `${runner.label}: not_enabled: 需要先完成证据修复或模块接口确认`
-                    : runnerIssueById[runner.id]
-                      ? `${runner.label}: 当前参数不支持该入口 - ${runnerIssueById[runner.id]}`
-                    : `${runner.label}: ${commandPreview(runner.id)}`}
-                </code>
+                <code key={runner.id}>{runnerCommandPreviewText(runner, activeCapability, runnerIssueById[runner.id], commandPreview)}</code>
               ))}
             </div>
             <div className="runner-grid" aria-label="CAD 生成入口">
@@ -1896,11 +2638,15 @@ function ModelsPage() {
                     type="button"
                     data-generator-action={`create-${runner.id}`}
                     disabled={!canSubmitTask || Boolean(runnerIssue) || solidWorksBusy}
-                    onClick={() => (runner.id === 'solidworks' ? createAndRunSolidWorksTask() : createGenerationTask(runner.id))}
+                    onClick={() =>
+                      runner.id === 'solidworks' && activeCapability.id !== 'locker_16029_regression'
+                        ? createAndRunSolidWorksTask()
+                        : createGenerationTask(runner.id)
+                    }
                   >
                     <Play size={17} />
-                    <span>{solidWorksBusy ? '正在启动 SOLIDWORKS' : runnerButtonLabel(runner.id)}</span>
-                    <small>{runnerIssue ?? runnerButtonDetail(runner.id, runner.detail)}</small>
+                    <span>{solidWorksBusy ? '正在启动 SOLIDWORKS' : runnerButtonLabel(runner.id, activeCapability.id)}</span>
+                    <small>{runnerIssue ?? runnerButtonDetail(runner.id, runner.detail, activeCapability.id)}</small>
                     <code>{runner.shortcut}</code>
                   </button>
                 )
@@ -1913,7 +2659,7 @@ function ModelsPage() {
           <div className="section-heading">
             <div>
               <h2>生成任务与运行记录</h2>
-              <p>当前模型和当前门数的任务会排在前面；SolidWorks 任务可以直接启动生成，也可以打开历史输出。</p>
+              <p>默认只显示当前模型/参数的非旧路线任务；旧 direct assembly 试验任务已从主视图隐藏。</p>
             </div>
             <ClipboardList size={20} />
           </div>
@@ -1927,15 +2673,17 @@ function ModelsPage() {
               <strong>{exactTaskCount}</strong>
             </div>
             <div>
-              <span>当前门数</span>
-              <strong>{normalizedParameterValues.door_count ?? '-'}</strong>
+              <span>隐藏历史</span>
+              <strong>{hiddenTaskCount}</strong>
             </div>
           </div>
           <div className="task-list">
             {generationTasks.length === 0 ? (
               <div className="empty-state">还没有生成任务。请选择可生成模型后创建任务草稿。</div>
+            ) : visibleGenerationTasks.length === 0 ? (
+              <div className="empty-state">当前模型/参数没有可显示任务；工程复核请优先使用上方 16029 质量门槛入口。</div>
             ) : (
-              prioritizedGenerationTasks.map((task) => (
+              visibleGenerationTasks.map((task) => (
                 <button
                   key={task.id}
                   type="button"
@@ -1959,6 +2707,7 @@ function ModelsPage() {
                     <span>{taskRelevanceLabel(task, activeCapability.id, normalizedParameterValues)}</span>
                     <strong>{taskNextActionLabel(task)}</strong>
                   </div>
+                  <TaskRunSnapshot task={task} />
                   <code>{task.command}</code>
                   <StatusPill tone={taskStatusTone(task.status)}>
                     {task.status}
@@ -1988,6 +2737,98 @@ function ModelsPage() {
           onOpenTaskInFreeCad={openTaskInFreeCad}
         />
       )}
+    </div>
+  )
+}
+
+function CurrentSolidWorksGenerationPanel({
+  activeCapabilityId,
+  currentDoorCount,
+  solidWorksIssue,
+  freeCadIssue,
+}: {
+  activeCapabilityId: string
+  currentDoorCount: string
+  solidWorksIssue: string | null
+  freeCadIssue: string | null
+}) {
+  const mainlineSelected = activeCapabilityId === 'locker_16029_regression'
+  const activeSolidWorksIssue = mainlineSelected ? solidWorksIssue : null
+  const activeFreeCadIssue = mainlineSelected ? freeCadIssue : null
+  const layout = locker16029SolidWorksLayoutSummary(currentDoorCount)
+  const supportedDoorCounts = LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS.join(' / ')
+  const freeCadDoorCounts = LOCKER_16029_SUPPORTED_FREECAD_COUNTS.join(' / ')
+  const solidWorksAvailable = mainlineSelected && Boolean(layout) && !activeSolidWorksIssue
+  const freeCadAvailable = mainlineSelected && Boolean(layout) && !activeFreeCadIssue
+  const statusTone: StatusTone = !mainlineSelected
+    ? 'idle'
+    : solidWorksAvailable || freeCadAvailable
+      ? 'good'
+      : activeSolidWorksIssue
+        ? 'warn'
+        : 'risk'
+  const statusText = !mainlineSelected
+    ? '先选择 16029'
+    : solidWorksAvailable
+      ? 'SolidWorks 可启动'
+      : freeCadAvailable
+        ? 'FreeCAD 可验证'
+        : activeSolidWorksIssue
+          ? 'SolidWorks 阻止'
+          : '门数未放开'
+
+  return (
+    <div className={`current-generation-panel current-generation-${statusTone}`}>
+      <div className="current-generation-main">
+        <div>
+          <span>当前工程交接</span>
+          <strong>16029 标准寄存柜整柜：{LOCKER_16029_OUTER_SIZE}</strong>
+          <p>
+            10/12/14 门优先使用原生 SolidWorks 增强矩阵样机 v2。下方 SolidWorks 大按钮开放{' '}
+            {supportedDoorCounts} 门原生参考任务；FreeCAD 规则验证开放 {freeCadDoorCounts} 门。
+          </p>
+        </div>
+        <StatusPill tone={statusTone}>{statusText}</StatusPill>
+      </div>
+      <div className="current-generation-facts">
+        <div>
+          <span>点击路径</span>
+          <strong>可生成模型 → 16029 → SolidWorks 大按钮 → dry-run → 运行 SolidWorks</strong>
+        </div>
+        <div>
+          <span>当前门数配方</span>
+          <strong>
+            {layout ? `${currentDoorCount} 门 / 每列 ${layout.rowsPerColumn} 排 / ${formatMm(layout.doorHeight)} mm` : '请选择 10 / 12 / 14 门规则样本'}
+          </strong>
+        </div>
+        <div>
+          <span>生成后反馈</span>
+          <strong>任务卡会显示 SLDASM、STEP、验证报告或阻塞原因；仍按工程参考模型交接</strong>
+        </div>
+      </div>
+      {activeSolidWorksIssue && <p className="current-generation-note">{activeSolidWorksIssue}</p>}
+    </div>
+  )
+}
+
+function TaskRunSnapshot({ task }: { task: GenerationTask }) {
+  const summary = taskRunSnapshotFor(task)
+
+  return (
+    <div className={`task-run-snapshot snapshot-${summary.tone}`}>
+      <div className="task-run-heading">
+        <span>{summary.label}</span>
+        <strong>{summary.title}</strong>
+      </div>
+      <div className="task-run-facts">
+        {summary.facts.map((fact) => (
+          <div key={fact.label}>
+            <span>{fact.label}</span>
+            <strong>{fact.value}</strong>
+          </div>
+        ))}
+      </div>
+      {summary.note && <p>{summary.note}</p>}
     </div>
   )
 }
@@ -2032,12 +2873,22 @@ function TaskDrawer({
   const solidworksBuildReport = execution?.outputs.find((path) => lowerOutput(path).endsWith('_build_report.md'))
   const componentManifest = execution?.outputs.find((path) => lowerOutput(path).endsWith('_component_manifest.csv'))
   const solidworksRunScript = execution?.outputs.find((path) => lowerOutput(path).endsWith('run-solidworks-worker.ps1'))
+  const freecadQualityStatus = execution?.freecad_quality_status ?? null
+  const freecadQualitySummary = execution?.freecad_quality_summary ?? null
+  const freecadQualityReport =
+    execution?.freecad_quality_report ?? execution?.outputs.find((path) => lowerOutput(path).endsWith('locker_16029_freecad_postprocess.json'))
+  const freecadStepGeometryReport = execution?.outputs.find((path) => lowerOutput(path).endsWith('freecad_geometry_check.json'))
+  const freecadFcstdIntegrityReport = execution?.outputs.find((path) => lowerOutput(path).endsWith('_geometry_integrity.md'))
+  const hasFreecadQualityPass = freecadQualityStatus === 'freecad_geometry_pass'
   const hasFcstdModel = Boolean(execution?.outputs.some((path) => lowerOutput(path).endsWith('.fcstd')))
   const hasNativeSolidWorksOutput = Boolean(solidworksAssemblyFile || solidworksPartFile)
   const solidworksRunSummary = execution?.solidworks_run_summary ?? null
   const solidworksQualityStatus = execution?.solidworks_quality_status ?? solidworksRunSummary?.quality_status ?? null
   const solidworksQualitySummary = execution?.solidworks_quality_summary ?? solidworksRunSummary?.quality_summary ?? null
   const hasReferenceOnlyQuality = solidworksQualityStatus === 'reference_feature_only'
+  const hasValidatedComponentReferences =
+    solidworksQualityStatus === 'component_reference_tree' || solidworksQualityStatus === 'component_tree'
+  const legacySolidWorksTask = isLegacySolidWorksDirectAssemblyTask(task)
 
   return (
     <>
@@ -2059,6 +2910,12 @@ function TaskDrawer({
             <StatusPill tone={taskStatusTone(task.status)}>{task.status}</StatusPill>
             <span>{formatTaskTime(task.updated_at)}</span>
           </div>
+          {legacySolidWorksTask && (
+            <div className="drawer-message">
+              这是早期 direct assembly 试验任务，曾出现装配基准/transform 视觉错乱；当前已停用运行入口，请改用质量门槛里的
+              10/12/14 门尝试打开 / 选中 STP。
+            </div>
+          )}
 
           <div className="drawer-section">
             <h3>任务边界</h3>
@@ -2098,7 +2955,7 @@ function TaskDrawer({
                   className="secondary-action"
                   type="button"
                   data-dry-run-action="run"
-                  disabled={dryRunBusy || executeBusy}
+                  disabled={dryRunBusy || executeBusy || legacySolidWorksTask}
                   onClick={onDryRun}
                 >
                   <Wrench size={16} />
@@ -2109,7 +2966,7 @@ function TaskDrawer({
                     className="secondary-action primary-open-action"
                     type="button"
                     data-execute-action="run-solidworks"
-                    disabled={solidWorksRunBusy || dryRunBusy || !canRunSolidWorksPackageStatus(task.status)}
+                    disabled={solidWorksRunBusy || dryRunBusy || !canRunSolidWorksPackageTask(task)}
                     onClick={onRunSolidWorksPackage}
                   >
                     <Play size={16} />
@@ -2137,7 +2994,7 @@ function TaskDrawer({
                 {dryRunChecks.map((check) => (
                   <div key={check.name} className={`dry-run-check ${check.ok ? 'pass' : 'fail'}`}>
                     <span>{check.ok ? 'PASS' : 'BLOCK'}</span>
-                    <strong>{check.name}</strong>
+                    <strong>{dryRunCheckLabel(check.name)}</strong>
                     <p>{check.detail}</p>
                   </div>
                 ))}
@@ -2156,6 +3013,69 @@ function TaskDrawer({
                   <span>exit={execution.exit_code ?? 'n/a'}</span>
                 </div>
                 <p>{execution.message}</p>
+                {task.cad_runner === 'freecad' && freecadQualityStatus && (
+                  <div className={`freecad-run-summary ${hasFreecadQualityPass ? '' : 'quality-warning'}`}>
+                    <div className="solidworks-run-heading">
+                      <div>
+                        <span>FreeCAD 自动复核</span>
+                        <strong>{freecadQualityTitle(freecadQualityStatus, task.status)}</strong>
+                      </div>
+                      <StatusPill tone={freecadQualityTone(freecadQualityStatus, task.status)}>
+                        {freecadQualityBadge(freecadQualityStatus)}
+                      </StatusPill>
+                    </div>
+                    <div className="solidworks-run-explain">
+                      <p>{freecadQualitySummary ?? execution.message}</p>
+                      <div className="solidworks-check-grid freecad-check-grid">
+                        <div data-state={freecadQualityCheckState(freecadQualityStatus, 'step')}>
+                          <span>STEP 几何</span>
+                          <strong>{freecadQualityStatus === 'freecad_run_lock_active' ? '未运行' : '已检查'}</strong>
+                        </div>
+                        <div data-state={freecadQualityCheckState(freecadQualityStatus, 'fcstd')}>
+                          <span>FCStd 完整性</span>
+                          <strong>{hasFreecadQualityPass ? 'PASS' : '待复核'}</strong>
+                        </div>
+                        <div data-state={freecadQualityCheckState(freecadQualityStatus, 'matrix')}>
+                          <span>16029 质量矩阵</span>
+                          <strong>{hasFreecadQualityPass ? '已刷新' : '待刷新'}</strong>
+                        </div>
+                      </div>
+                      <div className="local-action-row">
+                        {freecadQualityReport && (
+                          <button
+                            className="secondary-action"
+                            type="button"
+                            disabled={Boolean(localActionBusy)}
+                            onClick={() => onOpenPath(freecadQualityReport)}
+                          >
+                            <ClipboardList size={16} />
+                            打开自动复核报告
+                          </button>
+                        )}
+                        {freecadStepGeometryReport && (
+                          <button
+                            className="secondary-action quiet-action"
+                            type="button"
+                            disabled={Boolean(localActionBusy)}
+                            onClick={() => onOpenPath(freecadStepGeometryReport)}
+                          >
+                            打开 STEP 检查
+                          </button>
+                        )}
+                        {freecadFcstdIntegrityReport && (
+                          <button
+                            className="secondary-action quiet-action"
+                            type="button"
+                            disabled={Boolean(localActionBusy)}
+                            onClick={() => onOpenPath(freecadFcstdIntegrityReport)}
+                          >
+                            打开 FCStd 检查
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {task.cad_runner === 'solidworks' && (
                   <div className={`solidworks-run-summary ${hasReferenceOnlyQuality ? 'quality-warning' : ''}`}>
                     <div className="solidworks-run-heading">
@@ -2183,6 +3103,14 @@ function TaskDrawer({
                           <div>
                             <span>门数 / 模块</span>
                             <strong>{solidworksRunSummary.door_count ?? '-'}</strong>
+                          </div>
+                          <div>
+                            <span>每列门高组合</span>
+                            <strong>{solidworksRunSummary.layout_units ?? '-'}</strong>
+                          </div>
+                          <div>
+                            <span>配方成熟度</span>
+                            <strong>{solidworksLayoutStatusLabel(solidworksRunSummary.layout_rule_status)}</strong>
                           </div>
                           <div>
                             <span>组件清单</span>
@@ -2242,11 +3170,13 @@ function TaskDrawer({
                         <span>原生装配</span>
                         <strong>{solidworksAssemblyFile ? '已生成' : '未生成'}</strong>
                       </div>
-                      <div data-state={solidworksQualityStatus === 'component_tree' ? 'ready' : hasReferenceOnlyQuality ? 'warning' : 'waiting'}>
+                      <div data-state={hasValidatedComponentReferences ? 'ready' : hasReferenceOnlyQuality ? 'warning' : 'waiting'}>
                         <span>组件树质量</span>
                         <strong>
                           {solidworksQualityStatus === 'component_tree'
                             ? '可遍历'
+                            : solidworksQualityStatus === 'component_reference_tree'
+                              ? '已验证引用'
                             : hasReferenceOnlyQuality
                               ? 'Reference'
                               : '待诊断'}
@@ -2447,6 +3377,979 @@ function TaskDrawer({
   )
 }
 
+function DrawingSheetMetalPage() {
+  const readySourceCount = drawingSheetMetalSources.filter((source) => source.status === 'ready_for_intake').length
+  const candidateSourceCount = drawingSheetMetalSources.filter((source) => source.status === 'candidate').length
+  const activeRoadmapSteps = drawingSheetMetalRoadmap.filter((step) => step.statusTone !== 'idle').length
+  const [selectedUploadFiles, setSelectedUploadFiles] = useState<File[]>([])
+  const [uploadNotes, setUploadNotes] = useState('')
+  const [intakeRecords, setIntakeRecords] = useState<DrawingSheetMetalIntakeRecord[]>([])
+  const [uploadState, setUploadState] = useState<'checking' | 'online' | 'offline' | 'saving'>('checking')
+  const [uploadMessage, setUploadMessage] = useState<DrawingUploadMessage | null>(null)
+  const [runningExtractionId, setRunningExtractionId] = useState<string | null>(null)
+  const [runningCadCheckId, setRunningCadCheckId] = useState<string | null>(null)
+  const [ruleEvidence, setRuleEvidence] = useState<SheetMetalRuleEvidence16029 | null>(null)
+  const [ruleEvidenceState, setRuleEvidenceState] = useState<'checking' | 'ready' | 'missing'>('checking')
+  const selectedUploadSize = useMemo(
+    () => selectedUploadFiles.reduce((total, file) => total + file.size, 0),
+    [selectedUploadFiles],
+  )
+
+  const refreshDrawingIntake = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/drawing-sheetmetal-intake?limit=8`)
+      if (!response.ok) throw new Error(await response.text())
+      const records = (await response.json()) as DrawingSheetMetalIntakeRecord[]
+      setIntakeRecords(records)
+      setUploadState((current) => (current === 'saving' ? current : 'online'))
+    } catch (error) {
+      setUploadState('offline')
+      setUploadMessage({
+        tone: 'warn',
+        title: '上传 API 未连接',
+        detail: `当前只能看到页面说明，不能保存上传文件：${error instanceof Error ? error.message : 'unknown error'}`,
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void refreshDrawingIntake(), 0)
+    return () => window.clearTimeout(timer)
+  }, [refreshDrawingIntake])
+
+  const refreshRuleEvidence = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/sheetmetal-rule-evidence-16029`)
+      if (!response.ok) throw new Error(await response.text())
+      const evidence = (await response.json()) as SheetMetalRuleEvidence16029
+      setRuleEvidence(evidence)
+      setRuleEvidenceState(evidence.summary.candidate_count || evidence.summary.formula_count ? 'ready' : 'missing')
+    } catch {
+      setRuleEvidenceState('missing')
+    }
+  }, [])
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void refreshRuleEvidence(), 0)
+    return () => window.clearTimeout(timer)
+  }, [refreshRuleEvidence])
+
+  const submitDrawingUpload = useCallback(async () => {
+    if (selectedUploadFiles.length === 0) {
+      setUploadMessage({ tone: 'warn', title: '还没有选择文件', detail: '先选择 DXF、PDF、图片、STEP 或 SolidWorks 钣金模型。' })
+      return
+    }
+    if (selectedUploadSize > DRAWING_UPLOAD_MAX_BYTES) {
+      setUploadMessage({
+        tone: 'risk',
+        title: '文件批次太大',
+        detail: `本入口限制单批 ${formatBytes(DRAWING_UPLOAD_MAX_BYTES)}，当前为 ${formatBytes(selectedUploadSize)}。请拆成多个批次上传。`,
+      })
+      return
+    }
+
+    setUploadState('saving')
+    setUploadMessage({
+      tone: 'warn',
+      title: '正在写入 intake',
+      detail: '正在把文件保存到本地 intake 目录；不会自动启动 SolidWorks 或 FreeCAD 重任务。',
+    })
+
+    try {
+      const files = await Promise.all(
+        selectedUploadFiles.map(async (file) => ({
+          name: file.name,
+          size_bytes: file.size,
+          content_base64: await fileToBase64(file),
+        })),
+      )
+      const response = await fetch(`${API_BASE_URL}/api/drawing-sheetmetal-intake`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_type: 'drawing_or_sheetmetal',
+          notes: uploadNotes,
+          files,
+        }),
+      })
+      if (!response.ok) throw new Error(await response.text())
+      const record = (await response.json()) as DrawingSheetMetalIntakeRecord
+      setIntakeRecords((records) => [record, ...records.filter((item) => item.id !== record.id)].slice(0, 8))
+      setSelectedUploadFiles([])
+      setUploadNotes('')
+      setUploadState('online')
+      setUploadMessage({
+        tone: 'good',
+        title: '上传已进入 intake',
+        detail: `${record.files.length} 个文件已保存。${record.next_action}`,
+        outputDir: record.output_dir,
+      })
+    } catch (error) {
+      setUploadState('offline')
+      setUploadMessage({
+        tone: 'risk',
+        title: '上传失败',
+        detail: error instanceof Error ? error.message : 'unknown error',
+      })
+    }
+  }, [selectedUploadFiles, selectedUploadSize, uploadNotes])
+
+  const openDrawingIntakeDirectory = useCallback(async (path: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/local-actions/open-path`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, mode: 'open' }),
+      })
+      if (!response.ok) throw new Error(await response.text())
+      const result = (await response.json()) as LocalActionResult
+      setUploadMessage({ tone: 'good', title: '已打开 intake 目录', detail: result.message, outputDir: path })
+    } catch (error) {
+      setUploadMessage({
+        tone: 'risk',
+        title: '打开目录失败',
+        detail: error instanceof Error ? error.message : 'unknown error',
+        outputDir: path,
+      })
+    }
+  }, [])
+
+  const runDxfExtraction = useCallback(async (record: DrawingSheetMetalIntakeRecord) => {
+    if (!record.files.some((file) => file.suffix === '.dxf')) {
+      setUploadMessage({
+        tone: 'warn',
+        title: '没有 DXF 可解析',
+        detail: '这个 intake 不是 DXF 文件，后续需要走图片识别、STEP/FCStd 几何检查或 SolidWorks 工程图路线。',
+        outputDir: record.output_dir,
+      })
+      return
+    }
+
+    setRunningExtractionId(record.id)
+    setUploadMessage({
+      tone: 'warn',
+      title: '正在运行 DXF 轻量解析',
+      detail: '只解析 DXF 文本几何，不启动 SolidWorks/FreeCAD。',
+      outputDir: record.output_dir,
+    })
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/drawing-sheetmetal-intake/${record.id}/run-dxf-extraction`, { method: 'POST' })
+      if (!response.ok) throw new Error(await response.text())
+      const updatedRecord = (await response.json()) as DrawingSheetMetalIntakeRecord
+      setIntakeRecords((records) => records.map((item) => (item.id === updatedRecord.id ? updatedRecord : item)))
+      setUploadState('online')
+      setUploadMessage({
+        tone: updatedRecord.dxf_extraction.status === 'completed' ? 'good' : 'warn',
+        title: drawingExtractionStatusLabel(updatedRecord.dxf_extraction.status),
+        detail: updatedRecord.dxf_extraction.message,
+        outputDir: updatedRecord.dxf_extraction.output_dir ?? updatedRecord.output_dir,
+      })
+    } catch (error) {
+      setUploadMessage({
+        tone: 'risk',
+        title: 'DXF 解析失败',
+        detail: error instanceof Error ? error.message : 'unknown error',
+        outputDir: record.output_dir,
+      })
+    } finally {
+      setRunningExtractionId(null)
+    }
+  }, [])
+
+  const runFreeCadCheck = useCallback(async (record: DrawingSheetMetalIntakeRecord) => {
+    if (!record.files.some((file) => ['.step', '.stp', '.fcstd'].includes(file.suffix))) {
+      setUploadMessage({
+        tone: 'warn',
+        title: '没有 STEP/FCStd 可检查',
+        detail: '这个 intake 不包含 FreeCAD 可直接轻量检查的 STEP/STP/FCStd 文件。',
+        outputDir: record.output_dir,
+      })
+      return
+    }
+
+    setRunningCadCheckId(record.id)
+    setUploadMessage({
+      tone: 'warn',
+      title: '正在运行 FreeCAD 几何检查',
+      detail: '只启动 FreeCADCmd 读取 STEP/FCStd，统计 bbox、实体数和 invalid shape，不打开 SolidWorks。',
+      outputDir: record.output_dir,
+    })
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/drawing-sheetmetal-intake/${record.id}/run-freecad-check`, { method: 'POST' })
+      if (!response.ok) throw new Error(await response.text())
+      const updatedRecord = (await response.json()) as DrawingSheetMetalIntakeRecord
+      setIntakeRecords((records) => records.map((item) => (item.id === updatedRecord.id ? updatedRecord : item)))
+      setUploadState('online')
+      setUploadMessage({
+        tone: updatedRecord.cad_check.status === 'completed' ? 'good' : 'warn',
+        title: drawingCadCheckStatusLabel(updatedRecord.cad_check.status),
+        detail: updatedRecord.cad_check.message,
+        outputDir: updatedRecord.cad_check.output_dir ?? updatedRecord.output_dir,
+      })
+    } catch (error) {
+      setUploadMessage({
+        tone: 'risk',
+        title: 'FreeCAD 检查失败',
+        detail: error instanceof Error ? error.message : 'unknown error',
+        outputDir: record.output_dir,
+      })
+    } finally {
+      setRunningCadCheckId(null)
+    }
+  }, [])
+
+  return (
+    <div className="page-grid drawing-page">
+      <section className="section-block drawing-hero-block">
+        <div className="section-heading">
+          <div>
+            <h2>图纸生成与钣金出图支线</h2>
+            <p>先从单件图纸和钣金展开规则入手，服务 16029 多门数规则，不抢占整柜生成主线资源。</p>
+          </div>
+          <StatusPill tone="warn">工程参考</StatusPill>
+        </div>
+
+        <div className="drawing-hero-grid">
+          <article className="drawing-hero-card">
+            <div className="drawing-icon">
+              <Search size={20} />
+            </div>
+            <span>图纸/图片识别</span>
+            <strong>先抽参数和缺项</strong>
+            <p>DXF、PDF、图片先转成外形、孔位、折弯边、材料厚度线索和待确认项，不直接承诺精准建模。</p>
+          </article>
+          <article className="drawing-hero-card">
+            <div className="drawing-icon">
+              <Layers3 size={20} />
+            </div>
+            <span>钣金单件生成</span>
+            <strong>先做门板/层板/横隔板</strong>
+            <p>优先处理可复核的单件，而不是直接从图片生成整柜，减少错乱装配和电脑资源压力。</p>
+          </article>
+          <article className="drawing-hero-card">
+            <div className="drawing-icon">
+              <Wrench size={20} />
+            </div>
+            <span>展开与出图</span>
+            <strong>输出参考 DXF / PDF</strong>
+            <p>展开、尺寸标注和折弯/孔位校验先作为工程参考件，正式释放仍需要结构工程标准确认。</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="section-block drawing-upload-block">
+        <div className="section-heading">
+          <div>
+            <h2>上传图纸 / 钣金模型</h2>
+            <p>这里才是文件入口：先保存到本地 intake，后续再做 DXF 解析、规则提取或低并发 CAD 检查。</p>
+          </div>
+          <StatusPill tone={uploadState === 'online' ? 'good' : uploadState === 'saving' ? 'warn' : 'warn'}>
+            {uploadState === 'saving' ? 'saving' : uploadState === 'online' ? 'online' : 'offline'}
+          </StatusPill>
+        </div>
+
+        <div className="drawing-upload-grid">
+          <div className="drawing-upload-panel">
+            <label className="drawing-upload-dropzone">
+              <input
+                type="file"
+                multiple
+                accept={DRAWING_UPLOAD_ACCEPT}
+                onChange={(event) => setSelectedUploadFiles(Array.from(event.target.files ?? []))}
+              />
+              <span>
+                <Upload size={20} />
+                选择 DXF / PDF / 图片 / STEP / SolidWorks 文件
+              </span>
+              <small>支持 .dxf、.dwg、.pdf、.png、.jpg、.step、.stp、.sldprt、.sldasm、.slddrw、.fcstd。单批上限 {formatBytes(DRAWING_UPLOAD_MAX_BYTES)}。</small>
+            </label>
+
+            <div className="drawing-upload-meta">
+              <strong>{selectedUploadFiles.length ? `${selectedUploadFiles.length} 个文件待上传` : '尚未选择文件'}</strong>
+              <span>{selectedUploadFiles.length ? `合计 ${formatBytes(selectedUploadSize)}` : '选择后会先进入本地 intake，不会直接启动重 CAD 任务。'}</span>
+            </div>
+
+            {selectedUploadFiles.length > 0 && (
+              <div className="drawing-upload-file-list">
+                {selectedUploadFiles.map((file) => (
+                  <div key={`${file.name}-${file.size}-${file.lastModified}`}>
+                    <span>{file.name}</span>
+                    <small>{formatBytes(file.size)}</small>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <textarea
+              className="drawing-upload-notes"
+              value={uploadNotes}
+              placeholder="可选：写清楚这批文件对应的柜型、门数、尺寸或用途"
+              rows={3}
+              onChange={(event) => setUploadNotes(event.target.value)}
+            />
+
+            <div className="drawing-upload-actions">
+              <button className="primary-action" type="button" disabled={uploadState === 'saving'} onClick={submitDrawingUpload}>
+                <Upload size={17} />
+                上传到 intake
+              </button>
+              <button className="secondary-action" type="button" disabled={uploadState === 'saving'} onClick={() => void refreshDrawingIntake()}>
+                <RefreshCw size={17} />
+                刷新记录
+              </button>
+            </div>
+
+            {uploadMessage && (
+              <div className={`generation-feedback feedback-${uploadMessage.tone}`} role="status" aria-live="polite">
+                <div>
+                  <strong>{uploadMessage.title}</strong>
+                  <span>{uploadMessage.detail}</span>
+                </div>
+                {uploadMessage.outputDir && (
+                  <div className="feedback-path">
+                    <span>intake 目录</span>
+                    <code>{uploadMessage.outputDir}</code>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="drawing-intake-panel">
+            <div className="drawing-intake-heading">
+              <div>
+                <span>最近 intake</span>
+                <strong>{intakeRecords.length} 条记录</strong>
+              </div>
+              <Archive size={20} />
+            </div>
+            <div className="drawing-intake-list">
+              {intakeRecords.length === 0 && <p>还没有上传记录。选择文件并上传后，这里会显示待解析批次和本地目录。</p>}
+              {intakeRecords.map((record) => (
+                <article key={record.id} className="drawing-intake-card">
+                  <div className="drawing-card-top">
+                    <div>
+                      <span>{formatTaskTime(record.created_at)}</span>
+                      <strong>{record.id}</strong>
+                    </div>
+                    <StatusPill tone="warn">pending</StatusPill>
+                  </div>
+                  <div className="drawing-intake-files">
+                    {record.files.map((file) => (
+                      <span key={file.saved_path}>
+                        {drawingUploadCategoryLabel(file.source_category)} / {file.file_name} / {formatBytes(file.size_bytes)}
+                      </span>
+                    ))}
+                  </div>
+                  <p>{record.next_action}</p>
+                  {record.dxf_extraction.status !== 'not_started' && (
+                    <div className="drawing-extraction-summary">
+                      <div>
+                        <StatusPill tone={drawingExtractionTone(record.dxf_extraction.status)}>
+                          {drawingExtractionStatusLabel(record.dxf_extraction.status)}
+                        </StatusPill>
+                        <strong>
+                          {record.dxf_extraction.processed_files} files / {record.dxf_extraction.rule_seed_candidates} seeds
+                        </strong>
+                      </div>
+                      <span>{record.dxf_extraction.message}</span>
+                      {record.dxf_extraction.results.slice(0, 3).map((result) => (
+                        <small key={`${record.id}-${result.file_name}`}>
+                          {result.file_name}: {result.quality_status ?? result.status}
+                          {result.manufacturing_bbox_mm.width && result.manufacturing_bbox_mm.height
+                            ? ` / ${formatMm(result.manufacturing_bbox_mm.width)} x ${formatMm(result.manufacturing_bbox_mm.height)} mm`
+                            : ''}
+                        </small>
+                      ))}
+                    </div>
+                  )}
+                  {record.cad_check.status !== 'not_started' && (
+                    <div className="drawing-extraction-summary">
+                      <div>
+                        <StatusPill tone={drawingCadCheckTone(record.cad_check.status)}>
+                          {drawingCadCheckStatusLabel(record.cad_check.status)}
+                        </StatusPill>
+                        <strong>
+                          {record.cad_check.processed_files} files / {record.cad_check.pass_files} pass
+                        </strong>
+                      </div>
+                      <span>{record.cad_check.message}</span>
+                      {record.cad_check.results.slice(0, 3).map((result) => (
+                        <small key={`${record.id}-${result.file_name}`}>
+                          {result.file_name}: {result.quality_status ?? result.status}
+                          {result.assembly_bbox_mm.size_x && result.assembly_bbox_mm.size_y && result.assembly_bbox_mm.size_z
+                            ? ` / ${formatMm(result.assembly_bbox_mm.size_x)} x ${formatMm(result.assembly_bbox_mm.size_y)} x ${formatMm(
+                                result.assembly_bbox_mm.size_z,
+                              )} mm`
+                            : ''}
+                        </small>
+                      ))}
+                    </div>
+                  )}
+                  <div className="drawing-intake-actions">
+                    {record.files.some((file) => file.suffix === '.dxf') && (
+                      <button
+                        className="primary-action"
+                        type="button"
+                        disabled={runningExtractionId === record.id}
+                        onClick={() => void runDxfExtraction(record)}
+                      >
+                        <Play size={16} />
+                        {runningExtractionId === record.id ? '解析中' : '运行 DXF 解析'}
+                      </button>
+                    )}
+                    {record.files.some((file) => ['.step', '.stp', '.fcstd'].includes(file.suffix)) && (
+                      <button
+                        className="primary-action"
+                        type="button"
+                        disabled={runningCadCheckId === record.id}
+                        onClick={() => void runFreeCadCheck(record)}
+                      >
+                        <Wrench size={16} />
+                        {runningCadCheckId === record.id ? '检查中' : '运行 FreeCAD 检查'}
+                      </button>
+                    )}
+                    <button className="secondary-action quiet-action" type="button" onClick={() => void openDrawingIntakeDirectory(record.output_dir)}>
+                      <FolderOpen size={16} />
+                      打开 intake 目录
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="split-grid drawing-summary-grid">
+        <section className="section-block compact-block">
+          <div className="section-heading">
+            <div>
+              <h2>当前定位</h2>
+              <p>这不是新增一个页面给人看，而是给后续规则提取和单件出图留独立工作流。</p>
+            </div>
+            <Route size={20} />
+          </div>
+          <div className="detail-list">
+            <DetailLine label="主线关系" value="继续推进 16029 同外形 10/12/14 门规则；图纸支线只补单件证据和校验表。" />
+            <DetailLine label="首个样板" value="16029 门板，其次是层板、门框横隔板和简单隔板。" />
+            <DetailLine label="首个输出" value={sourcePaths.drawingSheetMetalFirstRun} />
+            <DetailLine label="暂不承诺" value="不把图片直接转成生产级整柜模型，不自动释放正式展开图和正式工程图。" />
+            <DetailLine label="工作目录" value={sourcePaths.drawingSheetMetalWorkspace} />
+          </div>
+          <EvidenceRow evidence={['DXF', '工程图', 'SolidWorks', 'FreeCAD', '证据闭环记录']} />
+        </section>
+
+        <section className="section-block compact-block">
+          <div className="section-heading">
+            <div>
+              <h2>支线状态</h2>
+              <p>先做轻量能力和数据闭环，不在前端点击后启动重 CAD 批处理。</p>
+            </div>
+            <StatusPill tone={readySourceCount ? 'good' : 'warn'}>{readySourceCount} ready</StatusPill>
+          </div>
+          <div className="drawing-status-grid">
+            <div>
+              <span>可先接入</span>
+              <strong>{readySourceCount}</strong>
+              <small>DXF 优先，能给展开和孔位证据</small>
+            </div>
+            <div>
+              <span>候选来源</span>
+              <strong>{candidateSourceCount}</strong>
+              <small>PDF / SolidWorks 工程图需逐项验证</small>
+            </div>
+            <div>
+              <span>并行步骤</span>
+              <strong>{activeRoadmapSteps}</strong>
+              <small>不做全量变种库存</small>
+            </div>
+          </div>
+          <div className="drawing-boundary-note">
+            当前输出统一标记为工程参考模型或规则证据，正式图纸/BOM/展开尺寸需要工程师按公司规范复核。
+          </div>
+        </section>
+      </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>输入来源与处理策略</h2>
+            <p>不同来源的可信度不同，系统只把可验证信息写入规则库。</p>
+          </div>
+          <Database size={20} />
+        </div>
+        <div className="drawing-source-grid">
+          {drawingSheetMetalSources.map((source) => (
+            <article key={source.id} className={'drawing-source-card status-' + source.status}>
+              <div className="drawing-card-top">
+                <div>
+                  <span>{source.sourceType}</span>
+                  <strong>{source.title}</strong>
+                </div>
+                <StatusPill tone={drawingSourceTone(source.status)}>{drawingSourceLabel(source.status)}</StatusPill>
+              </div>
+              <p>{source.currentState}</p>
+              <div className="detail-list mini-detail-list">
+                <DetailLine label="首个目标" value={source.firstTarget} />
+                <DetailLine label="下一步" value={source.nextAction} />
+              </div>
+              <EvidenceRow evidence={source.evidence} />
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>16029 DXF 批量解析结果</h2>
+            <p>门板、层板、横隔板和竖隔板已先做轻量筛选，用来决定下一步规则学习顺序。</p>
+          </div>
+          <StatusPill tone={drawingSheetMetalBatchRun.errorCount ? 'warn' : 'good'}>
+            {drawingSheetMetalBatchRun.fileCount} files
+          </StatusPill>
+        </div>
+        <div className="drawing-batch-grid">
+          <article className="drawing-batch-card">
+            <span>可做几何规则种子</span>
+            <strong>{drawingSheetMetalBatchRun.ruleSeedCandidateCount}</strong>
+            <p>能用于 bbox、孔径、阵列和门板/层板/隔板角色比对。</p>
+          </article>
+          <article className="drawing-batch-card">
+            <span>解析异常</span>
+            <strong>{drawingSheetMetalBatchRun.errorCount}</strong>
+            <p>本轮没有文件级解析失败，问题集中在图纸空间和轮廓闭合质量。</p>
+          </article>
+          <article className="drawing-batch-card">
+            <span>角色覆盖</span>
+            <strong>{drawingSheetMetalBatchRun.roleCounts.map((item) => `${item.label}:${item.value}`).join(' / ')}</strong>
+            <p>优先服务 16029 同外形门数变化规则，不扩散到全产品线。</p>
+          </article>
+        </div>
+        <div className="drawing-quality-grid">
+          {drawingSheetMetalBatchRun.qualityStatusCounts.map((item) => (
+            <div key={item.label}>
+              <StatusPill tone={item.tone}>{item.label}</StatusPill>
+              <strong>{item.value}</strong>
+            </div>
+          ))}
+        </div>
+        <div className="drawing-findings">
+          <div>
+            <h3>关键发现</h3>
+            {drawingSheetMetalBatchRun.keyFindings.map((finding) => (
+              <p key={finding}>{finding}</p>
+            ))}
+          </div>
+          <div>
+            <h3>下一动作</h3>
+            {drawingSheetMetalBatchRun.nextActions.map((action) => (
+              <p key={action}>{action}</p>
+            ))}
+          </div>
+        </div>
+        <div className="detail-list">
+          <DetailLine label="批量输出" value={drawingSheetMetalBatchRun.outputDir} />
+          <DetailLine label="摘要文件" value={drawingSheetMetalBatchRun.summaryPath} />
+        </div>
+      </section>
+
+      <section className="section-block drawing-rule-evidence-block">
+        <div className="section-heading">
+          <div>
+            <h2>16029 规则证据候选</h2>
+            <p>把可用 DXF 证据收敛成生成器能读的规则输入，避免继续凭感觉摆装配位置。</p>
+          </div>
+          <StatusPill tone={ruleEvidenceState === 'ready' ? 'good' : 'warn'}>
+            {ruleEvidenceState === 'checking' ? 'checking' : ruleEvidenceState === 'ready' ? 'ready' : 'missing'}
+          </StatusPill>
+        </div>
+        {ruleEvidence && (
+          <>
+            <div className="drawing-rule-metric-grid">
+              <article>
+                <span>公式</span>
+                <strong>{ruleEvidence.summary.formula_count}</strong>
+                <small>门板展开高度序列</small>
+              </article>
+              <article>
+                <span>候选件</span>
+                <strong>{ruleEvidence.summary.candidate_count}</strong>
+                <small>门板 / 层板 / 隔板 / 加强筋</small>
+              </article>
+              <article>
+                <span>可用证据</span>
+                <strong>{ruleEvidence.summary.accepted_rule_seed_file_count}</strong>
+                <small>可进入规则池的 DXF 样本</small>
+              </article>
+              <article>
+                <span>排除证据</span>
+                <strong>{ruleEvidence.blocked_evidence_summary.blocked_count}</strong>
+                <small>图纸空间噪声或轮廓未闭合</small>
+              </article>
+            </div>
+
+            <div className="drawing-rule-evidence-grid">
+              {ruleEvidence.formulas.slice(0, 1).map((formula) => (
+                <article key={formula.id} className="drawing-rule-card primary-rule-card">
+                  <div className="drawing-card-top">
+                    <div>
+                      <span>{formula.role} / {formula.confidence}</span>
+                      <strong>{formula.title}</strong>
+                    </div>
+                    <StatusPill tone={formula.confidence === 'high' ? 'good' : 'warn'}>{formula.sample_count} samples</StatusPill>
+                  </div>
+                  <code>{formula.formula_text}</code>
+                  <p>{formula.usage_note}</p>
+                  <div className="drawing-rule-samples">
+                    {formula.samples.slice(0, 6).map((sample) => (
+                      <span key={`${formula.id}-${sample.door_index}`}>
+                        {sample.door_index}/12: {formatMm(sample.flat_width_mm)} x {formatMm(sample.flat_height_mm)} mm
+                      </span>
+                    ))}
+                  </div>
+                </article>
+              ))}
+
+              <article className="drawing-rule-card">
+                <div className="drawing-card-top">
+                  <div>
+                    <span>输出文件</span>
+                    <strong>生成器规则输入</strong>
+                  </div>
+                  <button className="secondary-action quiet-action" type="button" onClick={() => void refreshRuleEvidence()}>
+                    <RefreshCw size={16} />
+                    刷新
+                  </button>
+                </div>
+                <div className="detail-list mini-detail-list">
+                  <DetailLine label="JSON" value={ruleEvidence.output_paths.json ?? ''} />
+                  <DetailLine label="Markdown" value={ruleEvidence.output_paths.markdown ?? ''} />
+                  <DetailLine label="批次" value={ruleEvidence.source_batch.run_id ?? 'BATCH-16029-SHEETMETAL-20260519'} />
+                </div>
+              </article>
+            </div>
+
+            <div className="drawing-rule-candidate-list">
+              {ruleEvidence.rule_candidates.slice(0, 7).map((candidate) => (
+                <article key={candidate.id} className="drawing-rule-candidate">
+                  <div>
+                    <span>{candidate.role}</span>
+                    <strong>{candidate.title}</strong>
+                    <small>{candidate.rule_seed}</small>
+                  </div>
+                  <div>
+                    <strong>
+                      {formatMm(candidate.dimensions_mm.long)} x {formatMm(candidate.dimensions_mm.short)} mm
+                    </strong>
+                    <small>
+                      {candidate.accepted_source_files_count}/{candidate.source_files_count} 可用 / {candidate.confidence}
+                    </small>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </>
+        )}
+        {!ruleEvidence && (
+          <div className="drawing-boundary-note">
+            暂未读取到规则证据文件。先运行 workers/drawing_sheetmetal/build_16029_sheetmetal_rule_evidence.py 生成 JSON 后再刷新。
+          </div>
+        )}
+      </section>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>可交付输出</h2>
+            <p>先把工程师能复核、能节省时间的中间件做出来，再接 CAD 自动化。</p>
+          </div>
+          <ClipboardList size={20} />
+        </div>
+        <div className="drawing-output-grid">
+          {drawingSheetMetalOutputs.map((output) => (
+            <article key={output.id} className="drawing-output-card">
+              <div className="drawing-card-top">
+                <div>
+                  <span>{output.level}</span>
+                  <strong>{output.title}</strong>
+                </div>
+                <StatusPill tone={output.statusTone}>{output.statusTone === 'good' ? '优先' : '需复核'}</StatusPill>
+              </div>
+              <p>{output.description}</p>
+              <small>{output.boundary}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div className="split-grid drawing-detail-grid">
+        <section className="section-block compact-block">
+          <div className="section-heading">
+            <div>
+              <h2>生产级出图边界</h2>
+              <p>这些条件没补齐前，系统不把展开或图纸标成正式释放。</p>
+            </div>
+            <FileWarning size={20} />
+          </div>
+          <div className="drawing-risk-list">
+            {drawingSheetMetalRisks.map((risk) => (
+              <article key={risk.item} className="drawing-risk-card">
+                <strong>{risk.item}</strong>
+                <p>{risk.reason}</p>
+                <div className="detail-list mini-detail-list">
+                  <DetailLine label="需要输入" value={risk.requiredInput} />
+                  <DetailLine label="确认人" value={risk.owner} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section-block compact-block">
+          <div className="section-heading">
+            <div>
+              <h2>并行开发节奏</h2>
+              <p>支线每一步都要服务模型质量，不做无休止页面展示。</p>
+            </div>
+            <ListChecks size={20} />
+          </div>
+          <div className="drawing-roadmap">
+            {drawingSheetMetalRoadmap.map((step) => (
+              <article key={step.step} className="drawing-roadmap-step">
+                <div className="roadmap-index">{step.step}</div>
+                <div>
+                  <div className="drawing-card-top">
+                    <strong>{step.focus}</strong>
+                    <StatusPill tone={step.statusTone}>{step.statusTone === 'idle' ? '后续' : '推进'}</StatusPill>
+                  </div>
+                  <p>{step.deliverable}</p>
+                  <small>{step.relationToMainline}</small>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}
+
+function drawingSourceTone(status: (typeof drawingSheetMetalSources)[number]['status']): StatusTone {
+  if (status === 'ready_for_intake') return 'good'
+  if (status === 'candidate') return 'warn'
+  if (status === 'blocked') return 'risk'
+  return 'idle'
+}
+
+function drawingSourceLabel(status: (typeof drawingSheetMetalSources)[number]['status']) {
+  if (status === 'ready_for_intake') return '可接入'
+  if (status === 'candidate') return '候选'
+  if (status === 'blocked') return '阻塞'
+  return '规划'
+}
+
+function drawingUploadCategoryLabel(category: string) {
+  if (category === '2d_drawing') return '二维图'
+  if (category === 'drawing_image') return '图纸/图片'
+  if (category === 'solidworks_drawing') return 'SolidWorks 工程图'
+  if (category === 'cad_model') return 'CAD 模型'
+  return category
+}
+
+function drawingExtractionTone(status: DrawingSheetMetalExtractionSummary['status']): StatusTone {
+  if (status === 'completed') return 'good'
+  if (status === 'partial_failed' || status === 'not_applicable') return 'warn'
+  if (status === 'failed') return 'risk'
+  return 'idle'
+}
+
+function drawingExtractionStatusLabel(status: DrawingSheetMetalExtractionSummary['status']) {
+  if (status === 'completed') return 'DXF 解析完成'
+  if (status === 'partial_failed') return 'DXF 部分完成'
+  if (status === 'failed') return 'DXF 解析失败'
+  if (status === 'not_applicable') return '无 DXF'
+  return '未解析'
+}
+
+function drawingCadCheckTone(status: DrawingSheetMetalCadCheckSummary['status']): StatusTone {
+  if (status === 'completed') return 'good'
+  if (status === 'partial_failed' || status === 'not_applicable') return 'warn'
+  if (status === 'failed') return 'risk'
+  return 'idle'
+}
+
+function drawingCadCheckStatusLabel(status: DrawingSheetMetalCadCheckSummary['status']) {
+  if (status === 'completed') return 'FreeCAD 检查完成'
+  if (status === 'partial_failed') return 'FreeCAD 部分完成'
+  if (status === 'failed') return 'FreeCAD 检查失败'
+  if (status === 'not_applicable') return '无 CAD'
+  return '未检查'
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') {
+        reject(new Error(`无法读取文件: ${file.name}`))
+        return
+      }
+      resolve(reader.result.includes(',') ? reader.result.split(',', 2)[1] : reader.result)
+    }
+    reader.onerror = () => reject(reader.error ?? new Error(`无法读取文件: ${file.name}`))
+    reader.readAsDataURL(file)
+  })
+}
+
+function formatBytes(value: number) {
+  if (value < 1024) return `${value} B`
+  const kb = value / 1024
+  if (kb < 1024) return `${kb.toFixed(kb >= 100 ? 0 : 1)} KB`
+  const mb = kb / 1024
+  if (mb < 1024) return `${mb.toFixed(mb >= 100 ? 0 : 1)} MB`
+  const gb = mb / 1024
+  return `${gb.toFixed(gb >= 100 ? 0 : 1)} GB`
+}
+
+function ReviewDownloadPage() {
+  const [downloadIndex, setDownloadIndex] = useState<ReviewDownloadIndex | null>(null)
+  const [scopeGate, setScopeGate] = useState<CurrentHandoffScopeGate | null>(null)
+  const [downloadStatus, setDownloadStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [downloadMessage, setDownloadMessage] = useState('')
+  const publicUrl =
+    typeof window === 'undefined' ? 'http://127.0.0.1:5173/#handoff' : `${window.location.origin}${window.location.pathname}#handoff`
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadDownloads() {
+      setDownloadStatus('loading')
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/review-downloads`)
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        const data = (await response.json()) as ReviewDownloadIndex
+        const gateResponse = await fetch(`${API_BASE_URL}/api/locker-16029-current-handoff-scope`)
+        const gateData = gateResponse.ok ? ((await gateResponse.json()) as CurrentHandoffScopeGate) : null
+        if (!cancelled) {
+          setDownloadIndex(data)
+          setScopeGate(gateData)
+          setDownloadStatus('ready')
+          setDownloadMessage(`下载接口已连接：${API_BASE_URL}`)
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setDownloadStatus('error')
+          setDownloadMessage(error instanceof Error ? error.message : 'download API unavailable')
+        }
+      }
+    }
+    loadDownloads()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const assets = downloadIndex?.assets ?? []
+  const availableAssets = assets.filter((asset) => asset.available)
+  const gateStatus = scopeGate?.status ?? 'UNKNOWN'
+  const gateTone: StatusTone = gateStatus === 'PASS' ? 'good' : gateStatus === 'FAIL' ? 'risk' : 'warn'
+  const failedGateChecks = (scopeGate?.checks ?? []).filter((check) => !check.ok).slice(0, 4)
+
+  return (
+    <div className="page-grid handoff-page">
+      <section className="section-block handoff-hero">
+        <div className="section-heading">
+          <div>
+            <h2>当前候选审核包下载</h2>
+            <p>这里只列出 16029 800W gold-variable 的 LMS / SML / DUAL 三个候选包；CAD 复核主线为 SolidWorks 2020。</p>
+          </div>
+          <div className="status-stack">
+            <StatusPill tone={downloadStatus === 'ready' ? 'good' : downloadStatus === 'error' ? 'risk' : 'warn'}>
+              {downloadStatus === 'ready' ? `${availableAssets.length} files` : downloadStatus}
+            </StatusPill>
+            <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+          </div>
+        </div>
+        <div className="handoff-share-box">
+          <div>
+            <span>给结构工程师的访问地址</span>
+            <strong>{publicUrl}</strong>
+            <p>{downloadMessage}</p>
+          </div>
+          <a className="secondary-action" href={publicUrl}>
+            <Archive size={16} />
+            打开下载页
+          </a>
+        </div>
+      </section>
+
+      <section className={`handoff-gate-panel gate-${gateStatus.toLowerCase()}`}>
+        <div>
+          <span>当前放行状态</span>
+          <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 证据已通过' : '候选包未正式放行'}</strong>
+          <p>
+            {gateStatus === 'PASS'
+              ? 'LMS/SML/DUAL 可以进入正式工程交付口径。'
+              : '当前可以下载给工程师继续审核结构问题，但不能标记为已验证交付。'}
+          </p>
+        </div>
+        <div className="handoff-gate-checks">
+          <span>{scopeGate ? `${scopeGate.checks_failed ?? 0}/${scopeGate.checks_total ?? 0} checks failed` : 'gate loading'}</span>
+          {failedGateChecks.length ? (
+            failedGateChecks.map((check) => (
+              <small key={check.name}>{check.name.replace(/^solidworks_2020_/, 'SW2020 ')}</small>
+            ))
+          ) : (
+            <small>{scopeGate ? '没有失败项。' : '正在读取 scope gate。'}</small>
+          )}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>16029 800W gold-variable 审核文件</h2>
+            <p>LMS: 大 6/12，中 4/12，小 2/12；SML: 小 2/12，中 4/12，大 6/12；统一规则 800W × 1917H × 550D；SolidWorks 2020 为当前复核环境。</p>
+          </div>
+          <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+        </div>
+
+        <div className="download-grid">
+          {assets.map((asset) => (
+            <article key={asset.id} className={`download-card ${asset.available ? '' : 'download-card-missing'}`}>
+              <div className="download-card-top">
+                <div>
+                  <span>{asset.category}</span>
+                  <strong>{asset.title}</strong>
+                </div>
+                <StatusPill tone={asset.available ? 'warn' : 'risk'}>{asset.available ? '候选可下载' : '缺失'}</StatusPill>
+              </div>
+              <p>{asset.description}</p>
+              <div className="download-meta">
+                <DetailLine label="文件名" value={asset.file_name} />
+                <DetailLine label="大小" value={asset.size_bytes === null ? 'missing' : formatBytes(asset.size_bytes)} />
+                <DetailLine label="更新时间" value={asset.modified_at ? formatTaskTime(asset.modified_at) : 'missing'} />
+              </div>
+              {asset.available ? (
+                <a className="primary-action download-link" href={`${API_BASE_URL}${asset.download_url}`}>
+                  <Download size={16} />
+                  下载
+                </a>
+              ) : (
+                <button className="secondary-action download-link" type="button" disabled>
+                  <Download size={16} />
+                  文件缺失
+                </button>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}
+
 function ReviewPage({
   query,
   setQuery,
@@ -2499,6 +4402,170 @@ function ReviewPage({
           )}
         </section>
       ))}
+    </div>
+  )
+}
+
+function AgentConsolePage({
+  selectedProject,
+  reviewCounts,
+  onNavigate,
+}: {
+  selectedProject: Project
+  reviewCounts: Record<string, number>
+  onNavigate: (page: PageId) => void
+}) {
+  const generatableCapabilities = capabilities.filter((capability) => capability.status === 'generatable')
+  const referenceCapabilities = capabilities.filter((capability) => capability.status === 'reference_only')
+  const activePriorityItems = reviewItems.filter((item) => item.priority === 'P0' || item.priority === 'P1')
+
+  return (
+    <div className="page-grid console-page">
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>结构 Agent 控制台</h2>
+            <p>先把生成边界说清楚，再把规则学习和待确认项排队。</p>
+          </div>
+          <div className="console-actions">
+            <button className="primary-action" type="button" onClick={() => onNavigate('models')}>
+              <Play size={16} />
+              去可生成模型
+            </button>
+            <button className="secondary-action" type="button" onClick={() => onNavigate('rules')}>
+              <ListChecks size={16} />
+              去规则库
+            </button>
+            <button className="secondary-action" type="button" onClick={() => onNavigate('drawings')}>
+              <ClipboardList size={16} />
+              去图纸出图
+            </button>
+            <button className="secondary-action" type="button" onClick={() => onNavigate('review')}>
+              <ClipboardList size={16} />
+              去待确认项
+            </button>
+          </div>
+        </div>
+
+        <div className="console-hero">
+          <article className="console-hero-card">
+            <div className="console-hero-heading">
+              <MessageSquareMore size={18} />
+              <div>
+                <span>当前结论</span>
+                <strong>1917×1000 样本已能学习同尺寸变体，但“门板尺寸自由变化”还没开放。</strong>
+              </div>
+            </div>
+            <p>
+              现在能走的是 16038 的 4/7/8/12 门同尺寸入口、16029 的整柜回归和门板单件入口；如果要做
+              1000mm 宽、1917mm 高外型下不同柜门尺寸变化，必须先把门框分隔、门板宽高、锁位和铰链阵列的规则闭环。
+            </p>
+            <div className="console-status-row">
+              <StatusPill tone="good">{generatableCapabilities.length} 可生成</StatusPill>
+              <StatusPill tone="warn">{referenceCapabilities.length} 参考</StatusPill>
+              <StatusPill tone={activePriorityItems.length ? 'risk' : 'good'}>{activePriorityItems.length} 待确认</StatusPill>
+            </div>
+          </article>
+
+          <article className="console-project-card">
+            <div className="console-project-top">
+              <ProgressDial value={selectedProject.progress} />
+              <div>
+                <span>当前项目</span>
+                <strong>{selectedProject.name}</strong>
+                <p>{selectedProject.productType}</p>
+              </div>
+            </div>
+            <div className="detail-list">
+              <DetailLine label="更新时间" value={selectedProject.updatedAt} />
+              <DetailLine label="当前能力" value={selectedProject.capability} />
+              <DetailLine label="当前风险" value={selectedProject.risk} />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div className="split-grid console-summary-grid">
+        <section className="section-block compact-block">
+          <div className="section-heading">
+            <div>
+              <h2>生成边界</h2>
+              <p>模型入口已经分开，参数化边界暂时只放到证据闭环后的项里。</p>
+            </div>
+            <Route size={20} />
+          </div>
+          <div className="detail-list">
+            <DetailLine
+              label="已验证范围"
+              value="16038: 4/7/8/12 门；16029 SolidWorks: 10/12/14 门增强整柜样机；16029 单门板可做尺寸零件验证"
+            />
+            <DetailLine
+              label="当前不开放"
+              value="1000×1917 外型下任意柜门宽高变化，不进入直接生成器"
+            />
+            <DetailLine
+              label="下一技术门槛"
+              value="门框横隔、门板宽高、锁位、铰链阵列、BOM/DXF/STEP 角色证据闭环"
+            />
+          </div>
+          <EvidenceRow evidence={['SolidWorks', 'DXF', 'BOM', 'STEP']} />
+        </section>
+
+        <section className="section-block compact-block">
+          <div className="section-heading">
+            <div>
+              <h2>可生成入口</h2>
+              <p>把“能生成”和“只能参考”分开，避免把工程参考模型误当成任意参数化生成。</p>
+            </div>
+            <Boxes size={20} />
+          </div>
+          <div className="console-capability-grid">
+            {generatableCapabilities.concat(referenceCapabilities).map((capability) => (
+              <article key={capability.id} className={'console-capability-card status-' + capability.status}>
+                <div className="console-capability-top">
+                  <div>
+                    <span>{capability.productType}</span>
+                    <strong>{capability.title}</strong>
+                  </div>
+                  <StatusPill tone={capability.status === 'generatable' ? 'good' : 'warn'}>{capability.status}</StatusPill>
+                </div>
+                <p>{capability.variants}</p>
+                <small>{capability.limitation}</small>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>规则学习轴</h2>
+            <p>先补门数，再补门尺寸；门尺寸变化要等公式闭环，不靠肉眼猜。</p>
+          </div>
+          <StatusPill tone="warn">{reviewCounts.P0 ?? 0} P0 / {reviewCounts.P1 ?? 0} P1</StatusPill>
+        </div>
+        <div className="axis-grid">
+          {ruleLearningAxes.map((axis) => (
+            <RuleLearningAxisCard key={axis.axis} axis={axis} />
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <div>
+            <h2>P0 / P1 待确认项</h2>
+            <p>这些项决定不同柜门尺寸变化能不能进入生成器。</p>
+          </div>
+          <StatusPill tone="risk">{activePriorityItems.length} items</StatusPill>
+        </div>
+        <div className="review-list">
+          {activePriorityItems.map((item) => (
+            <ReviewCard key={item.id} item={item} />
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
@@ -2884,6 +4951,477 @@ function GeneratorRuleBindingPanel({
   )
 }
 
+function Locker16029DoorLayoutPanel({
+  doorCount,
+  verifiedRulePacket,
+  message,
+}: {
+  doorCount?: string
+  verifiedRulePacket: Locker16029VerifiedRulePacket | null
+  message: string
+}) {
+  const numericDoorCount = Number(doorCount)
+  const verifiedVariant =
+    verifiedRulePacket?.status === 'PASS'
+      ? verifiedRulePacket.verified_variants.find((variant) => variant.door_count === numericDoorCount)
+      : null
+  const fallbackLayout = locker16029SolidWorksLayoutSummary(doorCount)
+  const layout = verifiedVariant
+    ? {
+        doorCount: verifiedVariant.door_count,
+        rowsPerColumn: verifiedVariant.layout_rule.rows_per_column,
+        doorHeight: verifiedVariant.layout_rule.door_height_mm,
+        doorPitch: verifiedVariant.layout_rule.door_pitch_mm,
+        doorWidth: verifiedVariant.layout_rule.door_width_mm,
+        exactUnit: locker16029ExactUnitForHeight(verifiedVariant.layout_rule.door_height_mm),
+        sourceMode: 'Verified rule packet / SolidWorks Pack-and-Go',
+        rowLabels: Array.from(
+          { length: verifiedVariant.layout_rule.rows_per_column },
+          (_, index) => `${index + 1}: ${formatMm(verifiedVariant.layout_rule.door_height_mm)} mm`,
+        ),
+      }
+    : fallbackLayout
+  const supported = (verifiedRulePacket?.verified_door_counts.length
+    ? verifiedRulePacket.verified_door_counts
+    : LOCKER_16029_SUPPORTED_RULE_COUNTS
+  ).join(' / ')
+  const solidWorksSupported = LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS.join(' / ')
+  const freeCadSupported = LOCKER_16029_SUPPORTED_FREECAD_COUNTS.join(' / ')
+  const lockHookCount = verifiedVariant?.component_count_rule.electric_lock_hooks ?? layout?.doorCount
+  const shelfCount = verifiedVariant?.component_count_rule.shelves
+  const crossbarCount = verifiedVariant?.component_count_rule.front_frame_crossbars
+
+  return (
+    <div className={`door-layout-panel ${layout ? '' : 'layout-warning'}`}>
+      <div className="door-layout-heading">
+        <div>
+          <span>16029 门数/尺寸规则</span>
+          <strong>{layout ? `${layout.doorCount} 门 / ${layout.rowsPerColumn} 排每列` : '当前门数未开放'}</strong>
+        </div>
+        <StatusPill tone={layout ? 'good' : 'risk'}>{layout ? '规则可用' : 'blocked'}</StatusPill>
+      </div>
+      {layout ? (
+        <>
+          <div className="door-layout-stats">
+            <div>
+              <span>外型尺寸</span>
+              <strong>{LOCKER_16029_OUTER_SIZE}</strong>
+            </div>
+            <div>
+              <span>单门高度</span>
+              <strong>{formatMm(layout.doorHeight)} mm</strong>
+            </div>
+            <div>
+              <span>门板来源</span>
+              <strong>{layout.sourceMode}</strong>
+            </div>
+            {verifiedVariant && (
+              <div>
+                <span>层板 / 横隔板</span>
+                <strong>{shelfCount} / {crossbarCount}</strong>
+              </div>
+            )}
+            {verifiedVariant && (
+              <div>
+                <span>锁钩 / 右门镜像</span>
+                <strong>
+                  {lockHookCount} / {verifiedVariant.measured_gate.right_column_rotation_ok}
+                </strong>
+              </div>
+            )}
+          </div>
+          <div className="door-layout-rows" aria-label="每列门尺寸序列">
+            {layout.rowLabels.map((label) => (
+              <span key={label}>
+                {label}
+                {layout.exactUnit ? ` · ${layout.exactUnit}/12` : ''}
+              </span>
+            ))}
+          </div>
+          <p>
+            {message} FreeCAD 规则验证支持 {freeCadSupported} 门；SolidWorks 原生整柜骨架当前支持 {solidWorksSupported} 门。其它门数先进入规则学习队列。
+          </p>
+          {verifiedVariant && (
+            <p>
+              Pack-and-Go: {verifiedVariant.pack_and_go_handoff.ok}，文件 {verifiedVariant.pack_and_go_handoff.file_count} 个，外部引用 {verifiedVariant.pack_and_go_handoff.external_top_reference_count}。
+            </p>
+          )}
+        </>
+      ) : (
+        <p>{message} 当前 16029 规则收敛样本只放开 {supported} 门。其它门数先进入规则学习队列，暂不直接生成。</p>
+      )}
+    </div>
+  )
+}
+
+function Locker16029QualityMatrixPanel({
+  matrix,
+  message,
+  handoffBundle,
+  handoffMessage,
+  handoffBusy,
+  onOpenHandoff,
+}: {
+  matrix: Locker16029VariantQualityMatrix | null
+  message: string
+  handoffBundle: Locker16029EngineeringHandoffBundle | null
+  handoffMessage: string
+  handoffBusy: boolean
+  onOpenHandoff: (path: string, mode?: LocalActionMode) => void
+}) {
+  const summary = matrix?.summary
+  const readinessSummary = handoffBundle?.readiness_summary
+  const solidWorksOpenVerified = readinessSummary?.solidworks_open_verified ?? false
+  const solidWorksRepairPromptRequired = readinessSummary?.solidworks_open_status === 'manual_repair_prompt_required'
+  const solidWorksStepApiBlocked =
+    readinessSummary?.solidworks_open_status === 'solidworks_step_api_blocked_manual_open_required'
+  const handoffVariants = [...(handoffBundle?.variants ?? [])].sort((left, right) => left.door_count - right.door_count)
+  const handoffByDoorCount = new Map((handoffBundle?.variants ?? []).map((variant) => [variant.door_count, variant]))
+  const rootLauncherByDoorCount = new Map(
+    (handoffBundle?.root_launchers ?? []).map((launcher) => [launcher.door_count, launcher.solidworks_launcher]),
+  )
+  const enrichedReferences = LOCKER_16029_ENRICHED_REFERENCES
+  const tone: StatusTone = !summary
+    ? 'idle'
+    : summary.fail_count || summary.missing_output_count
+      ? 'risk'
+      : summary.pass_rule_counts_needs_fcstd_audit_count
+        ? 'warn'
+        : 'good'
+
+  return (
+    <div className={`variant-quality-panel variant-quality-${tone}`}>
+      <div className="variant-quality-heading">
+        <div>
+          <span>16029 生成质量门槛</span>
+          <strong>10/12/14 门规则结果</strong>
+        </div>
+        <StatusPill tone={tone}>{summary ? '已读取' : 'loading'}</StatusPill>
+      </div>
+      <div className="variant-quality-summary">
+        <div>
+          <span>工程复核就绪</span>
+          <strong>{summary?.pass_ready_count ?? '-'}</strong>
+        </div>
+        <div>
+          <span>待完整性审计</span>
+          <strong>{summary?.pass_rule_counts_needs_fcstd_audit_count ?? '-'}</strong>
+        </div>
+        <div>
+          <span>失败/缺失</span>
+          <strong>{summary ? summary.fail_count + summary.missing_output_count : '-'}</strong>
+        </div>
+      </div>
+      <div className="engineer-handoff-direct enriched-reference-direct" aria-label="16029 当前推荐工程样机">
+        {enrichedReferences.map((enrichedReference) => (
+          <article key={enrichedReference.doorCount} className="engineer-handoff-card handoff-ready enriched-reference-card">
+            <div className="engineer-handoff-top">
+              <div>
+                <span>当前推荐样机</span>
+                <strong>{enrichedReference.title}</strong>
+              </div>
+              <StatusPill tone="good">PASS</StatusPill>
+            </div>
+            <div className="engineer-handoff-metrics">
+              <div>
+                <span>门数</span>
+                <strong>{enrichedReference.doorCount} 门</strong>
+              </div>
+              <div>
+                <span>固定模块</span>
+                <strong>9/9</strong>
+              </div>
+              <div>
+                <span>外型</span>
+                <strong>1000×1917×550</strong>
+              </div>
+            </div>
+            <small>包含维护门、插销、锁控板、M9 板、电源、WIFI 串口服务器等 transform-backed 固定模块；仍是工程参考模型。</small>
+            <p className="engineer-handoff-gate-note">
+              这是比骨架更完整的 SolidWorks 样机。先让结构工程师复核固定模块位置，再补后侧、电气和交接封包。
+            </p>
+            <div className="variant-quality-row-actions">
+              <button
+                type="button"
+                className="mini-action primary-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.assembly)}
+              >
+                <Play size={14} />
+                打开 SolidWorks 样机
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.step, 'reveal')}
+              >
+                定位 STEP
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.validationReport)}
+              >
+                验证报告
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.candidateMap)}
+              >
+                模块证据
+              </button>
+              <button
+                type="button"
+                className="mini-action quiet-mini-action"
+                disabled={handoffBusy}
+                onClick={() => onOpenHandoff(enrichedReference.outputDir)}
+              >
+                <FolderOpen size={14} />
+                目录
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+      {readinessSummary ? (
+        <div className={`handoff-readiness-summary ${readinessSummary.all_ready ? 'handoff-all-ready' : 'handoff-has-blockers'}`}>
+          <div className="handoff-readiness-title">
+            <span>工程交接总览</span>
+            <strong>
+              {readinessSummary.model_file_ready_count ?? readinessSummary.ready_count}/
+              {readinessSummary.variant_count || readinessSummary.target_door_counts.length} 个模型文件就绪
+            </strong>
+          </div>
+          <div className="handoff-readiness-stats">
+            <div>
+              <span>模型文件</span>
+              <strong>{readinessSummary.ready_door_counts.length ? `${readinessSummary.ready_door_counts.join('/')} 门` : '-'}</strong>
+            </div>
+            <div>
+              <span>SolidWorks 交接</span>
+              <strong>
+                {solidWorksOpenVerified
+                  ? '已确认'
+                  : solidWorksStepApiBlocked
+                    ? '需手动打开'
+                    : solidWorksRepairPromptRequired
+                      ? '需点修复'
+                      : '待修复'}
+              </strong>
+            </div>
+            <div>
+              <span>缺文件</span>
+              <strong>{readinessSummary.missing_file_count}</strong>
+            </div>
+          </div>
+          <StatusPill tone={readinessSummary.all_ready ? 'good' : solidWorksOpenVerified ? 'warn' : 'risk'}>
+            {readinessSummary.all_ready
+              ? '交接就绪'
+              : solidWorksOpenVerified
+                ? '需查看'
+                : solidWorksStepApiBlocked
+                  ? 'API 导入阻塞'
+                  : solidWorksRepairPromptRequired
+                    ? '需人工修复确认'
+                    : '自动打开待修复'}
+          </StatusPill>
+          {readinessSummary.missing_file_count ? (
+            <small>
+              首项缺失：{readinessSummary.missing_files[0]?.door_count ?? '-'} 门 / {readinessSummary.missing_files[0]?.key ?? '-'}
+            </small>
+          ) : (
+            <small>{readinessSummary.solidworks_open_message ?? '工程师优先打开 SolidWorks STP 入口；当前仍按工程参考模型复核。'}</small>
+          )}
+        </div>
+      ) : null}
+      {handoffVariants.length ? (
+        <div className="engineer-handoff-direct" aria-label="16029 工程交接直达入口">
+          {handoffVariants.map((handoff) => {
+            const solidworksLauncher = rootLauncherByDoorCount.get(handoff.door_count) ?? handoff.solidworks_launcher
+            const metrics = handoff.metrics
+            const handoffStep = handoff.stp ?? handoff.step
+            const files = handoff.file_status
+            const gate = handoffGateState(handoff)
+            const cardReady = gate.ready && solidWorksOpenVerified
+            return (
+              <article
+                key={handoff.door_count}
+                className={`engineer-handoff-card ${cardReady ? 'handoff-ready' : 'handoff-warning'}`}
+              >
+                <div className="engineer-handoff-top">
+                  <div>
+                    <span>工程交接</span>
+                    <strong>{handoff.door_count} 门 / 1000W</strong>
+                  </div>
+                  <StatusPill tone={cardReady ? gate.tone : 'warn'}>{cardReady ? gate.badge : gate.ready ? '文件就绪' : gate.badge}</StatusPill>
+                </div>
+                <div className="engineer-handoff-metrics">
+                  <div>
+                    <span>门高</span>
+                    <strong>{formatMm(metrics?.door_height_mm)} mm</strong>
+                  </div>
+                  <div>
+                    <span>STEP</span>
+                    <strong>{metrics?.step_mb ? `${formatMm(metrics.step_mb)} MB` : 'ready'}</strong>
+                  </div>
+                  <div>
+                    <span>invalid</span>
+                    <strong>{metrics?.step_invalid_shape_count ?? 0}</strong>
+                  </div>
+                </div>
+                <small>
+                  门宽 {formatMm(metrics?.door_width_mm)} mm / 锁孔X {formatAbsMetric(metrics?.lock_center_x_abs_mm)} / 铰链X{' '}
+                  {formatAbsMetric(metrics?.hinge_axis_x_abs_mm)}
+                </small>
+                <p className="engineer-handoff-gate-note">
+                  {gate.ready && !solidWorksOpenVerified
+                    ? solidWorksStepApiBlocked
+                      ? '模型文件和校验已就绪；SolidWorks API 自动导入 STEP 阻塞，请用 SolidWorks 手动打开/修复。'
+                      : solidWorksRepairPromptRequired
+                        ? '模型文件和校验已就绪；SolidWorks 导入 STEP 会弹修复确认，需点击“是”后再复核。'
+                        : '模型文件和校验已就绪；SolidWorks 自动打开 STP 未确认，按钮会尝试打开，失败时选中文件供手动打开。'
+                    : gate.detail}
+                </p>
+                <div className="variant-quality-row-actions">
+                  <button
+                    type="button"
+                    className="mini-action primary-mini-action"
+                    disabled={!gate.ready || !solidworksLauncher || handoffBusy}
+                    onClick={() => gate.ready && solidworksLauncher && onOpenHandoff(solidworksLauncher)}
+                  >
+                    <Play size={14} />
+                    {gate.ready ? (solidWorksOpenVerified ? 'SolidWorks 打开 STP' : '尝试打开 / 选中 STP') : '暂不交接'}
+                  </button>
+                  <button
+                    type="button"
+                    className="mini-action quiet-mini-action"
+                    disabled={!handoffStep || files?.stp === false || handoffBusy}
+                    onClick={() => handoffStep && onOpenHandoff(handoffStep, 'reveal')}
+                  >
+                    定位 STP
+                  </button>
+                  <button
+                    type="button"
+                    className="mini-action quiet-mini-action"
+                    disabled={!handoff.report_md || files?.report_md === false || handoffBusy}
+                    onClick={() => handoff.report_md && onOpenHandoff(handoff.report_md)}
+                  >
+                    报告
+                  </button>
+                  <button
+                    type="button"
+                    className="mini-action quiet-mini-action"
+                    disabled={!handoff.verify_csv || files?.verify_csv === false || handoffBusy}
+                    onClick={() => handoff.verify_csv && onOpenHandoff(handoff.verify_csv)}
+                  >
+                    验证数据
+                  </button>
+                  <button
+                    type="button"
+                    className="mini-action quiet-mini-action"
+                    disabled={!handoff.handoff_dir || files?.handoff_dir === false || handoffBusy}
+                    onClick={() => handoff.handoff_dir && onOpenHandoff(handoff.handoff_dir)}
+                  >
+                    <FolderOpen size={14} />
+                    目录
+                  </button>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      ) : null}
+      {matrix?.variants.length ? (
+        <div className="variant-quality-list" aria-label="16029 10 12 14 门质量矩阵">
+          {matrix.variants.map((variant) => {
+            const handoff = handoffByDoorCount.get(variant.door_count)
+            const solidworksLauncher = rootLauncherByDoorCount.get(variant.door_count) ?? handoff?.solidworks_launcher
+            const freecadLauncher = handoff?.freecad_launcher
+            const audit = variant.structural_rule_audit
+            const metrics = handoff?.metrics
+            return (
+              <div key={variant.door_count} className={`variant-quality-row status-${variant.status.toLowerCase()}`}>
+                <span>{variant.door_count} 门</span>
+                <strong>{variantQualityStatusLabel(variant.status)}</strong>
+                <small>
+                  bbox X {formatMm(variant.verify_bbox_x_len)} mm / 门宽{' '}
+                  {formatMm(audit?.door_width_mm ?? metrics?.door_width_mm ?? null)} / 门高{' '}
+                  {formatMm(audit?.door_height_mm ?? metrics?.door_height_mm ?? null)} / 锁孔X{' '}
+                  {formatAbsMetric(audit?.lock_center_x_abs_mm)} / 铰链X {formatAbsMetric(audit?.hinge_axis_x_abs_mm)}
+                  {' / '}STEP invalid {variant.step_geometry_check?.invalid_shape_count ?? metrics?.step_invalid_shape_count ?? '-'}
+                </small>
+                <div className="variant-quality-row-actions">
+                  <button
+                    type="button"
+                    className="mini-action"
+                    disabled={!solidworksLauncher || handoffBusy}
+                    onClick={() => solidworksLauncher && onOpenHandoff(solidworksLauncher)}
+                  >
+                    <Play size={14} />
+                    {solidWorksOpenVerified ? 'SolidWorks 打开' : '尝试打开 / 选中'}
+                  </button>
+                  <button
+                    type="button"
+                    className="mini-action quiet-mini-action"
+                    disabled={!freecadLauncher || handoffBusy}
+                    onClick={() => freecadLauncher && onOpenHandoff(freecadLauncher)}
+                  >
+                    <Play size={14} />
+                    FreeCAD
+                  </button>
+                  <button
+                    type="button"
+                    className="mini-action quiet-mini-action"
+                    disabled={!handoff?.handoff_dir || handoffBusy}
+                    onClick={() => handoff?.handoff_dir && onOpenHandoff(handoff.handoff_dir)}
+                  >
+                    <FolderOpen size={14} />
+                    目录
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      ) : (
+        <p>{message}</p>
+      )}
+      {matrix?.variants.length ? <p>{message} 操作建议：一次只打开一个门数，确认后再切换 SolidWorks 或 FreeCAD。</p> : null}
+      <div className="variant-quality-handoff">
+        <div>
+          <span>工程交接包</span>
+          <strong>{handoffBundle?.variants.length ? '10/12/14 门 STEP 交接已整理' : handoffMessage}</strong>
+          {handoffBundle?.handoff_dir ? <small>{handoffBundle.handoff_dir}</small> : null}
+        </div>
+        <div className="variant-quality-row-actions">
+          <button
+            type="button"
+            className="ghost-button"
+            disabled={!handoffBundle?.engineer_open_index || handoffBusy}
+            onClick={() => handoffBundle?.engineer_open_index && onOpenHandoff(handoffBundle.engineer_open_index)}
+          >
+            <ClipboardList size={16} />
+            工程师清单
+          </button>
+          <button
+            type="button"
+            className="ghost-button"
+            disabled={!handoffBundle?.handoff_dir || handoffBusy}
+            onClick={() => handoffBundle?.handoff_dir && onOpenHandoff(handoffBundle.handoff_dir)}
+          >
+            <FolderOpen size={16} />
+            {handoffBusy ? '打开中' : '打开交接包'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function RuleSeedQuantityFormulaCard({ item }: { item: RuleSeedQuantityFormulaItem }) {
   const primaryFormula = item.templateFormulas[0]
   const derivedEntries = Object.entries(primaryFormula?.derived ?? {}).slice(0, 6)
@@ -3036,6 +5574,27 @@ function formulaCheckLabel(name: string) {
   return labels[name] ?? name
 }
 
+function dryRunCheckLabel(name: string) {
+  const labels: Record<string, string> = {
+    freecad_command: 'FreeCAD 命令',
+    solidworks_shortcut: 'SolidWorks 桌面入口',
+    solidworks_gui: 'SolidWorks 程序',
+    solidworks_automation_host: '脚本宿主',
+    solidworks_command: 'SolidWorks 命令',
+    solidworks_single_run_guard: 'SolidWorks 单任务保护',
+    solidworks_16029_source_files: '16029 源文件清单',
+    solidworks_16029_spec_preview: '16029 装配清单预检',
+    solidworks_16029_native_reference_geometry_gate: '16029 原生参考质量门',
+    solidworks_16029_native_skeleton_geometry_gate: '16029 原生骨架质量门',
+    generator_script: '生成脚本',
+    parameters: '参数',
+    evidence: '证据',
+    output_boundary: '输出边界',
+    worker_command: 'worker 命令',
+  }
+  return labels[name] ?? name
+}
+
 function RuleLearningAxisCard({ axis }: { axis: RuleLearningAxis }) {
   return (
     <article className={`axis-card maturity-${axis.maturity}`}>
@@ -3118,15 +5677,23 @@ function canRunSolidWorksPackageStatus(status: GenerationTask['status']) {
   return status === 'ready_to_run' || status === 'requires_manual_run' || status === 'completed_reference' || status === 'failed_worker'
 }
 
+function canRunSolidWorksPackageTask(task: GenerationTask) {
+  return canRunSolidWorksPackageStatus(task.status) && !isLegacySolidWorksDirectAssemblyTask(task)
+}
+
+function isLegacySolidWorksDirectAssemblyTask(task: GenerationTask) {
+  return task.cad_runner === 'solidworks' && task.command.includes('sw_build_locker_16029_direct_assembly')
+}
+
 function generationRouteKind(capabilityId: string) {
-  if (capabilityId === 'locker_16029_regression') return 'direct'
+  if (capabilityId === 'locker_16029_regression') return 'template'
   if (capabilityId === 'locker_16038_variant_template') return 'template'
   if (capabilityId === 'locker_16029_door_panel') return 'part'
   return 'queued'
 }
 
 function generationRouteTitle(capabilityId: string) {
-  if (capabilityId === 'locker_16029_regression') return 'SolidWorks 按规则逐件装配'
+  if (capabilityId === 'locker_16029_regression') return '16029 原生 SolidWorks 参考样机 / FreeCAD 规则验证'
   if (capabilityId === 'locker_16038_variant_template') return 'SolidWorks 标准模板克隆 / 证据绑定'
   if (capabilityId === 'locker_16029_door_panel') return 'SolidWorks 单门板参数化零件'
   return '规则学习中，暂不进入生成器'
@@ -3134,7 +5701,7 @@ function generationRouteTitle(capabilityId: string) {
 
 function generationRouteDetail(capabilityId: string) {
   if (capabilityId === 'locker_16029_regression') {
-    return '点击 SolidWorks 后会按门数插入门框、柜体、层板和门装配，并生成组件清单、验证 CSV 与报告。'
+    return 'SolidWorks 大按钮开放 10/12/14 门原生整柜参考，并优先使用增强矩阵样机 v2。FreeCAD 保留同门数规则验证件。当前仍是工程参考模型，不是生产图纸/BOM。'
   }
   if (capabilityId === 'locker_16038_variant_template') {
     return '点击 SolidWorks 后会打开并保存已验证的 4/7/8 门整柜或 12/12 模块母版；这是同尺寸模板参考，不是任意门数自动重排。'
@@ -3146,6 +5713,7 @@ function generationRouteDetail(capabilityId: string) {
 }
 
 function solidworksGenerationModeLabel(mode: string) {
+  if (mode === 'native_skeleton_reference') return '原生整柜参考'
   if (mode === 'template_clone') return '标准总装模板克隆'
   if (mode === 'direct_component_assembly') return '按规则逐件装配'
   if (mode === 'manual_package') return '待本地 SolidWorks 执行'
@@ -3154,6 +5722,15 @@ function solidworksGenerationModeLabel(mode: string) {
 
 function solidworksNullableCount(value: number | null | undefined) {
   return typeof value === 'number' ? String(value) : '-'
+}
+
+function solidworksLayoutStatusLabel(status: string | null | undefined) {
+  if (status === 'verified_equal_row_native_source') return '等高原生门组件'
+  if (status === 'equal_row_rebuilt_panel_candidate') return '等高重建门板'
+  if (status === 'equal_row_parametric_panel_reference') return '等高参数门板'
+  if (status === 'verified_same_envelope_layout') return '已验证配方'
+  if (status === 'formula_composed_from_1_12_to_6_12_source_modules') return '源模块公式组合'
+  return '-'
 }
 
 function solidworksComponentInsertLabel(added: number | null | undefined, requested: number | null | undefined) {
@@ -3174,6 +5751,9 @@ function solidworksComponentTreeLabel(summary: SolidWorksRunSummary) {
   if (summary.quality_status === 'reference_feature_only') {
     return `Reference ${solidworksNullableCount(summary.reference_like_feature_count)}`
   }
+  if (summary.quality_status === 'component_reference_tree') {
+    return `validated refs ${solidworksNullableCount(summary.reference_like_feature_count)}`
+  }
   if (summary.quality_status === 'component_tree') {
     return `${solidworksNullableCount(summary.all_component_count)} components`
   }
@@ -3182,21 +5762,118 @@ function solidworksComponentTreeLabel(summary: SolidWorksRunSummary) {
 }
 
 function cadRunnerLabel(cadRunner: CadRunner) {
-  return cadRunner === 'solidworks' ? 'SOLIDWORKS 2025' : 'FreeCAD 1.1.1'
+  return cadRunner === 'solidworks' ? 'SOLIDWORKS 2020' : 'FreeCAD 1.1.1'
 }
 
-function runnerButtonLabel(cadRunner: CadRunner) {
-  return cadRunner === 'solidworks' ? '一键运行 SOLIDWORKS 2025' : '创建 FreeCAD 任务草稿'
+function variantQualityStatusLabel(status: string) {
+  if (status === 'PASS_READY_FOR_ENGINEERING_REVIEW') return '可工程复核'
+  if (status === 'PASS_STEP_GEOMETRY_NEEDS_FCSTD_AUDIT') return 'STEP 通过 / 待完整性审计'
+  if (status === 'PASS_RULE_COUNTS_NEEDS_FCSTD_AUDIT') return '数量通过 / 待完整性审计'
+  if (status === 'MISSING_OUTPUT') return '缺少输出'
+  if (status === 'FAIL') return '质量失败'
+  return status
 }
 
-function runnerButtonDetail(cadRunner: CadRunner, fallback: string) {
+function handoffGateState(handoff: Locker16029EngineeringHandoffBundle['variants'][number]): {
+  ready: boolean
+  tone: StatusTone
+  badge: string
+  detail: string
+} {
+  const metrics = handoff.metrics
+  const fileStatus = handoff.file_status
+  const blockers: string[] = []
+  const invalidShapeCount = metrics?.step_invalid_shape_count
+  const handoffStep = handoff.stp ?? handoff.step
+
+  if (handoff.status !== 'PASS_READY_FOR_ENGINEERING_REVIEW') blockers.push(variantQualityStatusLabel(handoff.status ?? 'UNKNOWN'))
+  if (!handoffStep) blockers.push('缺少 STP')
+  if (handoff.handoff_files_ready === false) blockers.push('交接文件不齐')
+  if (fileStatus) {
+    if (fileStatus.stp === false) blockers.push('STP 文件不存在')
+    if (fileStatus.root_solidworks_launcher === false) blockers.push('SolidWorks 根启动入口不存在')
+    if (fileStatus.solidworks_launcher === false) blockers.push('SolidWorks 子启动入口不存在')
+    if (fileStatus.report_md === false) blockers.push('报告文件不存在')
+    if (fileStatus.verify_csv === false) blockers.push('验证数据不存在')
+    if (fileStatus.handoff_dir === false) blockers.push('交接目录不存在')
+  }
+  if (metrics?.step_geometry_status !== 'geometry_check_pass') blockers.push('STEP 几何未通过')
+  if (typeof invalidShapeCount !== 'number' || invalidShapeCount !== 0) blockers.push('STEP invalid 未归零')
+  if (metrics?.fcstd_integrity_status !== 'PASS') blockers.push('FCStd 完整性未通过')
+  if (metrics?.structural_rule_status !== 'PASS') blockers.push('结构规则未通过')
+
+  const uniqueBlockers = [...new Set(blockers)]
+
+  if (!uniqueBlockers.length) {
+    return {
+      ready: true,
+      tone: 'good',
+      badge: 'PASS',
+      detail: '可交给结构工程师用 SolidWorks 打开 STP 复核；仍不是正式生产图纸。',
+    }
+  }
+
+  return {
+    ready: false,
+    tone: 'warn',
+    badge: '需查看',
+    detail: `暂不作为工程交接模型：${uniqueBlockers.join('，')}。`,
+  }
+}
+
+function runnerButtonLabel(cadRunner: CadRunner, capabilityId?: string) {
+  if (capabilityId === 'locker_16029_regression' && cadRunner === 'solidworks') {
+    return '生成原生参考模型'
+  }
+  if (capabilityId === 'locker_16029_regression' && cadRunner === 'freecad') {
+    return '生成规则 STEP / FCStd'
+  }
+  return cadRunner === 'solidworks' ? '一键运行 SOLIDWORKS 2020' : '创建 FreeCAD 任务草稿'
+}
+
+function runnerButtonDetail(cadRunner: CadRunner, fallback: string, capabilityId?: string) {
+  if (capabilityId === 'locker_16029_regression' && cadRunner === 'solidworks') {
+    return '10/12/14 门使用增强矩阵样机 v2。先 dry-run，再启动 SolidWorks 打开并另存。'
+  }
+  if (capabilityId === 'locker_16029_regression' && cadRunner === 'freecad') {
+    return '生成 10/12/14 门规则参考模型，并进入 STEP/FCStd 质量校验。'
+  }
   return cadRunner === 'solidworks' ? '创建任务、自动 dry-run，通过后直接启动 SolidWorks。' : fallback
+}
+
+function runnerCommandPreviewText(
+  runner: (typeof cadRunners)[number],
+  capability: Capability,
+  runnerIssue: string | null,
+  commandPreview: (cadRunner: CadRunner) => string,
+) {
+  if (capability.generator === 'not_enabled') {
+    return `${runner.label}: not_enabled: 需要先完成证据修复或模块接口确认`
+  }
+  if (runnerIssue) {
+    return `${runner.label}: 当前参数不支持该入口 - ${runnerIssue}`
+  }
+  if (capability.id === 'locker_16029_regression' && runner.id === 'solidworks') {
+    return `${runner.label}: 10/12/14门使用 enriched_v2.SLDASM，打开并另存当前门数原生参考。`
+  }
+  return `${runner.label}: ${commandPreview(runner.id)}`
 }
 
 function taskMatchesActiveParameters(task: GenerationTask, activeParameters: ParameterValues) {
   const activeEntries = Object.entries(activeParameters)
   if (!activeEntries.length) return false
   return activeEntries.every(([name, value]) => String(task.parameters[name] ?? '') === String(value))
+}
+
+function taskMatchesPrimaryParameters(task: GenerationTask, activeCapabilityId: string, activeParameters: ParameterValues) {
+  if (task.capability_id !== activeCapabilityId) return false
+  if (activeCapabilityId === 'locker_16029_regression') {
+    return (
+      String(task.parameters.door_count ?? '') === String(activeParameters.door_count ?? '') &&
+      String(task.parameters.cabinet_width ?? '') === String(activeParameters.cabinet_width ?? '')
+    )
+  }
+  return taskMatchesActiveParameters(task, activeParameters)
 }
 
 function taskPriorityScore(task: GenerationTask, activeCapabilityId: string, activeParameters: ParameterValues) {
@@ -3207,6 +5884,7 @@ function taskPriorityScore(task: GenerationTask, activeCapabilityId: string, act
   if (task.status === 'ready_to_run' || task.status === 'requires_manual_run') score += 45
   if (task.status === 'completed_reference') score += 30
   if (task.status === 'running') score += 20
+  if (isLegacySolidWorksDirectAssemblyTask(task)) score -= 1200
   return score
 }
 
@@ -3227,6 +5905,7 @@ function taskRelevanceLabel(task: GenerationTask, activeCapabilityId: string, ac
 }
 
 function taskNextActionLabel(task: GenerationTask) {
+  if (isLegacySolidWorksDirectAssemblyTask(task)) return '历史错乱路线，已停用'
   if (task.status === 'draft_pending_worker') return '下一步：dry-run'
   if (task.status === 'ready_to_run' && task.cad_runner === 'solidworks') return '下一步：运行 SolidWorks'
   if (task.status === 'ready_to_run') return '下一步：执行 worker'
@@ -3236,6 +5915,184 @@ function taskNextActionLabel(task: GenerationTask) {
   if (task.status === 'failed_worker') return '查看日志后重试'
   if (task.status === 'running') return '运行中'
   return '查看详情'
+}
+
+function freecadQualityTitle(status?: string | null, taskStatus?: GenerationTask['status']) {
+  if (status === 'freecad_geometry_pass') return 'STEP/FCStd 自动复核通过'
+  if (status === 'freecad_step_pass_fcstd_pending') return 'STEP 通过，FCStd 待复核'
+  if (status === 'freecad_run_lock_active') return '已有 FreeCAD 任务运行'
+  if (status === 'freecad_postprocess_needs_review') return '自动复核需查看'
+  if (status === 'freecad_postprocess_not_run') return '自动复核未运行'
+  if (taskStatus === 'failed_worker') return 'worker 执行失败'
+  return '自动复核状态待确认'
+}
+
+function freecadQualityTone(status?: string | null, taskStatus?: GenerationTask['status']): StatusTone {
+  if (status === 'freecad_geometry_pass') return 'good'
+  if (status === 'freecad_run_lock_active' || taskStatus === 'failed_worker') return 'risk'
+  if (status) return 'warn'
+  return 'idle'
+}
+
+function freecadQualityBadge(status?: string | null) {
+  if (status === 'freecad_geometry_pass') return 'PASS'
+  if (status === 'freecad_step_pass_fcstd_pending') return 'STEP PASS'
+  if (status === 'freecad_run_lock_active') return 'LOCKED'
+  if (status === 'freecad_postprocess_needs_review') return 'REVIEW'
+  if (status === 'freecad_postprocess_not_run') return 'PENDING'
+  return status ?? 'pending'
+}
+
+function freecadQualityCheckState(
+  status: string | null,
+  check: 'step' | 'fcstd' | 'matrix',
+): 'ready' | 'warning' | 'waiting' {
+  if (status === 'freecad_geometry_pass') return 'ready'
+  if (status === 'freecad_step_pass_fcstd_pending') return check === 'step' ? 'ready' : 'warning'
+  if (status === 'freecad_postprocess_needs_review') return 'warning'
+  return 'waiting'
+}
+
+function taskRunSnapshotFor(task: GenerationTask): {
+  tone: StatusTone
+  label: string
+  title: string
+  facts: Array<{ label: string; value: string }>
+  note?: string
+} {
+  const execution = task.execution_result
+  const outputs = execution?.outputs ?? []
+  const lowerOutputs = outputs.map((path) => path.toLowerCase())
+  const hasNativeSolidWorksOutput = lowerOutputs.some((path) => path.endsWith('.sldasm') || path.endsWith('.sldprt'))
+  const hasFcstdOutput = lowerOutputs.some((path) => path.endsWith('.fcstd'))
+  const hasStepOutput = lowerOutputs.some((path) => path.endsWith('.step') || path.endsWith('.stp'))
+  const hasValidationReport = lowerOutputs.some((path) => path.endsWith('_solidworks_validation_report.md') || path.endsWith('_report.md'))
+  const summary = execution?.solidworks_run_summary ?? null
+  const qualityStatus = execution?.solidworks_quality_status ?? summary?.quality_status ?? null
+  const freecadQualityStatus = execution?.freecad_quality_status ?? null
+
+  if (isLegacySolidWorksDirectAssemblyTask(task)) {
+    return {
+      tone: 'warn',
+      label: '历史路线',
+      title: '已停用，不再作为当前生成入口',
+      facts: [
+        { label: '原因', value: 'direct assembly 曾出现错乱' },
+        { label: '建议', value: '改用增强样机入口' },
+        { label: '门数', value: task.parameters.door_count ?? '-' },
+      ],
+      note: '当前工程复核请用 16029 的 10/12/14 门原生 SolidWorks 增强样机入口，历史 direct assembly 不再作为交接路线。',
+    }
+  }
+
+  if (task.cad_runner === 'solidworks') {
+    if (!execution) {
+      return {
+        tone: task.status === 'ready_to_run' ? 'warn' : 'idle',
+        label: 'SolidWorks 反馈',
+        title: task.status === 'ready_to_run' ? 'dry-run 已通过，等待启动' : '尚未运行 SolidWorks',
+        facts: [
+          { label: '路线', value: generationRouteTitle(task.capability_id) },
+          { label: '门数', value: task.parameters.door_count ?? '-' },
+          { label: '输出', value: '待生成' },
+        ],
+        note: task.status === 'draft_pending_worker' ? '先执行 dry-run，确认脚本、参数和证据门。' : undefined,
+      }
+    }
+
+    if (task.status === 'failed_worker') {
+      return {
+        tone: 'risk',
+        label: 'SolidWorks 反馈',
+        title: '生成失败，需看 stderr / 日志',
+        facts: [
+          { label: 'exit', value: String(execution.exit_code ?? 'n/a') },
+          { label: '输出', value: `${outputs.length} 个文件` },
+          { label: '门数', value: summary?.door_count ?? task.parameters.door_count ?? '-' },
+        ],
+        note: execution.message,
+      }
+    }
+
+    if (task.status === 'requires_manual_run') {
+      return {
+        tone: 'warn',
+        label: 'SolidWorks 反馈',
+        title: '任务包已准备，等待运行',
+        facts: [
+          { label: '模式', value: solidworksGenerationModeLabel(summary?.generation_mode ?? 'manual_package') },
+          { label: '门数', value: summary?.door_count ?? task.parameters.door_count ?? '-' },
+          { label: '输出', value: `${outputs.length} 个文件` },
+        ],
+        note: '点击运行 SolidWorks 生成后，才会写出原生 SLDASM/SLDPRT 和验证报告。',
+      }
+    }
+
+    if (qualityStatus === 'reference_feature_only') {
+      return {
+        tone: 'warn',
+        label: 'SolidWorks 反馈',
+        title: '可打开查看，但组件树未达标',
+        facts: [
+          { label: '模式', value: solidworksGenerationModeLabel(summary?.generation_mode ?? 'unknown') },
+          { label: '门数', value: summary?.door_count ?? task.parameters.door_count ?? '-' },
+          { label: '质量', value: 'Reference' },
+        ],
+        note: execution.solidworks_quality_summary ?? summary?.quality_summary ?? '工程参考模型，不作为生产级可编辑组件树。',
+      }
+    }
+
+    return {
+      tone: hasNativeSolidWorksOutput ? 'good' : 'warn',
+      label: 'SolidWorks 反馈',
+      title: hasNativeSolidWorksOutput ? '原生模型已生成' : '执行完成但未找到原生模型',
+      facts: [
+        { label: '模式', value: solidworksGenerationModeLabel(summary?.generation_mode ?? 'unknown') },
+        { label: '验证', value: summary ? solidworksValidationCountLabel(summary) : hasValidationReport ? '报告可打开' : '待汇总' },
+        { label: '输出', value: `${outputs.length} 个文件` },
+      ],
+      note: summary?.next_action ?? execution.message,
+    }
+  }
+
+  if (!execution) {
+    return {
+      tone: task.status === 'ready_to_run' ? 'warn' : 'idle',
+      label: 'FreeCAD / STEP 反馈',
+      title: task.status === 'ready_to_run' ? 'dry-run 已通过，等待 worker' : '尚未执行 worker',
+      facts: [
+        { label: '门数', value: task.parameters.door_count ?? task.parameters.door_height ?? '-' },
+        { label: '输出', value: '待生成' },
+        { label: '定位', value: '开源迁移路线' },
+      ],
+    }
+  }
+
+  if (task.cad_runner === 'freecad' && freecadQualityStatus) {
+    return {
+      tone: freecadQualityTone(freecadQualityStatus, task.status),
+      label: 'FreeCAD 自动复核',
+      title: freecadQualityTitle(freecadQualityStatus, task.status),
+      facts: [
+        { label: '门数', value: task.parameters.door_count ?? '-' },
+        { label: '复核', value: freecadQualityBadge(freecadQualityStatus) },
+        { label: '输出', value: `${outputs.length} 个文件` },
+      ],
+      note: execution.freecad_quality_summary ?? execution.message,
+    }
+  }
+
+  return {
+    tone: task.status === 'failed_worker' ? 'risk' : hasFcstdOutput || hasStepOutput ? 'good' : 'warn',
+    label: 'FreeCAD / STEP 反馈',
+    title: task.status === 'failed_worker' ? 'worker 执行失败' : hasFcstdOutput ? 'FCStd 参考模型已生成' : 'STEP/报告已生成',
+    facts: [
+      { label: 'FCStd', value: hasFcstdOutput ? 'ready' : 'n/a' },
+      { label: 'STEP', value: hasStepOutput ? 'ready' : 'n/a' },
+      { label: '输出', value: `${outputs.length} 个文件` },
+    ],
+    note: execution.message,
+  }
 }
 
 function ruleLearningTone(value: TemplateAsset['ruleLearningValue']): 'good' | 'warn' | 'risk' | 'idle' {
@@ -3341,13 +6198,23 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
   const outputDir = task.execution_result?.output_dir
   const validationReport = solidworksValidationReportFile(task)
   const validationData = solidworksValidationDataFile(task)
+  const freecadQualityStatus = task.execution_result?.freecad_quality_status ?? null
+  const freecadQualityNeedsReview =
+    task.cad_runner === 'freecad' &&
+    Boolean(freecadQualityStatus) &&
+    freecadQualityStatus !== 'freecad_geometry_pass'
 
   if (task.status === 'completed_reference') {
     const cleanedSolidWorksAssembly =
       task.cad_runner === 'solidworks' && Boolean(recommendedFile?.toLowerCase().endsWith('.sldasm'))
     const referenceFeatureOnly = task.execution_result?.solidworks_quality_status === 'reference_feature_only'
+    const validatedComponentReferences = task.execution_result?.solidworks_quality_status === 'component_reference_tree'
     let detail = '工程参考模型已写入输出目录。'
-    if (referenceFeatureOnly) {
+    if (validatedComponentReferences) {
+      detail =
+        task.execution_result?.solidworks_quality_summary ??
+        'SolidWorks 装配已生成，组件引用和验证清单匹配，可作为结构工程参考装配打开复核。'
+    } else if (referenceFeatureOnly) {
       detail =
         task.execution_result?.solidworks_quality_summary ??
         'SolidWorks 装配已生成并清理显示，但质量诊断显示它是 Reference 特征模型，只能作为视觉/摆放工程参考。'
@@ -3355,18 +6222,24 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
       detail = `SolidWorks 原生装配已生成，并已清理参考面/草图显示；验证报告已同步生成，建议直接打开 ${outputFileLabel(
         recommendedFile,
       )}。`
+    } else if (task.cad_runner === 'freecad' && task.execution_result?.freecad_quality_summary) {
+      detail = task.execution_result.freecad_quality_summary
     } else if (recommendedFile) {
       detail = `工程参考模型已写入输出目录，建议打开：${outputFileLabel(recommendedFile)}。`
     }
     return {
       taskId: task.id,
-      tone: referenceFeatureOnly ? 'warn' : 'good',
-      title: referenceFeatureOnly ? '生成完成但仅限工程参考' : '生成完成',
+      tone: referenceFeatureOnly || freecadQualityNeedsReview ? 'warn' : 'good',
+      title: referenceFeatureOnly
+        ? '生成完成但仅限工程参考'
+        : freecadQualityNeedsReview
+          ? '生成完成但自动复核需查看'
+          : '生成完成',
       detail,
       cadRunner: task.cad_runner,
       outputDir,
       recommendedFile,
-      validationReport,
+      validationReport: validationReport ?? task.execution_result?.freecad_quality_report ?? undefined,
       validationData,
     }
   }
@@ -3459,13 +6332,16 @@ function openButtonLabelFor(path: string) {
   if (lower.endsWith('.ps1')) return '查看手动脚本'
   if (lower.endsWith('.fcstd')) return '打开 FreeCAD 原生文件'
   if (lower.endsWith('.step') || lower.endsWith('.stp')) return '打开 STEP 几何'
+  if (lower.endsWith('locker_16029_freecad_postprocess.json')) return '打开自动复核报告'
+  if (lower.endsWith('freecad_geometry_check.json')) return '打开 STEP 检查'
+  if (lower.endsWith('_geometry_integrity.md')) return '打开 FCStd 检查'
   return '打开推荐文件'
 }
 
 function solidworksScriptFor(capabilityId: string) {
   if (capabilityId === 'locker_16029_door_panel') return 'scripts\\sw_make_parametric_door_panel.js'
   if (capabilityId === 'locker_16038_variant_template') return 'scripts\\sw_clone_16038_variant_template.js'
-  return 'scripts\\sw_build_locker_16029_direct_assembly.js'
+  return 'scripts\\sw_clone_16029_baseline_template.js'
 }
 
 function solidworksGeneratorFor(capability: { id: string; generator: string }) {
@@ -3479,7 +6355,7 @@ function freecadScriptFor(capabilityId: string, fallback: string) {
 }
 
 const numericParameterNames = new Set(['door_count', 'cabinet_width', 'door_width', 'door_height', 'flat_holes'])
-const defaultDoorCountPresets = ['8', '12', '14', '16', '18']
+const defaultDoorCountPresets = LOCKER_16029_SUPPORTED_RULE_COUNTS.map(String)
 const doorCountPresetsByCapability: Record<string, string[]> = {
   locker_16038_variant_template: ['4', '7', '8', '12'],
   locker_16029_regression: defaultDoorCountPresets,
@@ -3487,6 +6363,57 @@ const doorCountPresetsByCapability: Record<string, string[]> = {
 
 function doorCountPresetsFor(capabilityId: string) {
   return doorCountPresetsByCapability[capabilityId] ?? defaultDoorCountPresets
+}
+
+function locker16029EqualRowHeight(rowsPerColumn: number) {
+  return (
+    LOCKER_16029_DOOR_AREA_HEIGHT_MM -
+    LOCKER_16029_GRID_EDGE_GAP_MM * 2 -
+    (rowsPerColumn - 1) * LOCKER_16029_DOOR_GAP_MM
+  ) / rowsPerColumn
+}
+
+function formatMm(value?: number | null) {
+  if (typeof value !== 'number' || Number.isNaN(value)) return '-'
+  return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)
+}
+
+function formatAbsMetric(metric?: { min?: number | null; max?: number | null } | null) {
+  const min = metric?.min
+  const max = metric?.max
+  if (typeof min !== 'number' || Number.isNaN(min)) return '-'
+  if (typeof max !== 'number' || Number.isNaN(max) || Math.abs(max - min) < 0.001) return `±${formatMm(min)}`
+  return `±${formatMm(min)}-${formatMm(max)}`
+}
+
+function locker16029ExactUnitForHeight(height: number) {
+  const unit = (height + LOCKER_16029_DOOR_GAP_MM) / LOCKER_16029_UNIT_HEIGHT_MM
+  const rounded = Math.round(unit)
+  return rounded >= 1 && rounded <= 6 && Math.abs(unit - rounded) < 0.01 ? rounded : null
+}
+
+function locker16029SolidWorksLayoutSummary(doorCountText?: string) {
+  const doorCount = Number(doorCountText)
+  if (!Number.isInteger(doorCount)) return null
+  if (!LOCKER_16029_SUPPORTED_RULE_COUNTS.includes(doorCount)) return null
+  const rowsPerColumn = doorCount / 2
+  const doorHeight = locker16029EqualRowHeight(rowsPerColumn)
+  const exactUnit = locker16029ExactUnitForHeight(doorHeight)
+  const sourceMode =
+    doorCount === 10
+      ? '10门练习副本模板 / 2/10 门型'
+      : doorCount === 12 && exactUnit
+        ? `标准总装模板 / ${exactUnit}/12 门行`
+        : 'FreeCAD 规则验证 / 派生门型'
+
+  return {
+    doorCount,
+    rowsPerColumn,
+    doorHeight,
+    exactUnit,
+    sourceMode,
+    rowLabels: Array.from({ length: rowsPerColumn }, (_, index) => `${index + 1}: ${formatMm(doorHeight)} mm`),
+  }
 }
 
 function supportedDoorCountsFor(capabilityId: string) {
@@ -3529,7 +6456,9 @@ function parameterIssueFor(capabilityId: string, parameters: ParameterValues) {
   if (doorCount < 2) return 'door_count 必须至少为 2。'
   if (capabilityId === 'locker_16029_regression') {
     if (doorCount % 2 !== 0) return '当前 16029 整柜脚本是左右两列布局，door_count 必须是偶数。'
-    if (!supportedDoorCountsFor(capabilityId).has(doorCount)) return '当前 16029 MVP 已验证门数为 8、12、14、16、18。'
+    if (!supportedDoorCountsFor(capabilityId).has(doorCount)) {
+      return '当前 16029 规则收敛样本先开放 10、12、14 门；其它门数先进入规则学习队列，暂不直接生成。'
+    }
   }
   if (capabilityId === 'locker_16038_variant_template' && !supportedDoorCountsFor(capabilityId).has(doorCount)) {
     return '16038 模板证据生成当前支持 4、7、8 门整柜和 12/12 单门模块。'
@@ -3538,6 +6467,34 @@ function parameterIssueFor(capabilityId: string, parameters: ParameterValues) {
 }
 
 function runnerIssueFor(capabilityId: string, cadRunner: CadRunner, parameters: ParameterValues) {
+  if (capabilityId === 'locker_16029_regression' && cadRunner === 'solidworks') {
+    const doorCount = Number(parameterValue(parameters, 'door_count', '12'))
+    if (!LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS.includes(doorCount)) {
+      return 'SolidWorks 16029 当前只开放 10/12/14 门原生参考模型；其它门数先走规则学习队列。'
+    }
+    const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '1000'))
+    if (!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) {
+      return 'SolidWorks 主线当前只开放 1000mm 宽外型；宽度派生请先走 FreeCAD/STEP 规则实验。'
+    }
+    const geometrySource = parameterValue(parameters, 'geometry_source', 'auto')
+    if (geometrySource !== 'auto') {
+      return 'SolidWorks 主线当前只使用 16029 已验证原生骨架源，geometry_source 请保持 auto。'
+    }
+  }
+  if (capabilityId === 'locker_16029_regression' && cadRunner === 'freecad') {
+    const doorCount = Number(parameterValue(parameters, 'door_count', '12'))
+    if (!LOCKER_16029_SUPPORTED_FREECAD_COUNTS.includes(doorCount)) {
+      return 'FreeCAD 16029 规则验证当前先开放 10/12/14 门。'
+    }
+    const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '1000'))
+    if (!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) {
+      return 'FreeCAD 16029 工程交接当前只开放 1000mm 宽外型；宽度派生先留在规则学习队列。'
+    }
+    const geometrySource = parameterValue(parameters, 'geometry_source', 'auto')
+    if (geometrySource !== 'auto') {
+      return 'FreeCAD 16029 工程交接当前只使用 auto 证据路线，避免实验几何进入交接包。'
+    }
+  }
   if (capabilityId === 'locker_16038_variant_template' && cadRunner === 'freecad') {
     const doorCount = Number(parameterValue(parameters, 'door_count', '7'))
     if (doorCount === 12) return '12/12 目前只有 SolidWorks 单门模块；FreeCAD/STEP 只支持 4/7/8 门整柜。'
@@ -3549,10 +6506,13 @@ function parameterHintFor(capabilityId: string) {
   if (capabilityId === 'locker_16038_variant_template') {
     return '参数会写入任务 payload；16038 已绑定 4/7/8 门整柜模板和 12/12 单门模块证据，SolidWorks 为原生模板参考，FreeCAD 为 STEP 参考。'
   }
+  if (capabilityId === 'locker_16029_regression') {
+    return '16029 外型固定为 1000mm 宽、1917mm 高、550mm 深；10/12/14 门已开放原生 SolidWorks 增强矩阵样机 v2，FreeCAD 保留规则验证件。其它宽高/门数仍需先补规则证据。'
+  }
   if (capabilityId === 'locker_16029_door_panel') {
     return '16029 单门板入口只生成 ordinary_door_panel；门数变化请走 16029 整柜入口，避免把 category 误填成 8/12。'
   }
-  return '参数会写入任务 payload，并同步刷新 SolidWorks/FreeCAD 双轨命令预览；16029 整柜脚本已验证 8/12/14/16/18 门。'
+  return '参数会写入任务 payload，并同步刷新 SolidWorks/FreeCAD 双轨命令预览；16029 当前按 FreeCAD 规则验证、SolidWorks 工程交接两条路线收敛。'
 }
 
 function parameterInputType(parameter: string) {
@@ -3583,7 +6543,11 @@ function commandArgumentsFor(capabilityId: string, cadRunner: CadRunner, paramet
     if (capabilityId === 'locker_16038_variant_template') {
       return `%TASK_OUTPUT_DIR% %TASK_ID% ${parameterValue(parameters, 'door_count', '7')}`
     }
-    return `%TASK_OUTPUT_DIR% %TASK_ID% C:\\sw16029_direct_18door\\source ${parameterValue(parameters, 'door_count', '18')}`
+    return `%TASK_OUTPUT_DIR% %TASK_ID% %SOLIDWORKS_16029_TEMPLATE% ${parameterValue(
+      parameters,
+      'door_count',
+      '12',
+    )}`
   }
 
   if (capabilityId === 'locker_16038_variant_template') {
@@ -3661,7 +6625,10 @@ function outputFileLabel(path: string) {
   if (lower.endsWith('_solidworks_quality_report.md')) return 'SolidWorks 质量诊断报告'
   if (lower.endsWith('_solidworks_quality.json')) return 'SolidWorks 质量诊断数据'
   if (lower.endsWith('_solidworks_validation.csv')) return 'SolidWorks 生成验证数据'
-  if (lower.endsWith('_solidworks_import.stp')) return 'SolidWorks 2025 导入文件'
+  if (lower.endsWith('_solidworks_import.stp')) return 'SolidWorks 手动导入 STEP'
+  if (lower.endsWith('locker_16029_freecad_postprocess.json')) return 'FreeCAD 生成后自动复核报告'
+  if (lower.endsWith('freecad_geometry_check.json')) return 'FreeCAD STEP 几何检查'
+  if (lower.endsWith('_geometry_integrity.md')) return 'FreeCAD FCStd 完整性检查'
   if (lower.endsWith('.step') || lower.endsWith('.stp')) return '中性 STEP 几何'
   if (lower.endsWith('.fcstd')) return 'FreeCAD 原生文件'
   if (lower.endsWith('.ps1')) return 'SolidWorks 手动 worker 脚本'
