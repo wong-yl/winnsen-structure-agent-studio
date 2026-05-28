@@ -118,6 +118,23 @@ function setDimension(model, targetFeature, targetDim, newValueMm) {
   return false;
 }
 
+function openSolidWorksDoc(sw, path, docType) {
+  var errors = 0;
+  var warnings = 0;
+  var doc = safe(function () { return sw.OpenDoc6(path, docType, 1, "", errors, warnings); }, null);
+  var method = "OpenDoc6";
+  if (!doc) {
+    doc = safe(function () { return sw.OpenDoc(path, docType); }, null);
+    method = "OpenDoc";
+  }
+  return {
+    doc: doc,
+    errors: errors,
+    warnings: warnings,
+    method: doc ? method : "none"
+  };
+}
+
 var result = {
   templatePath: templatePath,
   outPartPath: outPartPath,
@@ -127,6 +144,9 @@ var result = {
   requestedValueMm: valueMm,
   copied: false,
   opened: false,
+  openMethod: "",
+  openErrors: 0,
+  openWarnings: 0,
   dimensionSet: false,
   rebuilt: false,
   partSaved: false,
@@ -142,13 +162,24 @@ if (!fso.FileExists(templatePath)) {
   WScript.Quit(2);
 }
 
+var preSw = null;
+try {
+  preSw = new ActiveXObject("SldWorks.Application");
+  preSw.CloseAllDocuments(true);
+} catch (preCloseIgnored) {}
+
 if (fso.FileExists(outPartPath)) fso.DeleteFile(outPartPath, true);
 fso.CopyFile(templatePath, outPartPath, true);
 result.copied = true;
 
-var sw = new ActiveXObject("SldWorks.Application");
+var sw = preSw || new ActiveXObject("SldWorks.Application");
 safe(function () { sw.Visible = true; }, null);
-var doc = safe(function () { return sw.OpenDoc(outPartPath, 1); }, null);
+safe(function () { sw.CloseAllDocuments(true); }, null);
+var opened = openSolidWorksDoc(sw, outPartPath, 1);
+var doc = opened.doc;
+result.openMethod = opened.method;
+result.openErrors = opened.errors;
+result.openWarnings = opened.warnings;
 if (!doc) {
   result.error = "open copied part failed";
   writeUtf8(outJsonPath, stringify(result));

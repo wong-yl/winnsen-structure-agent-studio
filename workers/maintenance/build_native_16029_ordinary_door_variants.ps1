@@ -21,16 +21,19 @@ $variants = @(
   @{
     Doors = 10
     DoorHeight = 359
+    DoorWidth = 437
     WeldAssembly = Join-Path $weldDir 'native_16029_door_weld_5part_10door_v6_csharp.SLDASM'
   },
   @{
     Doors = 12
     DoorHeight = 298
+    DoorWidth = 437
     WeldAssembly = Join-Path $weldDir 'native_16029_door_weld_5part_12door_v6_csharp.SLDASM'
   },
   @{
     Doors = 14
     DoorHeight = 254.429
+    DoorWidth = 437
     WeldAssembly = Join-Path $weldDir 'native_16029_door_weld_5part_14door_v6_csharp.SLDASM'
   }
 )
@@ -67,7 +70,7 @@ foreach ($variant in $variants) {
     $bboxJson = Join-Path $outDir ($base + '_step_bbox.json')
     $bboxCsv = Join-Path $outDir ($base + '_step_bbox.csv')
 
-    & $builder $asm $resultJson ([string]$variant.DoorHeight) $weldAssembly $bushing $hingePin $circlip $lockHook $hand | Out-Host
+    & $builder $asm $resultJson ([string]$variant.DoorHeight) $weldAssembly $bushing $hingePin $circlip $lockHook $hand ([string]$variant.DoorWidth) | Out-Host
     if ($LASTEXITCODE -ne 0) {
       throw "SolidWorks ordinary door generation failed for $($variant.Doors)-door $hand variant"
     }
@@ -90,6 +93,7 @@ foreach ($variant in $variants) {
       Doors = $variant.Doors
       Handedness = $hand
       DoorHeightMm = $variant.DoorHeight
+      DoorWidthMm = $variant.DoorWidth
       Assembly = $asm
       Step = $step
       BboxCsv = $bboxCsv

@@ -99,7 +99,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
             catch (Exception ex)
             {
-                result.Error = ex.ToString();
+                result.Error = SafeExceptionText(ex);
                 result.Inventory = Inventory(outDir);
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
@@ -145,13 +145,27 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (value == null) return "";
             Array array = value as Array;
-            if (array == null) return Convert.ToString(value, CultureInfo.InvariantCulture);
+            if (array == null) return TryValue(() => Convert.ToString(value, CultureInfo.InvariantCulture), value.GetType().FullName);
             var parts = new List<string>();
             foreach (object item in array)
             {
-                parts.Add(Convert.ToString(item, CultureInfo.InvariantCulture));
+                parts.Add(TryValue(() => Convert.ToString(item, CultureInfo.InvariantCulture), item == null ? "" : item.GetType().FullName));
             }
             return string.Join(",", parts.ToArray());
+        }
+
+        private static string SafeExceptionText(Exception ex)
+        {
+            if (ex == null) return "";
+            try { return ex.ToString(); }
+            catch
+            {
+                try
+                {
+                    return ex.GetType().FullName + ": " + (ex.Message ?? "");
+                }
+                catch { return "unprintable exception"; }
+            }
         }
 
         private static ISldWorks GetOrCreateSolidWorks()

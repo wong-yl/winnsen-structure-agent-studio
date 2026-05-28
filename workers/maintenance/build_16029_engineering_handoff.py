@@ -175,7 +175,7 @@ def build_handoff(now: str, rule_summary: dict[str, Any]) -> dict[str, Any]:
         "modelFamily": "16029 standard locker",
         "outerSizeMm": {"width": 1000, "height": 1917, "depth": 550},
         "solidworksEntry": {
-            "uiPath": "可生成模型 -> 16029 标准寄存柜 -> 10/12门 -> 一键运行 SOLIDWORKS 2025",
+            "uiPath": "可生成模型 -> 16029 标准寄存柜 -> 10/12门 -> 一键运行 SOLIDWORKS 2020",
             "script": r"D:\winnsen_cad_workspace\scripts\sw_clone_16029_baseline_template.js",
             "supportedDoorCounts": [10, 12],
             "blockedDoorCounts": [4, 6, 8, 14, 16, 18, 20, 22, 24],

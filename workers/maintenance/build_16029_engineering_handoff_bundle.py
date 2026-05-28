@@ -33,9 +33,9 @@ VERIFIED_RULE_PACKET_JSON_PATH = Path(
 VERIFIED_RULE_PACKET_CSV_PATH = Path(
     os.getenv("STUDIO_16029_VERIFIED_RULE_PACKET_CSV", ROOT_DIR / "data" / "locker_16029_verified_rule_packet.csv")
 )
-SOLIDWORKS_SHORTCUT = Path(os.getenv("STUDIO_SOLIDWORKS_SHORTCUT", r"C:\Users\Public\Desktop\SOLIDWORKS 2025.lnk"))
+SOLIDWORKS_SHORTCUT = Path(os.getenv("STUDIO_SOLIDWORKS_SHORTCUT", r"C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk"))
 SOLIDWORKS_EXE = Path(
-    os.getenv("STUDIO_SOLIDWORKS_EXE", r"D:\软件安装录\soildworks\SOLIDWORKS\SLDWORKS.exe")
+    os.getenv("STUDIO_SOLIDWORKS_EXE", r"D:\soildworks2020\SOLIDWORKS\SLDWORKS.exe")
 )
 FREECAD_EXE = Path(
     os.getenv(
@@ -605,7 +605,7 @@ Output level: engineering reference, not released production drawing.
 - This folder collects the current native enhanced reference and its evidence in one place.
 - This is not a true independent Pack-and-Go release yet. The dependency manifest lists top-level source references that must stay available on this workstation.
 - The launcher preflights the dependency manifest before opening SolidWorks and writes a missing-dependency report if references are not available.
-- Use this before the older STEP-only handoff when reviewing in SolidWorks 2025.
+- Use this before the older STEP-only handoff when reviewing in SolidWorks 2020.
 """
     write_text(readme_path, readme)
 
@@ -1356,7 +1356,7 @@ def write_engineer_open_index(payload: dict[str, Any]) -> str:
                 "",
                 "## 软件实测状态",
                 "",
-                "- 已做 SolidWorks 2025 受控打开验证：主程序可见启动通过，STEP 自动导入曾不稳定。",
+                "- 已做 SolidWorks 2020 受控打开验证：主程序可见启动通过，STEP 自动导入曾不稳定。",
                 "- 结论：当前根脚本已改为优先打开原生 SLDASM；STEP/FCStd 作为中性和开源复核备选。",
                 f"- 验证记录：`{solidworks_open_verification}`",
                 "",
@@ -1460,7 +1460,7 @@ def write_engineer_open_index_clean(payload: dict[str, Any]) -> str:
             "",
             "## 软件实测状态",
             "",
-            "- 已做 SolidWorks 2025 受控打开验证：主程序可启动，原生 SLDASM 是当前优先交付通道。",
+            "- 已做 SolidWorks 2020 受控打开验证：主程序可启动，原生 SLDASM 是当前优先交付通道。",
         "- STEP/FCStd 作为中性格式和开源复核备选，不作为当前 SolidWorks 主交付入口。",
         "- 需要移动到其他电脑时，优先使用每个门数目录中的 `solidworks_pack_and_go` 文件夹。",
         ]

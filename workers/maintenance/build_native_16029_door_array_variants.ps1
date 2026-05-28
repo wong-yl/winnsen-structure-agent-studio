@@ -18,18 +18,21 @@ $variants = @(
   @{
     Doors = 10
     DoorHeight = 359
+    DoorWidth = 437
     OrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_10door_v1_csharp.SLDASM'
     RightOrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_10door_v1_csharp_right.SLDASM'
   },
   @{
     Doors = 12
     DoorHeight = 298
+    DoorWidth = 437
     OrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_12door_v1_csharp.SLDASM'
     RightOrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_12door_v1_csharp_right.SLDASM'
   },
   @{
     Doors = 14
     DoorHeight = 254.429
+    DoorWidth = 437
     OrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_14door_v1_csharp.SLDASM'
     RightOrdinaryDoor = Join-Path $ordinaryDir 'native_16029_ordinary_door_14door_v1_csharp_right.SLDASM'
   }
@@ -63,7 +66,7 @@ foreach ($variant in $variants) {
   $bboxJson = Join-Path $outDir ($base + '_step_bbox.json')
   $bboxCsv = Join-Path $outDir ($base + '_step_bbox.csv')
 
-  & $builder $asm $resultJson ([string]$variant.Doors) ([string]$variant.DoorHeight) $variant.OrdinaryDoor 32 $variant.RightOrdinaryDoor | Out-Host
+  & $builder $asm $resultJson ([string]$variant.Doors) ([string]$variant.DoorHeight) $variant.OrdinaryDoor 32 $variant.RightOrdinaryDoor ([string]$variant.DoorWidth) | Out-Host
   if ($LASTEXITCODE -ne 0) {
     throw "SolidWorks door-array generation failed for $($variant.Doors)-door variant"
   }
@@ -85,6 +88,7 @@ foreach ($variant in $variants) {
   $summary += [pscustomobject]@{
     Doors = $variant.Doors
     DoorHeightMm = $variant.DoorHeight
+    DoorWidthMm = $variant.DoorWidth
     Assembly = $asm
     Step = $step
     BboxCsv = $bboxCsv

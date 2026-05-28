@@ -21,18 +21,21 @@ $variants = @(
   @{
     Doors = 10
     DoorHeight = 359
+    DoorWidth = 437
     Panel = Join-Path $panelDir 'native_16029_door_panel_10door_H359.SLDPRT'
     Stiffener = Join-Path $stiffenerDir 'native_16029_door_stiffener_10door_L348p5.SLDPRT'
   },
   @{
     Doors = 12
     DoorHeight = 298
+    DoorWidth = 437
     Panel = Join-Path $panelDir 'native_16029_door_panel_12door_H298.SLDPRT'
     Stiffener = Join-Path $stiffenerDir 'native_16029_door_stiffener_12door_L287p5.SLDPRT'
   },
   @{
     Doors = 14
     DoorHeight = 254.429
+    DoorWidth = 437
     Panel = Join-Path $panelDir 'native_16029_door_panel_14door_H254p429.SLDPRT'
     Stiffener = Join-Path $stiffenerDir 'native_16029_door_stiffener_14door_L243p929.SLDPRT'
   }
@@ -67,7 +70,7 @@ foreach ($variant in $variants) {
     $bboxJson = Join-Path $outDir ($base + '_step_bbox.json')
     $bboxCsv = Join-Path $outDir ($base + '_step_bbox.csv')
 
-    & $builder $asm $resultJson ([string]$variant.DoorHeight) $variant.Panel $variant.Stiffener $latchPlate $hookPad $hand | Out-Host
+    & $builder $asm $resultJson ([string]$variant.DoorHeight) $variant.Panel $variant.Stiffener $latchPlate $hookPad $hand ([string]$variant.DoorWidth) | Out-Host
     if ($LASTEXITCODE -ne 0) {
       throw "SolidWorks assembly generation failed for $($variant.Doors)-door $hand variant"
     }
@@ -90,6 +93,7 @@ foreach ($variant in $variants) {
       Doors = $variant.Doors
       Handedness = $hand
       DoorHeightMm = $variant.DoorHeight
+      DoorWidthMm = $variant.DoorWidth
       Assembly = $asm
       Step = $step
       BboxCsv = $bboxCsv

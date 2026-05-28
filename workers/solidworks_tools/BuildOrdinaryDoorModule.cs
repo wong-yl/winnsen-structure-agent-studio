@@ -15,7 +15,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 8)
             {
-                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook> [left|right]");
+                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook> [left|right] [door-width-mm]");
                 return 2;
             }
 
@@ -27,10 +27,35 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             string hingePin = Path.GetFullPath(args[5]);
             string circlip = Path.GetFullPath(args[6]);
             string lockHook = Path.GetFullPath(args[7]);
-            string handedness = args.Length >= 9 ? args[8].Trim().ToLowerInvariant() : "left";
+            string handedness = "left";
+            double doorWidth = 437.0;
+            for (int i = 8; i < args.Length; i++)
+            {
+                string value = args[i].Trim();
+                string lower = value.ToLowerInvariant();
+                double parsed;
+                if (lower == "left" || lower == "right")
+                {
+                    handedness = lower;
+                }
+                else if (double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out parsed))
+                {
+                    doorWidth = parsed;
+                }
+                else
+                {
+                    Console.Error.WriteLine("optional arguments must be handedness or door-width-mm: " + value);
+                    return 2;
+                }
+            }
             if (handedness != "left" && handedness != "right")
             {
                 Console.Error.WriteLine("handedness must be 'left' or 'right'");
+                return 2;
+            }
+            if (doorWidth <= 0)
+            {
+                Console.Error.WriteLine("door-width-mm must be positive");
                 return 2;
             }
             double side = handedness == "right" ? -1.0 : 1.0;
@@ -39,6 +64,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             {
                 OutAsmPath = outAsm,
                 DoorHeightMm = doorHeight,
+                DoorWidthMm = doorWidth,
                 Handedness = handedness,
             };
 
@@ -74,7 +100,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 double half = doorHeight / 2.0;
-                double hingeX = -208.5 * side;
+                double doorHalfWidth = doorWidth / 2.0;
+                double hingeX = -(doorHalfWidth - 10.0) * side;
                 const double hingeZ = -7.0;
                 double bushingTopTy = half - 5.5;
                 double bushingBottomTy = -half - 1.5;
@@ -83,6 +110,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 double circlipTopTy = half - 29.3;
                 double circlipBottomTy = -half + 29.6;
                 double lockHookTz = -40.588372;
+                double lockHookX = (doorHalfWidth - 15.0) * side;
 
                 var placements = new[]
                 {
@@ -92,7 +120,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     new Placement("door_hinge_pin", hingePin, Identity(), hingeX, hingePinTy, hingeZ),
                     new Placement("circlip_top", circlip, RotateX90(), hingeX, circlipTopTy, circlipTz),
                     new Placement("circlip_bottom", circlip, RotateX90(), hingeX, circlipBottomTy, circlipTz),
-                    new Placement("electric_lock_hook", lockHook, Identity(), 203.5 * side, 0, lockHookTz),
+                    new Placement("electric_lock_hook", lockHook, Identity(), lockHookX, 0, lockHookTz),
                 };
 
                 foreach (Placement p in placements)
@@ -111,7 +139,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
             catch (Exception ex)
             {
-                result.Error = ex.ToString();
+                result.Error = SafeExceptionText(ex);
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
                 return 9;
@@ -125,6 +153,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Role = p.Role,
                 Path = p.Path,
                 Exists = File.Exists(p.Path),
+                Rotation = p.Rotation,
                 TxMm = p.TxMm,
                 TyMm = p.TyMm,
                 TzMm = p.TzMm,
@@ -248,12 +277,24 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             File.WriteAllText(path, ToJson(result), new UTF8Encoding(false));
         }
 
+        private static string SafeExceptionText(Exception ex)
+        {
+            if (ex == null) return "";
+            try { return ex.ToString(); }
+            catch
+            {
+                try { return ex.GetType().FullName + ": " + (ex.Message ?? ""); }
+                catch { return "unprintable exception"; }
+            }
+        }
+
         private static string ToJson(BuildResult r)
         {
             var sb = new StringBuilder();
             sb.Append("{");
             Prop(sb, "outAsmPath", r.OutAsmPath, true);
             Prop(sb, "doorHeightMm", r.DoorHeightMm);
+            Prop(sb, "doorWidthMm", r.DoorWidthMm);
             Prop(sb, "handedness", r.Handedness);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
@@ -273,6 +314,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Prop(sb, "added", p.Added);
                 Prop(sb, "transformCreated", p.TransformCreated);
                 Prop(sb, "transformApplied", p.TransformApplied);
+                ArrayProp(sb, "rotation", p.Rotation);
                 Prop(sb, "txMm", p.TxMm);
                 Prop(sb, "tyMm", p.TyMm);
                 Prop(sb, "tzMm", p.TzMm);
@@ -306,6 +348,17 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             sb.Append(",\"").Append(Escape(name)).Append("\":").Append(value.ToString("0.#########", System.Globalization.CultureInfo.InvariantCulture));
         }
 
+        private static void ArrayProp(StringBuilder sb, string name, double[] values)
+        {
+            sb.Append(",\"").Append(Escape(name)).Append("\":[");
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (i > 0) sb.Append(",");
+                sb.Append(values[i].ToString("0.#########", System.Globalization.CultureInfo.InvariantCulture));
+            }
+            sb.Append("]");
+        }
+
         private static string Escape(string value)
         {
             if (value == null) return "";
@@ -336,6 +389,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             public string OutAsmPath = "";
             public double DoorHeightMm;
+            public double DoorWidthMm;
             public string Handedness = "left";
             public bool NewAssembly;
             public bool Rebuilt;
@@ -354,6 +408,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public bool Added;
             public bool TransformCreated;
             public bool TransformApplied;
+            public double[] Rotation = new double[0];
             public double TxMm;
             public double TyMm;
             public double TzMm;

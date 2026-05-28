@@ -17,7 +17,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 6)
             {
-                Console.Error.WriteLine("Usage: BuildDoorArrayModule.exe <out-asm> <out-json> <door-count> <door-height-mm> <left-door-asm> <bottom-panel-y-min-mm> [right-door-asm]");
+                Console.Error.WriteLine("Usage: BuildDoorArrayModule.exe <out-asm> <out-json> <door-count> <door-height-mm> <left-door-asm> <bottom-panel-y-min-mm> [right-door-asm] [door-width-mm]");
                 return 2;
             }
 
@@ -27,13 +27,28 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             double doorHeight = double.Parse(args[3], System.Globalization.CultureInfo.InvariantCulture);
             string leftDoorAsm = Path.GetFullPath(args[4]);
             double bottomPanelYMin = double.Parse(args[5], System.Globalization.CultureInfo.InvariantCulture);
-            string rightDoorAsm = args.Length >= 7 ? Path.GetFullPath(args[6]) : leftDoorAsm;
+            string rightDoorAsm = leftDoorAsm;
+            double doorWidth = 437.0;
+            for (int i = 6; i < args.Length; i++)
+            {
+                string value = args[i].Trim();
+                double parsed;
+                if (double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out parsed))
+                {
+                    doorWidth = parsed;
+                }
+                else
+                {
+                    rightDoorAsm = Path.GetFullPath(value);
+                }
+            }
 
             var result = new BuildResult
             {
                 OutAsmPath = outAsm,
                 DoorCount = doorCount,
                 DoorHeightMm = doorHeight,
+                DoorWidthMm = doorWidth,
                 BottomPanelYMinMm = bottomPanelYMin,
                 RightColumnMirrorYCompensationMm = RightColumnMirrorYCompensationMm,
             };
@@ -43,6 +58,12 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 if (doorCount <= 0 || doorCount % 2 != 0)
                 {
                     result.Error = "door-count must be a positive even number";
+                    WriteJson(outJson, result);
+                    return 2;
+                }
+                if (doorWidth <= 0)
+                {
+                    result.Error = "door-width-mm must be positive";
                     WriteJson(outJson, result);
                     return 2;
                 }
@@ -78,7 +99,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 int rowsPerColumn = doorCount / 2;
                 double pitch = doorHeight + 7.0;
-                double[] columns = { -258.5, 258.5 };
+                double columnCenterX = doorWidth / 2.0 + 40.0;
+                double[] columns = { -columnCenterX, columnCenterX };
                 string[] columnNames = { "L", "R" };
 
                 for (int c = 0; c < columns.Length; c++)
@@ -96,6 +118,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 result.RowsPerColumn = rowsPerColumn;
                 result.PitchMm = pitch;
+                result.ColumnCenterAbsXmm = columnCenterX;
                 result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
                 result.Saved = TryValue(() => model.SaveAs(outAsm), false);
                 result.ReferenceCount = CountReferenceFeatures(model);
@@ -107,7 +130,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
             catch (Exception ex)
             {
-                result.Error = ex.ToString();
+                result.Error = SafeExceptionText(ex);
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
                 return 9;
@@ -137,7 +160,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             int docType = p.Path.EndsWith(".SLDASM", StringComparison.OrdinalIgnoreCase)
                 ? (int)swDocumentTypes_e.swDocASSEMBLY
                 : (int)swDocumentTypes_e.swDocPART;
-            ModelDoc2 partDoc = sw.OpenDoc6(p.Path, docType, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errors, ref warnings) as ModelDoc2;
+            ModelDoc2 partDoc = TryValue(
+                () => sw.OpenDoc6(p.Path, docType, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errors, ref warnings) as ModelDoc2,
+                null);
             row.Opened = partDoc != null;
             row.OpenErrors = errors;
             row.OpenWarnings = warnings;
@@ -148,15 +173,17 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
 
             Try(() => sw.ActivateDoc2(asmModel.GetTitle(), false, ref errors));
-            Component2 comp = asm.AddComponent5(
-                p.Path,
-                (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
-                "",
-                false,
-                "",
-                p.TxMm / 1000.0,
-                p.TyMm / 1000.0,
-                p.TzMm / 1000.0) as Component2;
+            Component2 comp = TryValue(
+                () => asm.AddComponent5(
+                    p.Path,
+                    (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
+                    "",
+                    false,
+                    "",
+                    p.TxMm / 1000.0,
+                    p.TyMm / 1000.0,
+                    p.TzMm / 1000.0) as Component2,
+                null);
             row.Added = comp != null;
             if (comp == null)
             {
@@ -234,6 +261,16 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             try { return func(); } catch { return fallback; }
         }
 
+        private static string SafeExceptionText(Exception ex)
+        {
+            try { return ex.ToString(); }
+            catch
+            {
+                try { return ex.GetType().FullName + ": " + ex.Message; }
+                catch { return "unknown exception"; }
+            }
+        }
+
         private static void WriteJson(string path, BuildResult result)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -248,7 +285,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "doorCount", r.DoorCount);
             Prop(sb, "rowsPerColumn", r.RowsPerColumn);
             Prop(sb, "doorHeightMm", r.DoorHeightMm);
+            Prop(sb, "doorWidthMm", r.DoorWidthMm);
             Prop(sb, "pitchMm", r.PitchMm);
+            Prop(sb, "columnCenterAbsXmm", r.ColumnCenterAbsXmm);
             Prop(sb, "bottomPanelYMinMm", r.BottomPanelYMinMm);
             Prop(sb, "rightColumnMirrorYCompensationMm", r.RightColumnMirrorYCompensationMm);
             Prop(sb, "newAssembly", r.NewAssembly);
@@ -349,7 +388,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public int DoorCount;
             public int RowsPerColumn;
             public double DoorHeightMm;
+            public double DoorWidthMm;
             public double PitchMm;
+            public double ColumnCenterAbsXmm;
             public double BottomPanelYMinMm;
             public double RightColumnMirrorYCompensationMm;
             public bool NewAssembly;
