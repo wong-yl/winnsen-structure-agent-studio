@@ -33,6 +33,41 @@ workers/validation_screenshots/
 workers/variant_step_evidence/
 workers/verification/
 workers/**/__pycache__/
+workers/analysis/
+workers/handoffs/**/*.zip
+workers/handoffs/*/
+workers/tmp_*
+workers/handoffs/**/solidworks_native/*_step_bbox.*
+workers/handoffs/**/*.status.txt
+workers/handoffs/**/*.stdout.txt
+workers/handoffs/**/*.stderr.txt
+
+# Historical 16029 maintenance branches kept on disk but excluded from current cleanup view
+workers/maintenance/16029_*20260525.md
+workers/maintenance/16029_*20260527.md
+workers/maintenance/16029_r*_*.md
+workers/maintenance/*height_candidate*
+workers/maintenance/*width_candidate*
+workers/maintenance/*rule_review*
+workers/maintenance/*step_first*
+workers/maintenance/*12door_gold_replica*
+workers/maintenance/run_16029_door_orientation_gate*
+workers/maintenance/open_model_screenshot_freecad.py
+
+# Superseded local CAD probes and generated binaries
+workers/solidworks_tools/bin/
+workers/solidworks_tools/ExportSelectedPartBodies.cs
+workers/solidworks_tools/ImportStepSaveNative.cs
+workers/solidworks_tools/ProbePartBodies.cs
+workers/solidworks_tools/build_export_selected_part_bodies.ps1
+workers/solidworks_tools/build_import_step_save_native.ps1
+workers/solidworks_tools/build_probe_part_bodies.ps1
+workers/solidworks_tools/mirror_step_x_freecad.py
+workers/solidworks_tools/split_step_objects_r4_shell_fix_freecad.py
+workers/solidworks_tools/sw_clone_master_model_height_probe.js
+workers/solidworks_tools/sw_import_step_save_native.js
+workers/solidworks_tools/sw_inspect_document_dependencies.js
+workers/solidworks_tools/sw_open_step_2020_screenshot.js
 
 # Generated CAD and neutral geometry files
 *.SLDASM
@@ -55,3 +90,14 @@ workers/**/__pycache__/
 *.tmp
 *.bak
 ~$*
+
+# Generated project gates and review state
+data/*_gate*.*
+data/*_validation*.*
+data/*_summary*.*
+data/*_contract*.*
+data/*_blocker*.*
+data/*_review*.*
+data/review_download_users.json
+data/review_download_invite_code.txt
+data/review_feedback/

@@ -1,0 +1,78 @@
+name: 16029 PR Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Guard PR file scope
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $base = '${{ github.event.pull_request.base.sha }}'
+          $head = '${{ github.event.pull_request.head.sha }}'
+          $files = @(git diff --name-only $base $head)
+          $blockedPatterns = @(
+            '\.(zip|png|jpg|jpeg|pdf|docx|exe|dll|FCStd|step|stp|SLDPRT|SLDASM)$',
+            '^workers/handoffs/',
+            '^workers/generated_models/',
+            '^workers/analysis/',
+            '^docs/report_assets/',
+            '^docs/qa_assets/'
+          )
+          $blocked = New-Object System.Collections.Generic.List[string]
+          foreach ($file in $files) {
+            foreach ($pattern in $blockedPatterns) {
+              if ($file -match $pattern) {
+                $blocked.Add($file)
+                break
+              }
+            }
+          }
+          if ($blocked.Count -gt 0) {
+            Write-Output 'Blocked generated/binary/model files in PR:'
+            $blocked | ForEach-Object { Write-Output "  - $_" }
+            exit 1
+          }
+          Write-Output "PR file scope OK: $($files.Count) files"
+
+      - name: Check whitespace
+        shell: pwsh
+        run: |
+          git diff --check '${{ github.event.pull_request.base.sha }}' '${{ github.event.pull_request.head.sha }}'
+
+      - name: Build web app
+        working-directory: apps/web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Compile API Python sources
+        run: |
+          python -m py_compile services/api/app/main.py services/api/app/config.py
+
+      - name: Check review portal syntax
+        run: |
+          node --check tools/serve_16029_review_downloads.mjs
