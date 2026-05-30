@@ -15,7 +15,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 8)
             {
-                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook> [left|right] [door-width-mm] [mirror-z|mirror-accessories-x]");
+                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook> [left|right] [door-width-mm] [mirror-z|mirror-accessories-x|skip-electric-lock-hook]");
                 return 2;
             }
 
@@ -31,6 +31,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             double doorWidth = 437.0;
             bool mirrorZ = false;
             bool mirrorAccessoriesX = false;
+            bool includeElectricLockHook = true;
             for (int i = 8; i < args.Length; i++)
             {
                 string value = args[i].Trim();
@@ -52,9 +53,13 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 {
                     mirrorAccessoriesX = true;
                 }
+                else if (lower == "skip-electric-lock-hook" || lower == "no-electric-lock-hook" || lower == "cabinet-side-lock-hook")
+                {
+                    includeElectricLockHook = false;
+                }
                 else
                 {
-                    Console.Error.WriteLine("optional arguments must be handedness, door-width-mm, mirror-z, or mirror-accessories-x: " + value);
+                    Console.Error.WriteLine("optional arguments must be handedness, door-width-mm, mirror-z, mirror-accessories-x, or skip-electric-lock-hook: " + value);
                     return 2;
                 }
             }
@@ -78,6 +83,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Handedness = handedness,
                 MirrorZ = mirrorZ,
                 MirrorAccessoriesX = mirrorAccessoriesX,
+                IncludeElectricLockHook = includeElectricLockHook,
                 PanelThicknessMm = PanelThicknessMm,
             };
 
@@ -129,7 +135,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 double lockHookX = (doorHalfWidth - 15.0) * side;
                 double zSide = mirrorZ ? -1.0 : 1.0;
 
-                var placements = new[]
+                var placements = new List<Placement>
                 {
                     new Placement("door_weld_rule_module", weldAsm, Identity(), 0, 0, 0),
                     Accessory("plastic_bushing_top", bushing, RotateX180(), hingeX, bushingTopTy, hingeZ * zSide, mirrorAccessoriesX),
@@ -137,8 +143,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     Accessory("door_hinge_pin", hingePin, Identity(), hingeX, hingePinTy, hingeZ * zSide, mirrorAccessoriesX),
                     Accessory("circlip_top", circlip, Identity(), hingeX, circlipTopTy, circlipTz * zSide, mirrorAccessoriesX),
                     Accessory("circlip_bottom", circlip, Identity(), hingeX, circlipBottomTy, circlipTz * zSide, mirrorAccessoriesX),
-                    Accessory("electric_lock_hook", lockHook, FlipXZ(), lockHookX, 0, lockHookMountPlateTz * zSide, mirrorAccessoriesX),
                 };
+                if (includeElectricLockHook)
+                {
+                    placements.Add(Accessory("electric_lock_hook", lockHook, FlipXZ(), lockHookX, 0, lockHookMountPlateTz * zSide, mirrorAccessoriesX));
+                }
 
                 foreach (Placement p in placements)
                 {
@@ -423,6 +432,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "handedness", r.Handedness);
             Prop(sb, "mirrorZ", r.MirrorZ);
             Prop(sb, "mirrorAccessoriesX", r.MirrorAccessoriesX);
+            Prop(sb, "includeElectricLockHook", r.IncludeElectricLockHook);
             Prop(sb, "panelThicknessMm", r.PanelThicknessMm);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
@@ -521,6 +531,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string Handedness = "left";
             public bool MirrorZ;
             public bool MirrorAccessoriesX;
+            public bool IncludeElectricLockHook = true;
             public double PanelThicknessMm;
             public bool NewAssembly;
             public bool Rebuilt;

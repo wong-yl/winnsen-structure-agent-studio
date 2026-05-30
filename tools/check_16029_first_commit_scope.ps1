@@ -63,7 +63,9 @@ $includeExact = @(
     "workers/solidworks_tools/build_step_open_probe.ps1",
     "workers/solidworks_tools/ImportStepSaveNative.cs",
     "workers/solidworks_tools/build_import_step_save_native.ps1",
-    "workers/solidworks_tools/sw_clone_master_model_height_probe.js"
+    "workers/solidworks_tools/sw_clone_master_model_height_probe.js",
+    "workers/solidworks_tools/BuildOrdinaryDoorModule.cs",
+    "workers/maintenance/validate_16029_dimension_contract.py"
 )
 
 $excludePatterns = @(
@@ -96,7 +98,6 @@ $excludePatterns = @(
 $needsDecisionPatterns = @(
     "workers/solidworks_tools/BuildDoorArrayModule.cs",
     "workers/solidworks_tools/BuildDoorWeldModule.cs",
-    "workers/solidworks_tools/BuildOrdinaryDoorModule.cs",
     "workers/solidworks_tools/PackAndGoAssembly.cs",
     "workers/solidworks_tools/sw_make_parametric_part_dimension.js",
     "workers/solidworks_tools/build_door_array_module.ps1",

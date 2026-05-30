@@ -488,10 +488,19 @@ def validate_csharp_handedness(contract: dict[str, Any], checks: list[dict[str, 
         checks,
         "csharp_electric_lock_hook_tx_matches_contract",
         "double lockHookX = (doorHalfWidth - 15.0) * side;" in ordinary
-        and 'new Placement("electric_lock_hook", lockHook, Identity(), lockHookX' in ordinary
+        and 'Accessory("electric_lock_hook", lockHook, FlipXZ(), lockHookX' in ordinary
         and fixed.get("electric_lock_hook_tx_mm") == {"L": 203.5, "R": -203.5},
         fixed.get("electric_lock_hook_tx_mm"),
         "baseline L=203.5/R=-203.5 from width-aware edge offsets",
+    )
+    add_check(
+        checks,
+        "csharp_electric_lock_hook_can_be_omitted_for_cabinet_side_lock",
+        "includeElectricLockHook = false" in ordinary
+        and "skip-electric-lock-hook" in ordinary
+        and "cabinet-side-lock-hook" in ordinary,
+        "BuildOrdinaryDoorModule.cs optional skip-electric-lock-hook",
+        "door module keeps default hook placement but can omit it when the lock body belongs to the cabinet-side partition",
     )
     add_check(
         checks,

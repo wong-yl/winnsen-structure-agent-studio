@@ -40,6 +40,8 @@ These are current project code and documentation:
   - `workers/solidworks_tools/ImportStepSaveNative.cs`
   - `workers/solidworks_tools/build_import_step_save_native.ps1`
   - `workers/solidworks_tools/sw_clone_master_model_height_probe.js`
+  - `workers/solidworks_tools/BuildOrdinaryDoorModule.cs`
+  - `workers/maintenance/validate_16029_dimension_contract.py`
 
 ### Do Not Commit By Default
 
