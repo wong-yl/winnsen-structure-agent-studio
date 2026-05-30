@@ -46,8 +46,13 @@ function Resolve-PartByPrefix([string] $Root, [string] $Prefix, [string] $Suffix
 
 function Invoke-External([string] $FilePath, [string[]] $Arguments, [string] $Label, [int[]] $AllowedExitCodes = @(0)) {
   Write-Host "[$Label] $FilePath $($Arguments -join ' ')"
+  Set-Variable -Name LASTEXITCODE -Scope Global -Value 0
   $output = & $FilePath @Arguments 2>&1
-  $exitCode = $LASTEXITCODE
+  $commandSucceeded = $?
+  $exitCode = [int] (Get-Variable -Name LASTEXITCODE -Scope Global -ValueOnly -ErrorAction SilentlyContinue)
+  if (-not $commandSucceeded -and $exitCode -eq 0) {
+    $exitCode = 1
+  }
   if ($output) {
     $output | ForEach-Object { Write-Host $_ }
   }
@@ -199,6 +204,10 @@ $outputFiles = Get-ChildItem -LiteralPath $OutputDir -File |
   Where-Object { -not $_.Name.StartsWith('~$') } |
   Sort-Object Name |
   ForEach-Object { $_.Name }
+$summaryFileName = Split-Path -Leaf $summaryJson
+if ($outputFiles -notcontains $summaryFileName) {
+  $outputFiles = @($outputFiles) + $summaryFileName
+}
 
 $summary = [ordered] @{
   status = 'solidworks_2020_native_ready'
