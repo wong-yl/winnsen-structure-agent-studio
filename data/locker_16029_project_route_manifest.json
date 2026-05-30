@@ -48,10 +48,24 @@
     "single_finalize_entry": "workers/maintenance/finalize_16029_800w_gold_variable_handoff.py",
     "scope_gate": "workers/maintenance/validate_16029_current_handoff_scope.ps1",
     "scope_gate_status": {
-      "last_run": "2026-05-28T12:52:42+08:00",
+      "last_run": "2026-05-28T14:42:03+08:00",
       "status": "PASS",
       "checks_total": 60,
       "checks_failed": 0
+    },
+    "bbox_envelope_context": {
+      "nominal_cabinet_body_mm": {
+        "width": 800,
+        "height": 1917,
+        "depth": 550
+      },
+      "raw_step_assembly_bbox_mm": {
+        "width": 800.0,
+        "height": 1983.0,
+        "depth": 553.5
+      },
+      "delta_interpretation": "Raw STEP bbox includes bottom feet/reference extension to Y=-60, top object/reference extension to Y=1923, and front-side small hardware/reference extension to Z=+3.5.",
+      "engineer_signoff_required": "Confirm whether production/customer size uses nominal body envelope or installed envelope including feet/top/front protrusions."
     },
     "solidworks_2020_open_evidence": [
       {

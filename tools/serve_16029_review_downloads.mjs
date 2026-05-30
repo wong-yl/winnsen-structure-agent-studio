@@ -26,8 +26,8 @@ const reviewRound = {
   cadMainline: 'SolidWorks 2020',
   boundary: '800W x 1917H x 550D / W337 / gap 2+3+2=7',
   gateStatus: 'Scope gate PASS / 工程审核中',
-  gateBlocker: 'LMS/SML 已补齐 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。',
-  instruction: '本轮只审核 LMS、SML、DUAL 三个候选审核包；历史候选包不作为本轮输入。',
+  gateBlocker: 'LMS/SML 已补齐 SolidWorks 2020 打开截图证据；名义 1917H 与 raw STEP bbox 1983H 的底脚/顶部/前侧外伸仍需结构工程师签核。',
+  instruction: '本轮只审核 LMS、SML、DUAL 三个候选审核包；历史候选包不作为本轮输入，生产图纸释放前需确认名义外形和安装外形口径。',
 }
 
 const assets = [
@@ -35,7 +35,7 @@ const assets = [
     id: 'lms-gold-variable',
     title: 'LMS 审核包',
     category: '单方案审核',
-    description: 'LMS: 大 6/12，中 4/12，小 2/12；工程师主审 STEP、verify CSV、model gate、bbox gate 与 SolidWorks 2020 打开截图证据。',
+    description: 'LMS: 大 6/12，中 4/12，小 2/12；工程师主审 STEP、verify CSV、model gate、bbox gate、SolidWorks 2020 打开截图，以及名义外形/raw bbox 外伸口径。',
     fileName: '16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip',
     path: resolve(ROOT, 'workers/handoffs/16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
@@ -43,7 +43,7 @@ const assets = [
     id: 'sml-gold-variable',
     title: 'SML 审核包',
     category: '单方案审核',
-    description: 'SML: 小 2/12，中 4/12，大 6/12；工程师主审 STEP、verify CSV、model gate、bbox gate 与 SolidWorks 2020 打开截图证据。',
+    description: 'SML: 小 2/12，中 4/12，大 6/12；工程师主审 STEP、verify CSV、model gate、bbox gate、SolidWorks 2020 打开截图，以及名义外形/raw bbox 外伸口径。',
     fileName: '16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip',
     path: resolve(ROOT, 'workers/handoffs/16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
@@ -51,7 +51,7 @@ const assets = [
     id: 'dual-gold-variable',
     title: 'LMS/SML 总审核包',
     category: '双方案候选汇总',
-    description: '把 LMS 与 SML 两个候选审核包合并在一个 ZIP 中，适合项目负责人统一转发和归档；不是第三个结构方案。',
+    description: '把 LMS 与 SML 两个候选审核包合并在一个 ZIP 中，适合统一转发、归档和外形口径签核；不是第三个结构方案。',
     fileName: '16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip',
     path: resolve(ROOT, 'workers/handoffs/16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },

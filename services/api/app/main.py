@@ -3027,7 +3027,7 @@ def review_download_catalog() -> dict[str, dict[str, str | Path]]:
         "16029-800w-lms-gold-variable-review-zip": {
             "title": "16029 800W LMS 审核包",
             "category": "当前审核包",
-            "description": "LMS 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。",
+            "description": "LMS 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；名义 1917H 与 raw bbox 1983H 的底脚/顶部/前侧外伸需结构工程师签核。",
             "status": "ready_for_engineering_review",
             "path": HANDOFF_DIR / "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
@@ -3035,7 +3035,7 @@ def review_download_catalog() -> dict[str, dict[str, str | Path]]:
         "16029-800w-sml-gold-variable-review-zip": {
             "title": "16029 800W SML 审核包",
             "category": "当前审核包",
-            "description": "SML 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。",
+            "description": "SML 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；名义 1917H 与 raw bbox 1983H 的底脚/顶部/前侧外伸需结构工程师签核。",
             "status": "ready_for_engineering_review",
             "path": HANDOFF_DIR / "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
@@ -3043,7 +3043,7 @@ def review_download_catalog() -> dict[str, dict[str, str | Path]]:
         "16029-800w-dual-gold-variable-review-zip": {
             "title": "16029 800W LMS/SML 总审核包",
             "category": "当前汇总包",
-            "description": "双方案合包，用于 LMS/SML 对比审核和归档；不是第三个结构方案，也不是生产图纸释放包。",
+            "description": "双方案合包，用于 LMS/SML 对比审核、归档和确认名义外形与 raw STEP bbox 外伸口径；不是第三个结构方案，也不是生产图纸释放包。",
             "status": "ready_for_engineering_comparison",
             "path": HANDOFF_DIR / "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
@@ -3965,7 +3965,7 @@ def list_review_downloads() -> ReviewDownloadIndex:
     catalog = review_download_catalog()
     return ReviewDownloadIndex(
         generated_at=datetime.now(timezone.utc).isoformat(),
-        scope="16029 800W gold-variable engineer review bundles; scope gate is expected to pass before engineering review, while production release still requires structural signoff",
+        scope="16029 800W gold-variable engineer review bundles; scope gate is expected to pass before engineering review, while production release still requires structural signoff including nominal body envelope vs raw STEP bbox protrusions",
         assets=[review_download_asset(asset_id, meta) for asset_id, meta in catalog.items()],
     )
 
