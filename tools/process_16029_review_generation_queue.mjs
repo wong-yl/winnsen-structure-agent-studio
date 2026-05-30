@@ -104,13 +104,13 @@ function runPowerShellScript(scriptPath, args, label) {
   return `${completed.stdout || ''}${completed.stderr ? `\n${completed.stderr}` : ''}`
 }
 
-function lastSummaryPath(output) {
+function lastSummaryPath(output, fileName = 'solidworks_2020_native_generation_summary.json') {
   return String(output || '')
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
     .reverse()
-    .find((line) => line.toLowerCase().endsWith('solidworks_2020_native_generation_summary.json'))
+    .find((line) => line.toLowerCase().endsWith(fileName.toLowerCase()))
 }
 
 function readIndex() {
@@ -152,6 +152,22 @@ function shouldGenerateSolidWorksSingleDoor(request) {
   if (request.taskMode !== 'single_model') return false
   const doorType = String(request.doorType || 'ordinary_door_panel').toLowerCase()
   return doorType.includes('ordinary') || doorType.includes('storage') || doorType.includes('door')
+}
+
+function isFullAssemblyRequest(request) {
+  return String(request.taskMode || 'full_assembly') !== 'single_model'
+}
+
+function shouldGenerateSolidWorksTemplateFullAssembly(request) {
+  if (!isFullAssemblyRequest(request)) return false
+  const cabinetWidth = asNumber(request.cabinetWidth, 0)
+  const cabinetHeight = asNumber(request.cabinetHeight, 0)
+  const cabinetDepth = asNumber(request.cabinetDepth, 0)
+  if (Math.abs(cabinetWidth - 740) > 0.5) return false
+  if (Math.abs(cabinetHeight - 1917) > 0.5) return false
+  if (Math.abs(cabinetDepth - 550) > 0.5) return false
+  const routeText = `${request.prompt || ''} ${request.rowSequence || ''}`.toLowerCase()
+  return /l642|r246|6\s*[,/]\s*4\s*[,/]\s*2|2\s*[,/]\s*4\s*[,/]\s*6|740w/.test(routeText)
 }
 
 function processSolidWorksSingleDoorRequest(request, options) {
@@ -226,6 +242,84 @@ function processSolidWorksSingleDoorRequest(request, options) {
       queueFinishedAt: failedAt,
       error: error instanceof Error ? error.message : String(error),
       message: 'SolidWorks 2020 native sheet-metal generation failed; check workers/generation_logs and queue stdout/stderr.',
+    })
+    console.error(`failed\t${request.id}\t${result.error}`)
+    return result
+  }
+}
+
+function processSolidWorksTemplateFullAssemblyRequest(request, options) {
+  if (options.dryRun) {
+    console.log(`${request.id}\t${request.status}\tsolidworks2020_template_full_assembly`)
+    return request
+  }
+
+  const startedAt = nowIso()
+  updateRequest(request.id, {
+    status: 'running_solidworks2020_full_assembly_pack_and_go',
+    queueStartedAt: startedAt,
+    message: 'SolidWorks 2020 template-backed full assembly package is generating.',
+  })
+
+  try {
+    const cabinetWidth = asNumber(request.cabinetWidth, 740)
+    const cabinetHeight = asNumber(request.cabinetHeight, 1917)
+    const cabinetDepth = asNumber(request.cabinetDepth, 550)
+    const generator = resolve(ROOT, 'tools/generate_review_solidworks_full_assembly.ps1')
+    if (!existsSync(generator)) throw new Error(`SolidWorks full assembly generator was not found: ${generator}`)
+
+    const output = runPowerShellScript(
+      generator,
+      [
+        '-RequestId',
+        request.id,
+        '-CabinetWidthMm',
+        String(cabinetWidth),
+        '-CabinetHeightMm',
+        String(cabinetHeight),
+        '-CabinetDepthMm',
+        String(cabinetDepth),
+      ],
+      'SolidWorks 2020 template full assembly generation',
+    )
+    const summaryPath = lastSummaryPath(output, 'solidworks_2020_full_assembly_generation_summary.json')
+    if (!summaryPath || !existsSync(summaryPath)) {
+      throw new Error(`SolidWorks full assembly generation summary was not found. Output:\n${output}`)
+    }
+    const summary = readJson(summaryPath, null)
+    if (!summary || summary.status !== 'solidworks_2020_full_assembly_ready') {
+      throw new Error(`SolidWorks full assembly generation did not report ready status: ${summaryPath}`)
+    }
+
+    const outputDir = summary.outputDir
+    const zipPath = resolve(LOG_ROOT, `review_generation_${request.id}_solidworks2020_full_assembly.zip`)
+    compressPackage(outputDir, zipPath)
+
+    const completedAt = nowIso()
+    const result = updateRequest(request.id, {
+      status: 'solidworks2020_full_assembly_ready',
+      resultKind: 'solidworks2020_full_assembly_model',
+      outputDir,
+      zipPath,
+      downloadUrl: `/generation-download/${request.id}`,
+      processedAt: completedAt,
+      queueFinishedAt: completedAt,
+      modelGeneratedAt: completedAt,
+      primaryAssembly: summary.primaryAssembly,
+      packAndGoDir: summary.packAndGoDir,
+      outputFiles: Array.isArray(summary.outputFiles) ? summary.outputFiles : [],
+      error: '',
+      message: 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.',
+    })
+    console.log(`processed\t${request.id}\t${zipPath}`)
+    return result
+  } catch (error) {
+    const failedAt = nowIso()
+    const result = updateRequest(request.id, {
+      status: 'failed_solidworks2020_full_assembly',
+      queueFinishedAt: failedAt,
+      error: error instanceof Error ? error.message : String(error),
+      message: 'SolidWorks 2020 full assembly generation failed; check workers/generation_logs and queue stdout/stderr.',
     })
     console.error(`failed\t${request.id}\t${result.error}`)
     return result
@@ -374,6 +468,9 @@ function processRequest(request, options) {
   if (shouldGenerateSolidWorksSingleDoor(request)) {
     return processSolidWorksSingleDoorRequest(request, options)
   }
+  if (shouldGenerateSolidWorksTemplateFullAssembly(request)) {
+    return processSolidWorksTemplateFullAssemblyRequest(request, options)
+  }
   if (!options.emitWorkerPayload) {
     if (options.dryRun) {
       console.log(`${request.id}\t${request.status}\twaiting_solidworks2020_native_worker`)
@@ -388,7 +485,9 @@ function processRequest(request, options) {
       resultKind: '',
       outputFiles: [],
       error: '',
-      message: 'This request is queued for a SolidWorks 2020 native model worker; no CAD task package was emitted.',
+      message: isFullAssemblyRequest(request)
+        ? 'This full assembly request is queued for a SolidWorks 2020 native model worker. The current automatic full-assembly worker supports only the verified 740W x 1917H x 550D L642/R246 template.'
+        : 'This request is queued for a SolidWorks 2020 native model worker; no CAD task package was emitted.',
     })
   }
 

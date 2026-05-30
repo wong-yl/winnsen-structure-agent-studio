@@ -43,6 +43,7 @@ $includeExact = @(
     "tools/serve_16029_review_downloads.mjs",
     "tools/process_16029_review_generation_queue.mjs",
     "tools/generate_review_solidworks_single_door.ps1",
+    "tools/generate_review_solidworks_full_assembly.ps1",
     "tools/generate_review_task_simple_freecad_model.py",
     "tools/start_16029_review_portal.mjs",
     "tools/run_16029_review_portal_watchdog.ps1",

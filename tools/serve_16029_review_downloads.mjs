@@ -1517,7 +1517,11 @@ const server = createServer(async (request, response) => {
         return
       }
       const stat = statSync(zipPath)
-      const downloadKind = item.resultKind === 'cad_worker_payload_package' ? 'cad-worker-package' : 'solidworks2020-sheetmetal-model'
+      const downloadKind = item.resultKind === 'cad_worker_payload_package'
+        ? 'cad-worker-package'
+        : item.resultKind === 'solidworks2020_full_assembly_model'
+          ? 'solidworks2020-full-assembly'
+          : 'solidworks2020-sheetmetal-model'
       response.writeHead(200, {
         'Content-Type': 'application/zip',
         'Content-Length': stat.size,
