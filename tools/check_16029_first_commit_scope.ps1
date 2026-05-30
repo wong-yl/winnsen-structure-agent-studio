@@ -29,6 +29,7 @@ $includeExact = @(
     "docs/16029_current_project_process.md",
     "docs/16029_git_cleanup_boundary.md",
     "docs/project_code_management_policy.md",
+    "docs/platform_ui_interaction_enhancement_20260530.md",
     "docs/first_commit_candidate_16029_20260528.md",
     "data/locker_16029_project_route_manifest.json",
     "data/locker_16029_project_route_manifest.md",
@@ -40,6 +41,9 @@ $includeExact = @(
     "services/api/app/config.py",
     "services/api/app/main.py",
     "tools/serve_16029_review_downloads.mjs",
+    "tools/process_16029_review_generation_queue.mjs",
+    "tools/generate_review_solidworks_single_door.ps1",
+    "tools/generate_review_task_simple_freecad_model.py",
     "tools/start_16029_review_portal.mjs",
     "tools/run_16029_review_portal_watchdog.ps1",
     "tools/render_16029_project_flow_pdf.mjs",
@@ -56,7 +60,10 @@ $includeExact = @(
     "workers/maintenance/build_16029_variable_door_stack_contract.py",
     "workers/maintenance/build_16029_800w_lms_contract.py",
     "workers/solidworks_tools/StepOpenProbe.cs",
-    "workers/solidworks_tools/build_step_open_probe.ps1"
+    "workers/solidworks_tools/build_step_open_probe.ps1",
+    "workers/solidworks_tools/ImportStepSaveNative.cs",
+    "workers/solidworks_tools/build_import_step_save_native.ps1",
+    "workers/solidworks_tools/sw_clone_master_model_height_probe.js"
 )
 
 $excludePatterns = @(

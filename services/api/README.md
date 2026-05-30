@@ -56,6 +56,7 @@ path.
 - `POST /api/generation-tasks/{task_id}/dry-run`
 - `POST /api/generation-tasks/{task_id}/execute`
 - `POST /api/generation-tasks/{task_id}/run-solidworks-package`
+- `GET /api/generation-tasks/{task_id}/download`
 
 The dry-run endpoint checks local readiness only:
 
@@ -76,6 +77,7 @@ The dry-run endpoint checks local readiness only:
 - SolidWorks tasks write a PowerShell execution package to `workers\manual_runs\<task_id>`. The package can be inspected manually, or run directly through `POST /api/generation-tasks/{task_id}/run-solidworks-package`.
 - Direct SolidWorks package execution calls `powershell.exe -ExecutionPolicy Bypass -File run-solidworks-worker.ps1`, then refreshes `.SLDASM`, build report, validation CSV/report, and component manifest outputs in the task result.
 - SolidWorks execution also runs `sw_diagnose_assembly_quality.js`. The API records `solidworks_quality_status` and `solidworks_quality_summary`; `reference_feature_only` means the file opens visually but exposes `Reference` features instead of a traversable component tree.
+- Completed generation tasks can be downloaded from `GET /api/generation-tasks/{task_id}/download`; the response is a ZIP of the task output folder for browser delivery.
 - FreeCAD tasks run through `FreeCADCmd.exe` using a generated Python wrapper so script arguments do not collide with FreeCAD command-line options.
 - FreeCAD outputs are written to `workers\generated_models\<task_id>`.
 - Worker logs are written to `workers\generation_logs` by default.

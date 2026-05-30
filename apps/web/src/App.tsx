@@ -67,6 +67,7 @@ type GenerationFeedback = {
   cadRunner?: CadRunner
   outputDir?: string
   recommendedFile?: string
+  downloadUrl?: string
   validationReport?: string
   validationData?: string
 }
@@ -730,6 +731,42 @@ type GenerationTask = {
   updated_at: string
 }
 
+type DoorPromptDraft = {
+  cabinetWidth: number
+  cabinetHeight: number
+  cabinetDepth: number
+  columns: number
+  doorCount: number
+  doorWidth: number
+  doorHeight: number
+  doorHeightSequence: string
+  columnHeightSequences: string[]
+  doorType: string
+  lockType: string
+  hingeType: string
+  latchType: string
+  reinforcement: string
+  openings: string
+  material: string
+  thickness: string
+  assumptions: string[]
+  warnings: string[]
+}
+
+type DoorPromptPreviewRow = {
+  label: string
+  units: number
+  height: number
+}
+
+type EngineerReviewFocus = {
+  id: string
+  label: string
+  question: string
+  evidence: string
+  risk: string
+}
+
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
 const API_BASE_URL = (
   configuredApiBaseUrl ||
@@ -752,6 +789,58 @@ const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [10, 12, 14]
 const LOCKER_16029_SUPPORTED_RULE_COUNTS = Array.from(
   new Set([...LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS, ...LOCKER_16029_SUPPORTED_FREECAD_COUNTS]),
 )
+const DEFAULT_DOOR_PROMPT =
+  '800W x 1917H x 550D, two columns, LMS row units 6/12, 4/12, 2/12, ordinary sheet-metal locker doors, W337, electric lock, concealed hinge, latch, reinforcement rib, lock holes and hinge holes.'
+const DOOR_PROMPT_EXAMPLES = [
+  '740W x 1917H x 550D, two columns, left column [6,4,2], right column [2,4,6], ordinary locker doors, electric lock, concealed hinge, latch, reinforcement rib.',
+  '800W x 1917H x 550D, two columns, LMS row units 6/12, 4/12, 2/12, ordinary locker doors, W337, electric lock, concealed hinge, reinforcement rib.',
+  '1000W x 1917H x 550D, 12 door two-column standard locker, door width 437, equal height rows, electric lock, hinge holes, lock holes.',
+  'Single ordinary door panel, door width 337, door height 298, 0.8mm galvanized sheet, visible lock opening, hinge holes, vertical reinforcement rib.',
+]
+const ENGINEER_REVIEW_FOCUS_OPTIONS: EngineerReviewFocus[] = [
+  {
+    id: 'door-gap',
+    label: '门板/门缝',
+    question: '门板刚度、下垂风险、门缝一致性和开门碰撞是否满足当前柜型？',
+    evidence: '门板预览截图、STEP bbox、门高序列、门宽记录',
+    risk: '外观间隙和门板变形风险',
+  },
+  {
+    id: 'hinge',
+    label: '铰链',
+    question: '铰链类型、安装孔阵列、开门角度、维修替换路径是否清楚？',
+    evidence: '铰链孔位截图、SolidWorks/STEP 局部视图',
+    risk: '开门干涉、装配调整和售后更换风险',
+  },
+  {
+    id: 'lock',
+    label: '锁具/插销',
+    question: '锁舌啮合、门下垂余量、断电应急开启和锁具更换路径是否明确？',
+    evidence: '锁位尺寸、锁中心 datum、插销/锁扣局部截图',
+    risk: '锁不上、打不开和批量调门风险',
+  },
+  {
+    id: 'sheetmetal',
+    label: '钣金/外观',
+    question: '折弯边、孔到折弯线距离、外观面紧固件、喷涂厚度影响是否需要复核？',
+    evidence: 'DXF 展开、折弯/开孔标注、材料厚度记录',
+    risk: '加工变形、外观面缺陷和喷涂后间隙变化',
+  },
+  {
+    id: 'assembly',
+    label: '装配/维护',
+    question: '是否能预装成门模块，锁/铰链/线束是否能不拆整柜就更换？',
+    evidence: '装配顺序说明、模块路径、维护入口截图',
+    risk: '工时过长、盲装、返工和售后维修困难',
+  },
+  {
+    id: 'mechatronics',
+    label: '机电接口',
+    question: '线束出口、强弱电间距、接插件插拔空间和接地/散热路径是否保留？',
+    evidence: '线束路径、电子件安装板、操作区接口记录',
+    risk: '线束夹伤、维护空间不足和电气接口返工',
+  },
+]
 const LOCKER_16029_ENRICHED_REFERENCES = [10, 12, 14].map((doorCount) => ({
   doorCount,
   title: `${doorCount} 门增强矩阵样机 v2`,
@@ -1898,7 +1987,9 @@ function ModelsPage() {
   const [engineeringHandoffBundle, setEngineeringHandoffBundle] =
     useState<Locker16029EngineeringHandoffBundle | null>(null)
   const [engineeringHandoffMessage, setEngineeringHandoffMessage] = useState('正在读取 16029 工程交接包...')
+  const [doorPromptText, setDoorPromptText] = useState(DEFAULT_DOOR_PROMPT)
   const activeCapability = capabilities.find((capability) => capability.id === activeCapabilityId) ?? capabilities[0]
+  const doorPromptDraft = useMemo(() => buildDoorPromptDraft(doorPromptText), [doorPromptText])
   const parameterValues = useMemo(
     () => ({
       ...defaultParameterValues(activeCapability.id, activeCapability.parameters),
@@ -2112,6 +2203,21 @@ function ModelsPage() {
         [parameter]: value,
       },
     }))
+  }
+
+  function applyDoorPromptToGenerator() {
+    setActiveCapabilityId('locker_16029_door_panel')
+    setParameterValuesByCapability((current) => ({
+      ...current,
+      locker_16029_door_panel: {
+        ...(current.locker_16029_door_panel ?? {}),
+        category: 'ordinary_door_panel',
+        door_width: String(Math.round(doorPromptDraft.doorWidth)),
+        door_height: String(Math.round(doorPromptDraft.doorHeight)),
+        geometry_source: 'auto',
+      },
+    }))
+    setQueueMessage('已把提示词草案写入 16029 单门板入口；生成前仍需确认孔位、折弯和锁/铰链证据。')
   }
 
   function commandPreview(cadRunner: CadRunner) {
@@ -2364,6 +2470,12 @@ function ModelsPage() {
           solidWorksIssue={runnerIssueById.solidworks}
           freeCadIssue={runnerIssueById.freecad}
         />
+        <DoorPromptWorkbench
+          promptText={doorPromptText}
+          draft={doorPromptDraft}
+          onPromptChange={setDoorPromptText}
+          onApplyToGenerator={applyDoorPromptToGenerator}
+        />
         <div className="capability-grid">
           {capabilities.map((capability) => (
             <button
@@ -2549,6 +2661,12 @@ function ModelsPage() {
                   </div>
                 )}
                 <div className="feedback-actions">
+                  {generationFeedback.downloadUrl && (
+                    <a className="secondary-action primary-open-action" href={generationFeedback.downloadUrl}>
+                      <Download size={16} />
+                      下载结果包
+                    </a>
+                  )}
                   {generationFeedback.cadRunner === 'solidworks' &&
                     generationFeedback.recommendedFile &&
                     isPowerShellScript(generationFeedback.recommendedFile) && (
@@ -2862,6 +2980,7 @@ function TaskDrawer({
 }) {
   const dryRunChecks = task.dry_run_result?.checks ?? []
   const execution = task.execution_result
+  const downloadUrl = execution?.outputs.length ? taskDownloadUrl(task.id) : null
   const recommendedFile = recommendedOutputFile(task)
   const lowerOutput = (path: string) => path.toLowerCase()
   const freecadMacroFile = execution?.outputs.find((path) => lowerOutput(path).endsWith('show_all_objects_and_fit_view.fcmacro'))
@@ -3283,6 +3402,12 @@ function TaskDrawer({
                   </div>
                 )}
                 <div className="local-action-row">
+                  {downloadUrl && (
+                    <a className="secondary-action primary-open-action" href={downloadUrl}>
+                      <Download size={16} />
+                      下载结果包
+                    </a>
+                  )}
                   <button
                     className="secondary-action"
                     type="button"
@@ -4213,6 +4338,251 @@ function formatBytes(value: number) {
   return `${gb.toFixed(gb >= 100 ? 0 : 1)} GB`
 }
 
+function DoorPromptWorkbench({
+  promptText,
+  draft,
+  onPromptChange,
+  onApplyToGenerator,
+}: {
+  promptText: string
+  draft: DoorPromptDraft
+  onPromptChange: (value: string) => void
+  onApplyToGenerator: () => void
+}) {
+  return (
+    <div className="door-prompt-workbench">
+      <div className="door-prompt-heading">
+        <div>
+          <span>钣金柜门提示词工作台</span>
+          <strong>先把自然语言收敛成可复核参数，再进入 CAD 生成队列。</strong>
+        </div>
+        <StatusPill tone="warn">2D 实时预览</StatusPill>
+      </div>
+      <div className="door-prompt-grid">
+        <div className="door-prompt-input">
+          <label>
+            <span>自然语言 / 参数化提示词</span>
+            <textarea
+              value={promptText}
+              rows={6}
+              onChange={(event) => onPromptChange(event.target.value)}
+              placeholder="例：800W x 1917H x 550D，两列，LMS：6/12、4/12、2/12，W337，电控锁，暗铰链，加强筋，锁孔和铰链孔。"
+            />
+          </label>
+          <div className="prompt-chip-row">
+            {DOOR_PROMPT_EXAMPLES.map((example) => (
+              <button key={example} className="mini-action quiet-mini-action" type="button" onClick={() => onPromptChange(example)}>
+                套用样例
+              </button>
+            ))}
+          </div>
+          <div className="door-generated-prompt">
+            <span>生成器草案提示词</span>
+            <code>{buildDoorGeneratorPrompt(draft)}</code>
+          </div>
+          <button className="primary-action" type="button" onClick={onApplyToGenerator}>
+            <Settings2 size={17} />
+            应用到单门板生成入口
+          </button>
+        </div>
+
+        <div className="door-parameter-panel">
+          <div className="door-parameter-grid">
+            <DetailLine label="外形" value={`${formatMm(draft.cabinetWidth)}W x ${formatMm(draft.cabinetHeight)}H x ${formatMm(draft.cabinetDepth)}D`} />
+            <DetailLine label="列/门数" value={`${draft.columns} 列 / ${draft.doorCount} 门`} />
+            <DetailLine label="门板" value={`${formatMm(draft.doorWidth)}W x ${formatMm(draft.doorHeight)}H`} />
+            <DetailLine label="门高序列" value={draft.doorHeightSequence} />
+            <DetailLine label="门型" value={draft.doorType} />
+            <DetailLine label="锁/铰链/插销" value={`${draft.lockType} / ${draft.hingeType} / ${draft.latchType}`} />
+            <DetailLine label="加强/开孔" value={`${draft.reinforcement} / ${draft.openings}`} />
+            <DetailLine label="材料" value={`${draft.material} / ${draft.thickness}`} />
+          </div>
+          <div className="door-assumption-list">
+            {draft.assumptions.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
+          {draft.warnings.length > 0 && (
+            <div className="door-warning-list">
+              {draft.warnings.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="door-preview-panel" aria-label="钣金柜门实时预览窗口">
+          <div className="door-preview-toolbar">
+            <div>
+              <span>实时浏览窗口</span>
+              <strong>门阵列 / 单门板 2D 占位预览</strong>
+            </div>
+            <Layers3 size={20} />
+          </div>
+          <DoorPromptPreview draft={draft} />
+          <p>
+            当前预览用于沟通门序、门板比例、锁/铰链/加强筋/开孔意图；正式 3D 预览需接入 STEP/STL/FCStd/SolidWorks 缩略图服务。
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DoorPromptPreview({ draft }: { draft: DoorPromptDraft }) {
+  const rowsByColumn = doorPreviewColumnRows(draft)
+  const gap = 5
+  const padding = 16
+  const viewWidth = 360
+  const viewHeight = 420
+  const usableWidth = viewWidth - padding * 2 - gap * (draft.columns - 1)
+  const columnWidth = usableWidth / draft.columns
+
+  return (
+    <svg className="door-preview-svg" viewBox={`0 0 ${viewWidth} ${viewHeight}`} role="img" aria-label="柜门布局预览">
+      <rect x="2" y="2" width={viewWidth - 4} height={viewHeight - 4} rx="8" fill="#f8fafc" stroke="#d7e0ec" />
+      {rowsByColumn.map((rows, columnIndex) => {
+        const columnUsableHeight = viewHeight - padding * 2 - gap * Math.max(rows.length - 1, 0)
+        const totalUnits = rows.reduce((total, row) => total + row.units, 0) || 1
+        const positionedRows = rows.reduce<Array<DoorPromptPreviewRow & { y: number; previewHeight: number }>>((items, row, index) => {
+          const previewHeight = Math.max(34, (columnUsableHeight * row.units) / totalUnits)
+          const previous = items[index - 1]
+          const y = previous ? previous.y + previous.previewHeight + gap : padding
+          return [...items, { ...row, y, previewHeight }]
+        }, [])
+
+        return positionedRows.map((row) => {
+          const rowHeight = row.previewHeight
+          const y = row.y
+          const x = padding + columnIndex * (columnWidth + gap)
+          const isRightColumn = columnIndex % 2 === 1
+          const lockX = isRightColumn ? x + 14 : x + columnWidth - 14
+          const hingeX = isRightColumn ? x + columnWidth - 13 : x + 8
+          const centerY = y + rowHeight / 2
+          return (
+            <g key={`${columnIndex}-${row.label}-${y}`}>
+              <rect x={x} y={y} width={columnWidth} height={rowHeight} rx="4" fill="#ffffff" stroke="#1f3585" strokeWidth="1.5" />
+              <rect x={x + 5} y={y + 5} width={columnWidth - 10} height={rowHeight - 10} rx="3" fill="#f4f7fb" stroke="#dbe4ef" />
+              <rect x={hingeX} y={y + 10} width="5" height="20" rx="2" fill="#67758a" />
+              <rect x={hingeX} y={Math.max(y + rowHeight - 30, y + 14)} width="5" height="20" rx="2" fill="#67758a" />
+              <circle cx={lockX} cy={centerY} r="4.5" fill="#f04a12" />
+              {draft.reinforcement !== '未指定' && (
+                <line x1={x + columnWidth / 2} y1={y + 10} x2={x + columnWidth / 2} y2={y + rowHeight - 10} stroke="#8aa0bd" strokeDasharray="4 4" />
+              )}
+              {draft.openings !== '未指定' && (
+                <>
+                  <circle cx={lockX - 16} cy={centerY - 12} r="3" fill="#172b64" opacity="0.65" />
+                  <circle cx={lockX - 16} cy={centerY + 12} r="3" fill="#172b64" opacity="0.65" />
+                </>
+              )}
+              <text x={x + columnWidth / 2} y={centerY + 4} textAnchor="middle" fill="#172b64" fontSize="12" fontWeight="700">
+                {row.label}
+              </text>
+            </g>
+          )
+        })
+      })}
+      <text x={padding} y={viewHeight - 8} fill="#687587" fontSize="11">
+        {formatMm(draft.cabinetWidth)}W x {formatMm(draft.cabinetHeight)}H x {formatMm(draft.cabinetDepth)}D / {draft.columns} columns
+      </text>
+    </svg>
+  )
+}
+
+function EngineerReviewWorkspace() {
+  const [reviewInput, setReviewInput] = useState(
+    '请结构工程师重点确认：门序、门宽/门高、锁/铰链位置、加强筋、开孔、名义外形与 raw bbox 口径。',
+  )
+  const [selectedFocusIds, setSelectedFocusIds] = useState<string[]>(['door-gap', 'hinge', 'lock', 'sheetmetal'])
+  const [screenshotPath, setScreenshotPath] = useState('workers\\handoffs\\...\\solidworks_open_screenshot.png')
+  const [modelPath, setModelPath] = useState('workers\\handoffs\\...\\candidate.step')
+  const [evidencePath, setEvidencePath] = useState('data\\...\\model_gate.md / bbox_gate.md / verify.csv')
+  const selectedFocus = ENGINEER_REVIEW_FOCUS_OPTIONS.filter((item) => selectedFocusIds.includes(item.id))
+  const reviewPrompt = useMemo(
+    () =>
+      [
+        '请按结构工程审核口径复核以下柜门/钣金模型，不要把工程参考模型当生产释放：',
+        reviewInput,
+        `证据截图：${screenshotPath || '待补'}`,
+        `模型路径：${modelPath || '待补'}`,
+        `验证记录：${evidencePath || '待补'}`,
+        `审核点：${selectedFocus.map((item) => item.label).join('、') || '待选择'}`,
+      ].join('\n'),
+    [evidencePath, modelPath, reviewInput, screenshotPath, selectedFocus],
+  )
+
+  function toggleFocus(id: string) {
+    setSelectedFocusIds((current) =>
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+    )
+  }
+
+  return (
+    <section className="section-block engineer-review-workspace">
+      <div className="section-heading">
+        <div>
+          <h2>结构工程师交互区</h2>
+          <p>把审核输入、审核点、问题清单和证据路径放在同一处，便于沟通后再进入正式签核。</p>
+        </div>
+        <StatusPill tone="warn">本页草稿</StatusPill>
+      </div>
+      <div className="engineer-review-grid">
+        <div className="engineer-review-input">
+          <label>
+            <span>审核输入</span>
+            <textarea value={reviewInput} rows={5} onChange={(event) => setReviewInput(event.target.value)} />
+          </label>
+          <div className="engineer-path-grid">
+            <label>
+              <span>证据截图</span>
+              <input value={screenshotPath} onChange={(event) => setScreenshotPath(event.target.value)} />
+            </label>
+            <label>
+              <span>模型路径</span>
+              <input value={modelPath} onChange={(event) => setModelPath(event.target.value)} />
+            </label>
+            <label>
+              <span>验证记录</span>
+              <input value={evidencePath} onChange={(event) => setEvidencePath(event.target.value)} />
+            </label>
+          </div>
+        </div>
+
+        <div className="engineer-focus-panel">
+          <span>审核点选择</span>
+          <div className="engineer-focus-list">
+            {ENGINEER_REVIEW_FOCUS_OPTIONS.map((item) => (
+              <label key={item.id} className="engineer-focus-option">
+                <input type="checkbox" checked={selectedFocusIds.includes(item.id)} onChange={() => toggleFocus(item.id)} />
+                <span>{item.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="engineer-issue-panel">
+          <div className="engineer-issue-heading">
+            <span>自动生成问题清单</span>
+            <strong>{selectedFocus.length} 项</strong>
+          </div>
+          {selectedFocus.map((item) => (
+            <article key={item.id} className="engineer-issue-card">
+              <strong>{item.question}</strong>
+              <p>{item.risk}</p>
+              <small>{item.evidence}</small>
+            </article>
+          ))}
+        </div>
+
+        <div className="engineer-prompt-panel">
+          <span>可复制给结构工程师 / Agent 的审核提示词</span>
+          <code>{reviewPrompt}</code>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ReviewDownloadPage() {
   const [downloadIndex, setDownloadIndex] = useState<ReviewDownloadIndex | null>(null)
   const [scopeGate, setScopeGate] = useState<CurrentHandoffScopeGate | null>(null)
@@ -4382,6 +4752,8 @@ function ReviewPage({
           </label>
         </div>
       </section>
+
+      <EngineerReviewWorkspace />
 
       {grouped.map((group) => (
         <section key={group.priority} className="section-block">
@@ -6196,6 +6568,7 @@ function maturityTone(maturity: Maturity): 'good' | 'warn' | 'risk' | 'idle' {
 function feedbackForExecution(task: GenerationTask): GenerationFeedback {
   const recommendedFile = recommendedOutputFile(task)
   const outputDir = task.execution_result?.output_dir
+  const downloadUrl = task.execution_result?.outputs.length ? taskDownloadUrl(task.id) : undefined
   const validationReport = solidworksValidationReportFile(task)
   const validationData = solidworksValidationDataFile(task)
   const freecadQualityStatus = task.execution_result?.freecad_quality_status ?? null
@@ -6239,6 +6612,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
       cadRunner: task.cad_runner,
       outputDir,
       recommendedFile,
+      downloadUrl,
       validationReport: validationReport ?? task.execution_result?.freecad_quality_report ?? undefined,
       validationData,
     }
@@ -6254,6 +6628,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
         : 'API 未自动启动 SolidWorks；请在输出目录中运行手动脚本。',
       outputDir,
       recommendedFile,
+      downloadUrl,
       cadRunner: task.cad_runner,
       validationReport,
       validationData,
@@ -6269,6 +6644,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
       cadRunner: task.cad_runner,
       outputDir,
       recommendedFile,
+      downloadUrl,
       validationReport,
       validationData,
     }
@@ -6282,6 +6658,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
     cadRunner: task.cad_runner,
     outputDir,
     recommendedFile,
+    downloadUrl,
     validationReport,
     validationData,
   }
@@ -6336,6 +6713,10 @@ function openButtonLabelFor(path: string) {
   if (lower.endsWith('freecad_geometry_check.json')) return '打开 STEP 检查'
   if (lower.endsWith('_geometry_integrity.md')) return '打开 FCStd 检查'
   return '打开推荐文件'
+}
+
+function taskDownloadUrl(taskId: string) {
+  return `${API_BASE_URL}/api/generation-tasks/${taskId}/download`
 }
 
 function solidworksScriptFor(capabilityId: string) {
@@ -6587,6 +6968,206 @@ function commandArgumentsFor(capabilityId: string, cadRunner: CadRunner, paramet
     )}`
   }
   return ''
+}
+
+function buildDoorPromptDraft(promptText: string): DoorPromptDraft {
+  const text = promptText.trim()
+  const lower = text.toLowerCase()
+  const dimensions = extractCabinetDimensions(text)
+  const cabinetWidth =
+    firstNumberMatch(text, [/外形宽\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /柜宽\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:w|W|宽)/]) ??
+    dimensions?.width ??
+    800
+  const cabinetHeight =
+    firstNumberMatch(text, [/外形高\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /柜高\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:h|H|高)/]) ??
+    dimensions?.height ??
+    1917
+  const cabinetDepth =
+    firstNumberMatch(text, [/外形深\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /柜深\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:d|D|深)/]) ??
+    dimensions?.depth ??
+    550
+  const columns = clampInteger(firstNumberMatch(text, [/(\d+)\s*(?:列|columns?|cols?)/i]) ?? (lower.includes('single') || text.includes('单列') ? 1 : 2), 1, 6)
+  const baseDoorHeightSequence = extractDoorHeightSequence(text)
+  const columnHeightSequences = extractDoorColumnHeightSequences(text, columns, baseDoorHeightSequence)
+  const doorHeightSequence = formatColumnDoorHeightSequences(columnHeightSequences, baseDoorHeightSequence)
+  const sequenceRowsByColumn = columnHeightSequences.map(doorPreviewRowsFromSequence)
+  const sequenceRows = sequenceRowsByColumn.find((rows) => rows.length > 0) ?? []
+  const sequenceDoorCount = sequenceRowsByColumn.reduce((total, rows) => total + rows.length, 0)
+  const explicitDoorCount = firstNumberMatch(text, [/门数\s*[:：=]?\s*(\d+)/i, /door\s*count\s*[:=]?\s*(\d+)/i, /(\d+)\s*门(?:柜|整柜|布局|方案)/])
+  const doorCount = clampInteger(explicitDoorCount ?? Math.max(columns, sequenceDoorCount || sequenceRows.length * columns || 12), columns, 72)
+  const explicitDoorWidth = firstNumberMatch(text, [/门宽\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /door\s*width\s*[:=]?\s*(\d+(?:\.\d+)?)/i, /W\s*(\d+(?:\.\d+)?)/])
+  const explicitDoorHeight = firstNumberMatch(text, [/门高\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /door\s*height\s*[:=]?\s*(\d+(?:\.\d+)?)/i, /H\s*(\d+(?:\.\d+)?)/])
+  const firstSequenceHeight = sequenceRows[0]?.height
+  const doorWidth = explicitDoorWidth ?? estimateDoorWidth(cabinetWidth, columns)
+  const doorHeight = explicitDoorHeight ?? firstSequenceHeight ?? estimateDoorHeight(cabinetHeight, doorCount, columns)
+  const thickness = firstNumberMatch(text, [/(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:厚|thickness|板厚)/i])
+  const assumptions = [
+    explicitDoorWidth ? '门宽来自提示词。' : '门宽为预览估算，生成前需用 DXF/BOM/SolidWorks 证据确认。',
+    explicitDoorHeight || firstSequenceHeight ? '门高来自提示词或门高序列。' : '门高为等分预览估算。',
+    '当前 2D 预览不计算折弯展开、K 因子、公差和喷涂厚度。',
+  ]
+  const warnings = [
+    '正式 CAD 生成前必须确认材料、板厚、孔到折弯线距离、锁/铰链 datum 和工程图版本。',
+    '该工作台不会直接释放生产图纸，只把参数草案写入受控生成入口。',
+  ]
+
+  return {
+    cabinetWidth,
+    cabinetHeight,
+    cabinetDepth,
+    columns,
+    doorCount,
+    doorWidth,
+    doorHeight,
+    doorHeightSequence,
+    columnHeightSequences,
+    doorType: lower.includes('control') || text.includes('中控') ? 'control_door' : 'ordinary_door_panel',
+    lockType: lower.includes('electric') || text.includes('电控') ? '电控锁' : text.includes('机械') ? '机械锁' : '未指定',
+    hingeType: lower.includes('concealed') || text.includes('暗铰') ? '暗铰链' : text.includes('长铰') || lower.includes('piano') ? '长铰链' : '未指定',
+    latchType: text.includes('插销') || lower.includes('latch') ? '插销/锁扣需确认' : '未指定',
+    reinforcement: text.includes('加强') || lower.includes('rib') ? '加强筋' : '未指定',
+    openings: text.includes('孔') || lower.includes('hole') || lower.includes('opening') ? '锁孔/铰链孔/功能孔需按证据确认' : '未指定',
+    material: text.includes('镀锌') || lower.includes('galvanized') ? '镀锌板' : text.includes('不锈钢') ? '不锈钢' : '未指定',
+    thickness: thickness ? `${formatMm(thickness)} mm` : '未指定',
+    assumptions,
+    warnings,
+  }
+}
+
+function buildDoorGeneratorPrompt(draft: DoorPromptDraft) {
+  return [
+    `柜体外形 ${formatMm(draft.cabinetWidth)}W x ${formatMm(draft.cabinetHeight)}H x ${formatMm(draft.cabinetDepth)}D`,
+    `${draft.columns} 列 / ${draft.doorCount} 门`,
+    `单门板 ${formatMm(draft.doorWidth)}W x ${formatMm(draft.doorHeight)}H`,
+    `门高序列 ${draft.doorHeightSequence}`,
+    `${draft.doorType}, ${draft.lockType}, ${draft.hingeType}, ${draft.latchType}`,
+    `${draft.reinforcement}, ${draft.openings}, ${draft.material}, ${draft.thickness}`,
+  ].join('；')
+}
+
+function extractCabinetDimensions(text: string) {
+  const match = text.match(/(\d+(?:\.\d+)?)\s*(?:mm)?\s*[x×*]\s*(\d+(?:\.\d+)?)\s*(?:mm)?\s*[x×*]\s*(\d+(?:\.\d+)?)/i)
+  if (!match) return null
+  return {
+    width: Number(match[1]),
+    height: Number(match[2]),
+    depth: Number(match[3]),
+  }
+}
+
+function extractDoorHeightSequence(text: string) {
+  if (/LMS/i.test(text)) return '6/12, 4/12, 2/12'
+  if (/SML/i.test(text)) return '2/12, 4/12, 6/12'
+  const explicit = text.match(/(?:门高序列|高度序列|row\s*units?)\s*[:：=]\s*([^。；;]+)/i)
+  if (explicit?.[1]) return explicit[1].trim()
+  const fractions = Array.from(text.matchAll(/([1-6])\s*\/\s*12/g), (match) => `${match[1]}/12`)
+  if (fractions.length) return fractions.join(', ')
+  return 'equal rows'
+}
+
+function extractDoorColumnHeightSequences(text: string, columns: number, fallbackSequence: string) {
+  const sequences = Array.from({ length: columns }, () => '')
+  const setSequence = (index: number, raw: string) => {
+    if (index < 0 || index >= columns) return
+    const sequence = normalizeDoorHeightSequence(raw)
+    if (sequence) sequences[index] = sequence
+  }
+
+  const leftRaw = firstColumnSequenceMatch(text, ['左列', 'left column', 'left'])
+  const rightRaw = firstColumnSequenceMatch(text, ['右列', 'right column', 'right'])
+  if (leftRaw) setSequence(0, leftRaw)
+  if (rightRaw) setSequence(columns > 1 ? 1 : 0, rightRaw)
+
+  for (const match of text.matchAll(/(?:第\s*(\d+)\s*列|column\s*(\d+))\s*[:：=]?\s*(?:\[|【|\(|（)\s*([^\]】)）]+)\s*(?:\]|】|\)|）)/gi)) {
+    const indexText = match[1] || match[2]
+    const index = Number(indexText) - 1
+    setSequence(index, match[3])
+  }
+
+  const hasColumnSpecificSequence = sequences.some(Boolean)
+  if (hasColumnSpecificSequence) {
+    return sequences.map((sequence) => sequence || fallbackSequence)
+  }
+
+  return Array.from({ length: columns }, () => fallbackSequence)
+}
+
+function firstColumnSequenceMatch(text: string, labels: string[]) {
+  const escapedLabels = labels.map((label) => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+  const bracketPattern = new RegExp(`(?:${escapedLabels})\\s*[:：=]?\\s*[\\[【(（]\\s*([^\\]】)）]+)\\s*[\\]】)）]`, 'i')
+  const bracketMatch = text.match(bracketPattern)
+  if (bracketMatch?.[1]) return bracketMatch[1]
+
+  const inlinePattern = new RegExp(`(?:${escapedLabels})\\s*[:：=]?\\s*((?:[1-6]\\s*(?:\\/\\s*12)?\\s*[,，、 ]\\s*)+[1-6]\\s*(?:\\/\\s*12)?)`, 'i')
+  const inlineMatch = text.match(inlinePattern)
+  return inlineMatch?.[1] ?? null
+}
+
+function normalizeDoorHeightSequence(raw: string) {
+  const units = Array.from(raw.matchAll(/([1-6])\s*(?:\/\s*12)?/g), (match) => Number(match[1])).filter((unit) => unit >= 1 && unit <= 6)
+  return units.length ? units.map((unit) => `${unit}/12`).join(', ') : ''
+}
+
+function formatColumnDoorHeightSequences(columnHeightSequences: string[], fallbackSequence: string) {
+  const normalizedSequences = columnHeightSequences.filter(Boolean)
+  if (!normalizedSequences.length) return fallbackSequence
+  const uniqueSequences = Array.from(new Set(normalizedSequences))
+  if (uniqueSequences.length === 1) return uniqueSequences[0]
+  return columnHeightSequences.map((sequence, index) => `${index === 0 ? '左列' : index === 1 ? '右列' : `第${index + 1}列`} ${sequence}`).join('；')
+}
+
+function doorPreviewColumnRows(draft: DoorPromptDraft) {
+  const columns = Array.from({ length: draft.columns }, (_, index) => {
+    const sequence = draft.columnHeightSequences[index] || draft.doorHeightSequence
+    return doorPreviewRowsFromSequence(sequence)
+  })
+  if (columns.some((rows) => rows.length)) return columns
+  return Array.from({ length: draft.columns }, () => equalDoorPreviewRows(draft))
+}
+
+function equalDoorPreviewRows(draft: DoorPromptDraft) {
+  const rowCount = Math.max(1, Math.ceil(draft.doorCount / draft.columns))
+  return Array.from({ length: rowCount }, (_, index) => ({
+    label: `${index + 1}`,
+    units: 1,
+    height: estimateDoorHeight(draft.cabinetHeight, draft.doorCount, draft.columns),
+  }))
+}
+
+function doorPreviewRowsFromSequence(sequence: string) {
+  const fractionMatches = Array.from(sequence.matchAll(/([1-6])\s*\/\s*12/g), (match) => Number(match[1]))
+  if (!fractionMatches.length) return []
+  return fractionMatches.map((unit) => ({
+    label: `${unit}/12`,
+    units: unit,
+    height: unit * LOCKER_16029_UNIT_HEIGHT_MM - LOCKER_16029_DOOR_GAP_MM,
+  }))
+}
+
+function firstNumberMatch(text: string, patterns: RegExp[]) {
+  for (const pattern of patterns) {
+    const match = pattern.exec(text)
+    if (!match?.[1]) continue
+    const value = Number(match[1])
+    if (Number.isFinite(value)) return value
+  }
+  return null
+}
+
+function clampInteger(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, Math.round(value)))
+}
+
+function estimateDoorWidth(cabinetWidth: number, columns: number) {
+  if (Math.abs(cabinetWidth - 800) < 0.001 && columns === 2) return 337
+  if (Math.abs(cabinetWidth - 1000) < 0.001 && columns === 2) return 437
+  return Math.max(80, (cabinetWidth - 126) / columns)
+}
+
+function estimateDoorHeight(cabinetHeight: number, doorCount: number, columns: number) {
+  const rows = Math.max(1, Math.ceil(doorCount / columns))
+  const usableHeight = Math.min(cabinetHeight - 90, LOCKER_16029_DOOR_AREA_HEIGHT_MM)
+  return (usableHeight - (rows - 1) * LOCKER_16029_DOOR_GAP_MM) / rows
 }
 
 function StatusDot({ status }: { status: 'pass' | 'partial' | 'blocked' | 'waiting' }) {

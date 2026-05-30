@@ -26,12 +26,20 @@ These are current project code and documentation:
 
 - Engineer-facing web UI and API changes for the current 16029 route
 - Review login/download portal code
+- Review login generation queue and task-download code
 - SolidWorks 2020 config and open-evidence automation
+- SolidWorks 2020 native single-door generation helper source code
 - Current route manifest and project process docs
 - Fixed generator/finalizer entries:
   - `workers/maintenance/generate_16029_800w_gold_variable_model_freecad.py`
   - `workers/maintenance/finalize_16029_800w_gold_variable_handoff.py`
   - `workers/maintenance/validate_16029_current_handoff_scope.ps1`
+  - `tools/process_16029_review_generation_queue.mjs`
+  - `tools/generate_review_solidworks_single_door.ps1`
+  - `tools/generate_review_task_simple_freecad_model.py`
+  - `workers/solidworks_tools/ImportStepSaveNative.cs`
+  - `workers/solidworks_tools/build_import_step_save_native.ps1`
+  - `workers/solidworks_tools/sw_clone_master_model_height_probe.js`
 
 ### Do Not Commit By Default
 

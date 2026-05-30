@@ -2504,6 +2504,211 @@ td strong {
   color: #8a4f00;
 }
 
+.door-prompt-workbench {
+  margin: 0 16px 16px;
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid #c8d6e8;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.door-prompt-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.door-prompt-heading div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.door-prompt-heading span,
+.door-prompt-input label > span,
+.door-generated-prompt span,
+.door-preview-toolbar span,
+.door-assumption-list span,
+.door-warning-list span,
+.engineer-review-input label > span,
+.engineer-focus-panel > span,
+.engineer-prompt-panel > span,
+.engineer-issue-heading span,
+.engineer-path-grid label > span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.door-prompt-heading strong,
+.door-preview-toolbar strong,
+.engineer-issue-heading strong {
+  color: var(--heading);
+  line-height: 1.35;
+}
+
+.door-prompt-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr) minmax(320px, 0.9fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.door-prompt-input,
+.door-parameter-panel,
+.door-preview-panel,
+.engineer-review-input,
+.engineer-focus-panel,
+.engineer-issue-panel,
+.engineer-prompt-panel {
+  min-width: 0;
+  padding: 13px;
+  display: grid;
+  align-content: start;
+  gap: 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.door-prompt-input label,
+.engineer-review-input label,
+.engineer-path-grid label {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.door-prompt-input textarea,
+.engineer-review-input textarea,
+.engineer-path-grid input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: white;
+  color: var(--heading);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.door-prompt-input textarea,
+.engineer-review-input textarea {
+  padding: 10px 11px;
+  resize: vertical;
+}
+
+.engineer-path-grid input {
+  height: 36px;
+  padding: 0 10px;
+}
+
+.door-prompt-input textarea:focus,
+.engineer-review-input textarea:focus,
+.engineer-path-grid input:focus {
+  outline: 2px solid rgba(31, 53, 133, 0.2);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+.prompt-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.door-generated-prompt,
+.engineer-prompt-panel {
+  display: grid;
+  gap: 7px;
+}
+
+.door-generated-prompt code,
+.engineer-prompt-panel code {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.engineer-prompt-panel {
+  grid-column: 1 / -1;
+}
+
+.door-parameter-grid {
+  display: grid;
+  gap: 9px;
+}
+
+.door-parameter-grid .detail-line {
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 10px;
+  padding: 8px 9px;
+  border: 1px solid #dbe5f0;
+  border-radius: 7px;
+  background: white;
+}
+
+.door-assumption-list,
+.door-warning-list {
+  display: grid;
+  gap: 6px;
+}
+
+.door-assumption-list span,
+.door-warning-list span {
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: white;
+}
+
+.door-warning-list span {
+  border: 1px solid #f5d08d;
+  color: #8a4f00;
+  background: #fffaf0;
+}
+
+.door-preview-panel {
+  background: #f4f7fb;
+}
+
+.door-preview-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.door-preview-toolbar div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.door-preview-toolbar svg {
+  color: var(--accent);
+}
+
+.door-preview-svg {
+  width: 100%;
+  max-height: 430px;
+  display: block;
+  border: 1px solid #d7e0ec;
+  border-radius: 8px;
+  background: white;
+}
+
+.door-preview-panel p {
+  margin: 0;
+  color: #41516a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .capability-card {
   min-height: 182px;
   padding: 15px;
@@ -2710,6 +2915,85 @@ td strong {
 .download-link {
   justify-self: start;
   text-decoration: none;
+}
+
+.engineer-review-workspace {
+  background:
+    linear-gradient(180deg, rgba(31, 53, 133, 0.04), transparent 42%),
+    var(--surface);
+}
+
+.engineer-review-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) minmax(320px, 0.85fr);
+  gap: 12px;
+}
+
+.engineer-path-grid {
+  display: grid;
+  gap: 9px;
+}
+
+.engineer-focus-list {
+  display: grid;
+  gap: 8px;
+}
+
+.engineer-focus-option {
+  min-height: 34px;
+  padding: 8px 9px;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #dbe5f0;
+  border-radius: 7px;
+  background: white;
+  color: var(--heading);
+  font-size: 13px;
+}
+
+.engineer-focus-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.engineer-issue-panel {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.engineer-issue-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.engineer-issue-card {
+  min-width: 0;
+  padding: 10px;
+  display: grid;
+  gap: 5px;
+  border: 1px solid #dbe5f0;
+  border-radius: 8px;
+  background: white;
+}
+
+.engineer-issue-card strong {
+  color: var(--heading);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.engineer-issue-card p,
+.engineer-issue-card small {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 @media (max-width: 760px) {
@@ -3070,6 +3354,7 @@ td strong {
   cursor: pointer;
   font-size: 13px;
   font-weight: 720;
+  text-decoration: none;
 }
 
 .primary-action:hover:not(:disabled) {
@@ -3825,6 +4110,7 @@ td strong {
   cursor: pointer;
   font-size: 13px;
   font-weight: 720;
+  text-decoration: none;
 }
 
 .secondary-action:disabled {
@@ -4412,7 +4698,9 @@ td strong {
   .drawing-quality-grid,
   .drawing-findings,
   .drawing-rule-metric-grid,
-  .drawing-rule-candidate-list {
+  .drawing-rule-candidate-list,
+  .door-prompt-grid,
+  .engineer-review-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -4475,6 +4763,8 @@ td strong {
   .drawing-rule-metric-grid,
   .drawing-rule-evidence-grid,
   .drawing-rule-candidate-list,
+  .door-prompt-grid,
+  .engineer-review-grid,
   .stat-row,
   .priority-grid,
   .model-detail-grid {
@@ -4484,6 +4774,7 @@ td strong {
   .section-heading,
   .review-main,
   .current-generation-main,
+  .door-prompt-heading,
   .focus-layout {
     align-items: flex-start;
     flex-direction: column;

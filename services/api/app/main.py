@@ -14,6 +14,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -1588,6 +1589,22 @@ def task_output_dir(task: GenerationTask) -> Path:
     if not task.execution_result:
         raise HTTPException(status_code=409, detail="Task has no execution result.")
     return checked_local_action_path(task.execution_result.output_dir)
+
+
+def task_download_zip_path(task: GenerationTask) -> Path:
+    output_dir = task_output_dir(task)
+    files = [Path(path) for path in output_files(output_dir)]
+    if not files:
+        raise HTTPException(status_code=404, detail="Task output directory is empty.")
+
+    WORKER_LOG_DIR.mkdir(parents=True, exist_ok=True)
+    zip_path = WORKER_LOG_DIR / f"{task.id}-download.zip"
+    with ZipFile(zip_path, "w", compression=ZIP_DEFLATED) as archive:
+        for file_path in files:
+            if not file_path.exists() or not file_path.is_file():
+                continue
+            archive.write(file_path, arcname=str(file_path.relative_to(output_dir)))
+    return zip_path
 
 
 def first_output_with_suffix(output_dir: Path, suffix: str) -> Path | None:
@@ -4380,3 +4397,13 @@ def run_solidworks_package(task_id: str) -> GenerationTask:
     if row is None:
         raise HTTPException(status_code=500, detail="Generation task disappeared after SolidWorks package execution.")
     return row_to_task(row)
+
+
+@app.get("/api/generation-tasks/{task_id}/download")
+def download_generation_task(task_id: str) -> FileResponse:
+    task = row_to_task(fetch_task_or_404(task_id))
+    if task.execution_result is None:
+        raise HTTPException(status_code=409, detail="Task has no generated output yet.")
+    zip_path = task_download_zip_path(task)
+    download_name = f"{task.id}-{task.capability_id}-outputs.zip"
+    return FileResponse(path=zip_path, filename=download_name, media_type="application/zip")

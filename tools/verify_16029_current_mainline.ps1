@@ -67,6 +67,8 @@ $reviewPortalScript = Join-Path $Root "tools\serve_16029_review_downloads.mjs"
 
 Invoke-CheckInDirectory -Name "api_python_compile" -WorkingDirectory $Root -Command "python -m py_compile services\api\app\main.py services\api\app\config.py"
 Invoke-CheckInDirectory -Name "review_portal_node_check" -WorkingDirectory $Root -Command "node --check tools\serve_16029_review_downloads.mjs"
+Invoke-CheckInDirectory -Name "review_generation_queue_node_check" -WorkingDirectory $Root -Command "node --check tools\process_16029_review_generation_queue.mjs"
+Invoke-CheckInDirectory -Name "review_generation_helper_compile" -WorkingDirectory $Root -Command "python -m py_compile tools\generate_review_task_simple_freecad_model.py"
 Invoke-CheckInDirectory -Name "first_commit_scope_check" -WorkingDirectory $Root -Command "& '$scopeCheckScript'"
 Invoke-CheckInDirectory -Name "needs_decision_audit" -WorkingDirectory $Root -Command "& '$needsDecisionAuditScript'"
 Invoke-CheckInDirectory -Name "staged_scope_guard" -WorkingDirectory $Root -Command "& '$stagedGuardScript'"
