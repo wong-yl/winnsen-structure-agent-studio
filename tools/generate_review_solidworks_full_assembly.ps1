@@ -246,6 +246,85 @@ if ($DoorHeightMm -gt 0) {
 Invoke-External $NodeExe $planArgs 'plan template full assembly rule'
 Wait-File $planJson 'template rule plan json'
 $rulePlan = Read-Json $planJson
+$templateDoorModuleBindingStatus = [string] $rulePlan.derived.doorModuleBinding.status
+$missingTemplateDoorModuleUnits = @($rulePlan.derived.doorModuleBinding.missingUnits)
+$generatedDoorModulesJson = Join-Path $evidenceDir 'generated_native_door_modules.json'
+$generatedNativeDoorModules = New-Object System.Collections.Generic.List[object]
+$generatedNativeDoorModuleKeys = @{}
+$requiredGeneratedDoorModuleKeys = @{}
+if ($missingTemplateDoorModuleUnits.Count -gt 0) {
+  $singleDoorGenerator = Join-Path $root 'tools\generate_review_solidworks_single_door.ps1'
+  Assert-File $singleDoorGenerator 'single-door native SolidWorks generator'
+  foreach ($column in @($rulePlan.columns)) {
+    $side = ([string] $column.side).ToUpperInvariant()
+    if ($side -ne 'R') {
+      $side = 'L'
+    }
+    foreach ($row in @($column.rows)) {
+      $unitValue = [double] $row.unit
+      $unitText = Invariant $unitValue
+      if ($missingTemplateDoorModuleUnits -notcontains $unitText) {
+        continue
+      }
+      $key = "$side|$unitText"
+      $requiredGeneratedDoorModuleKeys[$key] = $true
+      if ($generatedNativeDoorModuleKeys.ContainsKey($key)) {
+        continue
+      }
+      $handedness = if ($side -eq 'R') { 'right' } else { 'left' }
+      $doorOutDir = Join-Path $evidenceDir ("generated_door_modules\{0}_{1}_12" -f $side, (Token $unitValue))
+      Invoke-External 'powershell.exe' @(
+        '-NoProfile',
+        '-ExecutionPolicy',
+        'Bypass',
+        '-File',
+        $singleDoorGenerator,
+        '-RequestId',
+        "$RequestId-$side-$(Token $unitValue)",
+        '-DoorWidthMm',
+        (Invariant ([double] $rulePlan.derived.doorWidthMm)),
+        '-DoorHeightMm',
+        (Invariant ([double] $row.heightMm)),
+        '-Handedness',
+        $handedness,
+        '-OutputDir',
+        $doorOutDir
+      ) "generate missing native $side $unitText/12 door module"
+      $doorSummaryJson = Join-Path $doorOutDir 'solidworks_2020_native_generation_summary.json'
+      Wait-File $doorSummaryJson 'generated native door module summary'
+      $doorSummary = Read-Json $doorSummaryJson
+      Assert-File ([string] $doorSummary.primaryAssembly) 'generated native door module assembly'
+      $generatedNativeDoorModules.Add([pscustomobject] ([ordered] @{
+        side = $side
+        unit = $unitText
+        ratio = "$unitText/12"
+        doorWidthMm = [double] $rulePlan.derived.doorWidthMm
+        doorHeightMm = [double] $row.heightMm
+        handedness = $handedness
+        assembly = [string] $doorSummary.primaryAssembly
+        summary = $doorSummaryJson
+        roleSuffix = 'generated_native_door_module'
+        source = 'solidworks_2020_native_single_door_generator'
+      })) | Out-Null
+      $generatedNativeDoorModuleKeys[$key] = $true
+    }
+  }
+}
+$generatedNativeDoorModuleArray = @($generatedNativeDoorModules.ToArray())
+$generatedDoorManifest = [ordered] @{
+  schema = 'winnsen.locker16029.generated_native_door_modules.v1'
+  templateDoorModuleBindingStatus = $templateDoorModuleBindingStatus
+  missingTemplateDoorModuleUnits = @($missingTemplateDoorModuleUnits)
+  modules = @($generatedNativeDoorModuleArray)
+}
+$generatedDoorManifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $generatedDoorModulesJson -Encoding UTF8
+$unresolvedNativeDoorModuleKeys = @($requiredGeneratedDoorModuleKeys.Keys | Where-Object { -not $generatedNativeDoorModuleKeys.ContainsKey($_) })
+$unresolvedNativeDoorModuleUnits = @($unresolvedNativeDoorModuleKeys | ForEach-Object { ($_ -split '\|', 2)[1] } | Sort-Object -Unique)
+$generatedNativeDoorModuleCount = $generatedNativeDoorModuleArray.Count
+$nativeDoorModuleBindingStatus = if ($missingTemplateDoorModuleUnits.Count -eq 0) { 'ready_from_template_modules' } elseif ($unresolvedNativeDoorModuleUnits.Count -eq 0) { 'ready_from_generated_modules' } else { 'needs_native_door_generation' }
+$nativeDoorModuleNeedsGeneration = $unresolvedNativeDoorModuleUnits.Count -gt 0
+$missingNativeDoorModuleUnits = @($unresolvedNativeDoorModuleUnits)
+$missingNativeDoorModuleUnitsText = if ($missingNativeDoorModuleUnits.Count -gt 0) { $missingNativeDoorModuleUnits -join ', ' } else { 'none' }
 
 $moduleTargetsJson = Join-Path $evidenceDir 'gold_source_module_targets.json'
 $moduleTargetsTsv = Join-Path $evidenceDir 'gold_source_module_targets.tsv'
@@ -264,6 +343,7 @@ $moduleTargetArgs = @(
   '--shelf-candidate-placements', $moduleTargetsShelfCandidatePlacementsTsv,
   '--cabinet-candidate-placements', $moduleTargetsCabinetCandidatePlacementsTsv,
   '--template-placements', $sourcePlacements,
+  '--generated-door-modules', $generatedDoorModulesJson,
   '--full-candidate-placements', $moduleTargetsFullCandidatePlacementsTsv
 )
 if (Test-Path -LiteralPath $goldStructureTrace -PathType Leaf) {
@@ -522,7 +602,7 @@ $structureFeedbackP1Count = Get-JsonInt $structureFeedback.derived 'p1Count' 0
 $structureFeedbackP2Count = Get-JsonInt $structureFeedback.derived 'p2Count' 0
 $structureNeedsRevision = $structureFeedbackIssueCount -gt 0
 $componentNamingStatus = if ($structureFeedbackP2Count -gt 0) { 'still_flagged_by_structure_feedback' } else { 'clean_after_solidworks_reopen_inspection' }
-$handoffReadinessStatus = if ($structureNeedsRevision) { 'needs_structure_revision' } else { 'engineer_ready' }
+$handoffReadinessStatus = if ($structureNeedsRevision) { 'needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'needs_native_door_generation' } else { 'engineer_ready' }
 
 Copy-Item -LiteralPath $sourceResult -Destination (Join-Path $evidenceDir 'template_build_result.json') -Force
 Copy-Item -LiteralPath $sourceComponents -Destination (Join-Path $evidenceDir 'template_components.json') -Force
@@ -543,6 +623,7 @@ $readme = @(
   "- Requested route: $(Invariant $CabinetWidthMm)W x $(Invariant $CabinetHeightMm)H x $(Invariant $CabinetDepthMm)D, $Columns columns, $DoorCount doors, row sequence $RowSequence.",
   "- Template rule mode: $($rulePlan.route.mode).",
   "- Native-template exact match: $($rulePlan.derived.compatibleWithNativeTemplate).",
+  "- Native door module binding: $nativeDoorModuleBindingStatus, template binding: $templateDoorModuleBindingStatus, generated native door modules: $generatedNativeDoorModuleCount, unresolved ratio units: $missingNativeDoorModuleUnitsText.",
   "- Rule boundary: $($rulePlan.boundary)",
   "- Gold-source cabinet module target count: $($moduleTargets.derived.targetCount), shelves from row boundaries: $($moduleTargets.derived.shelfModuleCount), build-ready fixed modules: $($moduleTargets.derived.buildReadyTargetCount), source-reference fixed module top-level count: $fixedModuleTopLevelCount.",
   "- Shelf binding candidate: $shelfCandidateStatus, requested candidate shelves: $shelfCandidateTargetCount, SolidWorks top-level candidate count: $shelfCandidateTopLevelCount. This is evidence only, not engineer-ready geometry.",
@@ -577,7 +658,7 @@ $outputFiles = Get-ChildItem -LiteralPath $OutputDir -Recurse -File |
 
 $summaryJson = Join-Path $OutputDir 'solidworks_2020_full_assembly_generation_summary.json'
 $compatibleWithNativeTemplate = [bool] $rulePlan.derived.compatibleWithNativeTemplate
-$summaryStatus = if ($structureNeedsRevision) { 'solidworks_2020_full_assembly_needs_structure_revision' } elseif ($compatibleWithNativeTemplate) { 'solidworks_2020_full_assembly_ready' } else { 'solidworks_2020_template_rule_package_ready' }
+$summaryStatus = if ($structureNeedsRevision) { 'solidworks_2020_full_assembly_needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'solidworks_2020_template_rule_needs_native_door_generation' } elseif ($compatibleWithNativeTemplate) { 'solidworks_2020_full_assembly_ready' } else { 'solidworks_2020_template_rule_package_ready' }
 $summaryResultKind = if ($structureNeedsRevision) { 'solidworks2020_structure_revision_evidence_package' } elseif ($compatibleWithNativeTemplate) { 'solidworks2020_full_assembly_model' } else { 'solidworks2020_template_rule_full_assembly_package' }
 $summary = [ordered] @{
   status = $summaryStatus
@@ -596,6 +677,12 @@ $summary = [ordered] @{
   templateRulePlan = $planJson
   templateRuleMode = $rulePlan.route.mode
   compatibleWithNativeTemplate = $compatibleWithNativeTemplate
+  templateDoorModuleBindingStatus = $templateDoorModuleBindingStatus
+  nativeDoorModuleBindingStatus = $nativeDoorModuleBindingStatus
+  generatedNativeDoorModules = $generatedDoorModulesJson
+  generatedNativeDoorModuleCount = $generatedNativeDoorModuleCount
+  missingNativeDoorModuleUnits = @($missingNativeDoorModuleUnits)
+  nativeDoorModuleNeedsGeneration = $nativeDoorModuleNeedsGeneration
   goldSourceModuleTargets = $moduleTargetsJson
   goldSourceModuleTargetsTsv = $moduleTargetsTsv
   goldSourceModuleRebuildPlanTsv = $moduleTargetsBuildPlanTsv

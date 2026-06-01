@@ -238,6 +238,9 @@ export function buildGoldModuleTargets({ plan, goldStructure = null, goldSourceR
       shelfModuleCount: shelves.length,
       requestedShelfBoundaryY,
       requestedUniqueShelfBoundaryY,
+      nativeDoorModuleBindingStatus: plan.derived?.doorModuleBinding?.status || 'unknown',
+      requestedNativeDoorModuleUnits: plan.derived?.doorModuleBinding?.requestedUnits || [],
+      missingNativeDoorModuleUnits: plan.derived?.doorModuleBinding?.missingUnits || [],
       missingSourceFileCount: targets.filter((target) => !target.exists).length,
       buildReadyTargetCount,
       needsBindingTargetCount,
@@ -431,19 +434,164 @@ function rightDoorSheetMetalCandidatePath(row) {
   return existsSync(candidate) ? candidate : ''
 }
 
-function toFullCandidatePlacementTsv(targets, templatePlacementText) {
-  const headers = ['role', 'path', 'tx_mm', 'ty_mm', 'tz_mm', 'rotation']
-  const rows = [headers.join('\t')]
+function ratioToken(value) {
+  return compactNumber(value).replace('.', 'p')
+}
+
+function planDoorRole(row, sheetMetalCandidate = false) {
+  const suffix = sheetMetalCandidate ? '_sheetmetal_panel_candidate' : ''
+  return `${row.side}_row${String(row.index).padStart(2, '0')}_${ratioToken(row.unit)}_12_door_module${suffix}`
+}
+
+function isTemplateElectronicsPlacement(row) {
+  return /gold_electronics_module/i.test(`${row.role || ''} ${row.path || ''}`)
+}
+
+function isTemplateLockBodyPlacement(row) {
+  return /cabinet_lock_body/i.test(textOf(row.role)) || /electric_lock_body/i.test(textOf(row.path))
+}
+
+function parseTemplateDoorPlacement(row) {
+  const role = textOf(row.role)
+  const sourcePath = textOf(row.path)
+  const roleMatch = role.match(/^([LR])_row\d+_([0-9]+(?:p[0-9]+)?)_12/i)
+  const pathMatch = sourcePath.match(/gold_ordinary_door_([0-9]+(?:p[0-9]+)?)_12_W\d+_(left|right)/i)
+  const side = textOf(roleMatch?.[1] || (pathMatch?.[2] ? pathMatch[2][0] : '')).toUpperCase()
+  const unitText = textOf(roleMatch?.[2] || pathMatch?.[1]).replace('p', '.')
+  const unit = Number(unitText)
+  if (!/^[LR]$/.test(side) || !Number.isFinite(unit) || unit <= 0) return null
+
+  const replacementPath = rightDoorSheetMetalCandidatePath(row)
+  return {
+    side,
+    unit: compactNumber(unit),
+    row: {
+      ...row,
+      path: replacementPath || row.path,
+    },
+    sheetMetalCandidate: Boolean(replacementPath),
+  }
+}
+
+function templatePlacementIndex(templatePlacementText) {
+  const index = {
+    electronics: null,
+    lockBody: null,
+    doors: new Map(),
+    preservedRows: [],
+  }
   for (const row of parsePlacementTsv(templatePlacementText)) {
     if (isTemplateShellBlackBoxPlacement(row)) continue
-    const replacementPath = rightDoorSheetMetalCandidatePath(row)
-    const outRow = replacementPath
-      ? { ...row, path: replacementPath, role: `${row.role}_sheetmetal_panel_candidate` }
-      : row
-    rows.push(headers.map((header) => tsvValue(outRow[header] ?? '')).join('\t'))
+    const door = parseTemplateDoorPlacement(row)
+    if (door) {
+      const key = `${door.side}|${door.unit}`
+      if (!index.doors.has(key)) index.doors.set(key, door)
+      continue
+    }
+    if (isTemplateLockBodyPlacement(row)) {
+      if (!index.lockBody) index.lockBody = row
+      continue
+    }
+    if (isTemplateElectronicsPlacement(row)) {
+      if (!index.electronics) index.electronics = row
+      continue
+    }
+    index.preservedRows.push(row)
   }
+  return index
+}
+
+function placementRowFromPlan(planRow, templateRow, overrides = {}) {
+  return {
+    role: overrides.role ?? templateRow.role,
+    path: overrides.path ?? templateRow.path,
+    tx_mm: roundMm(overrides.txMm ?? templateRow.tx_mm ?? 0),
+    ty_mm: roundMm(overrides.tyMm ?? templateRow.ty_mm ?? 0),
+    tz_mm: roundMm(overrides.tzMm ?? templateRow.tz_mm ?? 0),
+    rotation: overrides.rotation ?? templateRow.rotation ?? identityRotation().join(','),
+  }
+}
+
+function generatedDoorModuleMap(generatedDoorModules = []) {
+  const modules = Array.isArray(generatedDoorModules?.modules)
+    ? generatedDoorModules.modules
+    : Array.isArray(generatedDoorModules)
+    ? generatedDoorModules
+    : []
+  const map = new Map()
+  for (const module of modules) {
+    const side = textOf(module.side || module.handedness?.[0]).toUpperCase() === 'R' ? 'R' : 'L'
+    const unit = compactNumber(module.unit ?? module.ratioUnit ?? module.heightRatioUnit ?? 0)
+    const path = textOf(module.assembly || module.primaryAssembly || module.path)
+    if (!unit || unit === '0' || !path) continue
+    map.set(`${side}|${unit}`, {
+      side,
+      unit,
+      path,
+      roleSuffix: textOf(module.roleSuffix || 'generated_native_door_module'),
+    })
+  }
+  return map
+}
+
+export function buildFullCandidatePlacementRows({ targets = [], templatePlacementText = '', plan, generatedDoorModules = [] }) {
+  if (!plan) throw new Error('plan is required for full candidate placement generation')
+  const template = templatePlacementIndex(templatePlacementText)
+  const generatedDoors = generatedDoorModuleMap(generatedDoorModules)
+  const rows = []
+  if (template.electronics) rows.push(placementRowFromPlan(null, template.electronics))
+  rows.push(...template.preservedRows.map((row) => placementRowFromPlan(null, row)))
+
+  for (const column of Array.isArray(plan.columns) ? plan.columns : []) {
+    const side = textOf(column.side).toUpperCase() === 'R' ? 'R' : 'L'
+    for (const row of Array.isArray(column.rows) ? column.rows : []) {
+      const unit = compactNumber(row.unit)
+      const door = template.doors.get(`${side}|${unit}`)
+      if (door) {
+        rows.push(placementRowFromPlan(row, door.row, {
+          role: planDoorRole({ ...row, side }, door.sheetMetalCandidate),
+          txMm: row.centerXmm,
+          tyMm: row.centerYmm,
+          tzMm: 0,
+        }))
+      } else {
+        const generatedDoor = generatedDoors.get(`${side}|${unit}`)
+        if (generatedDoor) {
+          rows.push(placementRowFromPlan(row, {
+            role: `${side}_row${String(row.index).padStart(2, '0')}_${ratioToken(row.unit)}_12_${generatedDoor.roleSuffix}`,
+            path: generatedDoor.path,
+            rotation: identityRotation().join(','),
+          }, {
+            txMm: row.centerXmm,
+            tyMm: row.centerYmm,
+            tzMm: 0,
+          }))
+        }
+      }
+      if (template.lockBody) {
+        rows.push(placementRowFromPlan(row, template.lockBody, {
+          role: `cabinet_lock_body_${side}_row${String(row.index).padStart(2, '0')}`,
+          txMm: side === 'L' ? -Math.abs(Number(plan.derived?.lockBodyAbsXmm ?? 55.2)) : Math.abs(Number(plan.derived?.lockBodyAbsXmm ?? 55.2)),
+          tyMm: row.centerYmm,
+          tzMm: Number(plan.derived?.lockBodyZmm ?? -101.5),
+        }))
+      }
+    }
+  }
+
   for (const line of toCabinetCandidatePlacementTsv(targets).trimEnd().split(/\r?\n/).slice(1)) {
-    if (line.trim()) rows.push(line)
+    if (!line.trim()) continue
+    const [role, path, tx_mm, ty_mm, tz_mm, rotation] = line.split('\t')
+    rows.push({ role, path, tx_mm, ty_mm, tz_mm, rotation })
+  }
+  return rows
+}
+
+function toFullCandidatePlacementTsv(targets, templatePlacementText, plan, generatedDoorModules = []) {
+  const headers = ['role', 'path', 'tx_mm', 'ty_mm', 'tz_mm', 'rotation']
+  const rows = [headers.join('\t')]
+  for (const row of buildFullCandidatePlacementRows({ targets, templatePlacementText, plan, generatedDoorModules })) {
+    rows.push(headers.map((header) => tsvValue(row[header] ?? '')).join('\t'))
   }
   return `${rows.join('\n')}\n`
 }
@@ -462,10 +610,11 @@ function parseArgs(argv) {
 export function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv)
   if (!args.plan) {
-    throw new Error('Usage: node tools/locker_16029_gold_module_targets.mjs --plan <template_rule_plan.json> [--gold-structure <original_structure.json>] [--out <targets.json>] [--tsv <targets.tsv>] [--build-plan <plan.tsv>] [--fixed-placements <placements.tsv>] [--shelf-candidate-placements <placements.tsv>] [--cabinet-candidate-placements <placements.tsv>] [--template-placements <template.tsv>] [--full-candidate-placements <placements.tsv>] [--root <gold-source-root>]')
+    throw new Error('Usage: node tools/locker_16029_gold_module_targets.mjs --plan <template_rule_plan.json> [--gold-structure <original_structure.json>] [--out <targets.json>] [--tsv <targets.tsv>] [--build-plan <plan.tsv>] [--fixed-placements <placements.tsv>] [--shelf-candidate-placements <placements.tsv>] [--cabinet-candidate-placements <placements.tsv>] [--template-placements <template.tsv>] [--generated-door-modules <generated_native_door_modules.json>] [--full-candidate-placements <placements.tsv>] [--root <gold-source-root>]')
   }
+  const plan = readJson(args.plan)
   const targets = buildGoldModuleTargets({
-    plan: readJson(args.plan),
+    plan,
     goldStructure: args['gold-structure'] ? readJson(args['gold-structure']) : null,
     goldSourceRoot: args.root,
   })
@@ -479,7 +628,8 @@ export function main(argv = process.argv.slice(2)) {
   if (args['cabinet-candidate-placements']) writeText(args['cabinet-candidate-placements'], toCabinetCandidatePlacementTsv(targets.targets))
   if (args['full-candidate-placements']) {
     if (!args['template-placements']) throw new Error('--full-candidate-placements requires --template-placements')
-    writeText(args['full-candidate-placements'], toFullCandidatePlacementTsv(targets.targets, readFileSync(args['template-placements'], 'utf8')))
+    const generatedDoorModules = args['generated-door-modules'] ? readJson(args['generated-door-modules']) : []
+    writeText(args['full-candidate-placements'], toFullCandidatePlacementTsv(targets.targets, readFileSync(args['template-placements'], 'utf8'), plan, generatedDoorModules))
   }
   return targets
 }

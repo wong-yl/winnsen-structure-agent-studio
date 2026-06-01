@@ -1,4 +1,18 @@
 import { planTemplateFullAssemblyRequest } from './locker_16029_template_rules.mjs'
+import { buildFullCandidatePlacementRows } from './locker_16029_gold_module_targets.mjs'
+
+const templatePlacementText = [
+  ['role', 'path', 'tx_mm', 'ty_mm', 'tz_mm', 'rotation'],
+  ['gold_source_shell_frame_shelf', 'C:/gold/candidate_16029_740W_gold_shell_frame_shelf_only_v37.SLDPRT', '0', '0', '0', '1,0,0,0,1,0,0,0,1'],
+  ['gold_electronics_module', 'C:/gold/gold_electronics_module.SLDPRT', '0', '0', '0', '1,0,0,0,1,0,0,0,1'],
+  ['L_row01_6_12_door_module', 'C:/gold/v43_doors_variable_rib_restored_tongue/gold_ordinary_door_6_12_W307_left_v43_variable_rib_restored_tongue.SLDASM', '-193.5', '486', '0', '1,0,0,0,1,0,0,0,1'],
+  ['L_row02_4_12_door_module', 'C:/gold/v43_doors_variable_rib_restored_tongue/gold_ordinary_door_4_12_W307_left_v43_variable_rib_restored_tongue.SLDASM', '-193.5', '1248.5', '0', '1,0,0,0,1,0,0,0,1'],
+  ['L_row03_2_12_door_module', 'C:/gold/v43_doors_variable_rib_restored_tongue/gold_ordinary_door_2_12_W307_left_v43_variable_rib_restored_tongue.SLDASM', '-193.5', '1706', '0', '1,0,0,0,1,0,0,0,1'],
+  ['R_row01_2_12_door_module', 'C:/gold/v43_doors_variable_rib_restored_tongue/gold_ordinary_door_2_12_W307_right_v43_variable_rib_restored_tongue.SLDASM', '193.5', '181', '0', '1,0,0,0,1,0,0,0,1'],
+  ['R_row02_4_12_door_module', 'C:/gold/v43_doors_variable_rib_restored_tongue/gold_ordinary_door_4_12_W307_right_v43_variable_rib_restored_tongue.SLDASM', '193.5', '638.5', '0', '1,0,0,0,1,0,0,0,1'],
+  ['R_row03_6_12_door_module', 'C:/gold/v43_doors_variable_rib_restored_tongue/gold_ordinary_door_6_12_W307_right_v43_variable_rib_restored_tongue.SLDASM', '193.5', '1401', '0', '1,0,0,0,1,0,0,0,1'],
+  ['cabinet_lock_body_L_row01', 'C:/gold/electric_lock_body_zja_s500_from_23035_18door.SLDPRT', '-55.2', '486', '-101.5', '1,0,0,0,1,0,0,0,1'],
+].map((row) => row.join('\t')).join('\n') + '\n'
 
 const cases = [
   {
@@ -18,6 +32,12 @@ const cases = [
       doorCount: 6,
       placementCount: 14,
       outputToken: '740W_L6-4-2_R2-4-6',
+      bindingStatus: 'ready_from_template_modules',
+      missingUnits: [],
+      fullCandidateDoorCount: 6,
+      fullCandidateLockCount: 6,
+      firstLeftDoorX: -193.5,
+      firstRightDoorX: 193.5,
     },
   },
   {
@@ -37,6 +57,12 @@ const cases = [
       doorCount: 6,
       placementCount: 14,
       outputToken: '800W_L6-4-2_R2-4-6',
+      bindingStatus: 'ready_from_template_modules',
+      missingUnits: [],
+      fullCandidateDoorCount: 6,
+      fullCandidateLockCount: 6,
+      firstLeftDoorX: -208.5,
+      firstRightDoorX: 208.5,
     },
   },
   {
@@ -56,6 +82,12 @@ const cases = [
       doorCount: 6,
       placementCount: 14,
       outputToken: '1000W_L2-4-6_R6-4-2',
+      bindingStatus: 'ready_from_template_modules',
+      missingUnits: [],
+      fullCandidateDoorCount: 6,
+      fullCandidateLockCount: 6,
+      firstLeftDoorX: -258.5,
+      firstRightDoorX: 258.5,
     },
   },
   {
@@ -75,6 +107,16 @@ const cases = [
       doorCount: 7,
       placementCount: 16,
       outputToken: '900W_L3-3-3-3_R4-4-4',
+      bindingStatus: 'needs_native_door_generation',
+      missingUnits: ['3'],
+      fullCandidateDoorCount: 3,
+      fullCandidateLockCount: 7,
+      firstLeftDoorX: null,
+      firstRightDoorX: 233.5,
+      generatedDoorModules: [
+        { side: 'L', unit: '3', assembly: 'C:/generated/review_single_ordinary_door_W387_H450p5_left.SLDASM' },
+      ],
+      generatedFullCandidateDoorCount: 7,
     },
   },
 ]
@@ -102,19 +144,52 @@ const results = cases.map((testCase) => {
   assertEqual(plan.derived.doorCount, expect.doorCount, `${testCase.name} door count`)
   assertEqual(plan.placements.length, expect.placementCount, `${testCase.name} placement count`)
   assertEqual(plan.derived.outputToken, expect.outputToken, `${testCase.name} output token`)
+  assertEqual(plan.derived.doorModuleBinding.status, expect.bindingStatus, `${testCase.name} native door module binding status`)
+  assertEqual(JSON.stringify(plan.derived.doorModuleBinding.missingUnits), JSON.stringify(expect.missingUnits), `${testCase.name} missing native door module units`)
   assertEqual(plan.columns.length, 2, `${testCase.name} column count`)
   for (const column of plan.columns) {
     const sum = column.units.reduce((total, unit) => total + unit, 0)
     assertAlmostEqual(sum, 12, `${testCase.name} ${column.side} column ratio sum`)
   }
+  const fullCandidateRows = buildFullCandidatePlacementRows({ targets: [], templatePlacementText, plan })
+  assertEqual(fullCandidateRows.some((row) => /shell_frame_shelf/i.test(`${row.role} ${row.path}`)), false, `${testCase.name} full candidate must remove shell black-box`)
+  const doorRows = fullCandidateRows.filter((row) => /_door_module/i.test(row.role))
+  const lockRows = fullCandidateRows.filter((row) => /^cabinet_lock_body_/i.test(row.role))
+  assertEqual(doorRows.length, expect.fullCandidateDoorCount, `${testCase.name} full candidate door row count`)
+  assertEqual(lockRows.length, expect.fullCandidateLockCount, `${testCase.name} full candidate lock row count`)
+  const firstLeftDoor = doorRows.find((row) => /^L_row01_/i.test(row.role))
+  const firstRightDoor = doorRows.find((row) => /^R_row01_/i.test(row.role))
+  if (expect.firstLeftDoorX === null) {
+    assertEqual(Boolean(firstLeftDoor), false, `${testCase.name} unsupported left 3/12 door must not be emitted as build-ready`)
+  } else {
+    assertAlmostEqual(firstLeftDoor?.tx_mm, expect.firstLeftDoorX, `${testCase.name} first left door candidate X`)
+  }
+  assertAlmostEqual(firstRightDoor?.tx_mm, expect.firstRightDoorX, `${testCase.name} first right door candidate X`)
+  if (expect.generatedDoorModules) {
+    const generatedRows = buildFullCandidatePlacementRows({
+      targets: [],
+      templatePlacementText,
+      plan,
+      generatedDoorModules: { modules: expect.generatedDoorModules },
+    })
+    const generatedDoorRows = generatedRows.filter((row) => /_door_module/i.test(row.role) || /generated_native_door_module/i.test(row.role))
+    const generatedLeftDoor = generatedRows.find((row) => /^L_row01_3_12_generated_native_door_module$/i.test(row.role))
+    assertEqual(generatedDoorRows.length, expect.generatedFullCandidateDoorCount, `${testCase.name} generated native door fallback row count`)
+    assertEqual(generatedLeftDoor?.path, expect.generatedDoorModules[0].assembly, `${testCase.name} generated native door fallback path`)
+    assertAlmostEqual(generatedLeftDoor?.tx_mm, -233.5, `${testCase.name} generated native left door candidate X`)
+  }
   return {
     name: testCase.name,
     mode: plan.route.mode,
     compatibleWithNativeTemplate: plan.derived.compatibleWithNativeTemplate,
+    nativeDoorModuleBindingStatus: plan.derived.doorModuleBinding.status,
+    missingNativeDoorModuleUnits: plan.derived.doorModuleBinding.missingUnits,
     doorCount: plan.derived.doorCount,
     doorWidthMm: plan.derived.doorWidthMm,
     outputToken: plan.derived.outputToken,
     placements: plan.placements.length,
+    fullCandidateDoorRows: doorRows.length,
+    fullCandidateLockRows: lockRows.length,
     boundary: plan.boundary,
   }
 })

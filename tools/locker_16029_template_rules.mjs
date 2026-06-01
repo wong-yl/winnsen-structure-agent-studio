@@ -68,8 +68,34 @@ function goldDoorModulesForUnit(unit) {
     }))
 }
 
+function doorUnitsForPlan(columnsPlan) {
+  return [...new Set(columnsPlan.flatMap((column) => column.units.map((unit) => compactNumber(unit))))]
+}
+
+function doorModuleBindingForPlan(columnsPlan) {
+  const requestedUnits = doorUnitsForPlan(columnsPlan)
+  const bindings = requestedUnits.map((unit) => {
+    const modules = goldDoorModulesForUnit(Number(unit))
+    return {
+      unit,
+      moduleCount: modules.length,
+      status: modules.length ? 'ready_from_template_modules' : 'needs_native_door_generation',
+    }
+  })
+  const missingUnits = bindings.filter((binding) => binding.moduleCount === 0).map((binding) => binding.unit)
+  return {
+    status: missingUnits.length ? 'needs_native_door_generation' : 'ready_from_template_modules',
+    requestedUnits,
+    availableUnits: bindings.filter((binding) => binding.moduleCount > 0).map((binding) => binding.unit),
+    missingUnits,
+    availableDoorModuleCount: bindings.reduce((total, binding) => total + binding.moduleCount, 0),
+    missingDoorModuleCount: missingUnits.length,
+    bindings,
+  }
+}
+
 function targetAssemblyForPlan(columnsPlan) {
-  const doorUnits = [...new Set(columnsPlan.flatMap((column) => column.units.map((unit) => compactNumber(unit))))]
+  const doorUnits = doorUnitsForPlan(columnsPlan)
   return {
     source: 'gold_source_manifest',
     cabinetBodyModules: GOLD_SOURCE_MODULES.map((module) => ({
@@ -270,6 +296,10 @@ export function planTemplateFullAssemblyRequest(input = {}) {
     arraysAlmostEqual(columnUnits[0], TEMPLATE_RULE.leftUnits, 0.001) &&
     arraysAlmostEqual(columnUnits[1], TEMPLATE_RULE.rightUnits, 0.001)
   )
+  const doorModuleBinding = doorModuleBindingForPlan(columnsPlan)
+  if (doorModuleBinding.missingUnits.length) {
+    warnings.push(`door height ratios ${doorModuleBinding.missingUnits.map((unit) => `${unit}/12`).join(', ')} need generated native SolidWorks door modules before engineer-ready Pack-and-Go.`)
+  }
 
   const outputToken = [
     `${slugNumber(cabinetWidthMm)}W`,
@@ -304,8 +334,11 @@ export function planTemplateFullAssemblyRequest(input = {}) {
       columnCenterAbsXmm,
       doorGapMm: TEMPLATE_RULE.doorGapMm,
       unitHeightMm: TEMPLATE_RULE.unitHeightMm,
+      lockBodyAbsXmm: TEMPLATE_RULE.lockBodyAbsXmm,
+      lockBodyZmm: TEMPLATE_RULE.lockBodyZmm,
       outputToken,
       compatibleWithNativeTemplate,
+      doorModuleBinding,
     },
     columns: columnsPlan,
     targetAssembly: targetAssemblyForPlan(columnsPlan),

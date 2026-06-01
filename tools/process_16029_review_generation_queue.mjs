@@ -335,6 +335,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const readyStatuses = new Set([
       'solidworks_2020_full_assembly_ready',
       'solidworks_2020_template_rule_package_ready',
+      'solidworks_2020_template_rule_needs_native_door_generation',
       'solidworks_2020_full_assembly_needs_structure_revision',
     ])
     if (!summary || !readyStatuses.has(summary.status)) {
@@ -353,8 +354,18 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const structureNeedsRevision = structureFeedbackIssueCount > 0 ||
       String(summary.structureFeedbackStatus || '').toLowerCase() === 'issues_found' ||
       String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_structure_revision'
+    const nativeDoorModuleNeedsGeneration = Boolean(summary.nativeDoorModuleNeedsGeneration) ||
+      String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_native_door_generation'
+    const missingNativeDoorModuleUnits = Array.isArray(summary.missingNativeDoorModuleUnits)
+      ? summary.missingNativeDoorModuleUnits
+      : []
+    const generatedNativeDoorModuleCount = Number(summary.generatedNativeDoorModuleCount || 0)
     const result = updateRequest(request.id, {
-      status: structureNeedsRevision ? 'solidworks2020_full_assembly_needs_structure_revision' : 'solidworks2020_full_assembly_ready',
+      status: structureNeedsRevision
+        ? 'solidworks2020_full_assembly_needs_structure_revision'
+        : nativeDoorModuleNeedsGeneration
+        ? 'solidworks2020_template_rule_needs_native_door_generation'
+        : 'solidworks2020_full_assembly_ready',
       resultKind: structureNeedsRevision ? 'solidworks2020_structure_revision_evidence_package' : summary.resultKind || 'solidworks2020_full_assembly_model',
       outputDir,
       zipPath,
@@ -370,6 +381,12 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       templateRulePlan: summary.templateRulePlan,
       templateRuleMode: summary.templateRuleMode,
       compatibleWithNativeTemplate: summary.compatibleWithNativeTemplate,
+      templateDoorModuleBindingStatus: summary.templateDoorModuleBindingStatus,
+      nativeDoorModuleBindingStatus: summary.nativeDoorModuleBindingStatus,
+      generatedNativeDoorModules: summary.generatedNativeDoorModules,
+      generatedNativeDoorModuleCount,
+      missingNativeDoorModuleUnits,
+      nativeDoorModuleNeedsGeneration,
       goldSourceModuleTargets: summary.goldSourceModuleTargets,
       goldSourceModuleTargetsTsv: summary.goldSourceModuleTargetsTsv,
       goldSourceModuleRebuildPlanTsv: summary.goldSourceModuleRebuildPlanTsv,
@@ -432,8 +449,12 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       error: '',
       message: structureNeedsRevision
         ? `SolidWorks 2020 package generated as a structure-revision evidence package. Gold-source feedback still has ${structureFeedbackIssueCount} issue(s): P0=${structureFeedbackP0Count}, P1=${structureFeedbackP1Count}, P2=${structureFeedbackP2Count}; do not treat it as engineer-ready.`
+        : nativeDoorModuleNeedsGeneration
+        ? `SolidWorks 2020 template-rule package generated, but native door modules still need generation for ratio unit(s): ${missingNativeDoorModuleUnits.join(', ') || 'unknown'}. Download is evidence/parameter package, not engineer-ready Pack-and-Go.`
         : summary.compatibleWithNativeTemplate
         ? 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.'
+        : generatedNativeDoorModuleCount > 0
+        ? `SolidWorks 2020 template-rule package generated with ${generatedNativeDoorModuleCount} generated native door module(s). Download contains Pack-and-Go plus parameter and evidence files.`
         : 'SolidWorks 2020 template-rule package generated. Download contains the verified template Pack-and-Go plus a parameterized rule plan for engineer review.',
     })
     console.log(`processed\t${request.id}\t${zipPath}`)
