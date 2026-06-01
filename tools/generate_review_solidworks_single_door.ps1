@@ -62,7 +62,7 @@ function Invoke-External([string] $FilePath, [string[]] $Arguments, [string] $La
 }
 
 function Read-Json([string] $Path) {
-  return Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
+  return Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
 }
 
 function Assert-CloneSaved([string] $JsonPath, [string] $PartPath, [string] $StepPath, [string] $Label) {

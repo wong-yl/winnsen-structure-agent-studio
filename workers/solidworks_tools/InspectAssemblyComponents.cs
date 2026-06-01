@@ -16,13 +16,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: InspectAssemblyComponents.exe <assembly.SLDASM> <out-json>");
+                Console.Error.WriteLine("Usage: InspectAssemblyComponents.exe <assembly.SLDASM> <out-json> [--keep-open]");
                 return 2;
             }
 
             string asmPath = Path.GetFullPath(args[0]);
             string outJson = Path.GetFullPath(args[1]);
-            var result = new InspectResult { AssemblyPath = asmPath, Exists = File.Exists(asmPath) };
+            bool keepOpen = Array.Exists(args, arg => string.Equals(arg, "--keep-open", StringComparison.OrdinalIgnoreCase));
+            var result = new InspectResult { AssemblyPath = asmPath, Exists = File.Exists(asmPath), KeepOpen = keepOpen };
 
             try
             {
@@ -74,15 +75,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 if (asm != null)
                 {
                     Try(() => asm.ResolveAllLightWeightComponents(false));
-                    object raw = TryValue(() => asm.GetComponents(false), null);
-                    foreach (Component2 c in AsComponents(raw))
-                    {
-                        AddComponent(result, c, 0, "");
-                    }
-                }
 
-                if (result.Components.Count == 0)
-                {
                     Configuration cfg = TryValue(() => model.GetActiveConfiguration() as Configuration, null);
                     Component2 root = cfg == null ? null : TryValue(() => cfg.GetRootComponent3(true), null);
                     if (root != null)
@@ -91,6 +84,23 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                         {
                             AddComponentRecursive(result, c, 0, "");
                         }
+                        if (result.Components.Count > 0)
+                        {
+                            result.EnumerationMode = "root_children_recursive";
+                        }
+                    }
+
+                    if (result.Components.Count == 0)
+                    {
+                        object raw = TryValue(() => asm.GetComponents(false), null);
+                        foreach (Component2 c in AsComponents(raw))
+                        {
+                            AddComponent(result, c, 0, "");
+                        }
+                        if (result.Components.Count > 0)
+                        {
+                            result.EnumerationMode = "assembly_get_components_flat";
+                        }
                     }
                 }
 
@@ -98,13 +108,19 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 if (result.ComponentCount == 0)
                 {
                     result.Error = "component enumeration returned zero";
-                    Try(() => sw.CloseDoc(model.GetTitle()));
+                    if (!keepOpen)
+                    {
+                        Try(() => sw.CloseDoc(model.GetTitle()));
+                    }
                     WriteJson(outJson, result);
                     Console.WriteLine(outJson);
                     return 6;
                 }
 
-                Try(() => sw.CloseDoc(model.GetTitle()));
+                if (!keepOpen)
+                {
+                    Try(() => sw.CloseDoc(model.GetTitle()));
+                }
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
                 return 0;
@@ -171,6 +187,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             MathTransform transform = TryValue(() => c.Transform2, null);
             MathTransform totalTransform = TryValue(() => c.GetTotalTransform(true), null);
+            BoxInfo box = ToBoxInfo(TryValue(() => c.GetBox(false, false), null));
             result.Components.Add(new ComponentInfo
             {
                 Index = result.Components.Count,
@@ -184,6 +201,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 IsHidden = TryValue(() => c.IsHidden(false), false),
                 Transform = ToTransformInfo(transform),
                 TotalTransform = ToTransformInfo(totalTransform),
+                Box = box,
             });
         }
 
@@ -204,6 +222,27 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 TxMm = values.Count > 9 ? values[9] * 1000.0 : (double?)null,
                 TyMm = values.Count > 10 ? values[10] * 1000.0 : (double?)null,
                 TzMm = values.Count > 11 ? values[11] * 1000.0 : (double?)null,
+            };
+        }
+
+        private static BoxInfo ToBoxInfo(object raw)
+        {
+            Array array = raw as Array;
+            if (array == null || array.Length < 6) return null;
+            var values = new List<double>();
+            foreach (object item in array)
+            {
+                values.Add(Convert.ToDouble(item, CultureInfo.InvariantCulture) * 1000.0);
+            }
+            if (values.Count < 6) return null;
+            return new BoxInfo
+            {
+                XMinMm = values[0],
+                YMinMm = values[1],
+                ZMinMm = values[2],
+                XMaxMm = values[3],
+                YMaxMm = values[4],
+                ZMaxMm = values[5],
             };
         }
 
@@ -237,10 +276,12 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "assembly_path", r.AssemblyPath).Append(",");
             Field(sb, "exists", r.Exists).Append(",");
             Field(sb, "opened", r.Opened).Append(",");
+            Field(sb, "keep_open", r.KeepOpen).Append(",");
             Field(sb, "open_errors", r.OpenErrors).Append(",");
             Field(sb, "open_warnings", r.OpenWarnings).Append(",");
             Field(sb, "title", r.Title).Append(",");
             Field(sb, "model_path", r.ModelPath).Append(",");
+            Field(sb, "enumeration_mode", r.EnumerationMode).Append(",");
             Field(sb, "component_count", r.ComponentCount).Append(",");
             Field(sb, "error", r.Error).Append(",");
             sb.Append("\"components\":[");
@@ -269,6 +310,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             TransformJson(sb, c.Transform);
             sb.Append(",\"total_transform\":");
             TransformJson(sb, c.TotalTransform);
+            sb.Append(",\"box\":");
+            BoxJson(sb, c.Box);
             sb.Append("}");
         }
 
@@ -289,6 +332,26 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "tx_mm", t.TxMm).Append(",");
             Field(sb, "ty_mm", t.TyMm).Append(",");
             Field(sb, "tz_mm", t.TzMm);
+            sb.Append("}");
+        }
+
+        private static void BoxJson(StringBuilder sb, BoxInfo b)
+        {
+            if (b == null)
+            {
+                sb.Append("null");
+                return;
+            }
+            sb.Append("{");
+            Field(sb, "xmin_mm", b.XMinMm).Append(",");
+            Field(sb, "ymin_mm", b.YMinMm).Append(",");
+            Field(sb, "zmin_mm", b.ZMinMm).Append(",");
+            Field(sb, "xmax_mm", b.XMaxMm).Append(",");
+            Field(sb, "ymax_mm", b.YMaxMm).Append(",");
+            Field(sb, "zmax_mm", b.ZMaxMm).Append(",");
+            Field(sb, "xlen_mm", b.XMaxMm - b.XMinMm).Append(",");
+            Field(sb, "ylen_mm", b.YMaxMm - b.YMinMm).Append(",");
+            Field(sb, "zlen_mm", b.ZMaxMm - b.ZMinMm);
             sb.Append("}");
         }
 
@@ -323,10 +386,12 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string AssemblyPath = "";
             public bool Exists;
             public bool Opened;
+            public bool KeepOpen;
             public int OpenErrors;
             public int OpenWarnings;
             public string Title = "";
             public string ModelPath = "";
+            public string EnumerationMode = "";
             public int ComponentCount;
             public string Error = "";
             public readonly List<ComponentInfo> Components = new List<ComponentInfo>();
@@ -345,6 +410,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public bool IsHidden;
             public TransformInfo Transform;
             public TransformInfo TotalTransform;
+            public BoxInfo Box;
         }
 
         private sealed class TransformInfo
@@ -353,6 +419,16 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public double? TxMm;
             public double? TyMm;
             public double? TzMm;
+        }
+
+        private sealed class BoxInfo
+        {
+            public double XMinMm;
+            public double YMinMm;
+            public double ZMinMm;
+            public double XMaxMm;
+            public double YMaxMm;
+            public double ZMaxMm;
         }
     }
 }

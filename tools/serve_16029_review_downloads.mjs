@@ -1,7 +1,7 @@
 import { createReadStream, existsSync, mkdirSync, openSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { networkInterfaces } from 'node:os'
-import { isAbsolute, relative, resolve } from 'node:path'
+import { dirname, isAbsolute, relative, resolve } from 'node:path'
 import { spawn } from 'node:child_process'
 import { pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto'
 
@@ -20,12 +20,30 @@ const BRAND_MARK_PATH = resolve(ROOT, 'apps/web/public/brand/winnsen-mark.png')
 const GENERATION_QUEUE_WORKER_PATH = resolve(ROOT, 'tools/process_16029_review_generation_queue.mjs')
 const GENERATION_OUTPUT_ROOT = resolve(ROOT, 'workers/generated_models')
 const GENERATION_LOG_ROOT = resolve(ROOT, 'workers/generation_logs')
+const NODE_DIR = dirname(process.execPath)
 const SESSION_COOKIE = 'review_session'
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000
 const PASSWORD_ITERATIONS = 120000
 const MAX_BODY_BYTES = 32 * 1024 * 1024
 const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024
 const sessions = new Map()
+
+function childProcessEnv(extra = {}) {
+  const pathValue = [
+    NODE_DIR,
+    'C:\\Program Files\\nodejs',
+    process.env.Path || process.env.PATH || '',
+    'C:\\Windows\\System32',
+    'C:\\Windows',
+    'C:\\Windows\\System32\\WindowsPowerShell\\v1.0',
+  ].filter(Boolean).join(';')
+  return {
+    ...process.env,
+    Path: pathValue,
+    PATH: pathValue,
+    ...extra,
+  }
+}
 
 const reviewRound = {
   id: '16029-800w-gold-variable-review-20260528',
@@ -250,7 +268,17 @@ function isUnderRoot(path, root) {
   return rel === '' || (rel && !rel.startsWith('..') && !isAbsolute(rel))
 }
 
+function hasStructureRevisionFeedback(item) {
+  return Number(item.structureFeedbackIssueCount || 0) > 0 ||
+    Number(item.structureFeedbackP0Count || 0) > 0 ||
+    String(item.structureFeedbackStatus || '').toLowerCase() === 'issues_found' ||
+    String(item.handoffReadinessStatus || '').toLowerCase() === 'needs_structure_revision' ||
+    String(item.status || '').includes('needs_structure_revision') ||
+    item.resultKind === 'solidworks2020_structure_revision_evidence_package'
+}
+
 function generationStatusText(item) {
+  if (item.downloadUrl && hasStructureRevisionFeedback(item)) return '结构反馈待整改，证据包已生成'
   if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
   if (String(item.status || '').includes('failed')) return '生成失败'
   if (String(item.status || '').includes('running')) return '后台生成中'
@@ -259,7 +287,9 @@ function generationStatusText(item) {
 
 function generationActionHtml(item) {
   if (item.downloadUrl) {
-    const label = item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
+    const label = hasStructureRevisionFeedback(item)
+      ? '下载结构证据包'
+      : item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
     return `<a class="button" href="${htmlEscape(item.downloadUrl)}">${label}</a>`
   }
   if (String(item.status || '').includes('failed')) return '<button type="button" disabled>生成失败</button>'
@@ -277,10 +307,9 @@ function startGenerationQueueWorker(requestId) {
     detached: true,
     stdio: ['ignore', stdout, stderr],
     windowsHide: true,
-    env: {
-      ...process.env,
+    env: childProcessEnv({
       STUDIO_REVIEW_QUEUE_STARTED_BY: 'review_portal',
-    },
+    }),
   })
   child.unref()
 }
@@ -593,7 +622,7 @@ function renderPage(request) {
           <div class="studio-grid">
             <form id="generationForm" class="generator-form">
               <label>自然语言/参数化提示词
-                <textarea name="prompt" id="doorPrompt">800W x 1917H x 550D, two columns, LMS row units 6/12, 4/12, 2/12, W337, ordinary locker doors, electric lock, concealed hinge, latch, reinforcement rib, lock holes and hinge holes.</textarea>
+                <textarea name="prompt" id="doorPrompt">800W x 1917H x 550D, two columns, left column [6,4,2], right column [2,4,6], W337, ordinary locker doors, electric lock, concealed hinge, latch, reinforcement rib, lock holes and hinge holes.</textarea>
               </label>
               <input type="hidden" name="taskMode" id="taskMode" value="full_assembly" />
               <div class="mode-grid" role="tablist" aria-label="生成模式选择">
@@ -607,7 +636,7 @@ function renderPage(request) {
                 </button>
               </div>
               <div class="prompt-actions">
-                <button class="button secondary" type="button" data-example="800W x 1917H x 550D, two columns, LMS row units 6/12, 4/12, 2/12, W337, electric lock, concealed hinge, reinforcement rib.">整柜样例</button>
+                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, electric lock, concealed hinge, reinforcement rib.">整柜样例</button>
                 <button class="button secondary" type="button" data-example="300W x 1917H x 550D, single locker door panel, ordinary_door_panel, electric lock, concealed hinge, lock holes.">单门样例</button>
               </div>
               <details class="advanced-fields">
@@ -620,7 +649,7 @@ function renderPage(request) {
                   <label>门数<input name="doorCount" id="doorCount" value="6" /></label>
                   <label>门宽(mm)<input name="doorWidth" id="doorWidth" value="337" /></label>
                   <label>门高(mm)<input name="doorHeight" id="doorHeight" value="908" /></label>
-                  <label>门高序列<input name="rowSequence" id="rowSequence" value="6/12, 4/12, 2/12" /></label>
+                  <label>门高序列<input name="rowSequence" id="rowSequence" value="L642-R246" /></label>
                   <label>板厚<input name="thickness" id="thickness" value="待确认" /></label>
                 </div>
                 <div class="field-grid two">
@@ -770,8 +799,18 @@ function renderPage(request) {
         generationProgressLabel.textContent = label
       }
 
+      function hasStructureRevisionFeedbackForClient(item) {
+        return Number(item.structureFeedbackIssueCount || 0) > 0 ||
+          Number(item.structureFeedbackP0Count || 0) > 0 ||
+          String(item.structureFeedbackStatus || '').toLowerCase() === 'issues_found' ||
+          String(item.handoffReadinessStatus || '').toLowerCase() === 'needs_structure_revision' ||
+          String(item.status || '').includes('needs_structure_revision') ||
+          item.resultKind === 'solidworks2020_structure_revision_evidence_package'
+      }
+
       function generationStatusTextForClient(item) {
         const status = String(item.status || '')
+        if (item.downloadUrl && hasStructureRevisionFeedbackForClient(item)) return '结构反馈待整改，证据包已生成'
         if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
         if (status.includes('failed')) return '生成失败'
         if (status.includes('running')) return '后台生成中'
@@ -785,7 +824,9 @@ function renderPage(request) {
           const link = document.createElement('a')
           link.className = 'button'
           link.href = item.downloadUrl
-          link.textContent = item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
+          link.textContent = hasStructureRevisionFeedbackForClient(item)
+            ? '下载结构证据包'
+            : item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
           wrapper.append(link)
           return wrapper
         }
@@ -883,6 +924,11 @@ function renderPage(request) {
       }
 
       function parseRowSequence(text) {
+        const compact = text.match(/\\bL\\s*([0-9]+(?:[.-][0-9]+)*)\\s*[-_/]\\s*R\\s*([0-9]+(?:[.-][0-9]+)*)\\b/i)
+        if (compact) return 'L' + compact[1].replace(/[^0-9.]/g, '') + '-R' + compact[2].replace(/[^0-9.]/g, '')
+        const left = labeledRowUnits(text, ['left', 'L'])
+        const right = labeledRowUnits(text, ['right', 'R'])
+        if (left.length && right.length) return 'L: ' + left.map((unit) => unit + '/12').join(', ') + '; R: ' + right.map((unit) => unit + '/12').join(', ')
         if (/LMS/i.test(text)) return '6/12, 4/12, 2/12'
         if (/SML/i.test(text)) return '2/12, 4/12, 6/12'
         const explicit = text.match(/(?:门高序列|高度序列|row\\s*units?)\\s*[:：=]\\s*([^。；;]+)/i)
@@ -896,11 +942,86 @@ function renderPage(request) {
         return units
       }
 
+      function plainRowUnits(sequence) {
+        if (/\\d+\\s*\\/\\s*12/.test(String(sequence || ''))) return []
+        return Array.from(String(sequence || '').matchAll(/(?<![0-9.])([1-9](?:\\.[0-9]+)?)(?![0-9.])/g), (match) => Number(match[1]))
+          .filter((unit) => Number.isFinite(unit) && unit > 0 && unit <= 12)
+      }
+
+      function compactCodeUnits(value) {
+        const cleaned = String(value || '').replace(/[^0-9.]/g, '')
+        if (!cleaned) return []
+        if (cleaned.includes('.')) return cleaned.split('.').map(Number).filter((unit) => Number.isFinite(unit) && unit > 0)
+        return Array.from(cleaned, (char) => Number(char)).filter((unit) => Number.isFinite(unit) && unit > 0)
+      }
+
+      function normalizeRatioUnits(units) {
+        const sum = units.reduce((total, unit) => total + unit, 0)
+        if (!sum) return []
+        return units.map((unit) => Math.round((unit / sum) * 12000) / 1000)
+      }
+
+      function unitsFromAnySequence(value) {
+        const fractionUnits = explicitRowUnits(value)
+        if (fractionUnits.length) return fractionUnits
+        return plainRowUnits(value)
+      }
+
+      function labeledRowUnits(text, labels) {
+        const source = String(text || '')
+        for (const label of labels) {
+          const escaped = String(label)
+          const prefix = '(?:^|[^A-Za-z])' + escaped
+          const bracket = new RegExp(prefix + '\\\\s*(?:column)?\\\\s*[:=]?\\\\s*[\\\\[(]\\\\s*([^\\\\])]+)\\\\s*[\\\\])]', 'i')
+          const bracketMatch = source.match(bracket)
+          if (bracketMatch && bracketMatch[1]) return unitsFromAnySequence(bracketMatch[1])
+          const inline = new RegExp(prefix + '\\\\s*(?:column)?\\\\s*[:=]?\\\\s*((?:[0-9]+(?:\\\\.[0-9]+)?\\\\s*(?:/\\\\s*12)?\\\\s*[,;\\\\s-]+){1,8}[0-9]+(?:\\\\.[0-9]+)?\\\\s*(?:/\\\\s*12)?)', 'i')
+          const inlineMatch = source.match(inline)
+          if (inlineMatch && inlineMatch[1]) return unitsFromAnySequence(inlineMatch[1])
+        }
+        return []
+      }
+
+      function explicitColumnRowUnits(sequence, columns) {
+        const source = String(sequence || '')
+        const compact = source.match(/\\bL\\s*([0-9]+(?:[.-][0-9]+)*)\\s*[-_/]\\s*R\\s*([0-9]+(?:[.-][0-9]+)*)\\b/i)
+        if (compact) {
+          const left = compactCodeUnits(compact[1])
+          const right = compactCodeUnits(compact[2])
+          if (left.length && right.length) return [normalizeRatioUnits(left), normalizeRatioUnits(right)].slice(0, columns)
+        }
+        const left = labeledRowUnits(source, ['left', 'L'])
+        const right = labeledRowUnits(source, ['right', 'R'])
+        if (left.length && right.length) return [normalizeRatioUnits(left), normalizeRatioUnits(right)].slice(0, columns)
+        return []
+      }
+
+      function hasExplicitRowSequence(sequence) {
+        return explicitColumnRowUnits(sequence, 2).length > 0 || explicitRowUnits(sequence).length > 0 || plainRowUnits(sequence).length > 0
+      }
+
       function rowUnitsFromSequence(sequence, doorCount, columns) {
         const units = explicitRowUnits(sequence)
-        if (units.length) return units
+        if (units.length) return normalizeRatioUnits(units)
+        const plainUnits = plainRowUnits(sequence)
+        if (plainUnits.length) return normalizeRatioUnits(plainUnits)
         const rows = Math.max(1, Math.ceil(doorCount / columns))
         return Array.from({ length: rows }, () => 1)
+      }
+
+      function columnRowUnitsFromSequence(sequence, doorCount, columns) {
+        const explicitColumns = explicitColumnRowUnits(sequence, columns)
+        if (explicitColumns.length) return explicitColumns
+        const shared = rowUnitsFromSequence(sequence, doorCount, columns)
+        return Array.from({ length: columns }, () => shared)
+      }
+
+      function doorCountFromColumnUnits(columns) {
+        return columns.reduce((total, units) => total + units.length, 0)
+      }
+
+      function sequenceSummaryForHud(columns) {
+        return columns.map((units, index) => (index === 0 ? 'L ' : index === 1 ? 'R ' : 'C' + (index + 1) + ' ') + units.map((unit) => String(unit).replace(/\\.0$/, '')).join('/')).join(' | ')
       }
 
       function estimateDoorWidthFor(cabinetWidth, columns) {
@@ -910,8 +1031,9 @@ function renderPage(request) {
       }
 
       function estimateDoorHeightFor(cabinetHeight, doorCount, columns, rowSequence) {
-        const explicitUnits = explicitRowUnits(rowSequence)
-        const units = rowUnitsFromSequence(rowSequence, doorCount, columns)
+        const columnUnits = columnRowUnitsFromSequence(rowSequence, doorCount, columns)
+        const explicitUnits = columnUnits[0] || []
+        const units = explicitUnits.length ? explicitUnits : rowUnitsFromSequence(rowSequence, doorCount, columns)
         const rows = Math.max(1, units.length || Math.ceil(doorCount / columns))
         if (explicitUnits.length) return Math.max(80, Math.round(explicitUnits[0] * 152.5 - 7))
         const bodyHeight = Math.min(cabinetHeight - 90, 1827)
@@ -924,11 +1046,12 @@ function renderPage(request) {
         const W = numberValue('cabinetWidth', 800)
         const H = numberValue('cabinetHeight', 1917)
         const columns = Math.max(1, Math.min(6, Math.round(numberValue('columns', 2))))
-        const rowUnits = explicitRowUnits(fields.rowSequence.value)
-        const sequenceDefinesRows = rowUnits.length > 0
+        const columnUnits = columnRowUnitsFromSequence(fields.rowSequence.value, numberValue('doorCount', 6), columns)
+        const sequenceDoorCount = doorCountFromColumnUnits(columnUnits)
+        const sequenceDefinesRows = hasExplicitRowSequence(fields.rowSequence.value)
         if (sourceId === 'columns' && fields.columns.value !== String(columns)) fields.columns.value = String(columns)
-        if (sourceId === 'rowSequence' && sequenceDefinesRows) fields.doorCount.value = String(rowUnits.length * columns)
-        const doorCount = Math.max(columns, Math.round(numberValue('doorCount', rowUnits.length * columns || 6)))
+        if (sourceId === 'rowSequence' && sequenceDefinesRows) fields.doorCount.value = String(sequenceDoorCount)
+        const doorCount = Math.max(columns, Math.round(numberValue('doorCount', sequenceDoorCount || 6)))
         const shouldUpdateDoorWidth = ['cabinetWidth', 'columns'].includes(sourceId) || fields.doorWidth.value === lastAutoDoorWidth
         const shouldUpdateDoorHeight = ['cabinetHeight', 'doorCount', 'columns', 'rowSequence'].includes(sourceId) || fields.doorHeight.value === lastAutoDoorHeight
         if (shouldUpdateDoorWidth) {
@@ -957,9 +1080,10 @@ function renderPage(request) {
         const autoColumns = isSingleModel ? 1 : 2
         const columns = Math.max(1, Math.min(6, Math.round(firstMatch(text, [/(\\d+)\\s*(?:列|columns?|cols?)/i]) || autoColumns)))
         const rowSequence = isSingleModel ? 'single panel' : parseRowSequence(text)
-        const sequenceRows = isSingleModel ? [1] : rowUnitsFromSequence(rowSequence, 12, columns)
+        const sequenceColumns = isSingleModel ? [[1]] : columnRowUnitsFromSequence(rowSequence, 12, columns)
+        const sequenceDoorCount = isSingleModel ? 1 : doorCountFromColumnUnits(sequenceColumns)
         const explicitDoorCount = firstMatch(text, [/门数\\s*[:：=]?\\s*(\\d+)/i, /door\\s*count\\s*[:=]?\\s*(\\d+)/i, /(\\d+)\\s*门(?:柜|整柜|布局|方案)/])
-        const doorCount = isSingleModel ? 1 : Math.max(columns, Math.round(explicitDoorCount || sequenceRows.length * columns || 12))
+        const doorCount = isSingleModel ? 1 : Math.max(columns, Math.round(explicitDoorCount || sequenceDoorCount || 12))
         const explicitDoorWidth = firstMatch(text, [/门宽\\s*[:：=]?\\s*(\\d+(?:\\.\\d+)?)/i, /door\\s*width\\s*[:=]?\\s*(\\d+(?:\\.\\d+)?)/i, /W\\s*(\\d+(?:\\.\\d+)?)/])
         const explicitDoorHeight = firstMatch(text, [/门高\\s*[:：=]?\\s*(\\d+(?:\\.\\d+)?)/i, /door\\s*height\\s*[:=]?\\s*(\\d+(?:\\.\\d+)?)/i, /H\\s*(\\d+(?:\\.\\d+)?)/])
         const estimatedDoorWidth = isSingleModel ? cabinetWidth : estimateDoorWidthFor(cabinetWidth, columns)
@@ -1117,8 +1241,7 @@ function renderPage(request) {
         const D = numberValue('cabinetDepth', 550)
         const columns = Math.max(1, Math.round(numberValue('columns', 2)))
         const doorCount = Math.max(columns, Math.round(numberValue('doorCount', 6)))
-        const units = rowUnitsFromSequence(fields.rowSequence.value, doorCount, columns)
-        const rows = units.length || Math.ceil(doorCount / columns)
+        const columnUnits = columnRowUnitsFromSequence(fields.rowSequence.value, doorCount, columns)
         const scale = Math.min(360 / W, 430 / H, 260 / D) * zoom
         const modelW = W * scale
         const modelH = H * scale
@@ -1129,17 +1252,19 @@ function renderPage(request) {
         const frontZ = modelD / 2 + 7
         const gap = 7 * scale
         const doorW = Math.min(modelW / columns - gap * 2, numberValue('doorWidth', W / columns) * scale)
-        const totalUnits = units.reduce((sum, unit) => sum + unit, 0)
-        let yTop = modelH / 2 - 44 * scale
-        for (let row = 0; row < rows; row += 1) {
-          const unit = units[row] || 1
-          const rowH = units.length ? (modelH - 88 * scale - gap * (rows - 1)) * unit / totalUnits : (modelH - 88 * scale - gap * (rows - 1)) / rows
-          const cy = yTop - rowH / 2
-          for (let col = 0; col < columns; col += 1) {
+        for (let col = 0; col < columns; col += 1) {
+          const units = columnUnits[col] && columnUnits[col].length ? columnUnits[col] : rowUnitsFromSequence(fields.rowSequence.value, doorCount, columns)
+          const rows = units.length || Math.ceil(doorCount / columns)
+          const totalUnits = units.reduce((sum, unit) => sum + unit, 0)
+          let yTop = modelH / 2 - 44 * scale
+          for (let row = 0; row < rows; row += 1) {
+            const unit = units[row] || 1
+            const rowH = units.length ? (modelH - 88 * scale - gap * (rows - 1)) * unit / totalUnits : (modelH - 88 * scale - gap * (rows - 1)) / rows
+            const cy = yTop - rowH / 2
             const cx = -modelW / 2 + (col + .5) * (modelW / columns)
             addBox(faces, cx, cy, frontZ, doorW, rowH, 8, { front:'#ffffff', right:'#dbe4ef', left:'#f6f8fb', top:'#ffffff', bottom:'#d6e1ee' }, '#1f3585')
+            yTop -= rowH + gap
           }
-          yTop -= rowH + gap
         }
         faces.map((face) => facePath(face, angle)).sort((a, b) => a.depth - b.depth).forEach((face) => {
           ctx.beginPath()
@@ -1152,18 +1277,21 @@ function renderPage(request) {
           ctx.stroke()
         })
         drawBoxWireframe(angle, modelW, modelH, modelD, 'rgba(31,53,133,.58)')
-        yTop = modelH / 2 - 44 * scale
-        for (let row = 0; row < rows; row += 1) {
-          const unit = units[row] || 1
-          const rowH = units.length ? (modelH - 88 * scale - gap * (rows - 1)) * unit / totalUnits : (modelH - 88 * scale - gap * (rows - 1)) / rows
-          const cy = yTop - rowH / 2
-          for (let col = 0; col < columns; col += 1) {
+        for (let col = 0; col < columns; col += 1) {
+          const units = columnUnits[col] && columnUnits[col].length ? columnUnits[col] : rowUnitsFromSequence(fields.rowSequence.value, doorCount, columns)
+          const rows = units.length || Math.ceil(doorCount / columns)
+          const totalUnits = units.reduce((sum, unit) => sum + unit, 0)
+          let yTop = modelH / 2 - 44 * scale
+          for (let row = 0; row < rows; row += 1) {
+            const unit = units[row] || 1
+            const rowH = units.length ? (modelH - 88 * scale - gap * (rows - 1)) * unit / totalUnits : (modelH - 88 * scale - gap * (rows - 1)) / rows
+            const cy = yTop - rowH / 2
             const cx = -modelW / 2 + (col + .5) * (modelW / columns)
             drawMarker(cx + doorW / 2 - 12, cy, frontZ + 8, 4, '#f04a12', angle)
             drawMarker(cx - doorW / 2 + 10, cy + rowH / 2 - 18, frontZ + 8, 3, '#67758a', angle)
             drawMarker(cx - doorW / 2 + 10, cy - rowH / 2 + 18, frontZ + 8, 3, '#67758a', angle)
+            yTop -= rowH + gap
           }
-          yTop -= rowH + gap
         }
         drawTextAt({ x:0, y:-modelH / 2 - 42 * scale, z:modelD / 2 + 30 * scale }, W + 'W', angle, '#28476d')
         drawTextAt({ x:modelW / 2 + 45 * scale, y:0, z:modelD / 2 + 10 * scale }, H + 'H', angle, '#28476d')
@@ -1171,6 +1299,7 @@ function renderPage(request) {
         hudCabinetSize.textContent = W + 'W x ' + H + 'H x ' + D + 'D'
         hudDoorSize.textContent = fields.doorWidth.value + 'W x ' + fields.doorHeight.value + 'H'
         hudDoorLayout.textContent = columns + '列 / ' + doorCount + '门 / ' + fields.rowSequence.value
+        hudDoorLayout.textContent = columns + ' / ' + doorCount + ' / ' + sequenceSummaryForHud(columnUnits)
         hudHardware.textContent = fields.lockType.value + ' / ' + fields.hingeType.value
       }
 
@@ -1519,7 +1648,9 @@ const server = createServer(async (request, response) => {
       const stat = statSync(zipPath)
       const downloadKind = item.resultKind === 'cad_worker_payload_package'
         ? 'cad-worker-package'
-        : item.resultKind === 'solidworks2020_full_assembly_model'
+        : item.resultKind === 'solidworks2020_full_assembly_model' ||
+            item.resultKind === 'solidworks2020_template_rule_full_assembly_package' ||
+            item.resultKind === 'solidworks2020_structure_revision_evidence_package'
           ? 'solidworks2020-full-assembly'
           : 'solidworks2020-sheetmetal-model'
       response.writeHead(200, {

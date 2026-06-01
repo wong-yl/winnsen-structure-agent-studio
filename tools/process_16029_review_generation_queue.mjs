@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { planTemplateFullAssemblyRequest } from './locker_16029_template_rules.mjs'
 
 const ROOT = resolve('D:/Winnsen_Structure_Agent_Studio')
 const DATA_DIR = resolve(ROOT, 'data')
@@ -8,6 +9,7 @@ const REQUEST_DIR = resolve(DATA_DIR, 'review_generation_requests')
 const INDEX_PATH = resolve(REQUEST_DIR, 'generation_request_index.json')
 const OUTPUT_ROOT = resolve(ROOT, 'workers/generated_models/review_generation_requests')
 const LOG_ROOT = resolve(ROOT, 'workers/generation_logs')
+const NODE_DIR = dirname(process.execPath)
 
 function readJson(path, fallback) {
   try {
@@ -68,6 +70,24 @@ function powershellExe() {
   return existsSync(candidate) ? candidate : 'powershell.exe'
 }
 
+function childProcessEnv(extra = {}) {
+  const pathValue = [
+    NODE_DIR,
+    'C:\\Program Files\\nodejs',
+    process.env.Path || process.env.PATH || '',
+    'C:\\Windows\\System32',
+    'C:\\Windows',
+    'C:\\Windows\\System32\\WindowsPowerShell\\v1.0',
+  ].filter(Boolean).join(';')
+  return {
+    ...process.env,
+    Path: pathValue,
+    PATH: pathValue,
+    STUDIO_NODE_EXE: process.execPath,
+    ...extra,
+  }
+}
+
 function compressPackage(sourceDir, zipPath) {
   if (existsSync(zipPath)) rmSync(zipPath, { force: true })
   mkdirSync(dirname(zipPath), { recursive: true })
@@ -81,6 +101,7 @@ function compressPackage(sourceDir, zipPath) {
     cwd: ROOT,
     encoding: 'utf8',
     windowsHide: true,
+    env: childProcessEnv(),
   })
   if (completed.status !== 0) {
     throw new Error(`Compress-Archive failed: ${completed.stderr || completed.stdout || completed.error?.message || 'unknown error'}`)
@@ -96,6 +117,7 @@ function runPowerShellScript(scriptPath, args, label) {
       encoding: 'utf8',
       windowsHide: true,
       timeout: 20 * 60 * 1000,
+      env: childProcessEnv(),
     },
   )
   if (completed.status !== 0) {
@@ -158,16 +180,27 @@ function isFullAssemblyRequest(request) {
   return String(request.taskMode || 'full_assembly') !== 'single_model'
 }
 
+function fullAssemblyTemplatePlanFor(request) {
+  if (!isFullAssemblyRequest(request)) return null
+  try {
+    return planTemplateFullAssemblyRequest({
+      cabinetWidth: request.cabinetWidth,
+      cabinetHeight: request.cabinetHeight,
+      cabinetDepth: request.cabinetDepth,
+      columns: request.columns,
+      doorCount: request.doorCount,
+      doorWidth: request.doorWidth,
+      doorHeight: request.doorHeight,
+      rowSequence: request.rowSequence,
+      prompt: request.prompt,
+    })
+  } catch {
+    return null
+  }
+}
+
 function shouldGenerateSolidWorksTemplateFullAssembly(request) {
-  if (!isFullAssemblyRequest(request)) return false
-  const cabinetWidth = asNumber(request.cabinetWidth, 0)
-  const cabinetHeight = asNumber(request.cabinetHeight, 0)
-  const cabinetDepth = asNumber(request.cabinetDepth, 0)
-  if (Math.abs(cabinetWidth - 740) > 0.5) return false
-  if (Math.abs(cabinetHeight - 1917) > 0.5) return false
-  if (Math.abs(cabinetDepth - 550) > 0.5) return false
-  const routeText = `${request.prompt || ''} ${request.rowSequence || ''}`.toLowerCase()
-  return /l642|r246|6\s*[,/]\s*4\s*[,/]\s*2|2\s*[,/]\s*4\s*[,/]\s*6|740w/.test(routeText)
+  return Boolean(fullAssemblyTemplatePlanFor(request))
 }
 
 function processSolidWorksSingleDoorRequest(request, options) {
@@ -265,29 +298,46 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const cabinetWidth = asNumber(request.cabinetWidth, 740)
     const cabinetHeight = asNumber(request.cabinetHeight, 1917)
     const cabinetDepth = asNumber(request.cabinetDepth, 550)
+    const columns = Math.max(1, Math.round(asNumber(request.columns, 2)))
+    const doorCount = Math.max(1, Math.round(asNumber(request.doorCount, 6)))
+    const doorWidth = asNumber(request.doorWidth, 0)
+    const doorHeight = asNumber(request.doorHeight, 0)
     const generator = resolve(ROOT, 'tools/generate_review_solidworks_full_assembly.ps1')
     if (!existsSync(generator)) throw new Error(`SolidWorks full assembly generator was not found: ${generator}`)
 
-    const output = runPowerShellScript(
-      generator,
-      [
-        '-RequestId',
-        request.id,
-        '-CabinetWidthMm',
-        String(cabinetWidth),
-        '-CabinetHeightMm',
-        String(cabinetHeight),
-        '-CabinetDepthMm',
-        String(cabinetDepth),
-      ],
-      'SolidWorks 2020 template full assembly generation',
-    )
+    const generatorArgs = [
+      '-RequestId',
+      request.id,
+      '-CabinetWidthMm',
+      String(cabinetWidth),
+      '-CabinetHeightMm',
+      String(cabinetHeight),
+      '-CabinetDepthMm',
+      String(cabinetDepth),
+      '-Columns',
+      String(columns),
+      '-DoorCount',
+      String(doorCount),
+      '-RowSequence',
+      request.rowSequence || '',
+      '-Prompt',
+      request.prompt || '',
+    ]
+    if (doorWidth > 0) generatorArgs.push('-DoorWidthMm', String(doorWidth))
+    if (doorHeight > 0) generatorArgs.push('-DoorHeightMm', String(doorHeight))
+
+    const output = runPowerShellScript(generator, generatorArgs, 'SolidWorks 2020 template full assembly generation')
     const summaryPath = lastSummaryPath(output, 'solidworks_2020_full_assembly_generation_summary.json')
     if (!summaryPath || !existsSync(summaryPath)) {
       throw new Error(`SolidWorks full assembly generation summary was not found. Output:\n${output}`)
     }
     const summary = readJson(summaryPath, null)
-    if (!summary || summary.status !== 'solidworks_2020_full_assembly_ready') {
+    const readyStatuses = new Set([
+      'solidworks_2020_full_assembly_ready',
+      'solidworks_2020_template_rule_package_ready',
+      'solidworks_2020_full_assembly_needs_structure_revision',
+    ])
+    if (!summary || !readyStatuses.has(summary.status)) {
       throw new Error(`SolidWorks full assembly generation did not report ready status: ${summaryPath}`)
     }
 
@@ -296,9 +346,16 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     compressPackage(outputDir, zipPath)
 
     const completedAt = nowIso()
+    const structureFeedbackIssueCount = Number(summary.structureFeedbackIssueCount || 0)
+    const structureFeedbackP0Count = Number(summary.structureFeedbackP0Count || 0)
+    const structureFeedbackP1Count = Number(summary.structureFeedbackP1Count || 0)
+    const structureFeedbackP2Count = Number(summary.structureFeedbackP2Count || 0)
+    const structureNeedsRevision = structureFeedbackIssueCount > 0 ||
+      String(summary.structureFeedbackStatus || '').toLowerCase() === 'issues_found' ||
+      String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_structure_revision'
     const result = updateRequest(request.id, {
-      status: 'solidworks2020_full_assembly_ready',
-      resultKind: 'solidworks2020_full_assembly_model',
+      status: structureNeedsRevision ? 'solidworks2020_full_assembly_needs_structure_revision' : 'solidworks2020_full_assembly_ready',
+      resultKind: structureNeedsRevision ? 'solidworks2020_structure_revision_evidence_package' : summary.resultKind || 'solidworks2020_full_assembly_model',
       outputDir,
       zipPath,
       downloadUrl: `/generation-download/${request.id}`,
@@ -307,9 +364,77 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       modelGeneratedAt: completedAt,
       primaryAssembly: summary.primaryAssembly,
       packAndGoDir: summary.packAndGoDir,
+      packAndGoChineseSaveNameMapCount: summary.packAndGoChineseSaveNameMapCount,
+      packAndGoGotDocumentSaveToNames: summary.packAndGoGotDocumentSaveToNames,
+      packAndGoSetDocumentSaveToNames: summary.packAndGoSetDocumentSaveToNames,
+      templateRulePlan: summary.templateRulePlan,
+      templateRuleMode: summary.templateRuleMode,
+      compatibleWithNativeTemplate: summary.compatibleWithNativeTemplate,
+      goldSourceModuleTargets: summary.goldSourceModuleTargets,
+      goldSourceModuleTargetsTsv: summary.goldSourceModuleTargetsTsv,
+      goldSourceModuleRebuildPlanTsv: summary.goldSourceModuleRebuildPlanTsv,
+      goldSourceFixedCabinetModulePlacementsTsv: summary.goldSourceFixedCabinetModulePlacementsTsv,
+      goldSourceShelfCandidatePlacementsTsv: summary.goldSourceShelfCandidatePlacementsTsv,
+      goldSourceCabinetCandidatePlacementsTsv: summary.goldSourceCabinetCandidatePlacementsTsv,
+      goldSourceFullAssemblyCandidatePlacementsTsv: summary.goldSourceFullAssemblyCandidatePlacementsTsv,
+      goldSourceModuleTargetCount: summary.goldSourceModuleTargetCount,
+      goldSourceShelfModuleTargetCount: summary.goldSourceShelfModuleTargetCount,
+      goldSourceShelfCandidateTargetCount: summary.goldSourceShelfCandidateTargetCount,
+      goldSourceCabinetCandidateTargetCount: summary.goldSourceCabinetCandidateTargetCount,
+      goldSourceModuleBuildReadyTargetCount: summary.goldSourceModuleBuildReadyTargetCount,
+      goldSourceModuleNeedsBindingTargetCount: summary.goldSourceModuleNeedsBindingTargetCount,
+      goldSourceModuleTargetsSourceStructureBound: summary.goldSourceModuleTargetsSourceStructureBound,
+      fixedCabinetSourceReferenceAssembly: summary.fixedCabinetSourceReferenceAssembly,
+      fixedCabinetSourceReferenceBuild: summary.fixedCabinetSourceReferenceBuild,
+      fixedCabinetSourceReferenceStructure: summary.fixedCabinetSourceReferenceStructure,
+      fixedCabinetSourceReferenceComponentCount: summary.fixedCabinetSourceReferenceComponentCount,
+      fixedCabinetSourceReferenceTopLevelCount: summary.fixedCabinetSourceReferenceTopLevelCount,
+      shelfBindingCandidateStatus: summary.shelfBindingCandidateStatus,
+      shelfBindingCandidateAssembly: summary.shelfBindingCandidateAssembly,
+      shelfBindingCandidateBuild: summary.shelfBindingCandidateBuild,
+      shelfBindingCandidateStructure: summary.shelfBindingCandidateStructure,
+      shelfBindingCandidateComponentCount: summary.shelfBindingCandidateComponentCount,
+      shelfBindingCandidateTopLevelCount: summary.shelfBindingCandidateTopLevelCount,
+      cabinetBodyCandidateStatus: summary.cabinetBodyCandidateStatus,
+      cabinetBodyCandidateAssembly: summary.cabinetBodyCandidateAssembly,
+      cabinetBodyCandidateBuild: summary.cabinetBodyCandidateBuild,
+      cabinetBodyCandidateStructure: summary.cabinetBodyCandidateStructure,
+      cabinetBodyCandidateComponentCount: summary.cabinetBodyCandidateComponentCount,
+      cabinetBodyCandidateTopLevelCount: summary.cabinetBodyCandidateTopLevelCount,
+      cabinetBodyCandidateBboxStatus: summary.cabinetBodyCandidateBboxStatus,
+      cabinetBodyCandidateShelfInsideBodyEnvelope: summary.cabinetBodyCandidateShelfInsideBodyEnvelope,
+      cabinetBodyCandidateShelfBboxCount: summary.cabinetBodyCandidateShelfBboxCount,
+      cabinetBodyCandidateFixedBodyBboxCount: summary.cabinetBodyCandidateFixedBodyBboxCount,
+      cabinetBodyCandidateBodyEnvelope: summary.cabinetBodyCandidateBodyEnvelope,
+      fullAssemblyCandidateStatus: summary.fullAssemblyCandidateStatus,
+      fullAssemblyCandidateAssembly: summary.fullAssemblyCandidateAssembly,
+      fullAssemblyCandidateBuild: summary.fullAssemblyCandidateBuild,
+      fullAssemblyCandidateStructure: summary.fullAssemblyCandidateStructure,
+      fullAssemblyCandidateComponentCount: summary.fullAssemblyCandidateComponentCount,
+      fullAssemblyCandidateTopLevelCount: summary.fullAssemblyCandidateTopLevelCount,
+      packSourceAssembly: summary.packSourceAssembly,
+      structureRecord: summary.structureRecord,
+      structureFeedback: summary.structureFeedback,
+      structureFeedbackStatus: summary.structureFeedbackStatus,
+      structureFeedbackIssueCount: summary.structureFeedbackIssueCount,
+      structureFeedbackP0Count: summary.structureFeedbackP0Count,
+      structureFeedbackP1Count: summary.structureFeedbackP1Count,
+      structureFeedbackP2Count: summary.structureFeedbackP2Count,
+      handoffReadinessStatus: summary.handoffReadinessStatus,
+      componentRenameAttemptCount: summary.componentRenameAttemptCount,
+      componentRenameAssignedCount: summary.componentRenameAssignedCount,
+      componentRenameVerifiedCount: summary.componentRenameVerifiedCount,
+      componentRenameRunStatus: summary.componentRenameRunStatus,
+      componentRenameError: summary.componentRenameError,
+      componentRenameTimeoutSeconds: summary.componentRenameTimeoutSeconds,
+      componentNamingStatus: summary.componentNamingStatus,
       outputFiles: Array.isArray(summary.outputFiles) ? summary.outputFiles : [],
       error: '',
-      message: 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.',
+      message: structureNeedsRevision
+        ? `SolidWorks 2020 package generated as a structure-revision evidence package. Gold-source feedback still has ${structureFeedbackIssueCount} issue(s): P0=${structureFeedbackP0Count}, P1=${structureFeedbackP1Count}, P2=${structureFeedbackP2Count}; do not treat it as engineer-ready.`
+        : summary.compatibleWithNativeTemplate
+        ? 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.'
+        : 'SolidWorks 2020 template-rule package generated. Download contains the verified template Pack-and-Go plus a parameterized rule plan for engineer review.',
     })
     console.log(`processed\t${request.id}\t${zipPath}`)
     return result
@@ -486,7 +611,7 @@ function processRequest(request, options) {
       outputFiles: [],
       error: '',
       message: isFullAssemblyRequest(request)
-        ? 'This full assembly request is queued for a SolidWorks 2020 native model worker. The current automatic full-assembly worker supports only the verified 740W x 1917H x 550D L642/R246 template.'
+        ? 'This full assembly request needs a two-column row-ratio plan before the SolidWorks 2020 template worker can package it.'
         : 'This request is queued for a SolidWorks 2020 native model worker; no CAD task package was emitted.',
     })
   }

@@ -91,7 +91,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
-                result.Saved = TryValue(() => model.SaveAs(outAsm), false);
+                result.Saved = SaveModelWithRetry(model, outAsm, result);
                 result.ReferenceCount = CountReferenceFeatures(model);
                 Try(() => sw.CloseDoc(model.GetTitle()));
 
@@ -270,39 +270,51 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return row;
             }
 
-            Try(() => sw.ActivateDoc2(asmModel.GetTitle(), false, ref errors));
-            Component2 comp = TryValue(
-                () => asm.AddComponent5(
-                    p.Path,
-                    (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
-                    "",
-                    false,
-                    "",
-                    p.TxMm / 1000.0,
-                    p.TyMm / 1000.0,
-                    p.TzMm / 1000.0) as Component2,
-                null);
-            row.Added = comp != null;
-            if (comp == null)
+            string sourceTitle = TryValue(() => partDoc.GetTitle(), "");
+            try
             {
-                row.Error = "add failed";
-                return row;
-            }
-            Try(() => { comp.Name2 = p.Role; });
+                Try(() => sw.ActivateDoc2(asmModel.GetTitle(), false, ref errors));
+                Component2 comp = TryValue(
+                    () => asm.AddComponent5(
+                        p.Path,
+                        (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
+                        "",
+                        false,
+                        "",
+                        p.TxMm / 1000.0,
+                        p.TyMm / 1000.0,
+                        p.TzMm / 1000.0) as Component2,
+                    null);
+                row.Added = comp != null;
+                if (comp == null)
+                {
+                    row.Error = "add failed";
+                    return row;
+                }
+                Try(() => { comp.Name2 = p.Role; });
 
-            MathTransform xf = math.CreateTransform(ToTransformData(p.Rotation, p.TxMm, p.TyMm, p.TzMm)) as MathTransform;
-            row.TransformCreated = xf != null;
-            if (xf == null)
-            {
-                row.Error = "transform create failed";
+                MathTransform xf = math.CreateTransform(ToTransformData(p.Rotation, p.TxMm, p.TyMm, p.TzMm)) as MathTransform;
+                row.TransformCreated = xf != null;
+                if (xf == null)
+                {
+                    row.Error = "transform create failed";
+                    return row;
+                }
+                row.TransformApplied = TryValue(() => comp.SetTransformAndSolve2(xf), false);
+                if (!row.TransformApplied)
+                {
+                    row.Error = "transform apply failed";
+                }
                 return row;
             }
-            row.TransformApplied = TryValue(() => comp.SetTransformAndSolve2(xf), false);
-            if (!row.TransformApplied)
+            finally
             {
-                row.Error = "transform apply failed";
+                if (!string.IsNullOrWhiteSpace(sourceTitle) && !string.Equals(sourceTitle, asmModel.GetTitle(), StringComparison.OrdinalIgnoreCase))
+                {
+                    Try(() => sw.CloseDoc(sourceTitle));
+                }
+                Try(() => sw.ActivateDoc2(asmModel.GetTitle(), false, ref errors));
             }
-            return row;
         }
 
         private static object ToTransformData(double[] r, double txMm, double tyMm, double tzMm)
@@ -330,6 +342,40 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 feat = TryValue(() => feat.GetNextFeature() as Feature, null);
             }
             return count;
+        }
+
+        private static bool SaveModelWithRetry(ModelDoc2 model, string outAsm, BuildResult result)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(outAsm));
+            for (int attempt = 1; attempt <= 3; attempt++)
+            {
+                result.SaveAttempts = attempt;
+                Try(() => model.ForceRebuild3(false));
+                bool saved = TryValue(() => model.SaveAs(outAsm), false);
+                if (saved && File.Exists(outAsm)) return true;
+
+                int errors = 0;
+                int warnings = 0;
+                ModelDocExtension extension = TryValue(() => model.Extension, null);
+                if (extension != null)
+                {
+                    saved = TryValue(
+                        () => extension.SaveAs(
+                            outAsm,
+                            (int)swSaveAsVersion_e.swSaveAsCurrentVersion,
+                            (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+                            null,
+                            ref errors,
+                            ref warnings),
+                        false);
+                    result.SaveErrors = errors;
+                    result.SaveWarnings = warnings;
+                    if (saved && File.Exists(outAsm)) return true;
+                }
+
+                System.Threading.Thread.Sleep(750);
+            }
+            return File.Exists(outAsm);
         }
 
         private static double[] Identity()
@@ -394,6 +440,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "new_assembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
             Prop(sb, "saved", r.Saved);
+            Prop(sb, "save_attempts", r.SaveAttempts);
+            Prop(sb, "save_errors", r.SaveErrors);
+            Prop(sb, "save_warnings", r.SaveWarnings);
             Prop(sb, "reference_count", r.ReferenceCount);
             Prop(sb, "error", r.Error);
             sb.Append(",\"components\":[");
@@ -491,6 +540,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public bool NewAssembly;
             public bool Rebuilt;
             public bool Saved;
+            public int SaveAttempts;
+            public int SaveErrors;
+            public int SaveWarnings;
             public int ReferenceCount;
             public string Error = "";
             public readonly List<PlacementResult> Components = new List<PlacementResult>();

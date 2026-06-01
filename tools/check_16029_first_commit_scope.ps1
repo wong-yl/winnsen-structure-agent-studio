@@ -42,6 +42,10 @@ $includeExact = @(
     "services/api/app/main.py",
     "tools/serve_16029_review_downloads.mjs",
     "tools/process_16029_review_generation_queue.mjs",
+    "tools/locker_16029_template_rules.mjs",
+    "tools/locker_16029_gold_source_manifest.mjs",
+    "tools/locker_16029_gold_module_targets.mjs",
+    "tools/locker_16029_structure_feedback.mjs",
     "tools/generate_review_solidworks_single_door.ps1",
     "tools/generate_review_solidworks_full_assembly.ps1",
     "tools/generate_review_task_simple_freecad_model.py",
@@ -62,10 +66,16 @@ $includeExact = @(
     "workers/maintenance/build_16029_800w_lms_contract.py",
     "workers/solidworks_tools/StepOpenProbe.cs",
     "workers/solidworks_tools/build_step_open_probe.ps1",
+    "workers/solidworks_tools/InspectAssemblyComponents.cs",
+    "workers/solidworks_tools/build_inspect_assembly_components.ps1",
+    "workers/solidworks_tools/PackAndGoAssembly.cs",
+    "workers/solidworks_tools/RenameAssemblyComponents.cs",
+    "workers/solidworks_tools/build_rename_assembly_components.ps1",
     "workers/solidworks_tools/ImportStepSaveNative.cs",
     "workers/solidworks_tools/build_import_step_save_native.ps1",
     "workers/solidworks_tools/sw_clone_master_model_height_probe.js",
     "workers/solidworks_tools/BuildOrdinaryDoorModule.cs",
+    "workers/solidworks_tools/BuildPlacedComponentsModule.cs",
     "workers/maintenance/validate_16029_dimension_contract.py"
 )
 
