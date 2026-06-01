@@ -636,7 +636,9 @@ function renderPage(request) {
                 </button>
               </div>
               <div class="prompt-actions">
+                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, ordinary locker doors, ZJA-S500 electric lock, concealed hinge, restored latch tongue, gold source reinforcement rib and template openings.">录制用 740W 已验证模板</button>
                 <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, electric lock, concealed hinge, reinforcement rib.">整柜样例</button>
+                <button class="button secondary" type="button" data-example="800W x 1917H x 550D, two columns, L642-R246, W337, ordinary locker doors, electric lock, concealed hinge, reinforcement rib.">800W 参数化预览</button>
                 <button class="button secondary" type="button" data-example="300W x 1917H x 550D, single locker door panel, ordinary_door_panel, electric lock, concealed hinge, lock holes.">单门样例</button>
               </div>
               <details class="advanced-fields">

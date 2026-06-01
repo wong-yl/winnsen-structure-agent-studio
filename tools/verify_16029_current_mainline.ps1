@@ -69,6 +69,7 @@ Invoke-CheckInDirectory -Name "api_python_compile" -WorkingDirectory $Root -Comm
 Invoke-CheckInDirectory -Name "review_portal_node_check" -WorkingDirectory $Root -Command "node --check tools\serve_16029_review_downloads.mjs"
 Invoke-CheckInDirectory -Name "review_generation_queue_node_check" -WorkingDirectory $Root -Command "node --check tools\process_16029_review_generation_queue.mjs"
 Invoke-CheckInDirectory -Name "template_rule_planner_node_check" -WorkingDirectory $Root -Command "node --check tools\locker_16029_template_rules.mjs"
+Invoke-CheckInDirectory -Name "template_rule_matrix_check" -WorkingDirectory $Root -Command "node tools\verify_16029_template_rule_matrix.mjs"
 Invoke-CheckInDirectory -Name "gold_source_manifest_node_check" -WorkingDirectory $Root -Command "node --check tools\locker_16029_gold_source_manifest.mjs"
 Invoke-CheckInDirectory -Name "gold_source_module_targets_node_check" -WorkingDirectory $Root -Command "node --check tools\locker_16029_gold_module_targets.mjs"
 Invoke-CheckInDirectory -Name "template_structure_feedback_node_check" -WorkingDirectory $Root -Command "node --check tools\locker_16029_structure_feedback.mjs"
