@@ -63,6 +63,7 @@ $includeExact = @(
     "tools/verify_16029_gold_sheetmetal_evidence.mjs",
     "tools/verify_16029_gold_sheetmetal_rules.mjs",
     "tools/verify_16029_v43_delivery_manifest.mjs",
+    "tools/verify_16029_review_portal_manual_generation_control.mjs",
     "tools/verify_16029_template_rule_matrix.mjs",
     "tools/generate_review_solidworks_single_door.ps1",
     "tools/generate_review_solidworks_full_assembly.ps1",

@@ -238,7 +238,6 @@ function markdown(rules) {
   lines.push('- This is rule evidence for generated reference models, not a production drawing release.')
   lines.push('- Electrical boards and cabinet-side electric locks remain excluded from generated models.')
   lines.push('- Current output carries hole/interface datum data; direct SolidWorks cut-feature generation is the next implementation step.')
-  lines.push('')
   return `${lines.join('\n')}\n`
 }
 

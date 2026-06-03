@@ -67,6 +67,8 @@ $reviewPortalScript = Join-Path $Root "tools\serve_16029_review_downloads.mjs"
 
 Invoke-CheckInDirectory -Name "api_python_compile" -WorkingDirectory $Root -Command "python -m py_compile services\api\app\main.py services\api\app\config.py"
 Invoke-CheckInDirectory -Name "review_portal_node_check" -WorkingDirectory $Root -Command "node --check tools\serve_16029_review_downloads.mjs"
+Invoke-CheckInDirectory -Name "review_portal_manual_generation_control_node_check" -WorkingDirectory $Root -Command "node --check tools\verify_16029_review_portal_manual_generation_control.mjs"
+Invoke-CheckInDirectory -Name "review_portal_manual_generation_control_contract" -WorkingDirectory $Root -Command "node tools\verify_16029_review_portal_manual_generation_control.mjs"
 Invoke-CheckInDirectory -Name "review_generation_queue_node_check" -WorkingDirectory $Root -Command "node --check tools\process_16029_review_generation_queue.mjs"
 Invoke-CheckInDirectory -Name "review_queue_parametric_scaffold_contract" -WorkingDirectory $Root -Command "`$source = Get-Content -LiteralPath 'tools\process_16029_review_generation_queue.mjs' -Raw -Encoding UTF8; if (`$source -notmatch 'solidworks_2020_parametric_scaffold_needs_engineering_validation' -or `$source -notmatch 'solidworks2020_parametric_scaffold_needs_engineering_validation' -or `$source -notmatch 'parametricScaffoldNeedsEngineeringValidation') { throw 'review queue does not preserve parametric scaffold validation status' }"
 Invoke-CheckInDirectory -Name "template_rule_planner_node_check" -WorkingDirectory $Root -Command "node --check tools\locker_16029_template_rules.mjs"

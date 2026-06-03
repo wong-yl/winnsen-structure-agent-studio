@@ -96,7 +96,10 @@ const indexPath = resolve(ROOT, 'data/review_generation_requests/generation_requ
 checkFile('generation_index_exists', indexPath)
 const index = readJson(indexPath)
 const requests = Array.isArray(index.requests) ? index.requests : []
-check('generation_index_current_first', requests[0]?.id === requestId, requests[0]?.id, requestId)
+const currentIndexRecord = requests.find((item) => item.id === requestId)
+check('generation_index_current_record_present', Boolean(currentIndexRecord), currentIndexRecord?.id ?? '', requestId)
+check('generation_index_current_record_download_url', currentIndexRecord?.downloadUrl === delivery.download_url, currentIndexRecord?.downloadUrl ?? '', delivery.download_url)
+check('generation_index_current_record_zip_path', currentIndexRecord?.zipPath === delivery.zip_path, currentIndexRecord?.zipPath ?? '', delivery.zip_path)
 
 const apiText = readText(resolve(ROOT, 'services/api/app/main.py'))
 check('api_catalog_current_asset_id', apiText.includes(delivery.api_download_asset_id), delivery.api_download_asset_id, 'listed in FastAPI review_download_catalog')

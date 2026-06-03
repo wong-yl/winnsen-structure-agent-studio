@@ -120,7 +120,12 @@ if ($manifestExists) {
     }
     if (Test-Path -LiteralPath $indexPath -PathType Leaf) {
         $index = Read-JsonFile $indexPath
-        Add-Check -Name "generation_index_current_first" -Ok ($index.requests[0].id -eq $requestId) -Actual $index.requests[0].id -Expected $requestId
+        $currentIndexRecord = @($index.requests | Where-Object { $_.id -eq $requestId } | Select-Object -First 1)
+        Add-Check -Name "generation_index_current_record_present" -Ok ($null -ne $currentIndexRecord) -Actual $(if ($null -ne $currentIndexRecord) { $currentIndexRecord.id } else { "" }) -Expected $requestId
+        if ($null -ne $currentIndexRecord) {
+            Add-Check -Name "generation_index_current_record_download_url" -Ok ($currentIndexRecord.downloadUrl -eq $manifest.delivery.download_url) -Actual $currentIndexRecord.downloadUrl -Expected $manifest.delivery.download_url
+            Add-Check -Name "generation_index_current_record_zip_path" -Ok ($currentIndexRecord.zipPath -eq $zipPath) -Actual $currentIndexRecord.zipPath -Expected $zipPath
+        }
     }
 }
 

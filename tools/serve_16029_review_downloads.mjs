@@ -1,4 +1,4 @@
-import { createReadStream, existsSync, mkdirSync, openSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { createReadStream, existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { networkInterfaces } from 'node:os'
 import { dirname, isAbsolute, relative, resolve } from 'node:path'
@@ -300,7 +300,27 @@ function isCurrentV43RouteRequest(item, manifest) {
 
 function isActiveGenerationRequest(item) {
   const status = String(item.status || '').toLowerCase()
-  return !item.downloadUrl && !status.includes('failed')
+  return !item.downloadUrl && !status.includes('failed') && !status.includes('canceled') && !status.includes('cancelled')
+}
+
+function isManualStartPendingGenerationRequest(item) {
+  if (!item) return false
+  const status = String(item.status || '').toLowerCase()
+  return status === 'manual_start_required' || status === 'draft_ready_for_manual_start'
+}
+
+function isStartableGenerationRequest(item) {
+  if (!item || item.downloadUrl || item.zipPath) return false
+  const status = String(item.status || '').toLowerCase()
+  if (status.includes('running') || status.includes('failed') || status.includes('canceled') || status.includes('cancelled')) return false
+  if (String(item.id || '') === currentDeliveryRequestId()) return false
+  return true
+}
+
+function isDeletableGenerationRequest(item) {
+  if (!item || String(item.id || '') === currentDeliveryRequestId()) return false
+  const status = String(item.status || '').toLowerCase()
+  return !status.includes('running')
 }
 
 function isVisibleCurrentGenerationRequest(item, manifest) {
@@ -347,7 +367,9 @@ function generationStatusText(item) {
   if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
   if (String(item.status || '').includes('failed')) return '生成失败'
   if (String(item.status || '').includes('running')) return '后台生成中'
-  return '等待后台生成'
+  if (String(item.status || '').includes('canceled') || String(item.status || '').includes('cancelled')) return '已中断'
+  if (isManualStartPendingGenerationRequest(item)) return '等待手动开始'
+  return '已保存，等待点击开始'
 }
 
 function generationActionHtml(item) {
@@ -365,7 +387,15 @@ function generationActionHtml(item) {
   }
   if (String(item.status || '').includes('failed')) return '<button type="button" disabled>生成失败</button>'
   if (String(item.status || '').includes('running')) return '<button type="button" disabled>生成中</button>'
-  return '<button type="button" disabled>等待生成</button>'
+  if (isStartableGenerationRequest(item)) {
+    return `<button class="generation-start-button" type="button" data-request-id="${htmlEscape(item.id)}">开始</button>`
+  }
+  return '<button type="button" disabled>等待处理</button>'
+}
+
+function generationDeleteActionHtml(item) {
+  if (!isDeletableGenerationRequest(item)) return ''
+  return `<button class="secondary danger generation-delete-button" type="button" data-request-id="${htmlEscape(item.id)}">删除</button>`
 }
 
 function startGenerationQueueWorker(requestId) {
@@ -385,6 +415,74 @@ function startGenerationQueueWorker(requestId) {
   child.unref()
 }
 
+function generationRequestFilePath(requestId) {
+  return resolve(GENERATION_REQUEST_DIR, `${requestId}.json`)
+}
+
+function findGenerationRequestForUser(requestId, username) {
+  const item = readGenerationIndex().requests.find((entry) =>
+    entry.id === requestId && (entry.username === username || entry.username === '__global__')
+  )
+  if (!item) {
+    const error = new Error('generation request not found')
+    error.statusCode = 404
+    throw error
+  }
+  return item
+}
+
+function writeGenerationIndexRequest(updated) {
+  const index = readGenerationIndex()
+  let found = false
+  index.requests = index.requests.map((item) => {
+    if (item.id !== updated.id) return item
+    found = true
+    return updated
+  })
+  if (!found) {
+    const error = new Error('generation request not found')
+    error.statusCode = 404
+    throw error
+  }
+  writeJson(GENERATION_INDEX_PATH, index)
+  writeJson(generationRequestFilePath(updated.id), updated)
+  return updated
+}
+
+function startGenerationRequest(username, requestId) {
+  const item = findGenerationRequestForUser(requestId, username)
+  if (!isStartableGenerationRequest(item)) {
+    const error = new Error('generation request is not startable')
+    error.statusCode = 409
+    throw error
+  }
+  const startedAt = new Date().toISOString()
+  const updated = writeGenerationIndexRequest({
+    ...item,
+    status: 'queued_by_user_for_background_generation',
+    manualStartedAt: startedAt,
+    queueRequestedAt: startedAt,
+    message: '用户点击开始后，任务已进入后台生成队列。',
+    error: '',
+  })
+  startGenerationQueueWorker(requestId)
+  return updated
+}
+
+function deleteGenerationRequest(username, requestId) {
+  const item = findGenerationRequestForUser(requestId, username)
+  if (!isDeletableGenerationRequest(item)) {
+    const error = new Error('generation request is not deletable')
+    error.statusCode = 409
+    throw error
+  }
+  const index = readGenerationIndex()
+  index.requests = index.requests.filter((entry) => entry.id !== requestId)
+  writeJson(GENERATION_INDEX_PATH, index)
+  rmSync(generationRequestFilePath(requestId), { force: true })
+  return item
+}
+
 function clampText(value, maxLength = 4000) {
   return String(value || '').trim().slice(0, maxLength)
 }
@@ -397,7 +495,7 @@ function submitGenerationRequest(username, payload) {
     id: requestId,
     createdAt,
     username,
-    status: 'draft_ready_for_internal_cad_worker',
+    status: 'manual_start_required',
     taskMode: clampText(payload.taskMode || 'full_assembly', 40),
     taskType: payload.taskMode === 'single_model' ? 'single_model_generation_draft' : 'full_assembly_generation_draft',
     prompt: clampText(payload.prompt),
@@ -434,6 +532,7 @@ function submitGenerationRequest(username, payload) {
     ],
     boundary:
       '登录台只给工程师提交生成意图和查看预览；正式CAD文件由内部worker产出后再开放下载，不在本页展示内部规则日志。',
+    message: '任务已保存。点击任务卡片上的“开始”后才会进入后台生成。',
   }
 
   const outPath = resolve(GENERATION_REQUEST_DIR, `${requestId}.json`)
@@ -505,6 +604,7 @@ function renderShell(content, username = '') {
   textarea { min-height:92px; resize:vertical; }
   button, .button { display:inline-flex; align-items:center; justify-content:center; min-height:40px; padding:0 14px; border:0; border-radius:8px; background:var(--hot); color:#fff; font:inherit; font-weight:700; text-decoration:none; cursor:pointer; }
   .button.secondary, button.secondary { background:#eef3ff; color:var(--brand); border:1px solid #c8d5ee; }
+  button.danger, .button.danger { background:#fff5f5; color:var(--risk); border:1px solid #f4c2c2; }
   .top { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; margin-bottom:18px; }
   .top p { margin:8px 0 0; }
   .nav-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
@@ -618,6 +718,7 @@ function generationRows(rows) {
       <span>${new Date(item.createdAt).toLocaleString('zh-CN', { hour12: false })} / ${htmlEscape(generationStatusText(item))}</span>
       <div class="request-row-actions">
         ${generationActionHtml(item)}
+        ${generationDeleteActionHtml(item)}
       </div>
     </div>
   `).join('')
@@ -896,7 +997,28 @@ function renderPage(request) {
         if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
         if (status.includes('failed')) return '生成失败'
         if (status.includes('running')) return '后台生成中'
-        return '等待后台生成'
+        if (status === 'manual_start_required' || status === 'draft_ready_for_manual_start') return '等待手动开始'
+        return '已保存，等待点击开始'
+      }
+
+      function isStartableGenerationRequestForClient(item) {
+        if (!item || item.downloadUrl || item.zipPath) return false
+        const status = String(item.status || '').toLowerCase()
+        if (item.id === CURRENT_DELIVERY_REQUEST_ID) return false
+        return !status.includes('running') && !status.includes('failed') && !status.includes('canceled') && !status.includes('cancelled')
+      }
+
+      function isDeletableGenerationRequestForClient(item) {
+        if (!item || item.id === CURRENT_DELIVERY_REQUEST_ID) return false
+        const status = String(item.status || '').toLowerCase()
+        return !status.includes('running')
+      }
+
+      function isPollableGenerationRequestForClient(item) {
+        if (!item || item.downloadUrl) return false
+        const status = String(item.status || '').toLowerCase()
+        if (status.includes('failed')) return false
+        return status.includes('running') || status.includes('queued_by_user')
       }
 
       function generationActionForClient(item) {
@@ -913,14 +1035,31 @@ function renderPage(request) {
             : item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
           if (hasParametricScaffoldValidationForClient(item)) link.textContent = '下载参数化结构证据包'
           wrapper.append(link)
-          return wrapper
+        } else {
+          const status = String(item.status || '')
+          if (isStartableGenerationRequestForClient(item)) {
+            const startButton = document.createElement('button')
+            startButton.type = 'button'
+            startButton.textContent = '开始'
+            startButton.className = 'generation-start-button'
+            startButton.dataset.requestId = item.id
+            wrapper.append(startButton)
+          } else {
+            const button = document.createElement('button')
+            button.type = 'button'
+            button.disabled = true
+            button.textContent = status.includes('failed') ? '生成失败' : status.includes('running') ? '生成中' : '等待处理'
+            wrapper.append(button)
+          }
         }
-        const button = document.createElement('button')
-        button.type = 'button'
-        button.disabled = true
-        const status = String(item.status || '')
-        button.textContent = status.includes('failed') ? '生成失败' : status.includes('running') ? '生成中' : '等待生成'
-        wrapper.append(button)
+        if (isDeletableGenerationRequestForClient(item)) {
+          const deleteButton = document.createElement('button')
+          deleteButton.type = 'button'
+          deleteButton.textContent = '删除'
+          deleteButton.className = 'secondary danger generation-delete-button'
+          deleteButton.dataset.requestId = item.id
+          wrapper.append(deleteButton)
+        }
         return wrapper
       }
 
@@ -949,12 +1088,53 @@ function renderPage(request) {
         return requests
       }
 
+      async function updateGenerationRequestAction(requestId, action) {
+        const response = await fetch('/generation-request/' + encodeURIComponent(requestId) + '/' + action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        const result = await response.json()
+        if (!response.ok) throw new Error(result.error || '任务操作失败')
+        return result
+      }
+
+      generationRequestList?.addEventListener('click', async (event) => {
+        const startButton = event.target.closest('.generation-start-button')
+        const deleteButton = event.target.closest('.generation-delete-button')
+        if (!startButton && !deleteButton) return
+        const button = startButton || deleteButton
+        const requestId = button.dataset.requestId
+        if (!requestId) return
+        button.disabled = true
+        try {
+          if (startButton) {
+            button.textContent = '启动中...'
+            await updateGenerationRequestAction(requestId, 'start')
+            generationStatus.className = 'ok'
+            generationStatus.textContent = '已开始生成：' + requestId
+            setGenerationProgress(42, '后台生成已启动')
+            await refreshGenerationRequestList()
+            startGenerationPolling()
+            return
+          }
+          button.textContent = '删除中...'
+          await updateGenerationRequestAction(requestId, 'delete')
+          generationStatus.className = 'ok'
+          generationStatus.textContent = '已删除任务：' + requestId + '。已生成的模型/zip 文件不会被删除。'
+          await refreshGenerationRequestList()
+        } catch (error) {
+          generationStatus.className = 'alert'
+          generationStatus.textContent = error instanceof Error ? error.message : '任务操作失败'
+          await refreshGenerationRequestList()
+        }
+      })
+
       let generationPollTimer = null
       function startGenerationPolling() {
         if (!generationRequestList || generationPollTimer) return
         generationPollTimer = setInterval(async () => {
           const requests = await refreshGenerationRequestList()
-          const hasPending = requests.some((item) => !item.downloadUrl && !String(item.status || '').includes('failed'))
+          const hasPending = requests.some(isPollableGenerationRequestForClient)
           if (!hasPending) {
             clearInterval(generationPollTimer)
             generationPollTimer = null
@@ -1462,7 +1642,7 @@ function renderPage(request) {
         generationStatus.textContent = '正在提交生成任务...'
         setGenerationProgress(18, '已接收任务草稿')
         const payload = Object.fromEntries(new FormData(generationForm).entries())
-        setGenerationProgress(42, payload.taskMode === 'single_model' ? '单个模型排队中' : '完整装配体排队中')
+        setGenerationProgress(42, payload.taskMode === 'single_model' ? '单个模型草稿保存中' : '完整装配体草稿保存中')
         const response = await fetch('/generation-request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1476,11 +1656,10 @@ function renderPage(request) {
           return
         }
         generationStatus.className = 'ok'
-        setGenerationProgress(100, '任务已提交，等待后台生成')
-        generationStatus.textContent = '任务已提交：' + result.requestId + '。后台生成完成后，任务卡上的下载按钮会启用。'
+        setGenerationProgress(100, '任务已保存，等待手动开始')
+        generationStatus.textContent = '任务已保存：' + result.requestId + '。不会自动生成；点击任务卡片上的“开始”后才会进入后台。'
         if (generationRequestList) {
           await refreshGenerationRequestList()
-          startGenerationPolling()
         }
       })
       applyPromptToFields()
@@ -1774,8 +1953,37 @@ const server = createServer(async (request, response) => {
       }
       const payload = await readJsonBody(request, 512 * 1024)
       const requestRecord = submitGenerationRequest(username, payload)
-      startGenerationQueueWorker(requestRecord.id)
-      sendJson(response, 200, { ok: true, requestId: requestRecord.id, status: requestRecord.status, taskType: requestRecord.taskType })
+      sendJson(response, 200, {
+        ok: true,
+        requestId: requestRecord.id,
+        status: requestRecord.status,
+        taskType: requestRecord.taskType,
+        autoStarted: false,
+      })
+      return
+    }
+    const generationActionMatch = url.pathname.match(/^\/generation-request\/([a-zA-Z0-9_.-]+)\/(start|delete)$/)
+    if (request.method === 'POST' && generationActionMatch) {
+      const requestId = generationActionMatch[1]
+      const action = generationActionMatch[2]
+      if (action === 'start') {
+        const updated = startGenerationRequest(username, requestId)
+        sendJson(response, 200, {
+          ok: true,
+          requestId,
+          status: updated.status,
+          started: true,
+          message: updated.message,
+        })
+        return
+      }
+      const deleted = deleteGenerationRequest(username, requestId)
+      sendJson(response, 200, {
+        ok: true,
+        requestId,
+        deleted: true,
+        preservedGeneratedFiles: Boolean(deleted.downloadUrl || deleted.zipPath),
+      })
       return
     }
     if (request.method === 'POST' && url.pathname === '/feedback') {
