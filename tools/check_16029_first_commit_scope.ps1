@@ -27,6 +27,8 @@ $includeExact = @(
     ".gitignore",
     "README.md",
     "docs/16029_current_project_process.md",
+    "docs/16029_memory_gold_sheetmetal_no_electric_lock_20260602.md",
+    "docs/16029_memory_v43_internal_sheetmetal_repair_plan_20260602.md",
     "docs/16029_git_cleanup_boundary.md",
     "docs/project_code_management_policy.md",
     "docs/platform_ui_interaction_enhancement_20260530.md",
@@ -34,6 +36,12 @@ $includeExact = @(
     "docs/16029_vibe_coding_video_runbook.md",
     "data/locker_16029_project_route_manifest.json",
     "data/locker_16029_project_route_manifest.md",
+    "data/locker_16029_gold_sheetmetal_evidence.json",
+    "data/locker_16029_gold_sheetmetal_evidence.md",
+    "data/locker_16029_gold_sheetmetal_evidence.csv",
+    "data/locker_16029_gold_sheetmetal_rules.json",
+    "data/locker_16029_gold_sheetmetal_rules.md",
+    "data/locker_16029_v43_internal_sheetmetal_delivery.json",
     "apps/web/index.html",
     "apps/web/src/App.tsx",
     "apps/web/src/App.css",
@@ -47,9 +55,19 @@ $includeExact = @(
     "tools/locker_16029_gold_source_manifest.mjs",
     "tools/locker_16029_gold_module_targets.mjs",
     "tools/locker_16029_structure_feedback.mjs",
+    "tools/verify_16029_structure_feedback_contract.mjs",
+    "tools/verify_16029_gold_structure_gate.mjs",
+    "tools/verify_16029_gold_structure_gate_contract.mjs",
+    "tools/collect_16029_gold_sheetmetal_evidence.py",
+    "tools/build_16029_gold_sheetmetal_rules.mjs",
+    "tools/verify_16029_gold_sheetmetal_evidence.mjs",
+    "tools/verify_16029_gold_sheetmetal_rules.mjs",
+    "tools/verify_16029_v43_delivery_manifest.mjs",
     "tools/verify_16029_template_rule_matrix.mjs",
     "tools/generate_review_solidworks_single_door.ps1",
     "tools/generate_review_solidworks_full_assembly.ps1",
+    "tools/generate_16029_parametric_scaffold_freecad.py",
+    "tools/trim_16029_side_panel_step_freecad.py",
     "tools/generate_review_task_simple_freecad_model.py",
     "tools/start_16029_review_portal.mjs",
     "tools/run_16029_review_portal_watchdog.ps1",
@@ -64,6 +82,7 @@ $includeExact = @(
     "workers/maintenance/validate_16029_current_handoff_scope.ps1",
     "workers/maintenance/build_16029_dimension_contract.py",
     "workers/maintenance/validate_16029_dimension_contract.py",
+    "workers/maintenance/16029_v43_internal_sheetmetal_delivery_handoff_20260603.md",
     "workers/maintenance/build_16029_variable_door_stack_contract.py",
     "workers/maintenance/build_16029_800w_lms_contract.py",
     "workers/solidworks_tools/StepOpenProbe.cs",
@@ -73,11 +92,18 @@ $includeExact = @(
     "workers/solidworks_tools/PackAndGoAssembly.cs",
     "workers/solidworks_tools/RenameAssemblyComponents.cs",
     "workers/solidworks_tools/build_rename_assembly_components.ps1",
+    "workers/solidworks_tools/RemoveAssemblyComponentsByPattern.cs",
+    "workers/solidworks_tools/build_remove_assembly_components_by_pattern.ps1",
+    "workers/solidworks_tools/RestoreDoorLockTongues.cs",
+    "workers/solidworks_tools/build_restore_door_lock_tongues.ps1",
     "workers/solidworks_tools/ImportStepSaveNative.cs",
     "workers/solidworks_tools/build_import_step_save_native.ps1",
     "workers/solidworks_tools/sw_clone_master_model_height_probe.js",
     "workers/solidworks_tools/BuildOrdinaryDoorModule.cs",
     "workers/solidworks_tools/BuildPlacedComponentsModule.cs",
+    "workers/solidworks_tools/BuildCenteredBackSeamAssembly.cs",
+    "workers/solidworks_tools/build_centered_back_seam_assembly.ps1",
+    "workers/solidworks_tools/repair_16029_back_sheetmetal_side_panels.ps1",
     "workers/maintenance/validate_16029_dimension_contract.py"
 )
 
@@ -145,7 +171,7 @@ foreach ($line in $rawStatus) {
     }
     elseif (Test-AnyPattern -PathText $path -Patterns $needsDecisionPatterns) {
         $category = "needs_decision"
-        $reason = "source change outside the current 16029 gold-variable first commit"
+        $reason = "source change outside the current 16029 v43 internal sheet-metal cleanup"
     }
 
     $items.Add([pscustomobject]@{

@@ -116,7 +116,7 @@ function runPowerShellScript(scriptPath, args, label) {
       cwd: ROOT,
       encoding: 'utf8',
       windowsHide: true,
-      timeout: 20 * 60 * 1000,
+      timeout: 45 * 60 * 1000,
       env: childProcessEnv(),
     },
   )
@@ -213,6 +213,11 @@ function processSolidWorksSingleDoorRequest(request, options) {
   updateRequest(request.id, {
     status: 'running_solidworks2020_native',
     queueStartedAt: startedAt,
+    queueFinishedAt: '',
+    downloadUrl: '',
+    zipPath: '',
+    outputFiles: [],
+    error: '',
     message: 'SolidWorks 2020 native sheet-metal model is generating.',
   })
 
@@ -291,6 +296,11 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
   updateRequest(request.id, {
     status: 'running_solidworks2020_full_assembly_pack_and_go',
     queueStartedAt: startedAt,
+    queueFinishedAt: '',
+    downloadUrl: '',
+    zipPath: '',
+    outputFiles: [],
+    error: '',
     message: 'SolidWorks 2020 template-backed full assembly package is generating.',
   })
 
@@ -337,6 +347,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       'solidworks_2020_template_rule_package_ready',
       'solidworks_2020_template_rule_needs_native_door_generation',
       'solidworks_2020_full_assembly_needs_structure_revision',
+      'solidworks_2020_parametric_scaffold_needs_engineering_validation',
     ])
     if (!summary || !readyStatuses.has(summary.status)) {
       throw new Error(`SolidWorks full assembly generation did not report ready status: ${summaryPath}`)
@@ -351,8 +362,23 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const structureFeedbackP0Count = Number(summary.structureFeedbackP0Count || 0)
     const structureFeedbackP1Count = Number(summary.structureFeedbackP1Count || 0)
     const structureFeedbackP2Count = Number(summary.structureFeedbackP2Count || 0)
+    const goldStructureGateIssueCount = Number(summary.goldStructureGateIssueCount || 0)
+    const goldStructureGateP0Count = Number(summary.goldStructureGateP0Count || 0)
+    const goldStructureGateP1Count = Number(summary.goldStructureGateP1Count || 0)
+    const goldStructureGateWarningCount = Number(summary.goldStructureGateWarningCount || 0)
+    const goldSheetMetalRuleEvidence = summary.goldSheetMetalRuleEvidence &&
+      typeof summary.goldSheetMetalRuleEvidence === 'object'
+      ? summary.goldSheetMetalRuleEvidence
+      : {}
+    const goldSheetMetalRuleStatus = String(goldSheetMetalRuleEvidence.status || '')
+    const goldSheetMetalRuleFlatWidthExtraMm = goldSheetMetalRuleEvidence.doorFlatWidthExtraMm
+    const goldSheetMetalRuleFlatHeightExtraMm = goldSheetMetalRuleEvidence.doorFlatHeightExtraMm
+    const goldSheetMetalRuleCommonHoleStatus = String(goldSheetMetalRuleEvidence.commonHoleStatus || '')
+    const goldSheetMetalRuleHoleFeatureStatus = String(goldSheetMetalRuleEvidence.solidWorksHoleFeatureStatus || '')
     const structureNeedsRevision = structureFeedbackIssueCount > 0 ||
+      goldStructureGateIssueCount > 0 ||
       String(summary.structureFeedbackStatus || '').toLowerCase() === 'issues_found' ||
+      String(summary.goldStructureGateStatus || '').toLowerCase() === 'fail' ||
       String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_structure_revision'
     const nativeDoorModuleNeedsGeneration = Boolean(summary.nativeDoorModuleNeedsGeneration) ||
       String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_native_door_generation'
@@ -360,13 +386,28 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       ? summary.missingNativeDoorModuleUnits
       : []
     const generatedNativeDoorModuleCount = Number(summary.generatedNativeDoorModuleCount || 0)
+    const generatedNativeDoorModuleHoleDatumCount = Number(summary.generatedNativeDoorModuleHoleDatumCount || 0)
+    const generatedNativeDoorModuleDetectedCutFeatureCount = Number(summary.generatedNativeDoorModuleDetectedCutFeatureCount || 0)
+    const generatedNativeDoorModuleSuppressedCutFeatureCount = Number(summary.generatedNativeDoorModuleSuppressedCutFeatureCount || 0)
+    const generatedNativeDoorModuleHoleFeatureStatuses = Array.isArray(summary.generatedNativeDoorModuleHoleFeatureStatuses)
+      ? summary.generatedNativeDoorModuleHoleFeatureStatuses.map((item) => String(item)).filter(Boolean)
+      : []
+    const generatedNativeDoorModuleHoleFeatureStatusText = generatedNativeDoorModuleHoleFeatureStatuses.join(', ') || 'unknown'
+    const electricalOrElectricLockComponentCount = Number(summary.electricalOrElectricLockComponentCount || 0)
+    const parametricScaffoldNeedsEngineeringValidation = Boolean(summary.parametricScaffoldNeedsEngineeringValidation) ||
+      String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_parametric_scaffold_engineering_validation' ||
+      String(summary.status || '').toLowerCase() === 'solidworks_2020_parametric_scaffold_needs_engineering_validation'
     const result = updateRequest(request.id, {
       status: structureNeedsRevision
         ? 'solidworks2020_full_assembly_needs_structure_revision'
         : nativeDoorModuleNeedsGeneration
         ? 'solidworks2020_template_rule_needs_native_door_generation'
+        : parametricScaffoldNeedsEngineeringValidation
+        ? 'solidworks2020_parametric_scaffold_needs_engineering_validation'
         : 'solidworks2020_full_assembly_ready',
-      resultKind: structureNeedsRevision ? 'solidworks2020_structure_revision_evidence_package' : summary.resultKind || 'solidworks2020_full_assembly_model',
+      resultKind: structureNeedsRevision || parametricScaffoldNeedsEngineeringValidation
+        ? 'solidworks2020_structure_revision_evidence_package'
+        : summary.resultKind || 'solidworks2020_full_assembly_model',
       outputDir,
       zipPath,
       downloadUrl: `/generation-download/${request.id}`,
@@ -381,10 +422,29 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       templateRulePlan: summary.templateRulePlan,
       templateRuleMode: summary.templateRuleMode,
       compatibleWithNativeTemplate: summary.compatibleWithNativeTemplate,
+      electricalAndElectricLockComponentsExcluded: summary.electricalAndElectricLockComponentsExcluded,
+      cabinetSideElectricalAndElectricLockComponentsExcluded: summary.cabinetSideElectricalAndElectricLockComponentsExcluded,
+      electricalOrElectricLockComponentCount,
+      lockInterfaceCarriedBy: summary.lockInterfaceCarriedBy,
+      goldSheetMetalRules: summary.goldSheetMetalRules,
+      goldSheetMetalRuleEvidence,
+      goldSheetMetalRuleStatus,
+      goldSheetMetalRuleFlatWidthExtraMm,
+      goldSheetMetalRuleFlatHeightExtraMm,
+      goldSheetMetalRuleCommonHoleStatus,
+      goldSheetMetalRuleHoleFeatureStatus,
       templateDoorModuleBindingStatus: summary.templateDoorModuleBindingStatus,
       nativeDoorModuleBindingStatus: summary.nativeDoorModuleBindingStatus,
+      nativeDoorModuleGenerationPolicy: summary.nativeDoorModuleGenerationPolicy,
+      freezeVerifiedV43DoorRoute: summary.freezeVerifiedV43DoorRoute,
+      restoreVerifiedV43NativeAssemblyBase: summary.restoreVerifiedV43NativeAssemblyBase,
+      generatedModulesRequiredForNoElectricLock: summary.generatedModulesRequiredForNoElectricLock,
       generatedNativeDoorModules: summary.generatedNativeDoorModules,
       generatedNativeDoorModuleCount,
+      generatedNativeDoorModuleHoleDatumCount,
+      generatedNativeDoorModuleDetectedCutFeatureCount,
+      generatedNativeDoorModuleSuppressedCutFeatureCount,
+      generatedNativeDoorModuleHoleFeatureStatuses,
       missingNativeDoorModuleUnits,
       nativeDoorModuleNeedsGeneration,
       goldSourceModuleTargets: summary.goldSourceModuleTargets,
@@ -395,6 +455,8 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       goldSourceCabinetCandidatePlacementsTsv: summary.goldSourceCabinetCandidatePlacementsTsv,
       goldSourceFullAssemblyCandidatePlacementsTsv: summary.goldSourceFullAssemblyCandidatePlacementsTsv,
       goldSourceModuleTargetCount: summary.goldSourceModuleTargetCount,
+      goldSourceFixedCabinetModuleTargetCount: summary.goldSourceFixedCabinetModuleTargetCount,
+      goldSourceFixedAccessoryModuleTargetCount: summary.goldSourceFixedAccessoryModuleTargetCount,
       goldSourceShelfModuleTargetCount: summary.goldSourceShelfModuleTargetCount,
       goldSourceShelfCandidateTargetCount: summary.goldSourceShelfCandidateTargetCount,
       goldSourceCabinetCandidateTargetCount: summary.goldSourceCabinetCandidateTargetCount,
@@ -431,6 +493,12 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       fullAssemblyCandidateTopLevelCount: summary.fullAssemblyCandidateTopLevelCount,
       packSourceAssembly: summary.packSourceAssembly,
       structureRecord: summary.structureRecord,
+      goldStructureGate: summary.goldStructureGate,
+      goldStructureGateStatus: summary.goldStructureGateStatus,
+      goldStructureGateIssueCount,
+      goldStructureGateP0Count,
+      goldStructureGateP1Count,
+      goldStructureGateWarningCount,
       structureFeedback: summary.structureFeedback,
       structureFeedbackStatus: summary.structureFeedbackStatus,
       structureFeedbackIssueCount: summary.structureFeedbackIssueCount,
@@ -438,6 +506,19 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       structureFeedbackP1Count: summary.structureFeedbackP1Count,
       structureFeedbackP2Count: summary.structureFeedbackP2Count,
       handoffReadinessStatus: summary.handoffReadinessStatus,
+      parametricScaffoldStatus: summary.parametricScaffoldStatus,
+      parametricScaffoldNeedsEngineeringValidation,
+      parametricInternalSheetMetalRepairEnabled: summary.parametricInternalSheetMetalRepairEnabled,
+      parametricScaffoldPlacementMode: summary.parametricScaffoldPlacementMode,
+      parametricScaffoldManifest: summary.parametricScaffoldManifest,
+      parametricScaffoldPlacementsTsv: summary.parametricScaffoldPlacementsTsv,
+      parametricScaffoldNativePartCount: summary.parametricScaffoldNativePartCount,
+      parametricScaffoldPlacementCount: summary.parametricScaffoldPlacementCount,
+      parametricScaffoldReplacedPlacementCount: summary.parametricScaffoldReplacedPlacementCount,
+      restoredV43NativeAssemblyBaseUsed: summary.restoredV43NativeAssemblyBaseUsed,
+      restoredV43TemplatePlacementsTsv: summary.restoredV43TemplatePlacementsTsv,
+      restoredV43TemplatePlacementCount: summary.restoredV43TemplatePlacementCount,
+      restoredV43TemplateExcludedPlacementCount: summary.restoredV43TemplateExcludedPlacementCount,
       componentRenameAttemptCount: summary.componentRenameAttemptCount,
       componentRenameAssignedCount: summary.componentRenameAssignedCount,
       componentRenameVerifiedCount: summary.componentRenameVerifiedCount,
@@ -448,13 +529,15 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       outputFiles: Array.isArray(summary.outputFiles) ? summary.outputFiles : [],
       error: '',
       message: structureNeedsRevision
-        ? `SolidWorks 2020 package generated as a structure-revision evidence package. Gold-source feedback still has ${structureFeedbackIssueCount} issue(s): P0=${structureFeedbackP0Count}, P1=${structureFeedbackP1Count}, P2=${structureFeedbackP2Count}; do not treat it as engineer-ready.`
+        ? `SolidWorks 2020 package generated as a structure-revision evidence package. Compare against the 1000W gold/source reference; feedback has ${structureFeedbackIssueCount} issue(s): P0=${structureFeedbackP0Count}, P1=${structureFeedbackP1Count}, P2=${structureFeedbackP2Count}; gold gate has ${goldStructureGateIssueCount} issue(s): P0=${goldStructureGateP0Count}, P1=${goldStructureGateP1Count}, warnings=${goldStructureGateWarningCount}; gold DXF sheet-metal rule status=${goldSheetMetalRuleStatus || 'unknown'}, hole datums=${goldSheetMetalRuleCommonHoleStatus || 'unknown'}, generated door hole datums=${generatedNativeDoorModuleHoleDatumCount}, active template cut features=${generatedNativeDoorModuleDetectedCutFeatureCount}, suppressed template cut features=${generatedNativeDoorModuleSuppressedCutFeatureCount}, generated door cut-feature status=${generatedNativeDoorModuleHoleFeatureStatusText}; do not treat it as engineer-ready.`
         : nativeDoorModuleNeedsGeneration
         ? `SolidWorks 2020 template-rule package generated, but native door modules still need generation for ratio unit(s): ${missingNativeDoorModuleUnits.join(', ') || 'unknown'}. Download is evidence/parameter package, not engineer-ready Pack-and-Go.`
+      : parametricScaffoldNeedsEngineeringValidation
+        ? `SolidWorks 2020 package generated with frozen v43 shell and door route; parametric internal cabinet sheet-metal scaffold rows are kept as evidence only and are not appended to the restored v43 visible candidate. Row-specific lock-hole datums, shelf locating feet/notches, inner vertical partition stiffeners, and leveling feet are preserved in evidence. Cabinet-side electrical boards and electric-lock bodies are excluded; residual electrical/electric-lock component count from the gate=${electricalOrElectricLockComponentCount}. SW cut-feature status=${goldSheetMetalRuleHoleFeatureStatus || 'unknown'}, generated door cut-feature status=${generatedNativeDoorModuleHoleFeatureStatusText}; download is an engineering-validation evidence package, not an engineer-ready release.`
         : summary.compatibleWithNativeTemplate
         ? 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.'
         : generatedNativeDoorModuleCount > 0
-        ? `SolidWorks 2020 template-rule package generated with ${generatedNativeDoorModuleCount} generated native door module(s). Download contains Pack-and-Go plus parameter and evidence files.`
+        ? `SolidWorks 2020 template-rule package generated with ${generatedNativeDoorModuleCount} generated native no-electric-lock door module(s). Download contains Pack-and-Go plus parameter and evidence files.`
         : 'SolidWorks 2020 template-rule package generated. Download contains the verified template Pack-and-Go plus a parameterized rule plan for engineer review.',
     })
     console.log(`processed\t${request.id}\t${zipPath}`)

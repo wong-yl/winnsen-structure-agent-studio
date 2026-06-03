@@ -4,52 +4,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$approvedZips = @(
-    "workers\handoffs\16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
-    "workers\handoffs\16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
-    "workers\handoffs\16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip"
-)
-
-$legacyApiEndpoints = @(
-    "/api/locker-16029-variant-rule-packet",
-    "/api/locker-16029-verified-rule-packet",
-    "/api/locker-16029-variant-quality-matrix",
-    "/api/locker-16029-engineering-handoff-bundle"
-)
-
-$currentSolidWorksShortcut = "C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk"
-$currentSolidWorksExe = "D:\soildworks2020\SOLIDWORKS\SLDWORKS.exe"
-$solidWorksOpenEvidence = @(
-    @{
-        variant = "LMS"
-        screenshot = "workers\generation_logs\cad_open_screenshots\solidworks2020_lms_step_open.png"
-        json = "workers\generation_logs\cad_open_screenshots\solidworks2020_lms_step_open.png.json"
-    },
-    @{
-        variant = "SML"
-        screenshot = "workers\generation_logs\cad_open_screenshots\solidworks2020_sml_step_open.png"
-        json = "workers\generation_logs\cad_open_screenshots\solidworks2020_sml_step_open.png.json"
-    }
-)
-
-$blockedTerms = @(
-    "1200W",
-    "2117H",
-    "W537",
-    "rule-review",
-    "RULE_REVIEW",
-    "DUAL_RULE_REVIEW",
-    "lightweight",
-    "earlier",
-    "SOLIDWORKS 2025",
-    "SolidWorks 2025"
-)
-
-$goldSourceReferenceTerms = @(
-    "1000W",
-    "10/12/14"
-)
-
 $checks = New-Object System.Collections.Generic.List[object]
 
 function Add-Check {
@@ -69,245 +23,137 @@ function Add-Check {
     })
 }
 
+function Read-JsonFile {
+    param([string]$Path)
+    return Get-Content -LiteralPath $Path -Encoding UTF8 | ConvertFrom-Json
+}
+
 function Read-TextFile {
     param([string]$Path)
     return [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
 }
 
-function Get-ObjectBlockAfter {
-    param(
-        [string]$Text,
-        [string]$Needle
-    )
-    $start = $Text.IndexOf($Needle)
-    if ($start -lt 0) {
-        return ""
+$manifestPath = Join-Path $Root "data\locker_16029_v43_internal_sheetmetal_delivery.json"
+$manifestExists = Test-Path -LiteralPath $manifestPath -PathType Leaf
+Add-Check -Name "v43_delivery_manifest_exists" -Ok $manifestExists -Actual $manifestPath -Expected "manifest exists"
+
+if ($manifestExists) {
+    $manifest = Read-JsonFile $manifestPath
+    $requestId = [string]$manifest.current_request_id
+    $primaryAssembly = [string]$manifest.delivery.primary_assembly
+    $zipPath = [string]$manifest.delivery.zip_path
+    $screenshotFolder = [string]$manifest.delivery.screenshot_folder
+    $handoffNote = [string]$manifest.delivery.handoff_note
+    $summaryPath = [string]$manifest.evidence.summary
+    $goldGatePath = [string]$manifest.evidence.gold_structure_gate
+    $feedbackPath = [string]$manifest.evidence.structure_feedback
+    $restorePath = [string]$manifest.evidence.door_lock_tongue_restore
+
+    Add-Check -Name "current_request_id_is_v18" -Ok ($requestId -eq "v43-int-v18-lockfix") -Actual $requestId -Expected "v43-int-v18-lockfix"
+    Add-Check -Name "route_width_740" -Ok ([int]$manifest.route.cabinet_width_mm -eq 740) -Actual $manifest.route.cabinet_width_mm -Expected 740
+    Add-Check -Name "route_sequence_l642_r246" -Ok ($manifest.route.row_sequence -eq "L642-R246") -Actual $manifest.route.row_sequence -Expected "L642-R246"
+    Add-Check -Name "cad_mainline_sw2020" -Ok ($manifest.route.cad_mainline -eq "SolidWorks 2020") -Actual $manifest.route.cad_mainline -Expected "SolidWorks 2020"
+    Add-Check -Name "user_visual_confirmed" -Ok ($manifest.verified.user_visual_confirmed -eq $true) -Actual $manifest.verified.user_visual_confirmed -Expected $true
+
+    foreach ($item in @(
+        @{ name = "primary_assembly_exists"; path = $primaryAssembly },
+        @{ name = "download_zip_exists"; path = $zipPath },
+        @{ name = "handoff_note_exists"; path = $handoffNote },
+        @{ name = "summary_exists"; path = $summaryPath },
+        @{ name = "gold_gate_exists"; path = $goldGatePath },
+        @{ name = "structure_feedback_exists"; path = $feedbackPath },
+        @{ name = "lock_tongue_restore_exists"; path = $restorePath }
+    )) {
+        Add-Check -Name $item.name -Ok (Test-Path -LiteralPath $item.path) -Actual $item.path -Expected "path exists"
     }
-    $end = $Text.IndexOf("`n  },", $start)
-    if ($end -lt 0) {
-        return $Text.Substring($start)
+    Add-Check -Name "screenshot_folder_recorded" -Ok (-not [string]::IsNullOrWhiteSpace($screenshotFolder)) -Actual $screenshotFolder -Expected "screenshot folder path recorded"
+
+    if (Test-Path -LiteralPath $zipPath -PathType Leaf) {
+        $zipSize = (Get-Item -LiteralPath $zipPath).Length
+        Add-Check -Name "download_zip_size_nontrivial" -Ok ($zipSize -gt 95MB) -Actual $zipSize -Expected "> 95 MB"
     }
-    return $Text.Substring($start, $end - $start)
+
+    if (Test-Path -LiteralPath $summaryPath -PathType Leaf) {
+        $summary = Read-JsonFile $summaryPath
+        Add-Check -Name "summary_ready_status" -Ok ($summary.status -eq "solidworks_2020_full_assembly_ready") -Actual $summary.status -Expected "solidworks_2020_full_assembly_ready"
+        Add-Check -Name "summary_gold_gate_pass" -Ok ($summary.goldStructureGateStatus -eq "PASS") -Actual $summary.goldStructureGateStatus -Expected "PASS"
+        Add-Check -Name "summary_feedback_clean" -Ok ($summary.structureFeedbackStatus -eq "clean") -Actual $summary.structureFeedbackStatus -Expected "clean"
+        Add-Check -Name "summary_lock_tongue_count_6" -Ok ([int]$summary.doorLockTongueCount -eq 6) -Actual $summary.doorLockTongueCount -Expected 6
+        Add-Check -Name "summary_lock_tongue_restore_added_6" -Ok ([int]$summary.doorLockTongueRestoreAddedCount -eq 6) -Actual $summary.doorLockTongueRestoreAddedCount -Expected 6
+        Add-Check -Name "summary_electric_components_zero" -Ok ([int]$summary.electricalOrElectricLockComponentCount -eq 0) -Actual $summary.electricalOrElectricLockComponentCount -Expected 0
+        Add-Check -Name "summary_back_seam_centered" -Ok ($summary.backSheetMetalRepairStatus -eq "side_panel_sheetmetal_back_flange_centered") -Actual $summary.backSheetMetalRepairStatus -Expected "side_panel_sheetmetal_back_flange_centered"
+    }
+
+    if (Test-Path -LiteralPath $goldGatePath -PathType Leaf) {
+        $goldGate = Read-JsonFile $goldGatePath
+        $issueCount = if ($null -eq $goldGate.issues) { 0 } else { @($goldGate.issues).Count }
+        Add-Check -Name "gold_structure_gate_pass" -Ok ($goldGate.status -eq "PASS") -Actual $goldGate.status -Expected "PASS"
+        Add-Check -Name "gold_structure_gate_no_issues" -Ok ($issueCount -eq 0) -Actual $issueCount -Expected 0
+    }
+
+    if (Test-Path -LiteralPath $feedbackPath -PathType Leaf) {
+        $feedback = Read-JsonFile $feedbackPath
+        $issueCount = if ($null -eq $feedback.issues) { 0 } else { @($feedback.issues).Count }
+        Add-Check -Name "structure_feedback_clean" -Ok ($feedback.status -eq "clean") -Actual $feedback.status -Expected "clean"
+        Add-Check -Name "structure_feedback_no_issues" -Ok ($issueCount -eq 0) -Actual $issueCount -Expected 0
+        Add-Check -Name "structure_feedback_lock_tongue_count_6" -Ok ([int]$feedback.derived.doorLockTongueCount -eq 6) -Actual $feedback.derived.doorLockTongueCount -Expected 6
+    }
+
+    if (Test-Path -LiteralPath $restorePath -PathType Leaf) {
+        $restore = Read-JsonFile $restorePath
+        $restoreItems = @($restore.items)
+        $savedCount = @($restoreItems | Where-Object { $_.added -eq $true -and $_.saved -eq $true -and [string]::IsNullOrEmpty([string]$_.error) }).Count
+        $addedCount = if ($null -ne $restore.addedCount) { [int]$restore.addedCount } else { [int]$restore.added_count }
+        Add-Check -Name "lock_tongue_restore_status" -Ok ($restore.status -eq "restored") -Actual $restore.status -Expected "restored"
+        Add-Check -Name "lock_tongue_restore_added_6" -Ok ($addedCount -eq 6) -Actual $addedCount -Expected 6
+        Add-Check -Name "lock_tongue_restore_saved_6" -Ok ($savedCount -eq 6) -Actual $savedCount -Expected 6
+    }
+
+    $requestPath = Join-Path $Root "data\review_generation_requests\$requestId.json"
+    $indexPath = Join-Path $Root "data\review_generation_requests\generation_request_index.json"
+    Add-Check -Name "request_record_exists" -Ok (Test-Path -LiteralPath $requestPath -PathType Leaf) -Actual $requestPath -Expected "request JSON exists"
+    Add-Check -Name "generation_index_exists" -Ok (Test-Path -LiteralPath $indexPath -PathType Leaf) -Actual $indexPath -Expected "generation index exists"
+    if (Test-Path -LiteralPath $requestPath -PathType Leaf) {
+        $requestRecord = Read-JsonFile $requestPath
+        Add-Check -Name "request_download_url_current" -Ok ($requestRecord.downloadUrl -eq $manifest.delivery.download_url) -Actual $requestRecord.downloadUrl -Expected $manifest.delivery.download_url
+        Add-Check -Name "request_zip_path_current" -Ok ($requestRecord.zipPath -eq $zipPath) -Actual $requestRecord.zipPath -Expected $zipPath
+    }
+    if (Test-Path -LiteralPath $indexPath -PathType Leaf) {
+        $index = Read-JsonFile $indexPath
+        Add-Check -Name "generation_index_current_first" -Ok ($index.requests[0].id -eq $requestId) -Actual $index.requests[0].id -Expected $requestId
+    }
 }
-
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-
-$zipFindings = New-Object System.Collections.Generic.List[object]
-$nestedZipFindings = New-Object System.Collections.Generic.List[object]
-foreach ($relativeZip in $approvedZips) {
-    $zipPath = Join-Path $Root $relativeZip
-    Add-Check -Name "approved_zip_exists:$relativeZip" -Ok (Test-Path -LiteralPath $zipPath -PathType Leaf) -Actual $zipPath -Expected "file exists"
-    if (-not (Test-Path -LiteralPath $zipPath -PathType Leaf)) {
-        continue
-    }
-
-    $archive = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
-    try {
-        foreach ($entry in $archive.Entries) {
-            if ($relativeZip -like "*DUAL_GOLD_VARIABLE*" -and $entry.FullName -like "*.zip") {
-                $nestedZipFindings.Add([pscustomobject]@{
-                    zip = $relativeZip
-                    entry = $entry.FullName
-                })
-            }
-            if ($entry.FullName -notmatch "\.(md|json|csv|txt)$") {
-                continue
-            }
-            $reader = New-Object System.IO.StreamReader($entry.Open(), [System.Text.Encoding]::UTF8, $true)
-            try {
-                $text = $reader.ReadToEnd()
-                foreach ($term in $blockedTerms) {
-                    if ($text.Contains($term)) {
-                        $zipFindings.Add([pscustomobject]@{
-                            zip = $relativeZip
-                            entry = $entry.FullName
-                            term = $term
-                        })
-                    }
-                }
-            }
-            finally {
-                $reader.Dispose()
-            }
-        }
-    }
-    finally {
-        $archive.Dispose()
-    }
-}
-
-Add-Check -Name "approved_zip_text_scope_clean" -Ok ($zipFindings.Count -eq 0) -Actual $zipFindings.Count -Expected "0 blocked term hits in current handoff zips"
-Add-Check -Name "dual_package_no_nested_zip_entries" -Ok ($nestedZipFindings.Count -eq 0) -Actual $nestedZipFindings.Count -Expected "DUAL package exposes LMS/SML folders directly, no zip inside zip"
 
 $apiPath = Join-Path $Root "services\api\app\main.py"
-$apiText = Read-TextFile $apiPath
-$catalogStart = $apiText.IndexOf("def review_download_catalog()")
-$catalogEnd = $apiText.IndexOf("def review_download_asset", $catalogStart)
-$catalogText = if ($catalogStart -ge 0 -and $catalogEnd -gt $catalogStart) { $apiText.Substring($catalogStart, $catalogEnd - $catalogStart) } else { "" }
-foreach ($relativeZip in $approvedZips) {
-    $fileName = Split-Path $relativeZip -Leaf
-    Add-Check -Name "download_catalog_includes:$fileName" -Ok $catalogText.Contains($fileName) -Actual $fileName -Expected "listed in review_download_catalog"
-}
-foreach ($term in $blockedTerms) {
-    Add-Check -Name "download_catalog_excludes:$term" -Ok (-not $catalogText.Contains($term)) -Actual $term -Expected "not in review_download_catalog"
-}
-foreach ($term in $goldSourceReferenceTerms) {
-    Add-Check -Name "download_catalog_excludes_gold_source_reference:$term" -Ok (-not $catalogText.Contains($term)) -Actual $term -Expected "not listed as current review package; gold/source reference only"
-}
-
 $appPath = Join-Path $Root "apps\web\src\App.tsx"
-$appText = Read-TextFile $appPath
-Add-Check -Name "primary_nav_limited_to_engineer_pages" -Ok $appText.Contains("new Set<PageId>(['overview', 'handoff', 'review'])") -Actual "PRIMARY_NAV_PAGE_IDS" -Expected "overview/handoff/review only"
-Add-Check -Name "hidden_hash_pages_redirected" -Ok $appText.Contains("isPageId(value) && PRIMARY_NAV_PAGE_IDS.has(value)") -Actual "initialPageFromHash" -Expected "non-primary hash returns overview"
-Add-Check -Name "frontend_review_queue_current_project_only" -Ok $appText.Contains("item.project === '16029 800W gold-variable'") -Actual "visibleReviewItems filter" -Expected "review page filters to current 800W gold-variable project only"
-Add-Check -Name "frontend_solidworks_2020_label" -Ok ($appText.Contains("SOLIDWORKS 2020") -and -not $appText.Contains("SOLIDWORKS 2025")) -Actual "App.tsx CAD label" -Expected "SOLIDWORKS 2020 only"
-
-$reviewPortalPath = Join-Path $Root "tools\serve_16029_review_downloads.mjs"
-$reviewPortalText = Read-TextFile $reviewPortalPath
-Add-Check -Name "review_login_portal_current_round" -Ok (
-    $reviewPortalText.Contains("16029-800w-gold-variable-review-20260528") -and
-    $reviewPortalText.Contains("16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip") -and
-    $reviewPortalText.Contains("16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip") -and
-    $reviewPortalText.Contains("16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip") -and
-    $reviewPortalText.Contains("SolidWorks 2020")
-) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "current 800W gold-variable review round and three packages"
-foreach ($term in $blockedTerms) {
-    Add-Check -Name "review_login_portal_excludes:$term" -Ok (-not $reviewPortalText.Contains($term)) -Actual $term -Expected "not in review login portal"
-}
-foreach ($term in $goldSourceReferenceTerms) {
-    Add-Check -Name "review_login_portal_excludes_gold_source_reference:$term" -Ok (-not $reviewPortalText.Contains($term)) -Actual $term -Expected "not listed as current review package; gold/source reference only"
-}
-
-$configPath = Join-Path $Root "services\api\app\config.py"
-$configText = Read-TextFile $configPath
-Add-Check -Name "solidworks_2020_shortcut_exists" -Ok (Test-Path -LiteralPath $currentSolidWorksShortcut -PathType Leaf) -Actual $currentSolidWorksShortcut -Expected "SolidWorks 2020 shortcut exists"
-Add-Check -Name "solidworks_2020_exe_exists" -Ok (Test-Path -LiteralPath $currentSolidWorksExe -PathType Leaf) -Actual $currentSolidWorksExe -Expected "SolidWorks 2020 executable exists"
-Add-Check -Name "api_config_solidworks_2020_default" -Ok ($configText.Contains($currentSolidWorksShortcut) -and $configText.Contains($currentSolidWorksExe) -and -not $configText.Contains("SOLIDWORKS 2025")) -Actual "services/api/app/config.py" -Expected "SolidWorks 2020 shortcut and exe defaults"
-foreach ($evidence in $solidWorksOpenEvidence) {
-    $screenshotPath = Join-Path $Root $evidence.screenshot
-    $jsonEvidencePath = Join-Path $Root $evidence.json
-    Add-Check -Name "solidworks_2020_open_screenshot_exists:$($evidence.variant)" -Ok (Test-Path -LiteralPath $screenshotPath -PathType Leaf) -Actual $screenshotPath -Expected "SolidWorks 2020 screenshot file exists"
-    Add-Check -Name "solidworks_2020_open_json_exists:$($evidence.variant)" -Ok (Test-Path -LiteralPath $jsonEvidencePath -PathType Leaf) -Actual $jsonEvidencePath -Expected "SolidWorks 2020 open JSON exists"
-    if (Test-Path -LiteralPath $jsonEvidencePath -PathType Leaf) {
-        $openEvidence = Get-Content -LiteralPath $jsonEvidencePath -Encoding UTF8 | ConvertFrom-Json
-        Add-Check -Name "solidworks_2020_opened:$($evidence.variant)" -Ok (
-            $openEvidence.requested_mainline -eq "SolidWorks 2020" -and
-            $openEvidence.solidworks_revision -like "28.*" -and
-            $openEvidence.opened -eq $true -and
-            $openEvidence.preview_saved -eq $true
-        ) -Actual ($openEvidence | ConvertTo-Json -Compress) -Expected "SolidWorks 2020 revision 28.x opened STEP and saved screenshot"
-    }
-}
-
-Add-Check -Name "current_scope_api_exists" -Ok $apiText.Contains('/api/locker-16029-current-handoff-scope') -Actual "/api/locker-16029-current-handoff-scope" -Expected "current handoff scope endpoint exists"
-foreach ($endpoint in $legacyApiEndpoints) {
-    $routeIndex = $apiText.IndexOf($endpoint)
-    $nextRouteIndex = if ($routeIndex -ge 0) { $apiText.IndexOf('@app.', $routeIndex + $endpoint.Length) } else { -1 }
-    $block = if ($routeIndex -ge 0 -and $nextRouteIndex -gt $routeIndex) {
-        $apiText.Substring($routeIndex, $nextRouteIndex - $routeIndex)
-    }
-    elseif ($routeIndex -ge 0) {
-        $apiText.Substring($routeIndex)
-    }
-    else {
-        ""
-    }
-    Add-Check -Name "reference_api_marked:$endpoint" -Ok ($block.Contains("mark_locker_16029_reference_response") -and $apiText.Contains("gold_source_reference_only")) -Actual $endpoint -Expected "returns marked gold_source_reference_only response"
-}
-
-$manifestJsonPath = Join-Path $Root "data\locker_16029_project_route_manifest.json"
-$manifestMdPath = Join-Path $Root "data\locker_16029_project_route_manifest.md"
-Add-Check -Name "route_manifest_json_exists" -Ok (Test-Path -LiteralPath $manifestJsonPath -PathType Leaf) -Actual $manifestJsonPath -Expected "route manifest JSON exists"
-Add-Check -Name "route_manifest_md_exists" -Ok (Test-Path -LiteralPath $manifestMdPath -PathType Leaf) -Actual $manifestMdPath -Expected "route manifest markdown exists"
-if (Test-Path -LiteralPath $manifestJsonPath -PathType Leaf) {
-    $manifest = Get-Content -LiteralPath $manifestJsonPath -Encoding UTF8 | ConvertFrom-Json
-    $cadMainline = $manifest.current_route.cad_mainline
-    Add-Check -Name "route_manifest_cad_mainline_2020" -Ok (
-        $cadMainline.primary_cad -eq "SolidWorks 2020" -and
-        $cadMainline.solidworks_shortcut -eq $currentSolidWorksShortcut -and
-        $cadMainline.solidworks_exe -eq $currentSolidWorksExe
-    ) -Actual ($cadMainline | ConvertTo-Json -Compress) -Expected "SolidWorks 2020 current CAD mainline"
-}
-
 $studioDataPath = Join-Path $Root "apps\web\src\data\studioData.ts"
-$studioDataText = Read-TextFile $studioDataPath
-Add-Check -Name "frontend_data_solidworks_2020_mainline" -Ok ($studioDataText.Contains("SolidWorks 2020") -and -not $studioDataText.Contains("SolidWorks 2025")) -Actual "studioData.ts" -Expected "current UI data references SolidWorks 2020 only"
-$currentCapabilityBlock = Get-ObjectBlockAfter -Text $studioDataText -Needle "id: 'locker_16029_gold_variable_current'"
-Add-Check -Name "frontend_current_16029_capability_exists" -Ok ($currentCapabilityBlock.Length -gt 0) -Actual "locker_16029_gold_variable_current" -Expected "current 16029 gold-variable capability exists"
-Add-Check -Name "frontend_current_16029_capability_sw2020_verified" -Ok (
-    $currentCapabilityBlock.Contains("status: 'generatable'") -and
-    $currentCapabilityBlock.Contains("SolidWorks 2020") -and
-    $currentCapabilityBlock.Contains("generate_16029_800w_gold_variable_model_freecad.py")
-) -Actual "current capability block" -Expected "current capability uses SolidWorks 2020 evidence gate and fixed gold-variable generator"
-foreach ($legacyCapabilityId in @("locker_16029_regression", "locker_16029_door_panel")) {
-    $legacyBlock = Get-ObjectBlockAfter -Text $studioDataText -Needle "id: '$legacyCapabilityId'"
-    Add-Check -Name "frontend_reference_capability_not_current_handoff:$legacyCapabilityId" -Ok (
-        $legacyBlock.Contains("status: 'reference_only'") -and
-        ($legacyBlock.Contains("legacy evidence") -or $legacyBlock.Contains("gold/source"))
-    ) -Actual $legacyCapabilityId -Expected "reference_only; legacy evidence or gold/source reference"
-}
-$generatable16029Blocks = New-Object System.Collections.Generic.List[string]
-$searchFrom = 0
-while ($true) {
-    $idx = $studioDataText.IndexOf("status: 'generatable'", $searchFrom)
-    if ($idx -lt 0) {
-        break
-    }
-    $blockStart = $studioDataText.LastIndexOf("`n  {", $idx)
-    if ($blockStart -lt 0) {
-        $blockStart = $idx
-    }
-    $blockEnd = $studioDataText.IndexOf("`n  },", $idx)
-    if ($blockEnd -lt 0) {
-        $blockEnd = $studioDataText.Length
-    }
-    $block = $studioDataText.Substring($blockStart, $blockEnd - $blockStart)
-    if ($block.Contains("16029")) {
-        $generatable16029Blocks.Add($block)
-    }
-    $searchFrom = $idx + 1
-}
-$badGeneratable16029 = New-Object System.Collections.Generic.List[object]
-foreach ($block in $generatable16029Blocks) {
-    foreach ($term in $blockedTerms) {
-        if ($block.Contains($term)) {
-            $badGeneratable16029.Add([pscustomobject]@{ term = $term; excerpt = $block.Substring(0, [Math]::Min(160, $block.Length)) })
-        }
-    }
-}
-Add-Check -Name "frontend_generatable_16029_no_legacy_terms" -Ok ($badGeneratable16029.Count -eq 0) -Actual $badGeneratable16029.Count -Expected "0 blocked terms in generatable 16029 capability blocks"
+$reviewPortalPath = Join-Path $Root "tools\serve_16029_review_downloads.mjs"
 
-$obsoletePatterns = @(
-    "16029_WIDTH_CANDIDATE*",
-    "16029_HEIGHT_CANDIDATE*",
-    "16029_800W_*RULE_REVIEW*"
-)
-$goldSourceReferencePatterns = @(
-    "16029_10_12_14*"
-)
-$obsoleteCounts = @{}
-foreach ($pattern in $obsoletePatterns) {
-    $obsoleteCounts[$pattern] = @(Get-ChildItem -LiteralPath (Join-Path $Root "workers\handoffs") -Filter $pattern -Force -ErrorAction SilentlyContinue).Count
-}
-$goldSourceReferenceCounts = @{}
-foreach ($pattern in $goldSourceReferencePatterns) {
-    $goldSourceReferenceCounts[$pattern] = @(Get-ChildItem -LiteralPath (Join-Path $Root "workers\handoffs") -Filter $pattern -Force -ErrorAction SilentlyContinue).Count
-}
+$apiText = Read-TextFile $apiPath
+$appText = Read-TextFile $appPath
+$studioDataText = Read-TextFile $studioDataPath
+$reviewPortalText = Read-TextFile $reviewPortalPath
+
+Add-Check -Name "api_catalog_v43_current_zip" -Ok ($apiText.Contains("16029-v43-internal-sheetmetal-lockfix-zip") -and $apiText.Contains("review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip")) -Actual "services/api/app/main.py" -Expected "v43 current zip in API catalog"
+Add-Check -Name "api_scope_v43" -Ok $apiText.Contains("16029 740W / L642-R246 / v43") -Actual "services/api/app/main.py" -Expected "v43 current route copy"
+Add-Check -Name "frontend_handoff_v43" -Ok $appText.Contains("16029 740W / L642-R246 / v43") -Actual "apps/web/src/App.tsx" -Expected "v43 handoff copy"
+Add-Check -Name "frontend_current_v43_asset_highlight" -Ok $appText.Contains("asset.id.includes('v43-internal-sheetmetal')") -Actual "apps/web/src/App.tsx" -Expected "v43 asset highlighted"
+Add-Check -Name "frontend_review_filter_v43" -Ok $appText.Contains("item.project === '16029 740W / L642-R246 / v43'") -Actual "apps/web/src/App.tsx" -Expected "review page filters v43 current route"
+Add-Check -Name "studio_data_v43_capability" -Ok $studioDataText.Contains("locker_16029_v43_internal_sheetmetal_current") -Actual "apps/web/src/data/studioData.ts" -Expected "v43 current capability"
+Add-Check -Name "studio_data_current_metric_v43" -Ok $studioDataText.Contains("value: '740W v43'") -Actual "apps/web/src/data/studioData.ts" -Expected "current metric is v43"
+Add-Check -Name "review_portal_current_round_v43" -Ok ($reviewPortalText.Contains("16029-v43-internal-sheetmetal-review-20260603") -and $reviewPortalText.Contains("v43-int-v18-lockfix")) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "v43 review round and current request"
+Add-Check -Name "review_portal_hides_old_same_route_requests" -Ok ($reviewPortalText.Contains("readCurrentDeliveryManifest") -and $reviewPortalText.Contains("isVisibleCurrentGenerationRequest")) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "manifest-based request filtering"
+Add-Check -Name "review_portal_default_prompt_excludes_electric_hardware" -Ok ($reviewPortalText.Contains("no electrical board") -and $reviewPortalText.Contains("no cabinet-side electric lock body") -and $reviewPortalText.Contains("no cabinet-side electric lock hook")) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "default prompt excludes electric hardware"
+Add-Check -Name "solidworks_2020_only" -Ok (($apiText + $appText + $studioDataText + $reviewPortalText).Contains("SolidWorks 2020") -and -not (($apiText + $appText + $studioDataText + $reviewPortalText).Contains("SolidWorks 2025"))) -Actual "UI/API/portal CAD copy" -Expected "SolidWorks 2020 only"
 
 $failed = @($checks | Where-Object { -not $_.ok -and $_.severity -eq "error" })
 $gate = [ordered]@{
     generated_at = (Get-Date).ToString("o")
     status = if ($failed.Count -eq 0) { "PASS" } else { "FAIL" }
-    scope = "16029 800W gold-variable engineer-facing handoff scope"
-    approved_zips = $approvedZips
-    legacy_api_endpoints = $legacyApiEndpoints
-    blocked_terms = $blockedTerms
-    gold_source_reference_terms = $goldSourceReferenceTerms
-    obsolete_handoff_inventory = $obsoleteCounts
-    gold_source_reference_inventory = $goldSourceReferenceCounts
+    scope = "16029 740W / L642-R246 / v43 internal sheet-metal handoff scope"
+    current_request_id = if ($manifestExists) { [string]$manifest.current_request_id } else { "" }
     checks_total = $checks.Count
     checks_failed = $failed.Count
-    zip_findings = $zipFindings
     checks = $checks
 }
 
@@ -324,26 +170,9 @@ $lines.Add("# 16029 Current Handoff Scope Gate")
 $lines.Add("")
 $lines.Add("- Status: $($gate.status)")
 $lines.Add("- Scope: $($gate.scope)")
+$lines.Add("- Current request: $($gate.current_request_id)")
 $lines.Add("- Checks: $($gate.checks_total)")
 $lines.Add("- Failed: $($gate.checks_failed)")
-$lines.Add("")
-$lines.Add("## Approved engineer-facing zips")
-$lines.Add("")
-foreach ($zip in $approvedZips) {
-    $lines.Add(('- `{0}`' -f $zip))
-}
-$lines.Add("")
-$lines.Add("## Historical/trial handoff inventory")
-$lines.Add("")
-foreach ($pattern in $obsoletePatterns) {
-    $lines.Add(('- `{0}`: {1} present as history, not engineer-facing catalog' -f $pattern, $obsoleteCounts[$pattern]))
-}
-$lines.Add("")
-$lines.Add("## Gold source reference inventory")
-$lines.Add("")
-foreach ($pattern in $goldSourceReferencePatterns) {
-    $lines.Add(('- `{0}`: {1} present as gold/source reference, not current engineer-facing catalog' -f $pattern, $goldSourceReferenceCounts[$pattern]))
-}
 $lines.Add("")
 $lines.Add("## Checks")
 $lines.Add("")

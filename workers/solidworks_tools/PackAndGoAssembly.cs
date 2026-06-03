@@ -244,6 +244,30 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return "储物柜门" + RatioLabel(doorWeld.Groups[1].Value) + "╱12焊接_" + SideLabel(doorWeld.Groups[2].Value) + extension;
             }
 
+            Match generatedDoor = Regex.Match(name, @"^review_single_ordinary_door_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
+            if (generatedDoor.Success)
+            {
+                return "储物柜门" + DoorRatioTextFromHeightToken(generatedDoor.Groups[1].Value) + "装配_" + SideLabel(generatedDoor.Groups[2].Value) + extension;
+            }
+
+            Match generatedWeld = Regex.Match(name, @"^review_single_door_weld_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
+            if (generatedWeld.Success)
+            {
+                return "储物柜门" + DoorRatioTextFromHeightToken(generatedWeld.Groups[1].Value) + "焊接_" + SideLabel(generatedWeld.Groups[2].Value) + extension;
+            }
+
+            Match generatedPanel = Regex.Match(name, @"^review_single_door_panel_W\d+_H([0-9]+(?:p[0-9]+)?)_sheetmetal", RegexOptions.IgnoreCase);
+            if (generatedPanel.Success)
+            {
+                return "储物柜门板" + DoorRatioTextFromHeightToken(generatedPanel.Groups[1].Value) + extension;
+            }
+
+            Match generatedStiffener = Regex.Match(name, @"^review_single_door_stiffener_L([0-9]+(?:p[0-9]+)?)_sheetmetal", RegexOptions.IgnoreCase);
+            if (generatedStiffener.Success)
+            {
+                return "柜门加强筋" + DoorRatioTextFromStiffenerToken(generatedStiffener.Groups[1].Value) + extension;
+            }
+
             Match rightPanel = Regex.Match(name, @"^right_mirror_ordinary_panel_([0-9]+(?:p[0-9]+)?)_12_W\d+", RegexOptions.IgnoreCase);
             if (rightPanel.Success)
             {
@@ -262,6 +286,12 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return "插销固定板" + RatioLabel(topLatch.Groups[1].Value) + "╱12_" + SideLabel(topLatch.Groups[2].Value) + extension;
             }
 
+            Match generatedTopLatch = Regex.Match(name, @"^top_latch_from_bottom_mirror_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
+            if (generatedTopLatch.Success)
+            {
+                return "插销固定板" + DoorRatioTextFromHeightToken(generatedTopLatch.Groups[1].Value) + "_" + SideLabel(generatedTopLatch.Groups[2].Value) + extension;
+            }
+
             if (Regex.IsMatch(name, @"^candidate_16029_740W_gold_electronics_module", RegexOptions.IgnoreCase)) return "电控模块" + extension;
             if (Regex.IsMatch(name, @"^electric_lock_body_zja_s500", RegexOptions.IgnoreCase)) return "电控锁体ZJA-S500" + extension;
             if (Regex.IsMatch(name, @"^electric_lock_hook_zja_s500", RegexOptions.IgnoreCase)) return "电控U型锁钩ZJA-S500" + extension;
@@ -275,6 +305,36 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         private static string RatioLabel(string value)
         {
             return (value ?? "").Replace("p", ".");
+        }
+
+        private static string DoorRatioTextFromHeightToken(string token)
+        {
+            double heightMm;
+            if (!TryParseToken(token, out heightMm)) return "非标";
+            return DoorRatioText((heightMm + 7.0) / 152.5);
+        }
+
+        private static string DoorRatioTextFromStiffenerToken(string token)
+        {
+            double lengthMm;
+            if (!TryParseToken(token, out lengthMm)) return "非标";
+            return DoorRatioText((lengthMm + 17.5) / 152.5);
+        }
+
+        private static string DoorRatioText(double units)
+        {
+            double rounded = Math.Round(units, 3);
+            double integer = Math.Round(rounded);
+            if (Math.Abs(rounded - integer) < 0.01)
+            {
+                return integer.ToString("0", CultureInfo.InvariantCulture) + "╱12";
+            }
+            return rounded.ToString("0.###", CultureInfo.InvariantCulture) + "╱12";
+        }
+
+        private static bool TryParseToken(string token, out double value)
+        {
+            return double.TryParse((token ?? "").Replace("p", "."), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
         }
 
         private static string SideLabel(string value)

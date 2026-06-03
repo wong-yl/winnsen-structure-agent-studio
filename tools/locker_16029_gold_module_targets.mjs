@@ -15,6 +15,8 @@ const FIXED_CABINET_MODULE_KEYS = Object.freeze([
   'top_cover_weldment',
 ])
 
+const FIXED_ACCESSORY_MODULE_KEYS = Object.freeze([])
+
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8').replace(/^\uFEFF/, ''))
 }
@@ -214,8 +216,15 @@ export function buildGoldModuleTargets({ plan, goldStructure = null, goldSourceR
       rule: 'preserve as a cabinet body subassembly, not as an imported multi-body part',
     })
   })
+  const accessoryTargets = FIXED_ACCESSORY_MODULE_KEYS.map((key) => {
+    const module = moduleByKey(manifest, key)
+    return targetForModule(module, sourceInstances, {
+      type: 'fixed_accessory_module',
+      rule: 'preserve as a source-reference accessory assembly until the electrical interface is parameterized',
+    })
+  })
   const shelves = shelfTargets(plan, manifest, sourceInstances)
-  const targets = [...fixedTargets, ...shelves]
+  const targets = [...fixedTargets, ...shelves, ...accessoryTargets]
   const requestedShelfBoundaryY = shelves.map((target) => target.binding.boundaryYmm)
   const requestedUniqueShelfBoundaryY = [...new Set(requestedShelfBoundaryY)].sort((a, b) => a - b)
   const buildReadyTargetCount = targets.filter((target) => target.placement?.buildReady).length
@@ -235,6 +244,7 @@ export function buildGoldModuleTargets({ plan, goldStructure = null, goldSourceR
     derived: {
       targetCount: targets.length,
       fixedCabinetModuleCount: fixedTargets.length,
+      fixedAccessoryModuleCount: accessoryTargets.length,
       shelfModuleCount: shelves.length,
       requestedShelfBoundaryY,
       requestedUniqueShelfBoundaryY,
@@ -342,7 +352,7 @@ function toBuildPlanTsv(targets) {
 function toFixedPlacementTsv(targets) {
   const headers = ['role', 'path', 'tx_mm', 'ty_mm', 'tz_mm', 'rotation']
   const rows = [headers.join('\t')]
-  for (const target of targets.filter((item) => item.placement?.buildReady)) {
+  for (const target of targets.filter((item) => item.binding?.type === 'fixed_cabinet_body_module' && item.placement?.buildReady)) {
     rows.push([
       target.role,
       target.sourcePath,
@@ -382,6 +392,7 @@ function toCabinetCandidatePlacementTsv(targets) {
   const headers = ['role', 'path', 'tx_mm', 'ty_mm', 'tz_mm', 'rotation']
   const rows = [headers.join('\t')]
   for (const target of targets) {
+    if (target.binding?.type === 'fixed_accessory_module') continue
     const isShelf = target.binding?.type === 'row_boundary_shelf'
     const buildReady = isShelf ? target.placement?.candidateBuildReady : target.placement?.buildReady
     if (!buildReady) continue
@@ -539,13 +550,27 @@ export function buildFullCandidatePlacementRows({ targets = [], templatePlacemen
   const template = templatePlacementIndex(templatePlacementText)
   const generatedDoors = generatedDoorModuleMap(generatedDoorModules)
   const rows = []
-  if (template.electronics) rows.push(placementRowFromPlan(null, template.electronics))
+  // Generated review assemblies intentionally omit electronics and cabinet-side electric lock bodies.
+  // Lock and wiring interfaces are carried by structural hole/datum geometry instead.
   rows.push(...template.preservedRows.map((row) => placementRowFromPlan(null, row)))
 
   for (const column of Array.isArray(plan.columns) ? plan.columns : []) {
     const side = textOf(column.side).toUpperCase() === 'R' ? 'R' : 'L'
     for (const row of Array.isArray(column.rows) ? column.rows : []) {
       const unit = compactNumber(row.unit)
+      const generatedDoor = generatedDoors.get(`${side}|${unit}`)
+      if (generatedDoor) {
+        rows.push(placementRowFromPlan(row, {
+          role: `${side}_row${String(row.index).padStart(2, '0')}_${ratioToken(row.unit)}_12_${generatedDoor.roleSuffix}`,
+          path: generatedDoor.path,
+          rotation: identityRotation().join(','),
+        }, {
+          txMm: row.centerXmm,
+          tyMm: row.centerYmm,
+          tzMm: 0,
+        }))
+        continue
+      }
       const door = template.doors.get(`${side}|${unit}`)
       if (door) {
         rows.push(placementRowFromPlan(row, door.row, {
@@ -553,27 +578,6 @@ export function buildFullCandidatePlacementRows({ targets = [], templatePlacemen
           txMm: row.centerXmm,
           tyMm: row.centerYmm,
           tzMm: 0,
-        }))
-      } else {
-        const generatedDoor = generatedDoors.get(`${side}|${unit}`)
-        if (generatedDoor) {
-          rows.push(placementRowFromPlan(row, {
-            role: `${side}_row${String(row.index).padStart(2, '0')}_${ratioToken(row.unit)}_12_${generatedDoor.roleSuffix}`,
-            path: generatedDoor.path,
-            rotation: identityRotation().join(','),
-          }, {
-            txMm: row.centerXmm,
-            tyMm: row.centerYmm,
-            tzMm: 0,
-          }))
-        }
-      }
-      if (template.lockBody) {
-        rows.push(placementRowFromPlan(row, template.lockBody, {
-          role: `cabinet_lock_body_${side}_row${String(row.index).padStart(2, '0')}`,
-          txMm: side === 'L' ? -Math.abs(Number(plan.derived?.lockBodyAbsXmm ?? 55.2)) : Math.abs(Number(plan.derived?.lockBodyAbsXmm ?? 55.2)),
-          tyMm: row.centerYmm,
-          tzMm: Number(plan.derived?.lockBodyZmm ?? -101.5),
         }))
       }
     }
@@ -583,6 +587,16 @@ export function buildFullCandidatePlacementRows({ targets = [], templatePlacemen
     if (!line.trim()) continue
     const [role, path, tx_mm, ty_mm, tz_mm, rotation] = line.split('\t')
     rows.push({ role, path, tx_mm, ty_mm, tz_mm, rotation })
+  }
+  for (const target of targets.filter((item) => item.binding?.type === 'fixed_accessory_module' && item.placement?.buildReady)) {
+    rows.push({
+      role: target.role,
+      path: target.sourcePath,
+      tx_mm: target.placement?.targetTxMm ?? 0,
+      ty_mm: target.placement?.targetTyMm ?? 0,
+      tz_mm: target.placement?.targetTzMm ?? 0,
+      rotation: Array.isArray(target.placement?.rotation) ? target.placement.rotation.join(',') : identityRotation().join(','),
+    })
   }
   return rows
 }

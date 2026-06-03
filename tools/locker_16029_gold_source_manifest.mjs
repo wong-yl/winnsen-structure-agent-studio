@@ -1,12 +1,16 @@
 import { existsSync, readdirSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join, resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 export const GOLD_SOURCE_MANIFEST_SCHEMA = 'winnsen.locker16029.gold_source_manifest.v1'
 
 export const GOLD_SOURCE_FOLDER_NAME = '参数化模板素材_U盘原始_20260526'
 export const GOLD_16029_ENGINEERING_RELATIVE_DIR = join('16029 寄存柜(标准组合式 1917×1000×550)', '1.工程图')
+
+const TOOL_DIR = dirname(fileURLToPath(import.meta.url))
+const PROJECT_ROOT = resolve(TOOL_DIR, '..')
+const PROJECT_LOCAL_REFERENCE_ROOT = join(PROJECT_ROOT, 'workers', 'analysis', 'desktop_reference', GOLD_SOURCE_FOLDER_NAME)
 
 export const GOLD_SOURCE_MODULES = Object.freeze([
   {
@@ -72,7 +76,7 @@ export const GOLD_DOOR_MODULES = Object.freeze([2, 4, 6].flatMap((ratio) => [
     key: `door_${ratio}_12_assembly`,
     role: `储物柜门${ratio}╱12装配`,
     file: `储物柜门${ratio}╱12装配.SLDASM`,
-    requiredChildren: [`储物柜门${ratio}╱12焊接`, '塑料轴套(云绅模具)', '门轴销', '电控U型锁钩ZJA-S500', '开口挡圈 5'],
+    requiredChildren: [`储物柜门${ratio}╱12焊接`, '塑料轴套(云绅模具)', '门轴销', '开口挡圈 5'],
   },
   {
     key: `door_${ratio}_12_weldment`,
@@ -83,8 +87,12 @@ export const GOLD_DOOR_MODULES = Object.freeze([2, 4, 6].flatMap((ratio) => [
 ]))
 
 export function defaultGoldSourceRoot() {
-  return process.env.WINNSEN_16029_GOLD_SOURCE_ROOT ||
-    join(homedir(), 'Desktop', GOLD_SOURCE_FOLDER_NAME)
+  if (process.env.WINNSEN_16029_GOLD_SOURCE_ROOT) return process.env.WINNSEN_16029_GOLD_SOURCE_ROOT
+  const candidates = [
+    PROJECT_LOCAL_REFERENCE_ROOT,
+    join(homedir(), 'Desktop', GOLD_SOURCE_FOLDER_NAME),
+  ]
+  return candidates.find((candidate) => existsSync(candidate)) || candidates[0]
 }
 
 function findCaseInsensitiveFile(root, expectedName) {
@@ -127,6 +135,6 @@ export function main(argv = process.argv.slice(2)) {
   process.stdout.write(`${JSON.stringify(buildGoldSourceManifest(root), null, 2)}\n`)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main()
 }

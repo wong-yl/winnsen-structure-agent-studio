@@ -30,12 +30,13 @@ const cases = [
       compatible: true,
       doorWidthMm: 307,
       doorCount: 6,
-      placementCount: 14,
+      placementCount: 13,
       outputToken: '740W_L6-4-2_R2-4-6',
       bindingStatus: 'ready_from_template_modules',
       missingUnits: [],
       fullCandidateDoorCount: 6,
-      fullCandidateLockCount: 6,
+      fullCandidateLockCount: 0,
+      placementDatumCount: 6,
       firstLeftDoorX: -193.5,
       firstRightDoorX: 193.5,
     },
@@ -55,12 +56,13 @@ const cases = [
       compatible: false,
       doorWidthMm: 337,
       doorCount: 6,
-      placementCount: 14,
+      placementCount: 13,
       outputToken: '800W_L6-4-2_R2-4-6',
       bindingStatus: 'ready_from_template_modules',
       missingUnits: [],
       fullCandidateDoorCount: 6,
-      fullCandidateLockCount: 6,
+      fullCandidateLockCount: 0,
+      placementDatumCount: 6,
       firstLeftDoorX: -208.5,
       firstRightDoorX: 208.5,
     },
@@ -80,12 +82,13 @@ const cases = [
       compatible: false,
       doorWidthMm: 437,
       doorCount: 6,
-      placementCount: 14,
+      placementCount: 13,
       outputToken: '1000W_L2-4-6_R6-4-2',
       bindingStatus: 'ready_from_template_modules',
       missingUnits: [],
       fullCandidateDoorCount: 6,
-      fullCandidateLockCount: 6,
+      fullCandidateLockCount: 0,
+      placementDatumCount: 6,
       firstLeftDoorX: -258.5,
       firstRightDoorX: 258.5,
     },
@@ -105,12 +108,13 @@ const cases = [
       compatible: false,
       doorWidthMm: 387,
       doorCount: 7,
-      placementCount: 16,
+      placementCount: 15,
       outputToken: '900W_L3-3-3-3_R4-4-4',
       bindingStatus: 'needs_native_door_generation',
       missingUnits: ['3'],
       fullCandidateDoorCount: 3,
-      fullCandidateLockCount: 7,
+      fullCandidateLockCount: 0,
+      placementDatumCount: 7,
       firstLeftDoorX: null,
       firstRightDoorX: 233.5,
       generatedDoorModules: [
@@ -143,16 +147,31 @@ const results = cases.map((testCase) => {
   assertAlmostEqual(plan.derived.doorWidthMm, expect.doorWidthMm, `${testCase.name} door width`)
   assertEqual(plan.derived.doorCount, expect.doorCount, `${testCase.name} door count`)
   assertEqual(plan.placements.length, expect.placementCount, `${testCase.name} placement count`)
+  assertEqual(plan.placements.filter((row) => /^lock_mounting_hole_datum_/i.test(row.role)).length, expect.placementDatumCount, `${testCase.name} lock-hole datum placement count`)
+  assertEqual(plan.placements.some((row) => /electric_lock_body|gold_electronics_module|template_electric_lock_body/i.test(`${row.role} ${row.source}`)), false, `${testCase.name} plan must not emit electrical/electric-lock placements`)
   assertEqual(plan.derived.outputToken, expect.outputToken, `${testCase.name} output token`)
   assertEqual(plan.derived.doorModuleBinding.status, expect.bindingStatus, `${testCase.name} native door module binding status`)
   assertEqual(JSON.stringify(plan.derived.doorModuleBinding.missingUnits), JSON.stringify(expect.missingUnits), `${testCase.name} missing native door module units`)
+  assertEqual(plan.derived.sheetMetalRuleEvidence.status, 'ready_for_rule_plan_binding', `${testCase.name} sheet-metal rule binding status`)
+  assertAlmostEqual(plan.derived.sheetMetalRuleEvidence.doorFlatWidthExtraMm, 36.4, `${testCase.name} sheet-metal flat-width extra`)
+  assertAlmostEqual(plan.derived.sheetMetalRuleEvidence.doorFlatHeightExtraMm, 36.4, `${testCase.name} sheet-metal flat-height extra`)
+  assertEqual(plan.derived.sheetMetalRuleEvidence.commonHoleStatus, 'ready_from_gold_dxf', `${testCase.name} sheet-metal common hole status`)
   assertEqual(plan.columns.length, 2, `${testCase.name} column count`)
   for (const column of plan.columns) {
     const sum = column.units.reduce((total, unit) => total + unit, 0)
     assertAlmostEqual(sum, 12, `${testCase.name} ${column.side} column ratio sum`)
+    for (const row of column.rows) {
+      assertEqual(row.sheetMetal.status, 'bound_to_1000w_gold_dxf', `${testCase.name} ${column.side} ${row.label} sheet-metal row binding`)
+      assertAlmostEqual(row.sheetMetal.generatedFlatWidthMm, plan.derived.doorWidthMm + 36.4, `${testCase.name} ${column.side} ${row.label} generated flat width`)
+      assertAlmostEqual(row.sheetMetal.generatedFlatHeightMm, row.heightMm + 36.4, `${testCase.name} ${column.side} ${row.label} generated flat height`)
+      if (Number(row.sheetMetal.holeDatumCount) < 2) {
+        throw new Error(`${testCase.name} ${column.side} ${row.label} must carry at least two DXF hole datum records`)
+      }
+    }
   }
   const fullCandidateRows = buildFullCandidatePlacementRows({ targets: [], templatePlacementText, plan })
   assertEqual(fullCandidateRows.some((row) => /shell_frame_shelf/i.test(`${row.role} ${row.path}`)), false, `${testCase.name} full candidate must remove shell black-box`)
+  assertEqual(fullCandidateRows.some((row) => /gold_electronics_module|electric_lock_body|cabinet_lock_body/i.test(`${row.role} ${row.path}`)), false, `${testCase.name} full candidate must omit electrical/electric-lock rows`)
   const doorRows = fullCandidateRows.filter((row) => /_door_module/i.test(row.role))
   const lockRows = fullCandidateRows.filter((row) => /^cabinet_lock_body_/i.test(row.role))
   assertEqual(doorRows.length, expect.fullCandidateDoorCount, `${testCase.name} full candidate door row count`)
@@ -191,6 +210,7 @@ const results = cases.map((testCase) => {
     fullCandidateDoorRows: doorRows.length,
     fullCandidateLockRows: lockRows.length,
     boundary: plan.boundary,
+    sheetMetalRuleEvidence: plan.derived.sheetMetalRuleEvidence,
   }
 })
 

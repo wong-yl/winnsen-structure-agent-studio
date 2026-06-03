@@ -1,0 +1,436 @@
+{
+  "schema": "winnsen.locker16029.gold_sheetmetal_rules.v1",
+  "generated_at": "2026-06-03T10:07:16+08:00",
+  "generated_at_basis": "source_evidence_generated_at",
+  "sourceEvidence": "data/locker_16029_gold_sheetmetal_evidence.json",
+  "goldSourceReference": "1000W x 1917H x 550D / 16029 source-reference DXF flat patterns",
+  "boundary": {
+    "cadMainline": "SolidWorks 2020",
+    "freeCadRole": "internal parameter evidence only",
+    "generatedModelsExclude": "electrical boards and cabinet-side electric locks",
+    "generatedModelsCarry": "sheet-metal hole/interface datums from DXF rules"
+  },
+  "baseline": {
+    "productFamily": "16029",
+    "sourceWidthMm": 1000,
+    "sourceHeightMm": 1917,
+    "sourceDepthMm": 550,
+    "baselineDoorWidthMm": 437,
+    "totalVerticalUnits": 12,
+    "unitPitchMm": 152.5,
+    "visualGapMm": 7,
+    "doorFlatWidthExtraMm": 36.4,
+    "doorFlatHeightExtraMm": 36.4,
+    "installedDoorHeightRule": "slotUnits * unitPitchMm - visualGapMm",
+    "flatDoorHeightRule": "installedDoorHeightMm + doorFlatHeightExtraMm",
+    "flatDoorWidthRule": "doorWidthMm + doorFlatWidthExtraMm"
+  },
+  "doorClasses": {
+    "1/12": {
+      "classId": "1/12",
+      "slotUnits": 1,
+      "sourceDxf": "workers/analysis/desktop_reference/16029_金标准原始素材_U盘_20260526/2.钣金展开图/储物柜门板1╱12展开图.DXF",
+      "sourceFileName": "储物柜门板1╱12展开图.DXF",
+      "thicknessMmFromName": null,
+      "baselineInstalledWidthMm": 437,
+      "baselineInstalledHeightMm": 145.5,
+      "baselineFlatWidthMm": 473.4,
+      "baselineFlatHeightMm": 181.9,
+      "flatWidthExtraMm": 36.4,
+      "flatHeightExtraMm": 36.4,
+      "generatedFlatWidthRule": "doorWidthMm + flatWidthExtraMm",
+      "generatedFlatHeightRule": "doorHeightMm + flatHeightExtraMm",
+      "manufacturingBboxMm": {
+        "xmin_mm": -236.7,
+        "ymin_mm": -90.95,
+        "xmax_mm": 236.7,
+        "ymax_mm": 90.95,
+        "width_mm": 473.4,
+        "height_mm": 181.9,
+        "area_mm2": 86111.46
+      },
+      "holeCount": 2,
+      "holeRoleCounts": {
+        "hinge_pin_or_door_axis_hole": 2
+      },
+      "holes": [
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": -78.35,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 12.6,
+          "distanceToTopMm": 169.3,
+          "role": "hinge_pin_or_door_axis_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": 78.35,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 169.3,
+          "distanceToTopMm": 12.6,
+          "role": "hinge_pin_or_door_axis_hole"
+        }
+      ],
+      "qualityFlags": [
+        "needs_closed_loop_rebuild"
+      ]
+    },
+    "2/12": {
+      "classId": "2/12",
+      "slotUnits": 2,
+      "sourceDxf": "workers/analysis/desktop_reference/16029_金标准原始素材_U盘_20260526/2.钣金展开图/储物柜门板2╱12展开图.DXF",
+      "sourceFileName": "储物柜门板2╱12展开图.DXF",
+      "thicknessMmFromName": null,
+      "baselineInstalledWidthMm": 437,
+      "baselineInstalledHeightMm": 298,
+      "baselineFlatWidthMm": 473.4,
+      "baselineFlatHeightMm": 334.4,
+      "flatWidthExtraMm": 36.4,
+      "flatHeightExtraMm": 36.4,
+      "generatedFlatWidthRule": "doorWidthMm + flatWidthExtraMm",
+      "generatedFlatHeightRule": "doorHeightMm + flatHeightExtraMm",
+      "manufacturingBboxMm": {
+        "xmin_mm": -236.7,
+        "ymin_mm": -167.2,
+        "xmax_mm": 236.7,
+        "ymax_mm": 167.2,
+        "width_mm": 473.4,
+        "height_mm": 334.4,
+        "area_mm2": 158304.96
+      },
+      "holeCount": 4,
+      "holeRoleCounts": {
+        "lock_or_label_pilot_hole": 2,
+        "hinge_pin_or_door_axis_hole": 2
+      },
+      "holes": [
+        {
+          "diameterMm": 2,
+          "radiusMm": 1,
+          "cxFromCenterMm": 203.5,
+          "cyFromCenterMm": -25,
+          "distanceToLeftMm": 440.2,
+          "distanceToRightMm": 33.2,
+          "distanceToBottomMm": 142.2,
+          "distanceToTopMm": 192.2,
+          "role": "lock_or_label_pilot_hole"
+        },
+        {
+          "diameterMm": 2,
+          "radiusMm": 1,
+          "cxFromCenterMm": 203.5,
+          "cyFromCenterMm": 25,
+          "distanceToLeftMm": 440.2,
+          "distanceToRightMm": 33.2,
+          "distanceToBottomMm": 192.2,
+          "distanceToTopMm": 142.2,
+          "role": "lock_or_label_pilot_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": -154.6,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 12.6,
+          "distanceToTopMm": 321.8,
+          "role": "hinge_pin_or_door_axis_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": 154.6,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 321.8,
+          "distanceToTopMm": 12.6,
+          "role": "hinge_pin_or_door_axis_hole"
+        }
+      ],
+      "qualityFlags": [
+        "needs_closed_loop_rebuild"
+      ]
+    },
+    "3/12": {
+      "classId": "3/12",
+      "slotUnits": 3,
+      "sourceDxf": "workers/analysis/desktop_reference/16029_金标准原始素材_U盘_20260526/2.钣金展开图/储物柜门板3╱12展开图.DXF",
+      "sourceFileName": "储物柜门板3╱12展开图.DXF",
+      "thicknessMmFromName": null,
+      "baselineInstalledWidthMm": 437,
+      "baselineInstalledHeightMm": 450.5,
+      "baselineFlatWidthMm": 473.4,
+      "baselineFlatHeightMm": 486.9,
+      "flatWidthExtraMm": 36.4,
+      "flatHeightExtraMm": 36.4,
+      "generatedFlatWidthRule": "doorWidthMm + flatWidthExtraMm",
+      "generatedFlatHeightRule": "doorHeightMm + flatHeightExtraMm",
+      "manufacturingBboxMm": {
+        "xmin_mm": -236.7,
+        "ymin_mm": -243.45,
+        "xmax_mm": 236.7,
+        "ymax_mm": 243.45,
+        "width_mm": 473.4,
+        "height_mm": 486.9,
+        "area_mm2": 230498.46
+      },
+      "holeCount": 2,
+      "holeRoleCounts": {
+        "hinge_pin_or_door_axis_hole": 2
+      },
+      "holes": [
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": -230.85,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 12.6,
+          "distanceToTopMm": 474.3,
+          "role": "hinge_pin_or_door_axis_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": 230.85,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 474.3,
+          "distanceToTopMm": 12.6,
+          "role": "hinge_pin_or_door_axis_hole"
+        }
+      ],
+      "qualityFlags": [
+        "needs_closed_loop_rebuild"
+      ]
+    },
+    "4/12": {
+      "classId": "4/12",
+      "slotUnits": 4,
+      "sourceDxf": "workers/analysis/desktop_reference/16029_金标准原始素材_U盘_20260526/2.钣金展开图/储物柜门板4╱12展开图.DXF",
+      "sourceFileName": "储物柜门板4╱12展开图.DXF",
+      "thicknessMmFromName": null,
+      "baselineInstalledWidthMm": 437,
+      "baselineInstalledHeightMm": 603,
+      "baselineFlatWidthMm": 473.4,
+      "baselineFlatHeightMm": 639.4,
+      "flatWidthExtraMm": 36.4,
+      "flatHeightExtraMm": 36.4,
+      "generatedFlatWidthRule": "doorWidthMm + flatWidthExtraMm",
+      "generatedFlatHeightRule": "doorHeightMm + flatHeightExtraMm",
+      "manufacturingBboxMm": {
+        "xmin_mm": -236.7,
+        "ymin_mm": -319.7,
+        "xmax_mm": 236.7,
+        "ymax_mm": 319.7,
+        "width_mm": 473.4,
+        "height_mm": 639.4,
+        "area_mm2": 302691.96
+      },
+      "holeCount": 2,
+      "holeRoleCounts": {
+        "hinge_pin_or_door_axis_hole": 2
+      },
+      "holes": [
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": -307.1,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 12.6,
+          "distanceToTopMm": 626.8,
+          "role": "hinge_pin_or_door_axis_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": 307.1,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 626.8,
+          "distanceToTopMm": 12.6,
+          "role": "hinge_pin_or_door_axis_hole"
+        }
+      ],
+      "qualityFlags": [
+        "needs_closed_loop_rebuild"
+      ]
+    },
+    "5/12": {
+      "classId": "5/12",
+      "slotUnits": 5,
+      "sourceDxf": "workers/analysis/desktop_reference/16029_金标准原始素材_U盘_20260526/2.钣金展开图/储物柜门板5╱12展开图.DXF",
+      "sourceFileName": "储物柜门板5╱12展开图.DXF",
+      "thicknessMmFromName": null,
+      "baselineInstalledWidthMm": 437,
+      "baselineInstalledHeightMm": 755.5,
+      "baselineFlatWidthMm": 473.4,
+      "baselineFlatHeightMm": 791.9,
+      "flatWidthExtraMm": 36.4,
+      "flatHeightExtraMm": 36.4,
+      "generatedFlatWidthRule": "doorWidthMm + flatWidthExtraMm",
+      "generatedFlatHeightRule": "doorHeightMm + flatHeightExtraMm",
+      "manufacturingBboxMm": {
+        "xmin_mm": -236.7,
+        "ymin_mm": -395.95,
+        "xmax_mm": 236.7,
+        "ymax_mm": 395.95,
+        "width_mm": 473.4,
+        "height_mm": 791.9,
+        "area_mm2": 374885.46
+      },
+      "holeCount": 2,
+      "holeRoleCounts": {
+        "hinge_pin_or_door_axis_hole": 2
+      },
+      "holes": [
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": -383.35,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 12.6,
+          "distanceToTopMm": 779.3,
+          "role": "hinge_pin_or_door_axis_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": 383.35,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 779.3,
+          "distanceToTopMm": 12.6,
+          "role": "hinge_pin_or_door_axis_hole"
+        }
+      ],
+      "qualityFlags": [
+        "needs_closed_loop_rebuild"
+      ]
+    },
+    "6/12": {
+      "classId": "6/12",
+      "slotUnits": 6,
+      "sourceDxf": "workers/analysis/desktop_reference/16029_金标准原始素材_U盘_20260526/2.钣金展开图/储物柜门板6╱12展开图.DXF",
+      "sourceFileName": "储物柜门板6╱12展开图.DXF",
+      "thicknessMmFromName": null,
+      "baselineInstalledWidthMm": 437,
+      "baselineInstalledHeightMm": 908,
+      "baselineFlatWidthMm": 473.4,
+      "baselineFlatHeightMm": 944.4,
+      "flatWidthExtraMm": 36.4,
+      "flatHeightExtraMm": 36.4,
+      "generatedFlatWidthRule": "doorWidthMm + flatWidthExtraMm",
+      "generatedFlatHeightRule": "doorHeightMm + flatHeightExtraMm",
+      "manufacturingBboxMm": {
+        "xmin_mm": -236.7,
+        "ymin_mm": -472.2,
+        "xmax_mm": 236.7,
+        "ymax_mm": 472.2,
+        "width_mm": 473.4,
+        "height_mm": 944.4,
+        "area_mm2": 447078.96
+      },
+      "holeCount": 2,
+      "holeRoleCounts": {
+        "hinge_pin_or_door_axis_hole": 2
+      },
+      "holes": [
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": -459.6,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 12.6,
+          "distanceToTopMm": 931.8,
+          "role": "hinge_pin_or_door_axis_hole"
+        },
+        {
+          "diameterMm": 10.2,
+          "radiusMm": 5.1,
+          "cxFromCenterMm": -208.5,
+          "cyFromCenterMm": 459.6,
+          "distanceToLeftMm": 28.2,
+          "distanceToRightMm": 445.2,
+          "distanceToBottomMm": 931.8,
+          "distanceToTopMm": 12.6,
+          "role": "hinge_pin_or_door_axis_hole"
+        }
+      ],
+      "qualityFlags": [
+        "needs_closed_loop_rebuild"
+      ]
+    }
+  },
+  "commonDoorHoleRules": {
+    "status": "ready_from_gold_dxf",
+    "hingePinHoleDiameterMm": 10.2,
+    "hingeHoleFromSideMm": 28.2,
+    "hingeHoleFromTopBottomMm": 12.6,
+    "hingeHolePattern": "two holes on hinge side, offset from upper/lower flat edge",
+    "lockPilotEvidence": [
+      {
+        "classId": "2/12",
+        "diameterMm": 2,
+        "radiusMm": 1,
+        "cxFromCenterMm": 203.5,
+        "cyFromCenterMm": -25,
+        "distanceToLeftMm": 440.2,
+        "distanceToRightMm": 33.2,
+        "distanceToBottomMm": 142.2,
+        "distanceToTopMm": 192.2,
+        "role": "lock_or_label_pilot_hole"
+      },
+      {
+        "classId": "2/12",
+        "diameterMm": 2,
+        "radiusMm": 1,
+        "cxFromCenterMm": 203.5,
+        "cyFromCenterMm": 25,
+        "distanceToLeftMm": 440.2,
+        "distanceToRightMm": 33.2,
+        "distanceToBottomMm": 192.2,
+        "distanceToTopMm": 142.2,
+        "role": "lock_or_label_pilot_hole"
+      }
+    ]
+  },
+  "generatorBinding": {
+    "status": "ready_for_rule_plan_binding",
+    "dimensionInputs": "Use installed doorWidthMm/doorHeightMm for SolidWorks model dimensions; keep flat offsets and hole datums as reference evidence until direct SW cut features are implemented.",
+    "solidWorksHoleFeatureStatus": "datum_ready_not_cut_feature"
+  },
+  "summary": {
+    "doorClassCount": 6,
+    "classes": [
+      "1/12",
+      "2/12",
+      "3/12",
+      "4/12",
+      "5/12",
+      "6/12"
+    ],
+    "flatWidthExtraMm": 36.4,
+    "flatHeightExtraMm": 36.4,
+    "totalDoorHoleCount": 14,
+    "commonHoleStatus": "ready_from_gold_dxf"
+  }
+}

@@ -14,6 +14,7 @@ const GENERATION_REQUEST_DIR = resolve(DATA_DIR, 'review_generation_requests')
 const USER_DB_PATH = resolve(DATA_DIR, 'review_download_users.json')
 const FEEDBACK_INDEX_PATH = resolve(FEEDBACK_DIR, 'feedback_index.json')
 const GENERATION_INDEX_PATH = resolve(GENERATION_REQUEST_DIR, 'generation_request_index.json')
+const CURRENT_DELIVERY_MANIFEST_PATH = resolve(DATA_DIR, 'locker_16029_v43_internal_sheetmetal_delivery.json')
 const INVITE_CODE_PATH = resolve(DATA_DIR, 'review_download_invite_code.txt')
 const BRAND_LOGO_PATH = resolve(ROOT, 'apps/web/public/brand/winnsen-logo.jpg')
 const BRAND_MARK_PATH = resolve(ROOT, 'apps/web/public/brand/winnsen-mark.png')
@@ -46,38 +47,46 @@ function childProcessEnv(extra = {}) {
 }
 
 const reviewRound = {
-  id: '16029-800w-gold-variable-review-20260528',
-  title: '16029 800W gold-variable 三组柜子审核',
-  project: '16029 800W gold-variable',
+  id: '16029-v43-internal-sheetmetal-review-20260603',
+  title: '16029 740W / L642-R246 / v43 内部钣金收尾审核',
+  project: '16029 740W / L642-R246 / v43',
   cadMainline: 'SolidWorks 2020',
-  boundary: '800W x 1917H x 550D / W337 / gap 2+3+2=7',
-  gateStatus: 'Scope gate PASS / 工程审核中',
-  gateBlocker: 'LMS/SML 已补齐 SolidWorks 2020 打开截图证据；名义 1917H 与 raw STEP bbox 1983H 的底脚/顶部/前侧外伸仍需结构工程师签核。',
-  instruction: '本轮只审核 LMS、SML、DUAL 三个候选审核包；历史候选包不作为本轮输入，生产图纸释放前需确认名义外形和安装外形口径。',
+  boundary: '740W x 1917H x 550D / L642-R246 / v43 door route frozen',
+  gateStatus: 'v18 gate PASS / 用户目视确认',
+  gateBlocker: '当前包恢复 6 个机械锁舌，电器板、电控锁和电控锁钩仍排除；生产图纸释放前仍需结构工程师签核。',
+  instruction: '本轮只把 v43-int-v18-lockfix 作为当前交付入口；同路线旧生成包保留为历史，不作为当前下载入口。',
 }
 
 const assets = [
   {
+    id: '16029-v43-internal-sheetmetal-lockfix-zip',
+    title: '16029 740W v43 内部钣金最终包',
+    category: '当前交付包',
+    description: 'v43-int-v18-lockfix：SolidWorks 2020 Pack-and-Go，沿用 740W / L642-R246 / v43 柜门路线，恢复 6 个机械锁舌，后背接缝按侧板钣金居中，电器板、电控锁、电控锁钩排除。',
+    fileName: 'review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip',
+    path: resolve(ROOT, 'workers/generation_logs/review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip'),
+  },
+  {
     id: 'lms-gold-variable',
-    title: 'LMS 审核包',
-    category: '单方案审核',
-    description: 'LMS: 大 6/12，中 4/12，小 2/12；工程师主审 STEP、verify CSV、model gate、bbox gate、SolidWorks 2020 打开截图，以及名义外形/raw bbox 外伸口径。',
+    title: '800W LMS 历史参考包',
+    category: '保留参考',
+    description: '旧 800W gold-variable LMS 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。',
     fileName: '16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip',
     path: resolve(ROOT, 'workers/handoffs/16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
   {
     id: 'sml-gold-variable',
-    title: 'SML 审核包',
-    category: '单方案审核',
-    description: 'SML: 小 2/12，中 4/12，大 6/12；工程师主审 STEP、verify CSV、model gate、bbox gate、SolidWorks 2020 打开截图，以及名义外形/raw bbox 外伸口径。',
+    title: '800W SML 历史参考包',
+    category: '保留参考',
+    description: '旧 800W gold-variable SML 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。',
     fileName: '16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip',
     path: resolve(ROOT, 'workers/handoffs/16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
   {
     id: 'dual-gold-variable',
-    title: 'LMS/SML 总审核包',
-    category: '双方案候选汇总',
-    description: '把 LMS 与 SML 两个候选审核包合并在一个 ZIP 中，适合统一转发、归档和外形口径签核；不是第三个结构方案。',
+    title: '800W LMS/SML 历史合包',
+    category: '保留参考',
+    description: '旧 LMS/SML 双方案合包，保留作历史对照；不是当前 v43 内部钣金交付入口。',
     fileName: '16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip',
     path: resolve(ROOT, 'workers/handoffs/16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
@@ -97,6 +106,26 @@ function readJson(path, fallback) {
   } catch {
     return fallback
   }
+}
+
+function readCurrentDeliveryManifest() {
+  return readJson(CURRENT_DELIVERY_MANIFEST_PATH, {
+    current_request_id: 'v43-int-v18-lockfix',
+    route: {
+      cabinet_width_mm: 740,
+      cabinet_height_mm: 1917,
+      cabinet_depth_mm: 550,
+      row_sequence: 'L642-R246',
+    },
+    delivery: {
+      download_url: '/generation-download/v43-int-v18-lockfix',
+    },
+    superseded_same_route_request_ids: [],
+  })
+}
+
+function currentDeliveryRequestId() {
+  return String(readCurrentDeliveryManifest().current_request_id || 'v43-int-v18-lockfix')
 }
 
 function writeJson(path, value) {
@@ -257,9 +286,37 @@ function readGenerationIndex() {
   return Array.isArray(index.requests) ? index : { requests: [] }
 }
 
+function isCurrentV43RouteRequest(item, manifest) {
+  const route = manifest.route || {}
+  return String(item.id || '').startsWith('v43-int-') ||
+    (
+      String(item.taskMode || '') === 'full_assembly' &&
+      String(item.cabinetWidth || '') === String(route.cabinet_width_mm || 740) &&
+      String(item.cabinetHeight || '') === String(route.cabinet_height_mm || 1917) &&
+      String(item.cabinetDepth || '') === String(route.cabinet_depth_mm || 550) &&
+      String(item.rowSequence || '') === String(route.row_sequence || 'L642-R246')
+    )
+}
+
+function isActiveGenerationRequest(item) {
+  const status = String(item.status || '').toLowerCase()
+  return !item.downloadUrl && !status.includes('failed')
+}
+
+function isVisibleCurrentGenerationRequest(item, manifest) {
+  const currentId = String(manifest.current_request_id || '')
+  const supersededIds = new Set((manifest.superseded_same_route_request_ids || []).map((id) => String(id)))
+  if (String(item.id || '') === currentId) return true
+  if (!isCurrentV43RouteRequest(item, manifest)) return true
+  if (isActiveGenerationRequest(item)) return true
+  return !supersededIds.has(String(item.id || '')) && false
+}
+
 function currentGenerationRequests(username = null) {
+  const manifest = readCurrentDeliveryManifest()
   return readGenerationIndex().requests
-    .filter((item) => !username || item.username === username)
+    .filter((item) => !username || item.username === username || item.username === '__global__')
+    .filter((item) => isVisibleCurrentGenerationRequest(item, manifest))
     .slice(0, 40)
 }
 
@@ -277,7 +334,15 @@ function hasStructureRevisionFeedback(item) {
     item.resultKind === 'solidworks2020_structure_revision_evidence_package'
 }
 
+function hasParametricScaffoldValidation(item) {
+  return Boolean(item.parametricScaffoldNeedsEngineeringValidation) ||
+    String(item.handoffReadinessStatus || '').toLowerCase() === 'needs_parametric_scaffold_engineering_validation' ||
+    String(item.status || '').toLowerCase().includes('parametric_scaffold_needs_engineering_validation')
+}
+
 function generationStatusText(item) {
+  if (item.id === currentDeliveryRequestId() && item.downloadUrl) return '当前交付包：SW2020 gate PASS，用户已目视确认'
+  if (item.downloadUrl && hasParametricScaffoldValidation(item)) return '参数化箱体/锁孔基准/调节脚待工程师验证，证据包已生成'
   if (item.downloadUrl && hasStructureRevisionFeedback(item)) return '结构反馈待整改，证据包已生成'
   if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
   if (String(item.status || '').includes('failed')) return '生成失败'
@@ -286,6 +351,12 @@ function generationStatusText(item) {
 }
 
 function generationActionHtml(item) {
+  if (item.id === currentDeliveryRequestId() && item.downloadUrl) {
+    return `<a class="button" href="${htmlEscape(item.downloadUrl)}">下载当前 v43 交付包</a>`
+  }
+  if (item.downloadUrl && hasParametricScaffoldValidation(item)) {
+    return `<a class="button" href="${htmlEscape(item.downloadUrl)}">下载参数化结构证据包</a>`
+  }
   if (item.downloadUrl) {
     const label = hasStructureRevisionFeedback(item)
       ? '下载结构证据包'
@@ -572,7 +643,7 @@ function renderPage(request) {
         </div>
         <div class="side-card">
           <span>当前轮次</span>
-          <strong>16029 800W gold-variable</strong>
+          <strong>16029 740W v43 内部钣金</strong>
         </div>
         <div class="side-card">
           <span>登录账号</span>
@@ -585,12 +656,12 @@ function renderPage(request) {
           <div class="top">
             <div>
               <p class="eyebrow">ENGINEER REVIEW</p>
-              <h1>16029 800W 审核入口</h1>
-              <p class="muted">自动识别完整装配体或单个模型；提交后进入后台生成，完成后才显示下载。右侧只保留实时预览，不展示内部日志。</p>
+              <h1>16029 740W / L642-R246 / v43 审核入口</h1>
+              <p class="muted">当前交付入口为 v43-int-v18-lockfix。后台生成完成后才显示下载；旧同路线包默认隐藏，不作为当前交付。</p>
               <div class="chips">
                 <span class="chip good">${htmlEscape(reviewRound.cadMainline)}</span>
-                <span class="chip warn">工程审核</span>
-                <span class="chip">2 条入口</span>
+                <span class="chip warn">工程复核</span>
+                <span class="chip">v18 当前包</span>
               </div>
             </div>
             <a class="button" href="#generate">开始生成</a>
@@ -622,7 +693,7 @@ function renderPage(request) {
           <div class="studio-grid">
             <form id="generationForm" class="generator-form">
               <label>自然语言/参数化提示词
-                <textarea name="prompt" id="doorPrompt">800W x 1917H x 550D, two columns, left column [6,4,2], right column [2,4,6], W337, ordinary locker doors, electric lock, concealed hinge, latch, reinforcement rib, lock holes and hinge holes.</textarea>
+                <textarea name="prompt" id="doorPrompt">740W x 1917H x 550D, two columns, left column [6,4,2], right column [2,4,6], L642-R246, W307, ordinary locker doors, mechanical door lock tongue restored, lock-side holes and locating datums retained, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.</textarea>
               </label>
               <input type="hidden" name="taskMode" id="taskMode" value="full_assembly" />
               <div class="mode-grid" role="tablist" aria-label="生成模式选择">
@@ -636,31 +707,31 @@ function renderPage(request) {
                 </button>
               </div>
               <div class="prompt-actions">
-                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, ordinary locker doors, ZJA-S500 electric lock, concealed hinge, restored latch tongue, gold source reinforcement rib and template openings.">录制用 740W 已验证模板</button>
-                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, electric lock, concealed hinge, reinforcement rib.">整柜样例</button>
-                <button class="button secondary" type="button" data-example="800W x 1917H x 550D, two columns, L642-R246, W337, ordinary locker doors, electric lock, concealed hinge, reinforcement rib.">800W 参数化预览</button>
-                <button class="button secondary" type="button" data-example="300W x 1917H x 550D, single locker door panel, ordinary_door_panel, electric lock, concealed hinge, lock holes.">单门样例</button>
+                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, ordinary locker doors, mechanical door lock tongue restored, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.">当前 v43 交付样例</button>
+                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, freeze verified v43 door sheet metal, repair internal shelf/front-frame and centered rear seam.">内部钣金样例</button>
+                <button class="button secondary" type="button" data-example="1000W x 1917H x 550D, source reference only, compare side-panel welding, shelves/front frame, inner vertical reinforcement, top/bottom frame, leveling-foot datums, and lock-side locating datums.">1000W 金标准对照</button>
+                <button class="button secondary" type="button" data-example="Single ordinary door panel, door width 307, 0.8mm galvanized sheet, mechanical lock tongue interface, hinge holes, vertical reinforcement rib, no electric lock body.">单门界面样例</button>
               </div>
               <details class="advanced-fields">
                 <summary>高级参数</summary>
                 <div class="field-grid">
-                  <label>柜宽 W(mm)<input name="cabinetWidth" id="cabinetWidth" value="800" /></label>
+                  <label>柜宽 W(mm)<input name="cabinetWidth" id="cabinetWidth" value="740" /></label>
                   <label>柜高 H(mm)<input name="cabinetHeight" id="cabinetHeight" value="1917" /></label>
                   <label>柜深 D(mm)<input name="cabinetDepth" id="cabinetDepth" value="550" /></label>
                   <label>列数<input name="columns" id="columns" value="2" /></label>
                   <label>门数<input name="doorCount" id="doorCount" value="6" /></label>
-                  <label>门宽(mm)<input name="doorWidth" id="doorWidth" value="337" /></label>
+                  <label>门宽(mm)<input name="doorWidth" id="doorWidth" value="307" /></label>
                   <label>门高(mm)<input name="doorHeight" id="doorHeight" value="908" /></label>
                   <label>门高序列<input name="rowSequence" id="rowSequence" value="L642-R246" /></label>
                   <label>板厚<input name="thickness" id="thickness" value="待确认" /></label>
                 </div>
                 <div class="field-grid two">
                   <label>门型<input name="doorType" id="doorType" value="ordinary_door_panel" /></label>
-                  <label>锁具<input name="lockType" id="lockType" value="电控锁" /></label>
+                  <label>锁具<input name="lockType" id="lockType" value="机械锁舌；电控锁实体排除" /></label>
                   <label>铰链<input name="hingeType" id="hingeType" value="暗铰链" /></label>
-                  <label>插销/锁扣<input name="latchType" id="latchType" value="插销/锁扣需确认" /></label>
+                  <label>插销/锁扣<input name="latchType" id="latchType" value="锁舌已恢复" /></label>
                   <label>加强筋<input name="reinforcement" id="reinforcement" value="加强筋" /></label>
-                  <label>开孔<input name="openings" id="openings" value="锁孔/铰链孔需确认" /></label>
+                  <label>开孔<input name="openings" id="openings" value="锁侧孔/定位孔 datum 保留" /></label>
                   <label>材料<input name="material" id="material" value="待确认" /></label>
                 </div>
                 <div id="generatedPrompt" class="generated-prompt" hidden></div>
@@ -722,7 +793,7 @@ function renderPage(request) {
           <div class="top">
             <div>
               <h2>审核包下载</h2>
-              <p class="muted">只保留当前三包下载入口，不展开内部 gate 细节。</p>
+              <p class="muted">当前主入口为 v18 内部钣金最终包；旧 800W LMS/SML/DUAL 仅保留为历史参考。</p>
             </div>
             <span class="chip good">受保护下载</span>
           </div>
@@ -765,6 +836,7 @@ function renderPage(request) {
       </main>
     </div>
     <script>
+      const CURRENT_DELIVERY_REQUEST_ID = ${JSON.stringify(currentDeliveryRequestId())}
       const promptInput = document.getElementById('doorPrompt')
       const generationForm = document.getElementById('generationForm')
       const generatedPromptBox = document.getElementById('generatedPrompt')
@@ -810,8 +882,16 @@ function renderPage(request) {
           item.resultKind === 'solidworks2020_structure_revision_evidence_package'
       }
 
+      function hasParametricScaffoldValidationForClient(item) {
+        return Boolean(item.parametricScaffoldNeedsEngineeringValidation) ||
+          String(item.handoffReadinessStatus || '').toLowerCase() === 'needs_parametric_scaffold_engineering_validation' ||
+          String(item.status || '').toLowerCase().includes('parametric_scaffold_needs_engineering_validation')
+      }
+
       function generationStatusTextForClient(item) {
         const status = String(item.status || '')
+        if (item.id === CURRENT_DELIVERY_REQUEST_ID && item.downloadUrl) return '当前交付包：SW2020 gate PASS，用户已目视确认'
+        if (item.downloadUrl && hasParametricScaffoldValidationForClient(item)) return '参数化箱体/锁孔基准/调节脚待工程师验证，证据包已生成'
         if (item.downloadUrl && hasStructureRevisionFeedbackForClient(item)) return '结构反馈待整改，证据包已生成'
         if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
         if (status.includes('failed')) return '生成失败'
@@ -826,9 +906,12 @@ function renderPage(request) {
           const link = document.createElement('a')
           link.className = 'button'
           link.href = item.downloadUrl
-          link.textContent = hasStructureRevisionFeedbackForClient(item)
+          link.textContent = item.id === CURRENT_DELIVERY_REQUEST_ID
+            ? '下载当前 v43 交付包'
+            : hasStructureRevisionFeedbackForClient(item)
             ? '下载结构证据包'
             : item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
+          if (hasParametricScaffoldValidationForClient(item)) link.textContent = '下载参数化结构证据包'
           wrapper.append(link)
           return wrapper
         }
@@ -918,6 +1001,22 @@ function renderPage(request) {
           if (match && match[1]) return Number(match[1])
         }
         return null
+      }
+
+      function inferLockType(text, lower) {
+        const electricLockExcluded =
+          /\\bno\\s+(?:cabinet-side\\s+)?electric\\s+lock(?:\\s+(?:body|hook))?\\b/.test(lower) ||
+          /\\bno\\s+electric\\s+hardware\\b/.test(lower) ||
+          /(?:不生成|不包含|不要|无|排除).*电控锁/.test(text) ||
+          /电控锁.*(?:排除|不生成|不包含|不要)/.test(text)
+        const hasElectricLock = !electricLockExcluded && (/\\belectric\\s+lock\\b/.test(lower) || text.includes('电控锁') || text.includes('电控'))
+        const hasMechanicalLock = /\\bmechanical\\b/.test(lower) || text.includes('机械') || text.includes('锁舌')
+
+        if (hasElectricLock) return '电控锁'
+        if (hasMechanicalLock && electricLockExcluded) return '机械锁舌；电控锁实体排除'
+        if (hasMechanicalLock) return '机械锁'
+        if (electricLockExcluded) return '电控锁实体排除'
+        return '待确认'
       }
 
       function parseDimensions(text) {
@@ -1101,7 +1200,7 @@ function renderPage(request) {
         lastAutoDoorHeight = String(Math.round(explicitDoorHeight || estimatedDoorHeight))
         fields.rowSequence.value = rowSequence
         fields.doorType.value = lower.includes('control') || text.includes('中控') ? 'control_door' : 'ordinary_door_panel'
-        fields.lockType.value = lower.includes('electric') || text.includes('电控') ? '电控锁' : text.includes('机械') ? '机械锁' : '待确认'
+        fields.lockType.value = inferLockType(text, lower)
         fields.hingeType.value = lower.includes('concealed') || text.includes('暗铰') ? '暗铰链' : lower.includes('piano') || text.includes('长铰') ? '长铰链' : '待确认'
         fields.latchType.value = lower.includes('latch') || text.includes('插销') ? '插销/锁扣需确认' : '待确认'
         fields.reinforcement.value = lower.includes('rib') || text.includes('加强') ? '加强筋' : '待确认'
@@ -1636,7 +1735,7 @@ const server = createServer(async (request, response) => {
     const generationDownloadMatch = url.pathname.match(/^\/generation-download\/([a-zA-Z0-9_.-]+)$/)
     if (request.method === 'GET' && generationDownloadMatch) {
       const requestId = generationDownloadMatch[1]
-      const item = readGenerationIndex().requests.find((entry) => entry.id === requestId && entry.username === username)
+      const item = readGenerationIndex().requests.find((entry) => entry.id === requestId && (entry.username === username || entry.username === '__global__'))
       if (!item || !item.zipPath || !item.downloadUrl) {
         sendJson(response, 404, { error: 'generation output not found' })
         return

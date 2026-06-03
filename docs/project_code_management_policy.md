@@ -1,127 +1,116 @@
 # Project Code Management Policy
 
-Updated: 2026-05-28
+Updated: `2026-06-03`
 
 This repository is managed as an engineering workflow, not as a dump folder. The current active product line is:
 
-- Project: 16029 800W gold-variable LMS/SML
-- CAD mainline: SolidWorks 2020
-- Size: 800W x 1917H x 550D
-- Door width: W337
-- Gap rule: 2 + 3 + 2 = 7
-- Current gate: PASS, 60 checks, 0 failed
+- Project: `16029 / 740W / L642-R246 / v43`
+- CAD mainline: `SolidWorks 2020`
+- Current package: `v43-int-v18-lockfix`
+- Current status: SW2020 engineering review / handoff organization ready, not production drawing release
+- Current gate: v43 delivery manifest + current handoff scope gate must pass
 
 Gold/source reference baseline:
 
-- 1000W x 1917H x 550D / 10/12/14 is the verified source baseline for rule extraction and geometry comparison.
+- `1000W x 1917H x 550D / 10/12/14` remains the verified source baseline for rule extraction and structural comparison.
 - It may appear in internal source evidence, scripts, manifests, and traceability docs.
-- It must not be listed as a current engineer-facing review package for the 800W handoff.
+- It must not be listed as the current engineer-facing download package.
 - It must not be mislabeled as a trial route or waste line.
 
-## Management Rules
-
-### Keep In Current Code
+## Keep In Current Code
 
 These are current project code and documentation:
 
-- Engineer-facing web UI and API changes for the current 16029 route
-- Review login/download portal code
-- Review login generation queue and task-download code
-- SolidWorks 2020 config and open-evidence automation
-- SolidWorks 2020 native single-door generation helper source code
-- Current route manifest and project process docs
-- Fixed generator/finalizer entries:
-  - `workers/maintenance/generate_16029_800w_gold_variable_model_freecad.py`
-  - `workers/maintenance/finalize_16029_800w_gold_variable_handoff.py`
-  - `workers/maintenance/validate_16029_current_handoff_scope.ps1`
+- Engineer-facing web UI and API changes for the current v43 route.
+- Review login/download portal code.
+- Review login generation queue and task-download code.
+- SolidWorks 2020 generator and evidence automation.
+- 1000W gold/source sheet-metal evidence and rule builders.
+- v43 delivery manifest and delivery verifier:
+  - `data/locker_16029_v43_internal_sheetmetal_delivery.json`
+  - `tools/verify_16029_v43_delivery_manifest.mjs`
+- Current process and handoff docs:
+  - `docs/16029_current_project_process.md`
+  - `docs/16029_memory_v43_internal_sheetmetal_repair_plan_20260602.md`
+  - `workers/maintenance/16029_v43_internal_sheetmetal_delivery_handoff_20260603.md`
+- Fixed generator / validation entries:
   - `tools/process_16029_review_generation_queue.mjs`
+  - `tools/generate_review_solidworks_full_assembly.ps1`
   - `tools/generate_review_solidworks_single_door.ps1`
-  - `tools/generate_review_task_simple_freecad_model.py`
-  - `workers/solidworks_tools/ImportStepSaveNative.cs`
-  - `workers/solidworks_tools/build_import_step_save_native.ps1`
-  - `workers/solidworks_tools/sw_clone_master_model_height_probe.js`
-  - `workers/solidworks_tools/BuildOrdinaryDoorModule.cs`
-  - `workers/maintenance/validate_16029_dimension_contract.py`
+  - `workers/maintenance/validate_16029_current_handoff_scope.ps1`
+  - `tools/verify_16029_current_mainline.ps1`
+  - `tools/check_16029_first_commit_scope.ps1`
 
-### Do Not Commit By Default
+## Do Not Commit By Default
 
-These files may stay on disk but should not go into the first Git cleanup commit:
+These files may stay on disk but should not go into the Git cleanup commit:
 
-- Handoff zip files and extracted handoff folders
-- Generated model files, STEP, FCStd, SLDPRT, SLDASM
-- Gate output CSV/JSON/MD files
-- Screenshot evidence files
+- Generated model folders under `workers/generated_models/`
+- Generated logs and ZIPs under `workers/generation_logs/`
+- Desktop screenshots
+- SolidWorks binary model files: `.SLDASM`, `.SLDPRT`, `.SLDDRW`
+- STEP/STP/FCStd generated geometry
+- Gate output CSV/JSON/MD files generated during verification
 - Review login users, invite codes, and feedback uploads
 - Compiled EXE/DLL files under `workers/solidworks_tools/bin`
 - Temporary probe output and `workers/tmp_*`
 
-### Treat As Historical Evidence
+## Treat As Historical Evidence
 
 These are not deleted automatically, but they are not current delivery sources:
 
+- `v43-int-v15-*`, `v43-int-v16-*`, `v43-int-v17-*` same-route trial packages
 - `16029_WIDTH_CANDIDATE*`
 - `16029_HEIGHT_CANDIDATE*`
 - `16029_800W_*RULE_REVIEW*`
+- 800W LMS/SML/DUAL review packages from 2026-05-28
 - R3/R4/R5/R6/R7 feedback repair branches
 - SolidWorks 2025 environment traces
 - FreeCAD-only screenshots or layout-only packages
 
-### Keep As Gold Source Reference
-
-These are kept for source traceability and rule extraction, but not shown as current engineer-facing handoff packages:
-
-- `16029_10_12_14*`
-- 1000W x 1917H x 550D source assembly, DXF, BOM, STEP, and supporting evidence
-
-### Never Reintroduce As Current Mainline
+## Never Reintroduce As Current Mainline
 
 - 1200W / 2117H / W537 trial routes
 - 1000W / 10/12/14 mislabeled as current handoff or waste; it is gold/source reference only
+- 800W / 900W smoke packages mislabeled as standards
 - Lightweight rule-review packages as formal engineer handoff
 - SolidWorks 2025 as current CAD mainline
-- Screenshot-only proof without SolidWorks 2020 open JSON evidence
+- Screenshot-only proof without SolidWorks 2020 model/evidence checks
 
 ## Git Discipline
 
-The first cleanup commit should be small and focused:
+The cleanup commit should be small and focused:
 
-- UI/API/review portal wording and routes
-- `.gitignore` cleanup
-- Current route manifest
-- Current process and cleanup docs
-- SolidWorks 2020 open-evidence source code
-- Current 16029 scope gate script
+- UI/API/review portal wording and current v43 route.
+- v43 delivery manifest and verifier.
+- Current process and cleanup docs.
+- SolidWorks 2020 generator, gate, and portal source code.
+- Current 16029 scope gate script.
 
-Do not include model packages, screenshots, generated gates, or binary outputs unless there is a separate explicit decision.
+Do not include model packages, screenshots, generated gates, generated ZIPs, or binary outputs unless there is a separate explicit decision.
 
-Before any first cleanup commit, run:
+Before any cleanup commit, run:
 
 ```powershell
 tools/check_16029_first_commit_scope.ps1
 tools/audit_16029_needs_decision.ps1
-tools/verify_16029_current_mainline.ps1
-tools/stage_16029_first_commit.ps1
+tools/verify_16029_current_mainline.ps1 -SkipWebBuild
 tools/guard_16029_staged_scope.ps1
 ```
 
-The scope script must report `0 uncategorized`. Files in `include` may enter the first commit candidate. Files in `exclude` and `needs_decision` must not be staged automatically.
-
-The needs-decision audit script must report `PASS`. It records which tracked legacy SolidWorks and older native-route source changes are intentionally deferred out of the first cleanup commit.
-
-The verification script must report `PASS`. It runs API compile, review portal syntax, first-commit scope classification, needs-decision audit, current handoff scope gate, and web build.
-
-The staging script defaults to dry-run. It must not be run with `-Apply` unless staging is explicitly approved. If anything is staged manually, run `tools/guard_16029_staged_scope.ps1` before commit.
+The scope script must report `0 uncategorized`. Files in `include` may enter the commit candidate. Files in `exclude` and `needs_decision` must not be staged automatically.
 
 ## Verification Required Before Handoff
 
-Before a package is treated as engineer-review ready:
+Before a package is treated as the current SW2020 review package:
 
-1. Run model gate.
-2. Run STEP bbox gate.
-3. Open LMS and SML STEP in SolidWorks 2020.
-4. Save readable screenshots and JSON open evidence.
-5. Run current handoff scope gate.
-6. Confirm web UI and review portal no longer show stale blockers.
+1. Run the gold/source structure gate.
+2. Run structure feedback.
+3. Verify lock tongue count and electric/electric-lock residual count.
+4. Open in SolidWorks 2020 and capture readable screenshots.
+5. Run `tools/verify_16029_v43_delivery_manifest.mjs`.
+6. Run current handoff scope gate.
+7. Confirm the platform UI and review portal show v18 as current and old same-route packages as history.
 
 ## Approval Boundary
 

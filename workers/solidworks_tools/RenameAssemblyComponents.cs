@@ -196,6 +196,21 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Match weld = Regex.Match(text, @"gold_door_weld_(\d+)_12_W\d+_(left|right)", RegexOptions.IgnoreCase);
             if (weld.Success) return "储物柜门" + weld.Groups[1].Value + "╱12焊接_" + SideLabel(weld.Groups[2].Value);
 
+            Match generatedDoor = Regex.Match(text, @"review_single_ordinary_door_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
+            if (generatedDoor.Success) return "储物柜门" + DoorRatioTextFromHeightToken(generatedDoor.Groups[1].Value) + "装配_" + SideLabel(generatedDoor.Groups[2].Value);
+
+            Match generatedWeld = Regex.Match(text, @"review_single_door_weld_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
+            if (generatedWeld.Success) return "储物柜门" + DoorRatioTextFromHeightToken(generatedWeld.Groups[1].Value) + "焊接_" + SideLabel(generatedWeld.Groups[2].Value);
+
+            Match generatedPanel = Regex.Match(text, @"review_single_door_panel_W\d+_H([0-9]+(?:p[0-9]+)?)_sheetmetal", RegexOptions.IgnoreCase);
+            if (generatedPanel.Success) return "储物柜门板" + DoorRatioTextFromHeightToken(generatedPanel.Groups[1].Value);
+
+            Match generatedStiffener = Regex.Match(text, @"review_single_door_stiffener_L([0-9]+(?:p[0-9]+)?)_sheetmetal", RegexOptions.IgnoreCase);
+            if (generatedStiffener.Success) return "柜门加强筋" + DoorRatioTextFromStiffenerToken(generatedStiffener.Groups[1].Value);
+
+            Match generatedTopLatch = Regex.Match(text, @"top_latch_from_bottom_mirror_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
+            if (generatedTopLatch.Success) return "插销固定板" + DoorRatioTextFromHeightToken(generatedTopLatch.Groups[1].Value) + "_" + SideLabel(generatedTopLatch.Groups[2].Value);
+
             Match rightPanel = Regex.Match(text, @"right_mirror_ordinary_panel_(\d+)_12_W\d+", RegexOptions.IgnoreCase);
             if (rightPanel.Success) return "储物柜门板" + rightPanel.Groups[1].Value + "╱12_右";
 
@@ -231,6 +246,36 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         private static string SideLabel(string side)
         {
             return string.Equals(side, "right", StringComparison.OrdinalIgnoreCase) ? "右" : "左";
+        }
+
+        private static string DoorRatioTextFromHeightToken(string token)
+        {
+            double heightMm;
+            if (!TryParseToken(token, out heightMm)) return "非标";
+            return DoorRatioText((heightMm + 7.0) / 152.5);
+        }
+
+        private static string DoorRatioTextFromStiffenerToken(string token)
+        {
+            double lengthMm;
+            if (!TryParseToken(token, out lengthMm)) return "非标";
+            return DoorRatioText((lengthMm + 17.5) / 152.5);
+        }
+
+        private static string DoorRatioText(double units)
+        {
+            double rounded = Math.Round(units, 3);
+            double integer = Math.Round(rounded);
+            if (Math.Abs(rounded - integer) < 0.01)
+            {
+                return integer.ToString("0", CultureInfo.InvariantCulture) + "╱12";
+            }
+            return rounded.ToString("0.###", CultureInfo.InvariantCulture) + "╱12";
+        }
+
+        private static bool TryParseToken(string token, out double value)
+        {
+            return double.TryParse((token ?? "").Replace("p", "."), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
         }
 
         private static IEnumerable<Component2> AsComponents(object raw)

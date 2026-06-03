@@ -1,9 +1,13 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { GOLD_DOOR_MODULES, GOLD_SOURCE_MODULES } from './locker_16029_gold_source_manifest.mjs'
 
 export const TEMPLATE_RULE_SCHEMA = 'winnsen.locker16029.template_full_assembly_plan.v1'
+const MODULE_DIR = dirname(fileURLToPath(import.meta.url))
+const ROOT_DIR = resolve(MODULE_DIR, '..')
+const GOLD_SHEETMETAL_RULES_PATH = resolve(ROOT_DIR, 'data/locker_16029_gold_sheetmetal_rules.json')
+let cachedGoldSheetmetalRules = null
 
 export const TEMPLATE_RULE = Object.freeze({
   id: '740W_L642_R246_v43_hidden_lock_body_restored_tongue',
@@ -54,6 +58,58 @@ function slugNumber(value) {
 
 function codeForUnits(units) {
   return units.map((unit) => compactNumber(unit).replace('.', 'p')).join('-')
+}
+
+function loadGoldSheetmetalRules() {
+  if (cachedGoldSheetmetalRules) return cachedGoldSheetmetalRules
+  if (!existsSync(GOLD_SHEETMETAL_RULES_PATH)) return null
+  cachedGoldSheetmetalRules = JSON.parse(readFileSync(GOLD_SHEETMETAL_RULES_PATH, 'utf8').replace(/^\uFEFF/, ''))
+  return cachedGoldSheetmetalRules
+}
+
+function sheetMetalRuleForUnit(rules, unit) {
+  const key = `${compactNumber(unit)}/12`
+  return rules?.doorClasses?.[key] || null
+}
+
+function sheetMetalForRow(row, doorWidthMm, rules) {
+  const sourceClass = sheetMetalRuleForUnit(rules, row.unit)
+  const flatWidthExtraMm = Number(sourceClass?.flatWidthExtraMm ?? rules?.baseline?.doorFlatWidthExtraMm)
+  const flatHeightExtraMm = Number(sourceClass?.flatHeightExtraMm ?? rules?.baseline?.doorFlatHeightExtraMm)
+  const common = rules?.commonDoorHoleRules || {}
+  const hasFlatWidthRule = Number.isFinite(flatWidthExtraMm)
+  const hasFlatHeightRule = Number.isFinite(flatHeightExtraMm)
+  return {
+    status: sourceClass ? 'bound_to_1000w_gold_dxf' : 'no_direct_gold_dxf_class',
+    sourceClassId: sourceClass?.classId || `${compactNumber(row.unit)}/12`,
+    sourceDxf: sourceClass?.sourceDxf || null,
+    sourceFileName: sourceClass?.sourceFileName || null,
+    baselineInstalledWidthMm: sourceClass?.baselineInstalledWidthMm ?? rules?.baseline?.baselineDoorWidthMm ?? null,
+    baselineInstalledHeightMm: sourceClass?.baselineInstalledHeightMm ?? null,
+    baselineFlatWidthMm: sourceClass?.baselineFlatWidthMm ?? null,
+    baselineFlatHeightMm: sourceClass?.baselineFlatHeightMm ?? null,
+    generatedInstalledWidthMm: doorWidthMm,
+    generatedInstalledHeightMm: row.heightMm,
+    generatedFlatWidthMm: hasFlatWidthRule ? roundMm(doorWidthMm + flatWidthExtraMm) : null,
+    generatedFlatHeightMm: hasFlatHeightRule ? roundMm(row.heightMm + flatHeightExtraMm) : null,
+    flatWidthExtraMm: hasFlatWidthRule ? flatWidthExtraMm : null,
+    flatHeightExtraMm: hasFlatHeightRule ? flatHeightExtraMm : null,
+    holeDatumStatus: sourceClass ? 'hole_datums_from_gold_dxf' : 'missing_direct_hole_datum_source',
+    holeDatumCount: sourceClass?.holeCount ?? 0,
+    commonHingeHoleDiameterMm: common.hingePinHoleDiameterMm ?? null,
+    commonHingeHoleFromSideMm: common.hingeHoleFromSideMm ?? null,
+    commonHingeHoleFromTopBottomMm: common.hingeHoleFromTopBottomMm ?? null,
+    holeDatums: (sourceClass?.holes || []).map((hole) => ({
+      role: hole.role,
+      diameterMm: hole.diameterMm,
+      distanceToLeftMm: hole.distanceToLeftMm,
+      distanceToRightMm: hole.distanceToRightMm,
+      distanceToBottomMm: hole.distanceToBottomMm,
+      distanceToTopMm: hole.distanceToTopMm,
+      cxFromCenterMm: hole.cxFromCenterMm,
+      cyFromCenterMm: hole.cyFromCenterMm,
+    })),
+  }
 }
 
 function goldDoorModulesForUnit(unit) {
@@ -209,7 +265,7 @@ function equalUnitsForDoorCount(doorCount, columns) {
   return Array.from({ length: columns }, () => Array.from({ length: rowsPerColumn }, () => roundMm(unit)))
 }
 
-function rowsForColumn(units, side, xMm) {
+function rowsForColumn(units, side, xMm, doorWidthMm, sheetmetalRules) {
   let bottom = TEMPLATE_RULE.doorBottomMarginMm
   return units.map((unit, index) => {
     const heightMm = roundMm(unit * TEMPLATE_RULE.unitHeightMm - TEMPLATE_RULE.doorGapMm)
@@ -229,6 +285,7 @@ function rowsForColumn(units, side, xMm) {
       bottomYmm: roundMm(bottom),
       topYmm: topMm,
     }
+    row.sheetMetal = sheetMetalForRow(row, doorWidthMm, sheetmetalRules)
     bottom = topMm + TEMPLATE_RULE.doorGapMm
     return row
   })
@@ -257,18 +314,21 @@ export function planTemplateFullAssemblyRequest(input = {}) {
 
   const doorWidthMm = roundMm(asNumber(input.doorWidthMm ?? input.doorWidth, (cabinetWidthMm - TEMPLATE_RULE.fixedSideClearanceMm) / columns))
   const columnCenterAbsXmm = roundMm(doorWidthMm / 2 + TEMPLATE_RULE.columnCenterInsetMm)
+  const sheetmetalRules = loadGoldSheetmetalRules()
+  if (!sheetmetalRules) {
+    warnings.push('1000W gold/source sheet-metal rules are not available; door flat-pattern and hole datum evidence is not bound in this plan.')
+  }
   const columnsPlan = [
     { side: 'L', units: columnUnits[0], xMm: -columnCenterAbsXmm },
     { side: 'R', units: columnUnits[1], xMm: columnCenterAbsXmm },
   ].map((column) => ({
     side: column.side,
     units: column.units,
-    rows: rowsForColumn(column.units, column.side, column.xMm),
+    rows: rowsForColumn(column.units, column.side, column.xMm, doorWidthMm, sheetmetalRules),
   }))
 
   const placements = [
     { role: 'gold_source_shell_frame_shelf', txMm: 0, tyMm: 0, tzMm: 0, source: 'template_shell_frame_shelf' },
-    { role: 'gold_electronics_module', txMm: 0, tyMm: 0, tzMm: 0, source: 'template_electronics_module' },
   ]
   for (const column of columnsPlan) {
     for (const row of column.rows) {
@@ -280,11 +340,11 @@ export function planTemplateFullAssemblyRequest(input = {}) {
         source: `template_${row.side}_door_module_by_height_ratio`,
       })
       placements.push({
-        role: `cabinet_lock_body_${row.side}_row${String(row.index).padStart(2, '0')}`,
+        role: `lock_mounting_hole_datum_${row.side}_row${String(row.index).padStart(2, '0')}`,
         txMm: row.side === 'L' ? -TEMPLATE_RULE.lockBodyAbsXmm : TEMPLATE_RULE.lockBodyAbsXmm,
         tyMm: row.centerYmm,
         tzMm: TEMPLATE_RULE.lockBodyZmm,
-        source: 'template_electric_lock_body',
+        source: 'template_lock_hole_datum',
       })
     }
   }
@@ -315,7 +375,7 @@ export function planTemplateFullAssemblyRequest(input = {}) {
     route: {
       mode: compatibleWithNativeTemplate ? 'native_template_pack_and_go' : 'template_rule_parameter_plan',
       directAssemblyInsertion: false,
-      sourceTemplate: 'verified 740W / L642-R246 / v43 full assembly',
+      sourceTemplate: 'verified 740W / L642-R246 / v43 template seed; 1000W remains the gold/source structural reference',
       freeCadRole: 'internal evidence and parameter assistance only',
     },
     requested: {
@@ -339,14 +399,23 @@ export function planTemplateFullAssemblyRequest(input = {}) {
       outputToken,
       compatibleWithNativeTemplate,
       doorModuleBinding,
+      sheetMetalRuleEvidence: {
+        status: sheetmetalRules?.generatorBinding?.status || 'missing',
+        source: sheetmetalRules?.sourceEvidence || null,
+        goldSourceReference: sheetmetalRules?.goldSourceReference || '1000W x 1917H x 550D',
+        doorFlatWidthExtraMm: sheetmetalRules?.baseline?.doorFlatWidthExtraMm ?? null,
+        doorFlatHeightExtraMm: sheetmetalRules?.baseline?.doorFlatHeightExtraMm ?? null,
+        commonHoleStatus: sheetmetalRules?.commonDoorHoleRules?.status || 'missing',
+        solidWorksHoleFeatureStatus: sheetmetalRules?.generatorBinding?.solidWorksHoleFeatureStatus || 'not_bound',
+      },
     },
     columns: columnsPlan,
     targetAssembly: targetAssemblyForPlan(columnsPlan),
     placements,
     warnings,
     boundary: compatibleWithNativeTemplate
-      ? 'Exact verified native template; Pack-and-Go output is the SolidWorks 2020 assembly package.'
-      : 'Template-rule package; derived dimensions and placement plan are included for review, while native geometry mutation still requires the next SolidWorks rule-binding pass.',
+      ? 'Exact verified native template seed; Pack-and-Go output is the SolidWorks 2020 assembly package, not the 1000W gold/source standard.'
+      : 'Template-rule package; derived dimensions and placement plan are included for review, while native geometry mutation still requires the next SolidWorks rule-binding pass and 1000W gold/source comparison.',
   }
 }
 

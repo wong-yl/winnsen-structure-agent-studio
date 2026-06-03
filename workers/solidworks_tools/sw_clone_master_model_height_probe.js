@@ -4,12 +4,23 @@ var outStepPath = String(WScript.Arguments(2));
 var outJsonPath = String(WScript.Arguments(3));
 
 var dimSpecs = [];
-for (var ai = 4; ai + 2 < WScript.Arguments.length; ai += 3) {
+var manualSuppressFeatureNames = [];
+for (var ai = 4; ai < WScript.Arguments.length;) {
+  var token = String(WScript.Arguments(ai));
+  if (token === "--suppress-feature") {
+    if (ai + 1 < WScript.Arguments.length) {
+      manualSuppressFeatureNames.push(String(WScript.Arguments(ai + 1)));
+    }
+    ai += 2;
+    continue;
+  }
+  if (ai + 2 >= WScript.Arguments.length) break;
   dimSpecs.push({
-    feature: String(WScript.Arguments(ai)),
+    feature: token,
     dim: String(WScript.Arguments(ai + 1)),
     value_mm: parseFloat(WScript.Arguments(ai + 2))
   });
+  ai += 3;
 }
 
 var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -194,21 +205,50 @@ function bodyRows(doc) {
   return rows;
 }
 
+function featureSuppressed(feat) {
+  var direct = safe(function () { return feat.IsSuppressed(); }, null);
+  if (direct !== null && direct !== undefined) return !!direct;
+  var raw = safe(function () { return feat.IsSuppressed2(0, null); }, null);
+  var values = toArray(raw);
+  if (values.length) return !!values[0];
+  if (raw !== null && raw !== undefined) return !!raw;
+  return null;
+}
+
+function featureRows(model) {
+  var rows = [];
+  var feat = safe(function () { return model.FirstFeature(); }, null);
+  var guard = 0;
+  while (feat && guard < 5000) {
+    guard++;
+    rows.push({
+      name: safe(function () { return String(feat.Name); }, ""),
+      type: safe(function () { return String(feat.GetTypeName2()); }, ""),
+      is_suppressed: featureSuppressed(feat)
+    });
+    feat = safe(function () { return feat.GetNextFeature(); }, null);
+  }
+  return rows;
+}
+
 var result = {
   templatePath: templatePath,
   outPartPath: outPartPath,
   outStepPath: outStepPath,
   outJsonPath: outJsonPath,
   dimSpecs: dimSpecs,
+  manualSuppressFeatureNames: manualSuppressFeatureNames,
   copied: false,
   opened: false,
   outputBlockerFeatures: [],
   suppressedOutputBlockerFeatures: [],
+  manuallySuppressedFeatures: [],
   dimensionResults: [],
   rebuilt: false,
   savedPart: false,
   savedStep: false,
   partBoxMm: null,
+  features: [],
   bodies: [],
   dimensions: []
 };
@@ -247,6 +287,7 @@ if (!doc) {
 
 result.outputBlockerFeatures = collectOutputBlockerFeatureNames(doc);
 result.suppressedOutputBlockerFeatures = suppressFeatures(doc, result.outputBlockerFeatures);
+result.manuallySuppressedFeatures = suppressFeatures(doc, manualSuppressFeatureNames);
 
 for (var di = 0; di < dimSpecs.length; di++) {
   var spec = dimSpecs[di];
@@ -263,6 +304,7 @@ for (var di = 0; di < dimSpecs.length; di++) {
 result.rebuilt = safe(function () { return doc.ForceRebuild3(false); }, false);
 result.savedPart = safe(function () { return doc.SaveAs(outPartPath); }, false);
 result.partBoxMm = getPartBox(doc);
+result.features = featureRows(doc);
 result.bodies = bodyRows(doc);
 result.dimensions = getDimensions(doc);
 result.savedStep = safe(function () { return doc.SaveAs(outStepPath); }, false);

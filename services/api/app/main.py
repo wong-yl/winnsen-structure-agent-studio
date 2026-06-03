@@ -3041,27 +3041,35 @@ def summarize_rule_extraction_output(output_dir: Path) -> None:
 
 def review_download_catalog() -> dict[str, dict[str, str | Path]]:
     return {
+        "16029-v43-internal-sheetmetal-lockfix-zip": {
+            "title": "16029 740W v43 内部钣金最终包",
+            "category": "当前交付包",
+            "description": "v43-int-v18-lockfix：SolidWorks 2020 Pack-and-Go，沿用 740W / L642-R246 / v43 柜门路线，恢复 6 个机械锁舌，后背接缝按侧板钣金居中，电器板、电控锁、电控锁钩排除。",
+            "status": "sw2020_review_ready",
+            "path": WORKER_LOG_DIR / "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
+            "file_name": "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
+        },
         "16029-800w-lms-gold-variable-review-zip": {
-            "title": "16029 800W LMS 审核包",
-            "category": "当前审核包",
-            "description": "LMS 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；名义 1917H 与 raw bbox 1983H 的底脚/顶部/前侧外伸需结构工程师签核。",
-            "status": "ready_for_engineering_review",
+            "title": "16029 800W LMS 历史参考包",
+            "category": "保留参考",
+            "description": "旧 800W gold-variable LMS 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。",
+            "status": "historical_reference",
             "path": HANDOFF_DIR / "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
         },
         "16029-800w-sml-gold-variable-review-zip": {
-            "title": "16029 800W SML 审核包",
-            "category": "当前审核包",
-            "description": "SML 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；名义 1917H 与 raw bbox 1983H 的底脚/顶部/前侧外伸需结构工程师签核。",
-            "status": "ready_for_engineering_review",
+            "title": "16029 800W SML 历史参考包",
+            "category": "保留参考",
+            "description": "旧 800W gold-variable SML 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。",
+            "status": "historical_reference",
             "path": HANDOFF_DIR / "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
         },
         "16029-800w-dual-gold-variable-review-zip": {
-            "title": "16029 800W LMS/SML 总审核包",
-            "category": "当前汇总包",
-            "description": "双方案合包，用于 LMS/SML 对比审核、归档和确认名义外形与 raw STEP bbox 外伸口径；不是第三个结构方案，也不是生产图纸释放包。",
-            "status": "ready_for_engineering_comparison",
+            "title": "16029 800W LMS/SML 历史合包",
+            "category": "保留参考",
+            "description": "旧 LMS/SML 双方案合包，保留作历史对照；不是当前 v43 内部钣金交付入口。",
+            "status": "historical_reference",
             "path": HANDOFF_DIR / "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
         },
@@ -3087,6 +3095,7 @@ def review_download_asset(asset_id: str, meta: dict[str, str | Path]) -> ReviewD
 
 
 CURRENT_16029_ENGINEER_HANDOFF_ZIPS = [
+    "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
     "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
     "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
     "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
@@ -3102,7 +3111,7 @@ def mark_locker_16029_reference_response(payload: dict[str, Any], endpoint: str,
     marked["reference_reason"] = reference_reason
     marked["legacy_reason"] = reference_reason
     marked["current_review_route"] = {
-        "current_route": "16029 800W gold-variable LMS/SML",
+        "current_route": "16029 740W / L642-R246 / v43",
         "download_endpoint": "/api/review-downloads",
         "scope_gate": str(CURRENT_16029_HANDOFF_SCOPE_GATE_PATH),
         "approved_zips": CURRENT_16029_ENGINEER_HANDOFF_ZIPS,
@@ -3116,7 +3125,7 @@ def read_current_16029_handoff_scope_gate() -> dict[str, Any]:
         return {
             "generated_at": None,
             "status": "MISSING_OUTPUT",
-            "scope": "16029 800W gold-variable engineer-facing handoff scope",
+            "scope": "16029 740W / L642-R246 / v43 internal sheet-metal handoff scope",
             "approved_zips": CURRENT_16029_ENGINEER_HANDOFF_ZIPS,
             "notes": [
                 "Run workers\\maintenance\\validate_16029_current_handoff_scope.ps1 before handing files to engineering."
@@ -3982,7 +3991,7 @@ def list_review_downloads() -> ReviewDownloadIndex:
     catalog = review_download_catalog()
     return ReviewDownloadIndex(
         generated_at=datetime.now(timezone.utc).isoformat(),
-        scope="16029 800W gold-variable engineer review bundles; scope gate is expected to pass before engineering review, while production release still requires structural signoff including nominal body envelope vs raw STEP bbox protrusions",
+        scope="16029 740W / L642-R246 / v43 internal sheet-metal SW2020 review package; production release still requires drawings, DXF/flat patterns, BOM, supplier process review, and structural signoff",
         assets=[review_download_asset(asset_id, meta) for asset_id, meta in catalog.items()],
     )
 
@@ -4116,7 +4125,7 @@ def get_locker_16029_variant_rule_packet() -> dict[str, Any]:
     return mark_locker_16029_reference_response(
         read_locker_16029_variant_rule_packet(),
         "/api/locker-16029-variant-rule-packet",
-        "Door-count rule learning evidence is the 1000W 10/12/14 gold/source reference and must not be listed as the current 800W engineering handoff.",
+        "Door-count rule learning evidence is the 1000W 10/12/14 gold/source reference and must not be listed as the current v43 internal sheet-metal delivery.",
     )
 
 
@@ -4125,7 +4134,7 @@ def get_locker_16029_verified_rule_packet() -> dict[str, Any]:
     return mark_locker_16029_reference_response(
         read_locker_16029_verified_rule_packet(),
         "/api/locker-16029-verified-rule-packet",
-        "Verified same-size reference packet remains the gold/source baseline; current engineering handoff is the 800W gold-variable LMS/SML route.",
+        "Verified same-size reference packet remains the gold/source baseline; current engineering review package is the 740W / L642-R246 / v43 internal sheet-metal route.",
     )
 
 
@@ -4143,7 +4152,7 @@ def get_locker_16029_engineering_handoff_bundle() -> dict[str, Any]:
     return mark_locker_16029_reference_response(
         read_locker_16029_engineering_handoff_bundle(),
         "/api/locker-16029-engineering-handoff-bundle",
-        "The 1000W 10/12/14 handoff bundle is source-reference evidence only; current engineer review downloads are the 800W LMS/SML/DUAL gold-variable packages.",
+        "The 1000W 10/12/14 handoff bundle is source-reference evidence only; current engineer review download is the 740W / L642-R246 / v43 internal sheet-metal package.",
     )
 
 
