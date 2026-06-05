@@ -94,7 +94,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 {
                     if (item.Added) result.AddedCount++;
                     if (item.SkippedExisting) result.SkippedExistingCount++;
-                    if (!string.IsNullOrWhiteSpace(item.Error)) result.FailedCount++;
+                    if (!string.IsNullOrWhiteSpace(item.Error) || !item.Rebuilt || !item.Saved) result.FailedCount++;
                 }
 
                 result.Success = result.AssemblyCount > 0 && result.FailedCount == 0 && (result.AddedCount + result.SkippedExistingCount) == result.AssemblyCount;
@@ -114,18 +114,45 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
         private static IEnumerable<DoorAssemblySpec> FindDoorAssemblies(string packDir)
         {
-            var regex = new Regex(@"_(?<side>[LR])(?<unit>[246])$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            var asciiRegex = new Regex(@"_(?<side>[LR])(?<unit>\d+(?:p\d+)?|\d+(?:\.\d+)?)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            var chineseDoorRegex = new Regex(@"\u50a8\u7269\u67dc\u95e8(?<unit>\d+(?:[p\.]\d+)?)\u2571?12\u88c5\u914d(?:_(?<sideZh>\u5de6|\u53f3))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            var source14DoorRegex = new Regex(@"\u50a8\u7269\u67dc\u95e814\u95e8\u6e90\u94a3\u91d1\u88c5\u914d(?:_(?<sideZh>\u5de6|\u53f3))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
             foreach (string path in Directory.GetFiles(packDir, "*.SLDASM"))
             {
                 string stem = Path.GetFileNameWithoutExtension(path);
-                Match match = regex.Match(stem);
-                if (!match.Success) continue;
+                Match match = asciiRegex.Match(stem);
+                if (match.Success)
+                {
+                    yield return new DoorAssemblySpec
+                    {
+                        Path = path,
+                        Side = match.Groups["side"].Value.ToUpperInvariant(),
+                        Unit = match.Groups["unit"].Value.Replace('p', '.'),
+                    };
+                    continue;
+                }
 
+                match = source14DoorRegex.Match(stem);
+                if (match.Success)
+                {
+                    string source14SideZh = match.Groups["sideZh"].Value;
+                    yield return new DoorAssemblySpec
+                    {
+                        Path = path,
+                        Side = source14SideZh == "\u53f3" ? "R" : "L",
+                        Unit = "14door_source_sheetmetal"
+                    };
+                    continue;
+                }
+
+                match = chineseDoorRegex.Match(stem);
+                if (!match.Success) continue;
+                string sideZh = match.Groups["sideZh"].Value;
                 yield return new DoorAssemblySpec
                 {
                     Path = path,
-                    Side = match.Groups["side"].Value.ToUpperInvariant(),
-                    Unit = match.Groups["unit"].Value,
+                    Side = sideZh == "\u53f3" ? "R" : "L",
+                    Unit = match.Groups["unit"].Value.Replace('p', '.'),
                 };
             }
         }
@@ -162,6 +189,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 item.Error = "failed to open door assembly";
                 return item;
             }
+            Try(() => model.ShowFeatureErrorDialog = false);
 
             AssemblyDoc asm = model as AssemblyDoc;
             if (asm == null)
@@ -177,6 +205,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             {
                 item.SkippedExisting = true;
                 item.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
+                if (!item.Rebuilt) item.Error = "door assembly rebuild failed";
                 item.Saved = Save(model, item);
                 item.Closed = Close(sw, model);
                 return item;
@@ -207,6 +236,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 item.TyMm / 1000.0,
                 item.TzMm / 1000.0) as Component2;
             item.Added = comp != null;
+            item.PartClosed = Close(sw, partDoc);
             if (comp == null)
             {
                 item.Error = "AddComponent5 returned null";
@@ -232,6 +262,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
 
             item.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
+            if (!item.Rebuilt) item.Error = "door assembly rebuild failed";
             item.Saved = Save(model, item);
             item.Closed = Close(sw, model);
             return item;
@@ -465,6 +496,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "open_warnings", item.OpenWarnings).Append(",");
             Field(sb, "part_open_errors", item.PartOpenErrors).Append(",");
             Field(sb, "part_open_warnings", item.PartOpenWarnings).Append(",");
+            Field(sb, "part_closed", item.PartClosed).Append(",");
             Field(sb, "existing_count", item.ExistingCount).Append(",");
             Field(sb, "skipped_existing", item.SkippedExisting).Append(",");
             Field(sb, "added", item.Added).Append(",");
@@ -564,6 +596,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public int OpenWarnings;
             public int PartOpenErrors;
             public int PartOpenWarnings;
+            public bool PartClosed;
             public int ExistingCount;
             public bool SkippedExisting;
             public bool Added;

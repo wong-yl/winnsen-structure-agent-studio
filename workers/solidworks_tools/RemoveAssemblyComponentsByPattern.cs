@@ -74,6 +74,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     WriteJson(outJson, result);
                     return 4;
                 }
+                Try(() => model.ShowFeatureErrorDialog = false);
 
                 AssemblyDoc asm = model as AssemblyDoc;
                 if (asm == null)
@@ -129,6 +130,10 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 result.RemainingCount = CountMatches(model, asm, regex);
                 result.RemovedCount = Math.Max(0, result.SeenCount - result.RemainingCount);
                 result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
+                if (!result.Rebuilt)
+                {
+                    result.Error = "assembly rebuild failed after component cleanup";
+                }
                 int saveErrors = 0;
                 int saveWarnings = 0;
                 result.Saved = TryValue(
@@ -140,7 +145,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
-                return result.Opened && result.Saved && result.RemainingCount == 0 ? 0 : 6;
+                return result.Opened && result.Rebuilt && result.Saved && result.RemainingCount == 0 ? 0 : 6;
             }
             catch (Exception ex)
             {

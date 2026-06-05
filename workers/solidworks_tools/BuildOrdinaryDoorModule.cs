@@ -15,7 +15,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 8)
             {
-                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <electric-lock-hook> [left|right] [door-width-mm] [mirror-z|mirror-accessories-x|skip-electric-lock-hook]");
+                Console.Error.WriteLine("Usage: BuildOrdinaryDoorModule.exe <out-asm> <out-json> <door-height-mm> <door-weld-asm> <bushing> <hinge-pin> <circlip> <lock-tongue-or-electric-lock-hook> [left|right] [door-width-mm] [mirror-z|mirror-accessories-x|skip-electric-lock-hook|mechanical-lock-tongue]");
                 return 2;
             }
 
@@ -32,6 +32,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             bool mirrorZ = false;
             bool mirrorAccessoriesX = false;
             bool includeElectricLockHook = true;
+            bool mechanicalLockTongue = false;
             for (int i = 8; i < args.Length; i++)
             {
                 string value = args[i].Trim();
@@ -56,10 +57,16 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 else if (lower == "skip-electric-lock-hook" || lower == "no-electric-lock-hook" || lower == "cabinet-side-lock-hook")
                 {
                     includeElectricLockHook = false;
+                    mechanicalLockTongue = false;
+                }
+                else if (lower == "mechanical-lock-tongue" || lower == "lock-tongue")
+                {
+                    includeElectricLockHook = true;
+                    mechanicalLockTongue = true;
                 }
                 else
                 {
-                    Console.Error.WriteLine("optional arguments must be handedness, door-width-mm, mirror-z, mirror-accessories-x, or skip-electric-lock-hook: " + value);
+                    Console.Error.WriteLine("optional arguments must be handedness, door-width-mm, mirror-z, mirror-accessories-x, skip-electric-lock-hook, or mechanical-lock-tongue: " + value);
                     return 2;
                 }
             }
@@ -84,6 +91,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 MirrorZ = mirrorZ,
                 MirrorAccessoriesX = mirrorAccessoriesX,
                 IncludeElectricLockHook = includeElectricLockHook,
+                MechanicalLockTongue = mechanicalLockTongue,
+                LockTongueRole = mechanicalLockTongue ? "lock_tongue" : "electric_lock_hook",
                 PanelThicknessMm = PanelThicknessMm,
             };
 
@@ -146,7 +155,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 };
                 if (includeElectricLockHook)
                 {
-                    placements.Add(Accessory("electric_lock_hook", lockHook, FlipXZ(), lockHookX, 0, lockHookMountPlateTz * zSide, mirrorAccessoriesX));
+                    placements.Add(Accessory(result.LockTongueRole, lockHook, FlipXZ(), lockHookX, 0, lockHookMountPlateTz * zSide, mirrorAccessoriesX));
                 }
 
                 foreach (Placement p in placements)
@@ -433,6 +442,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "mirrorZ", r.MirrorZ);
             Prop(sb, "mirrorAccessoriesX", r.MirrorAccessoriesX);
             Prop(sb, "includeElectricLockHook", r.IncludeElectricLockHook);
+            Prop(sb, "mechanicalLockTongue", r.MechanicalLockTongue);
+            Prop(sb, "lockTongueRole", r.LockTongueRole);
             Prop(sb, "panelThicknessMm", r.PanelThicknessMm);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
@@ -532,6 +543,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public bool MirrorZ;
             public bool MirrorAccessoriesX;
             public bool IncludeElectricLockHook = true;
+            public bool MechanicalLockTongue;
+            public string LockTongueRole = "electric_lock_hook";
             public double PanelThicknessMm;
             public bool NewAssembly;
             public bool Rebuilt;

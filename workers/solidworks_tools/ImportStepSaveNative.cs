@@ -14,7 +14,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 4)
             {
-                Console.Error.WriteLine("Usage: ImportStepSaveNative.exe <source-step> <preferred-native-path> <exported-step> <out-json>");
+                Console.Error.WriteLine("Usage: ImportStepSaveNative.exe <source-step> <preferred-native-path> <exported-step> <out-json> [import-strategy] [--exit-session]");
                 return 2;
             }
 
@@ -22,16 +22,19 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             string preferredNative = Path.GetFullPath(args[1]);
             string exportedStep = Path.GetFullPath(args[2]);
             string outJson = Path.GetFullPath(args[3]);
-            string importStrategy = args.Length >= 5
+            string importStrategy = args.Length >= 5 && !args[4].StartsWith("--", StringComparison.Ordinal)
                 ? args[4]
                 : System.Environment.GetEnvironmentVariable("STUDIO_SW_STEP_IMPORT_STRATEGY") ?? "auto";
+            bool exitSession = HasArgument(args, "--exit-session");
             var result = new Result
             {
                 SourceStepPath = sourceStep,
                 PreferredNativePath = preferredNative,
                 ExportedStepPath = exportedStep,
                 ImportStrategy = importStrategy,
+                ExitSessionRequested = exitSession,
             };
+            ISldWorks sw = null;
 
             try
             {
@@ -46,7 +49,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Directory.CreateDirectory(Path.GetDirectoryName(exportedStep));
                 Directory.CreateDirectory(Path.GetDirectoryName(outJson));
 
-                ISldWorks sw = GetOrCreateSolidWorks();
+                sw = GetOrCreateSolidWorks();
                 if (sw == null)
                 {
                     result.Error = "SolidWorks unavailable";
@@ -54,6 +57,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     return 3;
                 }
                 sw.Visible = true;
+                result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
                 Try(() => sw.CloseAllDocuments(true));
 
                 OpenResult openResult = OpenStep(sw, sourceStep, importStrategy);
@@ -132,6 +136,23 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Console.WriteLine(outJson);
                 return 9;
             }
+            finally
+            {
+                if (exitSession && sw != null)
+                {
+                    Try(() => sw.CloseAllDocuments(true));
+                    Try(() => sw.ExitApp());
+                }
+            }
+        }
+
+        private static bool HasArgument(string[] args, string expected)
+        {
+            for (int i = 4; i < args.Length; i++)
+            {
+                if (string.Equals(args[i], expected, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
         }
 
         private static string NativePathForType(string preferredNative, int documentType)
@@ -252,6 +273,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "nativePath", r.NativePath);
             Prop(sb, "exportedStepPath", r.ExportedStepPath);
             Prop(sb, "importStrategy", r.ImportStrategy);
+            Prop(sb, "solidWorksProcessId", r.SolidWorksProcessId);
+            Prop(sb, "exitSessionRequested", r.ExitSessionRequested);
             Prop(sb, "openedSource", r.OpenedSource);
             Prop(sb, "savedNative", r.SavedNative);
             Prop(sb, "reopenedNative", r.ReopenedNative);
@@ -303,6 +326,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string NativePath = "";
             public string ExportedStepPath = "";
             public string ImportStrategy = "auto";
+            public int SolidWorksProcessId;
+            public bool ExitSessionRequested;
             public bool OpenedSource;
             public bool SavedNative;
             public bool ReopenedNative;

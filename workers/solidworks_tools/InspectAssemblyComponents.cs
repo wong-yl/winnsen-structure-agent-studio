@@ -16,14 +16,17 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: InspectAssemblyComponents.exe <assembly.SLDASM> <out-json> [--keep-open]");
+                Console.Error.WriteLine("Usage: InspectAssemblyComponents.exe <assembly.SLDASM> <out-json> [--keep-open] [--exit-session] [--require-rebuild]");
                 return 2;
             }
 
             string asmPath = Path.GetFullPath(args[0]);
             string outJson = Path.GetFullPath(args[1]);
             bool keepOpen = Array.Exists(args, arg => string.Equals(arg, "--keep-open", StringComparison.OrdinalIgnoreCase));
-            var result = new InspectResult { AssemblyPath = asmPath, Exists = File.Exists(asmPath), KeepOpen = keepOpen };
+            bool exitSession = Array.Exists(args, arg => string.Equals(arg, "--exit-session", StringComparison.OrdinalIgnoreCase));
+            bool requireRebuild = Array.Exists(args, arg => string.Equals(arg, "--require-rebuild", StringComparison.OrdinalIgnoreCase));
+            var result = new InspectResult { AssemblyPath = asmPath, Exists = File.Exists(asmPath), KeepOpen = keepOpen, RequireRebuild = requireRebuild };
+            ISldWorks sw = null;
 
             try
             {
@@ -35,7 +38,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     return 2;
                 }
 
-                ISldWorks sw = GetOrCreateSolidWorks();
+                sw = GetOrCreateSolidWorks();
                 if (sw == null)
                 {
                     result.Error = "SolidWorks unavailable";
@@ -44,6 +47,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 sw.Visible = true;
+                result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
+                WriteJson(outJson, result);
                 int errors = 0;
                 int warnings = 0;
                 ModelDoc2 model = sw.OpenDoc6(
@@ -70,11 +75,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 result.Title = TryValue(() => model.GetTitle(), "");
                 result.ModelPath = TryValue(() => model.GetPathName(), "");
+                Try(() => model.ShowFeatureErrorDialog = false);
 
                 AssemblyDoc asm = model as AssemblyDoc;
                 if (asm != null)
                 {
                     Try(() => asm.ResolveAllLightWeightComponents(false));
+                    result.RebuildAttempted = true;
+                    result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
 
                     Configuration cfg = TryValue(() => model.GetActiveConfiguration() as Configuration, null);
                     Component2 root = cfg == null ? null : TryValue(() => cfg.GetRootComponent3(true), null);
@@ -116,6 +124,17 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     Console.WriteLine(outJson);
                     return 6;
                 }
+                if (result.RequireRebuild && !result.Rebuilt)
+                {
+                    result.Error = "assembly rebuild failed";
+                    if (!keepOpen)
+                    {
+                        Try(() => sw.CloseDoc(model.GetTitle()));
+                    }
+                    WriteJson(outJson, result);
+                    Console.WriteLine(outJson);
+                    return 7;
+                }
 
                 if (!keepOpen)
                 {
@@ -131,6 +150,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
                 return 1;
+            }
+            finally
+            {
+                if (exitSession && !keepOpen && sw != null)
+                {
+                    Try(() => sw.CloseAllDocuments(true));
+                    Try(() => sw.ExitApp());
+                }
             }
         }
 
@@ -277,10 +304,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "exists", r.Exists).Append(",");
             Field(sb, "opened", r.Opened).Append(",");
             Field(sb, "keep_open", r.KeepOpen).Append(",");
+            Field(sb, "require_rebuild", r.RequireRebuild).Append(",");
+            Field(sb, "solidworks_process_id", r.SolidWorksProcessId).Append(",");
             Field(sb, "open_errors", r.OpenErrors).Append(",");
             Field(sb, "open_warnings", r.OpenWarnings).Append(",");
             Field(sb, "title", r.Title).Append(",");
             Field(sb, "model_path", r.ModelPath).Append(",");
+            Field(sb, "rebuild_attempted", r.RebuildAttempted).Append(",");
+            Field(sb, "rebuilt", r.Rebuilt).Append(",");
             Field(sb, "enumeration_mode", r.EnumerationMode).Append(",");
             Field(sb, "component_count", r.ComponentCount).Append(",");
             Field(sb, "error", r.Error).Append(",");
@@ -387,10 +418,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public bool Exists;
             public bool Opened;
             public bool KeepOpen;
+            public bool RequireRebuild;
+            public int SolidWorksProcessId;
             public int OpenErrors;
             public int OpenWarnings;
             public string Title = "";
             public string ModelPath = "";
+            public bool RebuildAttempted;
+            public bool Rebuilt;
             public string EnumerationMode = "";
             public int ComponentCount;
             public string Error = "";

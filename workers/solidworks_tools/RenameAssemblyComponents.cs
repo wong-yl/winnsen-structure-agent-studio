@@ -228,6 +228,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             if (Regex.IsMatch(text, @"U型锁钩垫板_SW2020", RegexOptions.IgnoreCase)) return "U型锁钩垫板";
             if (Regex.IsMatch(text, @"开口挡圈5_SW2020", RegexOptions.IgnoreCase)) return "开口挡圈 5";
 
+            if (Regex.IsMatch(text, @"front_frame_split", RegexOptions.IgnoreCase)) return "\u95e8\u6846\u710a\u63a5_\u6e90\u94a3\u91d1_split";
+
             return "";
         }
 

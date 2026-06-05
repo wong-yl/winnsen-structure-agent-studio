@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -16,24 +17,30 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 3)
             {
-                Console.Error.WriteLine("Usage: BuildPlacedComponentsModule.exe <placements-tsv> <out-asm> <out-json>");
+                Console.Error.WriteLine("Usage: BuildPlacedComponentsModule.exe <placements-tsv> <out-asm> <out-json> [--isolated-session]");
                 return 2;
             }
 
             string placementPath = Path.GetFullPath(args[0]);
             string outAsm = Path.GetFullPath(args[1]);
             string outJson = Path.GetFullPath(args[2]);
+            bool isolatedSession = HasArgument(args, "--isolated-session");
 
             var result = new BuildResult
             {
                 PlacementPath = placementPath,
                 OutAsmPath = outAsm,
+                BuildStatus = "starting",
+                SolidWorksSessionMode = isolatedSession ? "isolated_new_instance" : "reuse_or_create",
             };
+            ISldWorks sw = null;
+            bool ownsSolidWorksSession = false;
 
             try
             {
                 if (!File.Exists(placementPath))
                 {
+                    result.BuildStatus = "failed";
                     result.Error = "placements file not found";
                     WriteJson(outJson, result);
                     return 2;
@@ -43,26 +50,41 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 result.PlacementCount = placements.Count;
                 if (placements.Count == 0)
                 {
+                    result.BuildStatus = "failed";
                     result.Error = "placements file has no rows";
                     WriteJson(outJson, result);
                     return 2;
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(outAsm));
-                ISldWorks sw = GetOrCreateSolidWorks();
+                if (isolatedSession && Process.GetProcessesByName("SLDWORKS").Length > 0)
+                {
+                    result.BuildStatus = "failed";
+                    result.Error = "isolated session requires no running SolidWorks process";
+                    WriteJson(outJson, result);
+                    return 3;
+                }
+                sw = isolatedSession ? CreateSolidWorks() : GetOrCreateSolidWorks();
+                ownsSolidWorksSession = isolatedSession && sw != null;
                 if (sw == null)
                 {
+                    result.BuildStatus = "failed";
                     result.Error = "SolidWorks unavailable";
                     WriteJson(outJson, result);
                     return 3;
                 }
                 sw.Visible = true;
+                result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
+                result.SolidWorksSessionOwned = ownsSolidWorksSession;
+                result.BuildStatus = "solidworks_session_started";
+                WriteJson(outJson, result);
                 Try(() => sw.CloseAllDocuments(true));
 
                 ModelDoc2 model = NewAssemblyDocument(sw);
                 AssemblyDoc asm = model as AssemblyDoc;
                 if (model == null || asm == null)
                 {
+                    result.BuildStatus = "failed";
                     result.Error = "NewAssembly failed";
                     WriteJson(outJson, result);
                     return 4;
@@ -72,6 +94,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 MathUtility math = sw.GetMathUtility() as MathUtility;
                 if (math == null)
                 {
+                    result.BuildStatus = "failed";
                     result.Error = "GetMathUtility failed";
                     WriteJson(outJson, result);
                     return 5;
@@ -83,6 +106,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
                 if (HasComponentErrors(result.Components))
                 {
+                    result.BuildStatus = "failed";
                     result.Error = "component placement validation failed; see components[].error";
                     WriteJson(outJson, result);
                     Console.WriteLine(outJson);
@@ -95,17 +119,36 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 result.ReferenceCount = CountReferenceFeatures(model);
                 Try(() => sw.CloseDoc(model.GetTitle()));
 
+                result.BuildStatus = result.Saved ? "completed" : "failed";
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
                 return result.Saved ? 0 : 6;
             }
             catch (Exception ex)
             {
+                result.BuildStatus = "failed";
                 result.Error = SafeExceptionText(ex);
                 WriteJson(outJson, result);
                 Console.WriteLine(outJson);
                 return 9;
             }
+            finally
+            {
+                if (ownsSolidWorksSession && sw != null)
+                {
+                    Try(() => sw.CloseAllDocuments(true));
+                    Try(() => sw.ExitApp());
+                }
+            }
+        }
+
+        private static bool HasArgument(string[] args, string expected)
+        {
+            for (int i = 3; i < args.Length; i++)
+            {
+                if (string.Equals(args[i], expected, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
         }
 
         private static List<Placement> ReadPlacements(string path)
@@ -393,7 +436,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     if (active != null) return active as ISldWorks;
                 }
                 catch { }
+            }
+            return CreateSolidWorks();
+        }
 
+        private static ISldWorks CreateSolidWorks()
+        {
+            foreach (string progId in new[] { "SldWorks.Application.28", "SldWorks.Application" })
+            {
                 try
                 {
                     Type t = Type.GetTypeFromProgID(progId);
@@ -436,6 +486,10 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             sb.Append("{");
             Prop(sb, "placement_path", r.PlacementPath, true);
             Prop(sb, "out_asm_path", r.OutAsmPath);
+            Prop(sb, "build_status", r.BuildStatus);
+            Prop(sb, "solidworks_session_mode", r.SolidWorksSessionMode);
+            Prop(sb, "solidworks_session_owned", r.SolidWorksSessionOwned);
+            Prop(sb, "solidworks_process_id", r.SolidWorksProcessId);
             Prop(sb, "placement_count", r.PlacementCount);
             Prop(sb, "new_assembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
@@ -536,6 +590,10 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             public string PlacementPath = "";
             public string OutAsmPath = "";
+            public string BuildStatus = "";
+            public string SolidWorksSessionMode = "";
+            public bool SolidWorksSessionOwned;
+            public int SolidWorksProcessId;
             public int PlacementCount;
             public bool NewAssembly;
             public bool Rebuilt;

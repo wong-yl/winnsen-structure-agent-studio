@@ -46,6 +46,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     return 3;
                 }
 
+                result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
                 sw.Visible = true;
                 try
                 {
@@ -244,6 +245,18 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return "储物柜门" + RatioLabel(doorWeld.Groups[1].Value) + "╱12焊接_" + SideLabel(doorWeld.Groups[2].Value) + extension;
             }
 
+            Match source14Door = Regex.Match(name, @"^review_14door_source_ordinary_door_W\d+_H[0-9]+(?:p[0-9]+)?_(left|right)", RegexOptions.IgnoreCase);
+            if (source14Door.Success)
+            {
+                return "储物柜门14门源钣金装配_" + SideLabel(source14Door.Groups[1].Value) + extension;
+            }
+
+            Match source14Weld = Regex.Match(name, @"^review_14door_source_door_weld_W\d+_H[0-9]+(?:p[0-9]+)?_(left|right)", RegexOptions.IgnoreCase);
+            if (source14Weld.Success)
+            {
+                return "储物柜门14门源钣金焊接_" + SideLabel(source14Weld.Groups[1].Value) + extension;
+            }
+
             Match generatedDoor = Regex.Match(name, @"^review_single_ordinary_door_W\d+_H([0-9]+(?:p[0-9]+)?)_(left|right)", RegexOptions.IgnoreCase);
             if (generatedDoor.Success)
             {
@@ -262,10 +275,22 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return "储物柜门板" + DoorRatioTextFromHeightToken(generatedPanel.Groups[1].Value) + extension;
             }
 
+            Match generated14DoorPanel = Regex.Match(name, @"^review_14door_source_panel_W\d+_H[0-9]+(?:p[0-9]+)?_sheetmetal", RegexOptions.IgnoreCase);
+            if (generated14DoorPanel.Success)
+            {
+                return "储物柜门板14门源钣金" + extension;
+            }
+
             Match generatedStiffener = Regex.Match(name, @"^review_single_door_stiffener_L([0-9]+(?:p[0-9]+)?)_sheetmetal", RegexOptions.IgnoreCase);
             if (generatedStiffener.Success)
             {
                 return "柜门加强筋" + DoorRatioTextFromStiffenerToken(generatedStiffener.Groups[1].Value) + extension;
+            }
+
+            Match generated14DoorStiffener = Regex.Match(name, @"^review_14door_source_stiffener_L[0-9]+(?:p[0-9]+)?_sheetmetal", RegexOptions.IgnoreCase);
+            if (generated14DoorStiffener.Success)
+            {
+                return "柜门加强筋14门源钣金" + extension;
             }
 
             Match rightPanel = Regex.Match(name, @"^right_mirror_ordinary_panel_([0-9]+(?:p[0-9]+)?)_12_W\d+", RegexOptions.IgnoreCase);
@@ -450,6 +475,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string AssemblyPath = "";
             public string OutDir = "";
             public bool InputExists;
+            public int SolidWorksProcessId;
             public bool Opened;
             public int OpenErrors;
             public int OpenWarnings;
@@ -474,6 +500,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 sb.Append("\"assembly_path\":").Append(Json(AssemblyPath)).Append(",");
                 sb.Append("\"out_dir\":").Append(Json(OutDir)).Append(",");
                 sb.Append("\"input_exists\":").Append(InputExists ? "true" : "false").Append(",");
+                sb.Append("\"solidworks_process_id\":").Append(SolidWorksProcessId).Append(",");
                 sb.Append("\"opened\":").Append(Opened ? "true" : "false").Append(",");
                 sb.Append("\"open_errors\":").Append(OpenErrors).Append(",");
                 sb.Append("\"open_warnings\":").Append(OpenWarnings).Append(",");

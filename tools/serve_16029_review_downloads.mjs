@@ -4,6 +4,12 @@ import { networkInterfaces } from 'node:os'
 import { dirname, isAbsolute, relative, resolve } from 'node:path'
 import { spawn } from 'node:child_process'
 import { pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto'
+import {
+  controlled16029DownloadBlockers,
+  controlled16029ReleaseState,
+  isDownloadBlockedByControlled16029Gate,
+  validateControlled16029GenerationRequest,
+} from './locker_16029_controlled_generation_policy.mjs'
 
 const ROOT = resolve('D:/Winnsen_Structure_Agent_Studio')
 const PORT = Number(process.env.STUDIO_REVIEW_PORT || 5180)
@@ -313,7 +319,9 @@ function isStartableGenerationRequest(item) {
   if (!item || item.downloadUrl || item.zipPath) return false
   const status = String(item.status || '').toLowerCase()
   if (status.includes('running') || status.includes('failed') || status.includes('canceled') || status.includes('cancelled')) return false
+  if (status.includes('blocked_controlled_generation_policy')) return false
   if (String(item.id || '') === currentDeliveryRequestId()) return false
+  if (!validateControlled16029GenerationRequest(item).ok) return false
   return true
 }
 
@@ -360,10 +368,45 @@ function hasParametricScaffoldValidation(item) {
     String(item.status || '').toLowerCase().includes('parametric_scaffold_needs_engineering_validation')
 }
 
+function hasVerifiedNoVisibleCabinetBodyBoxScaffold(item) {
+  return item?.visibleCabinetBodyBoxScaffoldGateApplied === true &&
+    Number(item?.visibleCabinetBodyBoxScaffoldCount || 0) === 0
+}
+
+function isDerivedSheetMetalReviewModel(item) {
+  if (!hasVerifiedNoVisibleCabinetBodyBoxScaffold(item) || hasStructureRevisionFeedback(item)) return false
+  return Boolean(item?.derivedSheetMetalModelReadyForReview) ||
+    String(item?.handoffReadinessStatus || '').toLowerCase() === 'sw2020_derived_sheetmetal_review_ready' ||
+    String(item?.status || '').toLowerCase() === 'solidworks2020_derived_sheetmetal_review_ready' ||
+    String(item?.resultKind || '').toLowerCase() === 'solidworks2020_derived_sheetmetal_full_assembly_model'
+}
+
+function controlledGenerationBlockerText(item) {
+  return controlled16029DownloadBlockers(item)
+    .map((blocker) => blocker.message)
+    .join('; ')
+}
+
+function isNonNativeFullAssemblyRequest(item, manifest = readCurrentDeliveryManifest()) {
+  if (!item || String(item.taskMode || '') !== 'full_assembly') return false
+  if (String(item.id || '') === currentDeliveryRequestId()) return false
+  if (item.compatibleWithNativeTemplate === true) return false
+  if (item.compatibleWithNativeTemplate === false) return true
+  return !isCurrentV43RouteRequest(item, manifest)
+}
+
 function generationStatusText(item) {
+  if (item.downloadUrl && isDownloadBlockedByControlled16029Gate(item)) {
+    return `Controlled gate blocked download: ${controlledGenerationBlockerText(item)}`
+  }
+  if (String(item.status || '').includes('blocked_controlled_generation_policy')) {
+    return item.message || 'Blocked by controlled generation policy'
+  }
   if (item.id === currentDeliveryRequestId() && item.downloadUrl) return '当前交付包：SW2020 gate PASS，用户已目视确认'
-  if (item.downloadUrl && hasParametricScaffoldValidation(item)) return '参数化箱体/锁孔基准/调节脚待工程师验证，证据包已生成'
-  if (item.downloadUrl && hasStructureRevisionFeedback(item)) return '结构反馈待整改，证据包已生成'
+  if (item.downloadUrl && isDerivedSheetMetalReviewModel(item)) return '派生钣金模型已生成，等待工程复核'
+  if (item.downloadUrl && hasParametricScaffoldValidation(item)) return '非 v43 原生模板：参数化结构证据包已生成，不能作为交付模型'
+  if (item.downloadUrl && hasStructureRevisionFeedback(item)) return '结构反馈待整改，证据包已生成，不能作为交付模型'
+  if (item.downloadUrl && isNonNativeFullAssemblyRequest(item)) return '非 v43 原生模板：结构证据包已生成，不能作为交付模型'
   if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
   if (String(item.status || '').includes('failed')) return '生成失败'
   if (String(item.status || '').includes('running')) return '后台生成中'
@@ -373,15 +416,22 @@ function generationStatusText(item) {
 }
 
 function generationActionHtml(item) {
+  if (item.downloadUrl && isDownloadBlockedByControlled16029Gate(item)) {
+    return '<button type="button" disabled>Box regression blocked</button>'
+  }
   if (item.id === currentDeliveryRequestId() && item.downloadUrl) {
     return `<a class="button" href="${htmlEscape(item.downloadUrl)}">下载当前 v43 交付包</a>`
   }
   if (item.downloadUrl && hasParametricScaffoldValidation(item)) {
-    return `<a class="button" href="${htmlEscape(item.downloadUrl)}">下载参数化结构证据包</a>`
+    return `<a class="button secondary" href="${htmlEscape(item.downloadUrl)}">下载非交付结构证据包</a>`
   }
   if (item.downloadUrl) {
-    const label = hasStructureRevisionFeedback(item)
-      ? '下载结构证据包'
+    const label = isDerivedSheetMetalReviewModel(item)
+      ? '下载派生钣金模型'
+      : hasStructureRevisionFeedback(item)
+      ? '下载结构证据包（非交付）'
+      : isNonNativeFullAssemblyRequest(item)
+      ? '下载结构证据包（非交付）'
       : item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
     return `<a class="button" href="${htmlEscape(item.downloadUrl)}">${label}</a>`
   }
@@ -396,6 +446,22 @@ function generationActionHtml(item) {
 function generationDeleteActionHtml(item) {
   if (!isDeletableGenerationRequest(item)) return ''
   return `<button class="secondary danger generation-delete-button" type="button" data-request-id="${htmlEscape(item.id)}">删除</button>`
+}
+
+function generationWarningHtml(item, manifest) {
+  if (item.downloadUrl && isDownloadBlockedByControlled16029Gate(item)) {
+    return `<p class="request-warning">Controlled gate blocked this generated package: ${htmlEscape(controlledGenerationBlockerText(item))}. Do not use it for engineering review.</p>`
+  }
+  if (isDerivedSheetMetalReviewModel(item)) {
+    return '<p class="request-warning">派生钣金复核模型：已按 1000W 金标准结构 gate 校验通过；仍需工程师复核后才能转生产图。</p>'
+  }
+  if (isNonNativeFullAssemblyRequest(item, manifest)) {
+    return '<p class="request-warning">非 v43 原生模板完整装配体：未通过派生钣金 gate 前只能作为结构证据包，不能作为工程交付模型。</p>'
+  }
+  if (hasStructureRevisionFeedback(item)) {
+    return '<p class="request-warning">结构 gate 未通过：请先按 1000W 金标准修正，再作为工程模型下载。</p>'
+  }
+  return ''
 }
 
 function startGenerationQueueWorker(requestId) {
@@ -456,12 +522,38 @@ function startGenerationRequest(username, requestId) {
     error.statusCode = 409
     throw error
   }
+  const policy = validateControlled16029GenerationRequest(item)
+  if (!policy.ok) {
+    const updated = writeGenerationIndexRequest({
+      ...item,
+      status: policy.status,
+      error: policy.reason,
+      controlledGenerationPolicy: {
+        status: policy.status,
+        reason: policy.reason,
+        normalized: policy.normalized,
+        message: policy.message,
+      },
+      message: policy.message,
+    })
+    const error = new Error(updated.message)
+    error.statusCode = 409
+    throw error
+  }
   const startedAt = new Date().toISOString()
   const updated = writeGenerationIndexRequest({
     ...item,
     status: 'queued_by_user_for_background_generation',
     manualStartedAt: startedAt,
     queueRequestedAt: startedAt,
+    controlledGenerationPolicy: {
+      status: policy.status,
+      reason: policy.reason,
+      policyKey: policy.policyKey,
+      releaseLevel: policy.releaseLevel,
+      normalized: policy.normalized,
+      message: policy.message,
+    },
     message: '用户点击开始后，任务已进入后台生成队列。',
     error: '',
   })
@@ -534,6 +626,25 @@ function submitGenerationRequest(username, payload) {
       '登录台只给工程师提交生成意图和查看预览；正式CAD文件由内部worker产出后再开放下载，不在本页展示内部规则日志。',
     message: '任务已保存。点击任务卡片上的“开始”后才会进入后台生成。',
   }
+
+  const policy = validateControlled16029GenerationRequest(normalized)
+  if (!policy.ok) {
+    const error = new Error(policy.message)
+    error.statusCode = 422
+    throw error
+  }
+  normalized.controlledGenerationPolicy = {
+    status: policy.status,
+    reason: policy.reason,
+    policyKey: policy.policyKey,
+    releaseLevel: policy.releaseLevel,
+    allowElectricalLockHardware: policy.allowElectricalLockHardware === true,
+    normalized: policy.normalized,
+    message: policy.message,
+  }
+  normalized.allowElectricalLockHardware = policy.allowElectricalLockHardware === true
+  normalized.includeElectricalLockHardware = policy.allowElectricalLockHardware === true
+  normalized.message = `${policy.message} Click Start to run the background CAD worker.`
 
   const outPath = resolve(GENERATION_REQUEST_DIR, `${requestId}.json`)
   writeJson(outPath, normalized)
@@ -669,6 +780,7 @@ function renderShell(content, username = '') {
   .request-row { padding:11px; border:1px solid var(--line); border-radius:8px; background:#fff; }
   .request-row strong, .request-row span { display:block; }
   .request-row span { color:var(--muted); font-size:12px; line-height:1.45; }
+  .request-warning, .mode-warning { margin:8px 0 0; padding:8px 10px; border:1px solid #f5d08d; border-radius:8px; background:#fff8e8; color:#8a4f00; font-size:12px; line-height:1.45; }
   .request-row-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
   .request-row-actions .button,
   .request-row-actions button { min-height:34px; padding:0 12px; font-size:12px; }
@@ -711,11 +823,13 @@ function feedbackRows(rows) {
 
 function generationRows(rows) {
   if (!rows.length) return '<p class="muted">还没有3D建模任务草稿。提交后会保存在本机 data/review_generation_requests 目录，后续可接 CAD worker 队列。</p>'
+  const manifest = readCurrentDeliveryManifest()
   return rows.map((item) => `
     <div class="request-row">
       <strong>${item.taskMode === 'single_model' ? '单个模型' : '完整装配体'} / ${htmlEscape(item.cabinetWidth || '-')}W x ${htmlEscape(item.cabinetHeight || '-')}H x ${htmlEscape(item.cabinetDepth || '-')}D</strong>
       <span>${htmlEscape(item.doorCount || '-')} 门 / 门板 ${htmlEscape(item.doorWidth || '-')}W x ${htmlEscape(item.doorHeight || '-')}H</span>
       <span>${new Date(item.createdAt).toLocaleString('zh-CN', { hour12: false })} / ${htmlEscape(generationStatusText(item))}</span>
+      ${generationWarningHtml(item, manifest)}
       <div class="request-row-actions">
         ${generationActionHtml(item)}
         ${generationDeleteActionHtml(item)}
@@ -800,13 +914,14 @@ function renderPage(request) {
               <div class="mode-grid" role="tablist" aria-label="生成模式选择">
                 <button class="mode-card active" type="button" data-task-mode="full_assembly">
                   <strong>生成完整装配体</strong>
-                  <span>用于整柜结构审核。提示词里写门数、列数、W/H/D 即可。</span>
+                  <span>当前只有 740W / L642-R246 / v43 保持原生交付质量；其他尺寸只作为结构证据包。</span>
                 </button>
                 <button class="mode-card" type="button" data-task-mode="single_model">
                   <strong>生成单个模型</strong>
                   <span>用于单门板 / 单柜门件审核。适合先把一个门做对。</span>
                 </button>
               </div>
+              <p class="mode-warning">注意：950W、14门、400D 等非 v43 原生模板参数会进入参数化结构证据路线，不能按当前 v43 交付模型质量使用。</p>
               <div class="prompt-actions">
                 <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, ordinary locker doors, mechanical door lock tongue restored, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.">当前 v43 交付样例</button>
                 <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, freeze verified v43 door sheet metal, repair internal shelf/front-frame and centered rear seam.">内部钣金样例</button>
@@ -938,6 +1053,7 @@ function renderPage(request) {
     </div>
     <script>
       const CURRENT_DELIVERY_REQUEST_ID = ${JSON.stringify(currentDeliveryRequestId())}
+      const CURRENT_NATIVE_TEMPLATE_ROUTE = ${JSON.stringify(readCurrentDeliveryManifest().route || {})}
       const promptInput = document.getElementById('doorPrompt')
       const generationForm = document.getElementById('generationForm')
       const generatedPromptBox = document.getElementById('generatedPrompt')
@@ -989,11 +1105,66 @@ function renderPage(request) {
           String(item.status || '').toLowerCase().includes('parametric_scaffold_needs_engineering_validation')
       }
 
+      function hasVerifiedNoVisibleCabinetBodyBoxScaffoldForClient(item) {
+        return item && item.visibleCabinetBodyBoxScaffoldGateApplied === true &&
+          Number(item.visibleCabinetBodyBoxScaffoldCount || 0) === 0
+      }
+
+      function controlledGenerationBlockersForClient(item) {
+        const blockers = []
+        const bodyBoxCount = Number(item && item.visibleCabinetBodyBoxScaffoldCount || 0)
+        const doorBoxCount = Number(item && item.generatedDoorPanelBoxEnvelopeCount || 0)
+        const electricalCount = Number(item && item.electricalOrElectricLockComponentCount || 0)
+        const allowElectricalLockHardware = Boolean(item && (
+          item.allowElectricalLockHardware ||
+          item.includeElectricalLockHardware ||
+          (item.controlledGenerationPolicy && item.controlledGenerationPolicy.allowElectricalLockHardware)
+        ))
+        if (bodyBoxCount > 0) blockers.push('visible cabinet body box scaffold count=' + bodyBoxCount)
+        if (doorBoxCount > 0) blockers.push('generated door panel box envelope count=' + doorBoxCount)
+        if (electricalCount > 0 && !allowElectricalLockHardware) blockers.push('electrical/electric-lock component count=' + electricalCount)
+        return blockers
+      }
+
+      function isDownloadBlockedByControlledGateForClient(item) {
+        return controlledGenerationBlockersForClient(item).length > 0
+      }
+
+      function isDerivedSheetMetalReviewModelForClient(item) {
+        if (!hasVerifiedNoVisibleCabinetBodyBoxScaffoldForClient(item) || hasStructureRevisionFeedbackForClient(item)) return false
+        return Boolean(item && item.derivedSheetMetalModelReadyForReview) ||
+          String(item && item.handoffReadinessStatus || '').toLowerCase() === 'sw2020_derived_sheetmetal_review_ready' ||
+          String(item && item.status || '').toLowerCase() === 'solidworks2020_derived_sheetmetal_review_ready' ||
+          String(item && item.resultKind || '').toLowerCase() === 'solidworks2020_derived_sheetmetal_full_assembly_model'
+      }
+
+      function isCurrentV43RouteForClient(item) {
+        return String(item.taskMode || '') === 'full_assembly' &&
+          String(item.cabinetWidth || '') === String(CURRENT_NATIVE_TEMPLATE_ROUTE.cabinet_width_mm || 740) &&
+          String(item.cabinetHeight || '') === String(CURRENT_NATIVE_TEMPLATE_ROUTE.cabinet_height_mm || 1917) &&
+          String(item.cabinetDepth || '') === String(CURRENT_NATIVE_TEMPLATE_ROUTE.cabinet_depth_mm || 550) &&
+          String(item.rowSequence || '') === String(CURRENT_NATIVE_TEMPLATE_ROUTE.row_sequence || 'L642-R246')
+      }
+
+      function isNonNativeFullAssemblyForClient(item) {
+        if (!item || String(item.taskMode || '') !== 'full_assembly') return false
+        if (item.id === CURRENT_DELIVERY_REQUEST_ID) return false
+        if (item.compatibleWithNativeTemplate === true) return false
+        if (item.compatibleWithNativeTemplate === false) return true
+        return !isCurrentV43RouteForClient(item)
+      }
+
       function generationStatusTextForClient(item) {
         const status = String(item.status || '')
+        if (item.downloadUrl && isDownloadBlockedByControlledGateForClient(item)) {
+          return 'Controlled gate blocked download: ' + controlledGenerationBlockersForClient(item).join('; ')
+        }
+        if (status.includes('blocked_controlled_generation_policy')) return item.message || 'Blocked by controlled generation policy'
         if (item.id === CURRENT_DELIVERY_REQUEST_ID && item.downloadUrl) return '当前交付包：SW2020 gate PASS，用户已目视确认'
-        if (item.downloadUrl && hasParametricScaffoldValidationForClient(item)) return '参数化箱体/锁孔基准/调节脚待工程师验证，证据包已生成'
-        if (item.downloadUrl && hasStructureRevisionFeedbackForClient(item)) return '结构反馈待整改，证据包已生成'
+        if (item.downloadUrl && isDerivedSheetMetalReviewModelForClient(item)) return '派生钣金模型已生成，等待工程复核'
+        if (item.downloadUrl && hasParametricScaffoldValidationForClient(item)) return '非 v43 原生模板：参数化结构证据包已生成，不能作为交付模型'
+        if (item.downloadUrl && hasStructureRevisionFeedbackForClient(item)) return '结构反馈待整改，证据包已生成，不能作为交付模型'
+        if (item.downloadUrl && isNonNativeFullAssemblyForClient(item)) return '非 v43 原生模板：结构证据包已生成，不能作为交付模型'
         if (item.downloadUrl) return item.resultKind === 'cad_worker_payload_package' ? '任务包已生成' : '已生成'
         if (status.includes('failed')) return '生成失败'
         if (status.includes('running')) return '后台生成中'
@@ -1005,7 +1176,7 @@ function renderPage(request) {
         if (!item || item.downloadUrl || item.zipPath) return false
         const status = String(item.status || '').toLowerCase()
         if (item.id === CURRENT_DELIVERY_REQUEST_ID) return false
-        return !status.includes('running') && !status.includes('failed') && !status.includes('canceled') && !status.includes('cancelled')
+        return !status.includes('running') && !status.includes('failed') && !status.includes('canceled') && !status.includes('cancelled') && !status.includes('blocked_controlled_generation_policy')
       }
 
       function isDeletableGenerationRequestForClient(item) {
@@ -1025,15 +1196,30 @@ function renderPage(request) {
         const wrapper = document.createElement('div')
         wrapper.className = 'request-row-actions'
         if (item.downloadUrl) {
+          if (isDownloadBlockedByControlledGateForClient(item)) {
+            const button = document.createElement('button')
+            button.type = 'button'
+            button.disabled = true
+            button.textContent = 'Box regression blocked'
+            wrapper.append(button)
+            return wrapper
+          }
           const link = document.createElement('a')
           link.className = 'button'
           link.href = item.downloadUrl
           link.textContent = item.id === CURRENT_DELIVERY_REQUEST_ID
             ? '下载当前 v43 交付包'
+            : isDerivedSheetMetalReviewModelForClient(item)
+            ? '下载派生钣金模型'
             : hasStructureRevisionFeedbackForClient(item)
-            ? '下载结构证据包'
+            ? '下载结构证据包（非交付）'
+            : isNonNativeFullAssemblyForClient(item)
+            ? '下载结构证据包（非交付）'
             : item.resultKind === 'cad_worker_payload_package' ? '下载任务包' : '下载结果'
-          if (hasParametricScaffoldValidationForClient(item)) link.textContent = '下载参数化结构证据包'
+          if (hasParametricScaffoldValidationForClient(item)) {
+            link.textContent = '下载非交付结构证据包'
+            link.className = 'button secondary'
+          }
           wrapper.append(link)
         } else {
           const status = String(item.status || '')
@@ -1063,6 +1249,22 @@ function renderPage(request) {
         return wrapper
       }
 
+      function generationWarningForClient(item) {
+        if (item.downloadUrl && isDownloadBlockedByControlledGateForClient(item)) {
+          return 'Controlled gate blocked this generated package: ' + controlledGenerationBlockersForClient(item).join('; ') + '. Do not use it for engineering review.'
+        }
+        if (isDerivedSheetMetalReviewModelForClient(item)) {
+          return '派生钣金复核模型：已按 1000W 金标准结构 gate 校验通过；仍需工程师复核后才能转生产图。'
+        }
+        if (isNonNativeFullAssemblyForClient(item)) {
+          return '非 v43 原生模板完整装配体：未通过派生钣金 gate 前只能作为结构证据包，不能作为工程交付模型。'
+        }
+        if (hasStructureRevisionFeedbackForClient(item)) {
+          return '结构 gate 未通过：请先按 1000W 金标准修正，再作为工程模型下载。'
+        }
+        return ''
+      }
+
       function generationRequestRow(item) {
         const modeLabel = item.taskMode === 'single_model' ? '单个模型' : '完整装配体'
         const row = document.createElement('div')
@@ -1074,7 +1276,15 @@ function renderPage(request) {
         const status = document.createElement('span')
         const createdAt = item.createdAt ? new Date(item.createdAt).toLocaleString('zh-CN', { hour12: false }) : '刚刚提交'
         status.textContent = createdAt + ' / ' + generationStatusTextForClient(item)
-        row.append(title, dims, status, generationActionForClient(item))
+        row.append(title, dims, status)
+        const warningText = generationWarningForClient(item)
+        if (warningText) {
+          const warning = document.createElement('p')
+          warning.className = 'request-warning'
+          warning.textContent = warningText
+          row.append(warning)
+        }
+        row.append(generationActionForClient(item))
         return row
       }
 
@@ -1919,6 +2129,14 @@ const server = createServer(async (request, response) => {
         sendJson(response, 404, { error: 'generation output not found' })
         return
       }
+      if (isDownloadBlockedByControlled16029Gate(item)) {
+        sendJson(response, 409, {
+          error: 'controlled generation gate blocked this download',
+          releaseState: controlled16029ReleaseState(item),
+          blockers: controlled16029DownloadBlockers(item),
+        })
+        return
+      }
       const zipPath = resolve(String(item.zipPath))
       const allowed = [GENERATION_OUTPUT_ROOT, GENERATION_LOG_ROOT].some((root) => isUnderRoot(zipPath, root))
       if (!allowed || !existsSync(zipPath)) {
@@ -1930,6 +2148,7 @@ const server = createServer(async (request, response) => {
         ? 'cad-worker-package'
         : item.resultKind === 'solidworks2020_full_assembly_model' ||
             item.resultKind === 'solidworks2020_template_rule_full_assembly_package' ||
+            item.resultKind === 'solidworks2020_derived_sheetmetal_full_assembly_model' ||
             item.resultKind === 'solidworks2020_structure_revision_evidence_package'
           ? 'solidworks2020-full-assembly'
           : 'solidworks2020-sheetmetal-model'

@@ -4,6 +4,7 @@ var inPath = String(WScript.Arguments(0));
 var outDir = String(WScript.Arguments(1));
 var resultPath = String(WScript.Arguments(2));
 var shouldClose = WScript.Arguments.length > 3 ? String(WScript.Arguments(3)).toLowerCase() !== "keepopen" : true;
+var hidePattern = WScript.Arguments.length > 4 ? String(WScript.Arguments(4)) : "";
 
 function esc(s) {
   return String(s).replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n");
@@ -78,6 +79,72 @@ function openModel(sw, path, docType) {
   return { doc: doc, errors: errors, warnings: warnings, attempts: attempts };
 }
 
+function toArray(v) {
+  if (v === null || v === undefined) return [];
+  try { return new VBArray(v).toArray(); } catch (e) {}
+  if (v instanceof Array) return v;
+  return [v];
+}
+
+function collectComponents(doc) {
+  var found = [];
+  var seen = {};
+  function add(component) {
+    if (!component) return;
+    var key = safe(function () { return component.Name2; }, "") + "|" + safe(function () { return component.GetPathName(); }, "");
+    if (seen[key]) return;
+    seen[key] = true;
+    found.push(component);
+  }
+
+  var direct = toArray(safe(function () { return doc.GetComponents(false); }, null));
+  for (var i = 0; i < direct.length; i++) add(direct[i]);
+  direct = toArray(safe(function () { return doc.GetComponents(true); }, null));
+  for (var j = 0; j < direct.length; j++) add(direct[j]);
+
+  var cfgMgr = safe(function () { return doc.ConfigurationManager; }, null);
+  var cfg = cfgMgr ? safe(function () { return cfgMgr.ActiveConfiguration; }, null) : null;
+  var root = cfg ? safe(function () { return cfg.GetRootComponent3(true); }, null) : null;
+  function walk(component) {
+    var children = toArray(safe(function () { return component.GetChildren(); }, null));
+    for (var i = 0; i < children.length; i++) {
+      if (!children[i]) continue;
+      add(children[i]);
+      walk(children[i]);
+    }
+  }
+  if (root) walk(root);
+  return found;
+}
+
+function hideMatchingComponents(doc, pattern) {
+  var result = { pattern: pattern, attempted: false, hidden_count: 0, matched: [], error: "" };
+  if (!pattern) return result;
+  result.attempted = true;
+  try {
+    var re = new RegExp(pattern, "i");
+    var components = collectComponents(doc);
+    result.component_count = components.length;
+    for (var i = 0; i < components.length; i++) {
+      var c = components[i];
+      if (!c) continue;
+      var name = safe(function () { return c.Name2; }, "");
+      var path = safe(function () { return c.GetPathName(); }, "");
+      var text = String(name) + " " + String(path);
+      if (!re.test(text)) continue;
+      var hidden = safe(function () { c.Visible = 0; return true; }, false);
+      if (hidden) {
+        result.hidden_count++;
+        result.matched.push({ name: name, path: path });
+      }
+    }
+    safe(function () { doc.GraphicsRedraw2(); return true; }, false);
+  } catch (e) {
+    result.error = String(e.message || e);
+  }
+  return result;
+}
+
 ensureFolder(outDir);
 ensureFolder(fso.GetParentFolderName(resultPath));
 
@@ -99,6 +166,7 @@ var result = {
   open_errors: 0,
   open_warnings: 0,
   open_attempts: [],
+  hide_components: { pattern: hidePattern, attempted: false, hidden_count: 0, matched: [], error: "" },
   views: [],
   closed: false,
   error: ""
@@ -121,6 +189,7 @@ if (!sw) {
   result.open_attempts = opened.attempts;
   if (doc) {
     safe(function () { sw.ActivateDoc(doc.GetTitle()); return true; }, false);
+    result.hide_components = hideMatchingComponents(doc, hidePattern);
     for (var i = 0; i < views.length; i++) {
       var v = views[i];
       var path = outDir + "\\" + v.label + ".png";

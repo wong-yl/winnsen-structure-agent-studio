@@ -47,6 +47,8 @@ const requiredGoldRoleNames = [
   '\u95e8\u6846\u710a\u63a5-1',
   '\u5e95\u5ea7\u710a\u63a5-1',
   '\u4e0a\u76d6\u710a\u63a5-1',
+  '\u9501\u63a7\u7ef4\u62a4\u6761\u94a3\u91d1-1',
+  '\u9876\u90e8\u5e26\u9501\u76d6\u677f\u94a3\u91d1-1',
   '\u9501\u5b54\u57fa\u51c6\u5de6-1',
   '\u9501\u5b54\u57fa\u51c6\u5de6-2',
   '\u9501\u5b54\u57fa\u51c6\u5de6-3',
@@ -88,6 +90,8 @@ assert.equal(goldLikeResult.status, 'PASS')
 assert.equal(goldLikeResult.summary.componentCount, 320)
 assert.equal(goldLikeResult.summary.lockMountingHoleDatumCount, 7)
 assert.equal(goldLikeResult.summary.doorLockTongueCount, 7)
+assert.ok(goldLikeResult.summary.centerLockMaintenanceStripCount >= 1)
+assert.ok(goldLikeResult.summary.topLockCoverSheetMetalCount >= 1)
 assert.equal(goldLikeResult.summary.shelfFrontFrameLocatingInterfaceCount, 2)
 assert.equal(goldLikeResult.summary.innerVerticalPartitionStiffenerCount, 4)
 assert.equal(goldLikeResult.summary.issueCount, 0)
@@ -120,6 +124,32 @@ const missingDoorLockTongueIssueIds = new Set(missingDoorLockTongueResult.issues
 assert.equal(missingDoorLockTongueResult.status, 'FAIL')
 assert.equal(missingDoorLockTongueResult.summary.doorLockTongueCount, 0)
 assert.equal(missingDoorLockTongueIssueIds.has('missing_door_lock_tongue'), true)
+
+const electricHookAsLockTongueLike = record({
+  componentCount: 320,
+  topLevelCount: 36,
+  maxDepth: 2,
+  names: [
+    ...requiredGoldRoleNames.filter((name) => !name.includes('\u9501\u820c')),
+    '\u7535\u63a7U\u578b\u9501\u94a9ZJA-S500-1',
+    '\u7535\u63a7U\u578b\u9501\u94a9ZJA-S500-2',
+    '\u7535\u63a7U\u578b\u9501\u94a9ZJA-S500-3',
+    '\u7535\u63a7U\u578b\u9501\u94a9ZJA-S500-4',
+    '\u7535\u63a7U\u578b\u9501\u94a9ZJA-S500-5',
+    '\u7535\u63a7U\u578b\u9501\u94a9ZJA-S500-6',
+    '\u9501\u63a7\u6761\u5de6-1',
+    '\u9501\u63a7\u6761\u53f3-1',
+  ],
+})
+const electricHookAsLockTongueResult = analyzeGoldStructureGate({
+  candidateRecord: electricHookAsLockTongueLike,
+  expectedDoorCount: 6,
+  allowElectricalLockHardware: true,
+})
+assert.equal(electricHookAsLockTongueResult.status, 'PASS')
+assert.equal(electricHookAsLockTongueResult.summary.doorLockTongueCount, 6)
+assert.equal(electricHookAsLockTongueResult.summary.lockControlStripPlaceholderCount, 0)
+assert.equal(electricHookAsLockTongueResult.summary.allowElectricalLockHardware, true)
 
 const parametricDirectoryOnly = JSON.parse(JSON.stringify(sixDoorRoleComplete))
 parametricDirectoryOnly.components = parametricDirectoryOnly.components.map((item) => ({
@@ -205,10 +235,14 @@ assert.equal(scaffoldResult.status, 'FAIL')
 assert.equal(scaffoldResult.summary.componentCount, 117)
 assert.equal(scaffoldResult.baseline.minComponentCount, 147)
 assert.equal(scaffoldResult.summary.lockMountingHoleDatumCount, 0)
+assert.equal(scaffoldResult.summary.centerLockMaintenanceStripCount, 0)
+assert.equal(scaffoldResult.summary.topLockCoverSheetMetalCount, 0)
 assert.equal(scaffoldResult.summary.lockControlStripPlaceholderCount, 2)
 assert.equal(scaffoldResult.summary.provisionalParametricScaffoldCount, 9)
 assert.equal(scaffoldIssueIds.has('component_count_below_gold_floor'), true)
 assert.equal(scaffoldIssueIds.has('missing_lock_mounting_hole_datum'), true)
+assert.equal(scaffoldIssueIds.has('missing_center_lock_maintenance_sheetmetal_strip'), true)
+assert.equal(scaffoldIssueIds.has('missing_top_lock_cover_sheetmetal_feature'), true)
 assert.equal(scaffoldIssueIds.has('missing_shelf_front_frame_locating_interface'), true)
 assert.equal(scaffoldIssueIds.has('missing_inner_vertical_partition_stiffeners'), true)
 assert.equal(scaffoldIssueIds.has('provisional_parametric_scaffold_components'), true)
@@ -230,6 +264,14 @@ const electricalIssueIds = new Set(electricalResult.issues.map((item) => item.id
 assert.equal(electricalResult.status, 'FAIL')
 assert.equal(electricalResult.summary.electricalOrElectricLockComponentCount, 3)
 assert.equal(electricalIssueIds.has('electrical_or_electric_lock_components_present'), true)
+
+const allowedElectricalResult = analyzeGoldStructureGate({
+  candidateRecord: electricalLike,
+  expectedDoorCount: 7,
+  allowElectricalLockHardware: true,
+})
+assert.equal(allowedElectricalResult.status, 'PASS')
+assert.equal(allowedElectricalResult.summary.electricalOrElectricLockComponentCount, 3)
 
 const externalHoleLike = record({
   componentCount: 320,

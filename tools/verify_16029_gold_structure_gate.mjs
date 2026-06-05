@@ -74,6 +74,18 @@ const ROLE_CHECKS = Object.freeze([
     min: 1,
   },
   {
+    id: 'center_lock_maintenance_sheetmetal_strip',
+    label: 'center vertical lock-control maintenance sheet-metal strip',
+    pattern: /\u9501\u63a7\u7ef4\u62a4\u6761(?:_\u6e90\u94a3\u91d1|\u94a3\u91d1)?|\u9501\u63a7\u7ef4\u62a4\u677f|\u5e94\u6025\u7ef4\u62a4\u95e8|\u7ef4\u62a4\u95e8\u9501\u5b54|center[_ -]?lock[_ -]?maintenance[_ -]?sheet(?:metal)?[_ -]?strip|lock[_ -]?control[_ -]?maintenance[_ -]?strip/i,
+    min: 1,
+  },
+  {
+    id: 'top_lock_cover_sheetmetal_feature',
+    label: 'top lockable sheet-metal cover feature',
+    pattern: /\u9876\u90e8\u5e26\u9501\u76d6\u677f\u94a3\u91d1|\u4e0a\u76d6\u5e26\u9501\u76d6\u677f\u94a3\u91d1|\u4e0a\u76d6\u710a\u63a5(?!_(?:\u53c2\u6570\u5316|\u6d3e\u751f\u94a3\u91d1|parametric))|\u4e0a\u76d6\u58f3\u4f53|\u7535\u63a7\u6a21\u5757|top[_ -]?lock(?:able)?[_ -]?cover[_ -]?sheet(?:metal)?|top[_ -]?locking[_ -]?cover/i,
+    min: 1,
+  },
+  {
     id: 'lock_mounting_hole_datum',
     label: 'lock and electrical mounting hole datum',
     pattern: /\u9501\u5b54\u57fa\u51c6|\u9501\u5b89\u88c5\u5b54\u4f4d|lock[_ -]?(?:mounting[_ -]?)?hole[_ -]?datum/i,
@@ -143,6 +155,10 @@ function componentText(component) {
   return `${textOf(component?.name)} ${basename(componentPath)}`
 }
 
+function componentFullText(component) {
+  return `${componentText(component)} ${textOf(component?.path)}`
+}
+
 function visibleComponents(record) {
   return asArray(record?.components).filter((component) => !component.is_hidden && !component.is_suppressed)
 }
@@ -164,24 +180,48 @@ function countMatching(record, pattern) {
   return visibleComponents(record).filter((component) => pattern.test(componentText(component))).length
 }
 
+function countVisibleCabinetBodyBoxScaffold(record) {
+  const bodyRolePattern = /\u7bb1\u4f53(?:\u5de6\u4fa7\u677f|\u53f3\u4fa7\u677f|\u6a2a\u5c42\u677f[LR]?|\u7ad6\u9694\u677f[LR]?)\u710a\u63a5|\u95e8\u6846\u710a\u63a5|\u5e95\u5ea7\u710a\u63a5|\u4e0a\u76d6\u710a\u63a5|\u540e\u80cc\u4e2d\u7f1d\u94a3\u91d1\u8fde\u63a5\u7247|cabinet_(?:left|right)_(?:side|partition|shelf)_weldment|front_frame_weldment|base_weldment|top_cover_weldment|rear[_ -]?center[_ -]?seam/i
+  const boxSourcePattern = /\u53c2\u6570\u5316|\u6d3e\u751f\u94a3\u91d1|derived[_ -]?sheetmetal|_parametric\b|parametric[_ -]?scaffold|freecad[_ -]?internal[_ -]?parameter[_ -]?scaffold/i
+  return visibleComponents(record).filter((component) => {
+    const text = componentFullText(component)
+    return bodyRolePattern.test(text) && boxSourcePattern.test(text)
+  }).length
+}
+
+function countGeneratedDoorPanelBoxEnvelope(record) {
+  const decimalRatioDoorPanelPattern = /\u50a8\u7269\u67dc\u95e8\u677f\d+(?:[.p]\d+)\u257112|locker[_ -]?door[_ -]?panel[_ -]?\d+(?:[.p]\d+)[_-]?12|review_single_door_panel/i
+  return visibleComponents(record).filter((component) => {
+    const text = componentFullText(component)
+    if (!decimalRatioDoorPanelPattern.test(text)) return false
+    const box = component?.box || {}
+    const xLen = Number(box.xlen_mm)
+    const yLen = Number(box.ylen_mm)
+    const zLen = Number(box.zlen_mm)
+    return Number.isFinite(xLen) && Number.isFinite(yLen) && Number.isFinite(zLen) &&
+      xLen >= 100 && yLen >= 100 && zLen >= 10
+  }).length
+}
+
 function sidePanelBackSheetMetalSeam(record) {
   const components = visibleComponents(record).filter((component) => component?.box)
   const overlayPanels = components.filter((component) => REAR_OVERLAY_PANEL_PATTERN.test(componentText(component)))
   const left = components
     .filter((component) => LEFT_SIDE_WELDMENT_PATTERN.test(componentText(component)))
-    .filter((component) => Number(component.box.xmin_mm) <= -360 && Number(component.box.ylen_mm) > 1700 && Number(component.box.zlen_mm) > 500)
+    .filter((component) => Number(component.box.xmin_mm) <= -300 && Number(component.box.ylen_mm) > 1700 && Number(component.box.zlen_mm) > 300)
     .sort((a, b) => Number(b.box.ylen_mm) - Number(a.box.ylen_mm))[0] || null
   const right = components
     .filter((component) => RIGHT_SIDE_WELDMENT_PATTERN.test(componentText(component)))
-    .filter((component) => Number(component.box.xmax_mm) >= 360 && Number(component.box.ylen_mm) > 1700 && Number(component.box.zlen_mm) > 500)
+    .filter((component) => Number(component.box.xmax_mm) >= 300 && Number(component.box.ylen_mm) > 1700 && Number(component.box.zlen_mm) > 300)
     .sort((a, b) => Number(b.box.ylen_mm) - Number(a.box.ylen_mm))[0] || null
 
   const leftXMin = left ? Number(left.box.xmin_mm) : null
   const leftXMax = left ? Number(left.box.xmax_mm) : null
   const rightXMin = right ? Number(right.box.xmin_mm) : null
   const rightXMax = right ? Number(right.box.xmax_mm) : null
-  const leftOuterOk = Number.isFinite(leftXMin) && Math.abs(leftXMin + 370) <= 2
-  const rightOuterOk = Number.isFinite(rightXMax) && Math.abs(rightXMax - 370) <= 2
+  const outerSymmetryOk = Number.isFinite(leftXMin) && Number.isFinite(rightXMax) && Math.abs(Math.abs(leftXMin) - Math.abs(rightXMax)) <= 2
+  const leftOuterOk = Number.isFinite(leftXMin) && Number.isFinite(rightXMax) && leftXMin < -100 && outerSymmetryOk
+  const rightOuterOk = Number.isFinite(rightXMax) && Number.isFinite(leftXMin) && rightXMax > 100 && outerSymmetryOk
   const leftCenterLapOk = Number.isFinite(leftXMax) && leftXMax >= 0 && leftXMax <= 20
   const rightCenterEdgeOk = Number.isFinite(rightXMin) && Math.abs(rightXMin - 0.5) <= 2
 
@@ -196,6 +236,7 @@ function sidePanelBackSheetMetalSeam(record) {
     rightXMinMm: Number.isFinite(rightXMin) ? rightXMin : null,
     rightXMaxMm: Number.isFinite(rightXMax) ? rightXMax : null,
     seamDatumXMm: Number.isFinite(rightXMin) ? rightXMin : null,
+    outerSymmetryOk,
     leftOuterOk,
     rightOuterOk,
     leftCenterLapOk,
@@ -204,14 +245,22 @@ function sidePanelBackSheetMetalSeam(record) {
   }
 }
 
-function summarizeRecord(record) {
+function summarizeRecord(record, { allowElectricalLockHardware = false } = {}) {
   const roleCounts = {}
   for (const check of [...ROLE_CHECKS, ...OPTIONAL_ROLE_CHECKS]) {
     roleCounts[check.id] = countMatching(record, check.pattern)
   }
-  roleCounts.lock_control_strip_placeholder = countMatching(record, /\u9501\u63a7\u6761|lock[_ -]?control[_ -]?strip/i)
+  if (allowElectricalLockHardware) {
+    const electricHookCount = countMatching(record, /\u7535\u63a7U\u578b\u9501\u94a9|electric[_ -]?lock[_ -]?hook/i)
+    roleCounts.door_lock_tongue = Math.max(roleCounts.door_lock_tongue, electricHookCount)
+  }
+  roleCounts.lock_control_strip_placeholder = allowElectricalLockHardware
+    ? 0
+    : countMatching(record, /\u9501\u63a7\u6761|lock[_ -]?control[_ -]?strip/i)
   roleCounts.electrical_or_electric_lock_component = countMatching(record, /\u7535\u63a7\u9501\u4f53|\u7535\u63a7U\u578b\u9501\u94a9|\u9501\u63a7\u677f\u88c5\u914d\u7ec4\u4ef6|\u7535\u8def\u677f\u652f\u67b6|ZJA-S500|LK-4-6|M9 V1\.1|electric[_ -]?lock[_ -]?(?:body|hook)|lock[_ -]?control[_ -]?board/i)
   roleCounts.provisional_parametric_scaffold = countMatching(record, /\u53c2\u6570\u5316|parametric|scaffold/i)
+  roleCounts.visible_cabinet_body_box_scaffold = countVisibleCabinetBodyBoxScaffold(record)
+  roleCounts.generated_door_panel_box_envelope = countGeneratedDoorPanelBoxEnvelope(record)
   roleCounts.external_through_hole_candidate = countMatching(record, /\u5916\u4fa7.*\u8d2f\u7a7f\u5b54|external[_ -]?through[_ -]?hole|outside[_ -]?face[_ -]?hole/i)
 
   return {
@@ -253,10 +302,11 @@ export function analyzeGoldStructureGate({
   goldRecord = null,
   expectedDoorCount = 0,
   serviceAccessDoorPolicy = 'not_applicable',
+  allowElectricalLockHardware = false,
 } = {}) {
   if (!candidateRecord) throw new Error('candidateRecord is required')
   const baseline = baselineFromGoldRecord(goldRecord)
-  const candidate = summarizeRecord(candidateRecord)
+  const candidate = summarizeRecord(candidateRecord, { allowElectricalLockHardware })
   const backSeam = sidePanelBackSheetMetalSeam(candidateRecord)
   const issues = []
   const warnings = []
@@ -362,6 +412,24 @@ export function analyzeGoldStructureGate({
     ))
   }
 
+  if (candidate.roleCounts.visible_cabinet_body_box_scaffold > 0) {
+    issues.push(issue(
+      'visible_cabinet_body_box_scaffold_components',
+      'P0',
+      'Candidate cabinet body still contains visible box/scaffold-derived body modules; role naming is not enough to satisfy the 1000W sheet-metal gold standard.',
+      { count: candidate.roleCounts.visible_cabinet_body_box_scaffold },
+    ))
+  }
+
+  if (candidate.roleCounts.generated_door_panel_box_envelope > 0) {
+    issues.push(issue(
+      'generated_door_panel_box_envelope_components',
+      'P0',
+      'Candidate generated non-template door panels still contain visible rectangular panel envelopes; the verified v43/gold door sheet-metal geometry must be reused or parameterized.',
+      { count: candidate.roleCounts.generated_door_panel_box_envelope },
+    ))
+  }
+
   if (candidate.roleCounts.lock_control_strip_placeholder > 0) {
     issues.push(issue(
       'legacy_lock_control_strip_placeholder',
@@ -371,7 +439,7 @@ export function analyzeGoldStructureGate({
     ))
   }
 
-  if (candidate.roleCounts.electrical_or_electric_lock_component > 0) {
+  if (candidate.roleCounts.electrical_or_electric_lock_component > 0 && !allowElectricalLockHardware) {
     issues.push(issue(
       'electrical_or_electric_lock_components_present',
       'P1',
@@ -403,6 +471,7 @@ export function analyzeGoldStructureGate({
       componentCountScale,
       minTopLevelVisibleCount,
       serviceAccessDoorPolicy: servicePolicy,
+      allowElectricalLockHardware,
     },
     candidate,
     expectedDoorCount,
@@ -412,9 +481,13 @@ export function analyzeGoldStructureGate({
       maxDepth: candidate.maxDepth,
       lockMountingHoleDatumCount: candidate.roleCounts.lock_mounting_hole_datum,
       doorLockTongueCount: candidate.roleCounts.door_lock_tongue,
+      centerLockMaintenanceStripCount: candidate.roleCounts.center_lock_maintenance_sheetmetal_strip,
+      topLockCoverSheetMetalCount: candidate.roleCounts.top_lock_cover_sheetmetal_feature,
       lockControlStripPlaceholderCount: candidate.roleCounts.lock_control_strip_placeholder,
       electricalOrElectricLockComponentCount: candidate.roleCounts.electrical_or_electric_lock_component,
       provisionalParametricScaffoldCount: candidate.roleCounts.provisional_parametric_scaffold,
+      visibleCabinetBodyBoxScaffoldCount: candidate.roleCounts.visible_cabinet_body_box_scaffold,
+      generatedDoorPanelBoxEnvelopeCount: candidate.roleCounts.generated_door_panel_box_envelope,
       shelfFrontFrameLocatingInterfaceCount: candidate.roleCounts.shelf_front_frame_locating_interface,
       innerVerticalPartitionStiffenerCount: candidate.roleCounts.inner_vertical_partition_stiffeners,
       externalThroughHoleCandidateCount: candidate.roleCounts.external_through_hole_candidate,
@@ -422,6 +495,7 @@ export function analyzeGoldStructureGate({
       doorModuleCount: candidate.roleCounts.door_modules,
       serviceAccessDoorCount: candidate.roleCounts.service_access_door,
       serviceAccessDoorPolicy: servicePolicy,
+      allowElectricalLockHardware,
       centeredBackSeam: backSeam,
       issueCount: issues.length,
       warningCount: warnings.length,
@@ -445,16 +519,21 @@ function parseArgs(argv) {
   return args
 }
 
+function boolArg(value) {
+  return /^(1|true|yes)$/i.test(String(value ?? ''))
+}
+
 export function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv)
   if (!args.candidate) {
-    throw new Error('Usage: node tools/verify_16029_gold_structure_gate.mjs --candidate <structure_record.json> [--gold <gold_structure_record.json>] [--expected-door-count <n>] [--service-access-door-policy not-applicable|optional|required] [--out <result.json>]')
+    throw new Error('Usage: node tools/verify_16029_gold_structure_gate.mjs --candidate <structure_record.json> [--gold <gold_structure_record.json>] [--expected-door-count <n>] [--service-access-door-policy not-applicable|optional|required] [--allow-electrical-lock-hardware true] [--out <result.json>]')
   }
   const result = analyzeGoldStructureGate({
     candidateRecord: readJson(args.candidate),
     goldRecord: args.gold ? readJson(args.gold) : null,
     expectedDoorCount: Number(args['expected-door-count'] || 0),
     serviceAccessDoorPolicy: args['service-access-door-policy'] || 'not_applicable',
+    allowElectricalLockHardware: boolArg(args['allow-electrical-lock-hardware']),
   })
   const text = `${JSON.stringify(result, null, 2)}\n`
   if (args.out) writeFileSync(args.out, text, 'utf8')

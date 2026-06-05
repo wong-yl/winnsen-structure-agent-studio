@@ -779,16 +779,38 @@ const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2020.lnk'
 const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_regression'
 const LOCKER_16038_RULE_BINDING_CAPABILITY_ID = 'locker_16038_variant_template'
 const LOCKER_16038_RULE_BINDING_ID = 'STEP-VARIANT-16038-4-7-8-12'
-const LOCKER_16029_OUTER_SIZE = '1000 W × 1917 H × 550 D'
+const LOCKER_16029_OUTER_SIZE = '规则受控：v43 700-780W / 金标准 740-1100W'
 const LOCKER_16029_UNIT_HEIGHT_MM = 152.5
 const LOCKER_16029_DOOR_GAP_MM = 7
 const LOCKER_16029_DOOR_AREA_HEIGHT_MM = 1827
 const LOCKER_16029_GRID_EDGE_GAP_MM = 2
-const LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS = [10, 12, 14]
-const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [10, 12, 14]
+const LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS = [6, 10, 12, 14]
+const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [6, 10, 12, 14]
 const LOCKER_16029_SUPPORTED_RULE_COUNTS = Array.from(
   new Set([...LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS, ...LOCKER_16029_SUPPORTED_FREECAD_COUNTS]),
 )
+const LOCKER_16029_CONTROLLED_COMBOS = [
+  { width: 740, depth: 550, doorCount: 6, label: '740W / L642-R246 / v43 template seed' },
+  { width: 950, depth: 400, doorCount: 14, label: '950W / 400D / 14-door controlled derived review' },
+  { width: 1000, depth: 550, doorCount: 10, label: '1000W / 10-door gold/source reference' },
+  { width: 1000, depth: 550, doorCount: 12, label: '1000W / 12-door gold/source reference' },
+  { width: 1000, depth: 550, doorCount: 14, label: '1000W / 14-door gold/source reference' },
+]
+const LOCKER_16029_V43_WIDTH_DERIVED_RULE = {
+  minWidth: 700,
+  maxWidth: 780,
+  depth: 550,
+  doorCount: 6,
+  label: 'v43 L642-R246 width-derived sheet-metal review',
+}
+const LOCKER_16029_GOLD_DERIVED_RULE = {
+  minWidth: 740,
+  maxWidth: 1100,
+  minDepth: 350,
+  maxDepth: 600,
+  doorCounts: [10, 12, 14],
+  label: '1000W gold-rule equal-row derived sheet-metal review',
+}
 const DEFAULT_DOOR_PROMPT =
   '740W x 1917H x 550D, two columns, L642-R246, W307, ordinary sheet-metal locker doors, freeze verified v43 door route, restore six mechanical lock tongues, retain lock-side holes and locating datums, repair internal shelf/front-frame fit and centered rear seam, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.'
 const DOOR_PROMPT_EXAMPLES = [
@@ -6244,7 +6266,8 @@ function taskMatchesPrimaryParameters(task: GenerationTask, activeCapabilityId: 
   if (activeCapabilityId === 'locker_16029_regression') {
     return (
       String(task.parameters.door_count ?? '') === String(activeParameters.door_count ?? '') &&
-      String(task.parameters.cabinet_width ?? '') === String(activeParameters.cabinet_width ?? '')
+      String(task.parameters.cabinet_width ?? '') === String(activeParameters.cabinet_width ?? '') &&
+      String(task.parameters.cabinet_depth ?? '') === String(activeParameters.cabinet_depth ?? '')
     )
   }
   return taskMatchesActiveParameters(task, activeParameters)
@@ -6737,7 +6760,7 @@ function freecadScriptFor(capabilityId: string, fallback: string) {
   return fallback
 }
 
-const numericParameterNames = new Set(['door_count', 'cabinet_width', 'door_width', 'door_height', 'flat_holes'])
+const numericParameterNames = new Set(['door_count', 'cabinet_width', 'cabinet_depth', 'door_width', 'door_height', 'flat_holes'])
 const defaultDoorCountPresets = LOCKER_16029_SUPPORTED_RULE_COUNTS.map(String)
 const doorCountPresetsByCapability: Record<string, string[]> = {
   locker_16038_variant_template: ['4', '7', '8', '12'],
@@ -6812,6 +6835,51 @@ function parameterValue(parameters: ParameterValues, name: string, fallback: str
   return value && value.trim() ? value.trim() : fallback
 }
 
+function locker16029ControlledComboFor(parameters: ParameterValues) {
+  const doorCount = Number(parameterValue(parameters, 'door_count', '14'))
+  const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '950'))
+  const cabinetDepth = Number(parameterValue(parameters, 'cabinet_depth', '400'))
+  if (![doorCount, cabinetWidth, cabinetDepth].every(Number.isFinite)) return null
+  const exactCombo = LOCKER_16029_CONTROLLED_COMBOS.find(
+    (combo) =>
+      combo.doorCount === doorCount &&
+      Math.abs(combo.width - cabinetWidth) < 0.001 &&
+      Math.abs(combo.depth - cabinetDepth) < 0.001,
+  )
+  if (exactCombo) return exactCombo
+  if (
+    doorCount === LOCKER_16029_V43_WIDTH_DERIVED_RULE.doorCount &&
+    cabinetWidth >= LOCKER_16029_V43_WIDTH_DERIVED_RULE.minWidth &&
+    cabinetWidth <= LOCKER_16029_V43_WIDTH_DERIVED_RULE.maxWidth &&
+    Math.abs(cabinetDepth - LOCKER_16029_V43_WIDTH_DERIVED_RULE.depth) < 0.001
+  ) {
+    return LOCKER_16029_V43_WIDTH_DERIVED_RULE
+  }
+  if (
+    LOCKER_16029_GOLD_DERIVED_RULE.doorCounts.includes(doorCount) &&
+    cabinetWidth >= LOCKER_16029_GOLD_DERIVED_RULE.minWidth &&
+    cabinetWidth <= LOCKER_16029_GOLD_DERIVED_RULE.maxWidth &&
+    cabinetDepth >= LOCKER_16029_GOLD_DERIVED_RULE.minDepth &&
+    cabinetDepth <= LOCKER_16029_GOLD_DERIVED_RULE.maxDepth
+  ) {
+    return LOCKER_16029_GOLD_DERIVED_RULE
+  }
+  return null
+}
+
+function locker16029ControlledComboIssue(parameters: ParameterValues) {
+  const doorCount = Number(parameterValue(parameters, 'door_count', '14'))
+  const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '950'))
+  const cabinetDepth = Number(parameterValue(parameters, 'cabinet_depth', '400'))
+  if (!Number.isFinite(cabinetWidth)) return 'cabinet_width 必须是数字。'
+  if (!Number.isFinite(cabinetDepth)) return 'cabinet_depth 必须是数字。'
+  if (!Number.isFinite(doorCount)) return 'door_count 必须是数字。'
+  if (!locker16029ControlledComboFor(parameters)) {
+    return '16029 现在按规则受控生成：6门 L642-R246 允许 700-780W/550D；10/12/14门允许 740-1100W/350-600D。超出范围要先补规则证据。'
+  }
+  return null
+}
+
 function lockedParameterValue(capabilityId: string, parameter: string) {
   if (capabilityId === 'locker_16029_door_panel' && parameter === 'category') return 'ordinary_door_panel'
   return null
@@ -6843,6 +6911,10 @@ function parameterIssueFor(capabilityId: string, parameters: ParameterValues) {
       return '当前 16029 规则收敛样本先开放 10、12、14 门；其它门数先进入规则学习队列，暂不直接生成。'
     }
   }
+  if (capabilityId === 'locker_16029_regression') {
+    const comboIssue = locker16029ControlledComboIssue(parameters)
+    if (comboIssue) return comboIssue
+  }
   if (capabilityId === 'locker_16038_variant_template' && !supportedDoorCountsFor(capabilityId).has(doorCount)) {
     return '16038 模板证据生成当前支持 4、7、8 门整柜和 12/12 单门模块。'
   }
@@ -6856,7 +6928,7 @@ function runnerIssueFor(capabilityId: string, cadRunner: CadRunner, parameters: 
       return 'SolidWorks 16029 当前只开放 10/12/14 门原生参考模型；其它门数先走规则学习队列。'
     }
     const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '1000'))
-    if (!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) {
+    if ((!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) && !locker16029ControlledComboFor(parameters)) {
       return 'SolidWorks 主线当前只开放 1000mm 宽外型；宽度派生请先走 FreeCAD/STEP 规则实验。'
     }
     const geometrySource = parameterValue(parameters, 'geometry_source', 'auto')
@@ -6870,7 +6942,7 @@ function runnerIssueFor(capabilityId: string, cadRunner: CadRunner, parameters: 
       return 'FreeCAD 16029 规则验证当前先开放 10/12/14 门。'
     }
     const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '1000'))
-    if (!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) {
+    if ((!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) && !locker16029ControlledComboFor(parameters)) {
       return 'FreeCAD 16029 工程交接当前只开放 1000mm 宽外型；宽度派生先留在规则学习队列。'
     }
     const geometrySource = parameterValue(parameters, 'geometry_source', 'auto')
@@ -6941,7 +7013,7 @@ function commandArgumentsFor(capabilityId: string, cadRunner: CadRunner, paramet
       parameters,
       'cabinet_width',
       '1000',
-    )} --geometry-source ${parameterValue(parameters, 'geometry_source', 'auto')}`
+    )} --cabinet-depth ${parameterValue(parameters, 'cabinet_depth', '400')} --geometry-source ${parameterValue(parameters, 'geometry_source', 'auto')}`
   }
   if (capabilityId === 'locker_16029_door_panel') {
     return `--category ${parameterValue(parameters, 'category', 'ordinary_door_panel')} --door-width ${parameterValue(
@@ -7241,13 +7313,14 @@ function outputFileLabel(path: string) {
 function sampleParameterValue(parameter: string, capabilityId?: string) {
   if (parameter === 'category') return 'ordinary_door_panel'
   if (parameter === 'geometry_source') return 'auto'
-  if (parameter === 'cabinet_width') return '1000'
+  if (parameter === 'cabinet_width') return capabilityId === 'locker_16029_regression' ? '950' : '1000'
+  if (parameter === 'cabinet_depth') return capabilityId === 'locker_16029_regression' ? '400' : '550'
   if (parameter === 'door_width') return '437'
   if (parameter === 'door_height') return '298'
   if (parameter === 'formed_bbox_x' || parameter === 'formed_bbox_y' || parameter === 'formed_bbox_z') return 'from_STEP'
   if (parameter === 'flat_holes') return '11'
   if (parameter.includes('door_count') && capabilityId === 'locker_16038_variant_template') return '7'
-  if (parameter.includes('door_count')) return '12'
+  if (parameter.includes('door_count')) return capabilityId === 'locker_16029_regression' ? '14' : '12'
   if (parameter.includes('width')) return '1000'
   if (parameter.includes('height')) return '1939'
   if (parameter.includes('depth')) return '550'

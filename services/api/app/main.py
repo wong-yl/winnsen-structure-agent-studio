@@ -737,7 +737,19 @@ def locker_16029_verified_door_counts() -> set[int]:
     return set(VERIFIED_LOCKER_16029_SOLIDWORKS_DOOR_COUNTS)
 
 
+def locker_16029_controlled_combo_supported(cabinet_width: float, cabinet_depth: float, door_count: int | None) -> bool:
+    if door_count is None:
+        return False
+    if door_count == 6:
+        return 700.0 <= cabinet_width <= 780.0 and abs(cabinet_depth - 550.0) <= 0.001
+    if door_count in {10, 12, 14}:
+        return 740.0 <= cabinet_width <= 1100.0 and 350.0 <= cabinet_depth <= 600.0
+    return False
+
+
 def locker_16029_verified_rule_packet_check(door_count: int) -> tuple[bool, str]:
+    if door_count == 6:
+        return True, "740W/6-door v43 controlled seed uses the current delivery manifest; 1000W verified rule packet is reference-only for this combo."
     payload = read_locker_16029_verified_rule_packet()
     if payload.get("status") != "PASS":
         return False, f"16029 verified rule packet status is {payload.get('status')}; see {LOCKER_16029_VERIFIED_RULE_PACKET_PATH}"
@@ -2166,7 +2178,7 @@ def validate_task_parameters(task: GenerationTask) -> list[str]:
             elif door_count % 2:
                 errors.append("door_count must be even for the current two-column 16029 layout.")
             else:
-                supported_counts = locker_16029_verified_door_counts()
+                supported_counts = locker_16029_verified_door_counts() | {6}
                 if door_count not in supported_counts:
                     supported = ", ".join(str(value) for value in sorted(supported_counts))
                     route = (
@@ -2178,16 +2190,23 @@ def validate_task_parameters(task: GenerationTask) -> list[str]:
                         f"{route} for 16029 currently supports only {supported}-door output. "
                         "Other door counts stay in rule-learning until their transform/mate and geometry gates pass."
                     )
-        raw_cabinet_width = str(task.parameters.get("cabinet_width", "1000")).strip() or "1000"
+        raw_cabinet_width = str(task.parameters.get("cabinet_width", "950")).strip() or "950"
+        raw_cabinet_depth = str(task.parameters.get("cabinet_depth", "400")).strip() or "400"
+        cabinet_width: float | None = None
+        cabinet_depth: float | None = None
         try:
             cabinet_width = float(raw_cabinet_width)
         except ValueError:
             errors.append("cabinet_width must be numeric for the 16029 mainline.")
-        else:
-            if abs(cabinet_width - 1000.0) > 0.001:
+        try:
+            cabinet_depth = float(raw_cabinet_depth)
+        except ValueError:
+            errors.append("cabinet_depth must be numeric for the 16029 mainline.")
+        if cabinet_width is not None and cabinet_depth is not None:
+            if not locker_16029_controlled_combo_supported(cabinet_width, cabinet_depth, door_count):
                 errors.append(
-                    "16029 generation handoff currently supports only the 1000mm-wide, 1917mm-high, 550mm-deep outer size; "
-                    "width-rule experiments must not enter this engineering-reference queue."
+                    "16029 generation is rule-controlled: use 6-door L642-R246 700-780W/550D, "
+                    "or 10/12/14-door gold-rule 740-1100W/350-600D requests."
                 )
         geometry_source = str(task.parameters.get("geometry_source", "auto")).strip() or "auto"
         if geometry_source != "auto":

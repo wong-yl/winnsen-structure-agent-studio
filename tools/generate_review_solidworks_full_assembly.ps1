@@ -14,7 +14,11 @@ param(
   [string] $Prompt = '',
 
   [string] $OutputDir = '',
-  [int] $ComponentRenameTimeoutSeconds = 0
+  [int] $ComponentRenameTimeoutSeconds = 0,
+  [int] $FixedModuleBuildTimeoutSeconds = 180,
+  [int] $PlacedAssemblyBuildTimeoutSeconds = 600,
+  [int] $StructureInspectionTimeoutSeconds = 300,
+  [switch] $IncludeElectricalLockHardware
 )
 
 $ErrorActionPreference = 'Stop'
@@ -36,6 +40,15 @@ function Assert-File([string] $Path, [string] $Label) {
   if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
     throw "$Label was not found: $Path"
   }
+}
+
+function Resolve-FirstExistingFile([string[]] $Paths, [string] $Label) {
+  foreach ($path in @($Paths)) {
+    if (-not [string]::IsNullOrWhiteSpace($path) -and (Test-Path -LiteralPath $path -PathType Leaf)) {
+      return $path
+    }
+  }
+  throw "$Label was not found in any configured source path"
 }
 
 function Wait-File([string] $Path, [string] $Label, [int] $TimeoutSeconds = 180) {
@@ -151,12 +164,92 @@ function Read-Json([string] $Path) {
   return Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
 }
 
+function Wait-NoRunningSolidWorks(
+  [string] $Label,
+  [int] $TimeoutSeconds = 0
+) {
+  $deadline = (Get-Date).AddSeconds([Math]::Max(0, $TimeoutSeconds))
+  do {
+    $processes = @(Get-Process SLDWORKS -ErrorAction SilentlyContinue)
+    if ($processes.Count -eq 0) {
+      return
+    }
+    if ((Get-Date) -ge $deadline) {
+      $processIds = ($processes | ForEach-Object { [string] $_.Id }) -join ', '
+      throw "$Label requires SolidWorks to be closed so the background worker cannot reuse or close an engineer's interactive session. Running SLDWORKS PID(s): $processIds"
+    }
+    Start-Sleep -Seconds 1
+  } while ($true)
+}
+
+function Stop-IsolatedSolidWorksSessionFromBuildJson([string] $BuildJsonPath, [string] $Label) {
+  if (-not (Test-Path -LiteralPath $BuildJsonPath -PathType Leaf)) {
+    return 'no SolidWorks session PID was recorded'
+  }
+
+  try {
+    $buildState = Read-Json $BuildJsonPath
+    $pidProperty = $buildState.PSObject.Properties['solidworks_process_id']
+    if ($null -eq $pidProperty -or [int] $pidProperty.Value -le 0) {
+      return 'no SolidWorks session PID was recorded'
+    }
+
+    $solidWorksProcessId = [int] $pidProperty.Value
+    $solidWorksProcess = Get-Process -Id $solidWorksProcessId -ErrorAction SilentlyContinue
+    if ($null -eq $solidWorksProcess) {
+      return "isolated SolidWorks PID $solidWorksProcessId already exited"
+    }
+    if ($solidWorksProcess.ProcessName -ne 'SLDWORKS') {
+      return "recorded PID $solidWorksProcessId is not SLDWORKS; it was not stopped"
+    }
+
+    Stop-Process -Id $solidWorksProcessId -Force -ErrorAction Stop
+    return "stopped isolated SolidWorks PID $solidWorksProcessId after $Label"
+  }
+  catch {
+    return "could not stop isolated SolidWorks session: $($_.Exception.Message)"
+  }
+}
+
+function Invoke-IsolatedPlacedAssemblyBuild(
+  [string] $ToolPath,
+  [string] $PlacementsPath,
+  [string] $AssemblyPath,
+  [string] $BuildJsonPath,
+  [string] $Label,
+  [int] $TimeoutSeconds
+) {
+  if (Test-Path -LiteralPath $BuildJsonPath -PathType Leaf) {
+    Remove-Item -LiteralPath $BuildJsonPath -Force -ErrorAction SilentlyContinue
+  }
+
+  try {
+    Wait-NoRunningSolidWorks "$Label isolated session start" 60
+    Invoke-ExternalWithTimeout $ToolPath @($PlacementsPath, $AssemblyPath, $BuildJsonPath, '--isolated-session') $Label $TimeoutSeconds
+  }
+  catch {
+    $cleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $BuildJsonPath $Label
+    throw "$Label failed in an isolated SolidWorks session. $($_.Exception.Message). Cleanup: $cleanupStatus. Build state: $BuildJsonPath"
+  }
+
+  Wait-File $BuildJsonPath "$Label build json" 30
+  $build = Read-Json $BuildJsonPath
+  if (-not $build.saved) {
+    $cleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $BuildJsonPath $Label
+    throw "$Label did not save the assembly. Cleanup: $cleanupStatus. Build state: $BuildJsonPath"
+  }
+  $cleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $BuildJsonPath $Label
+  Write-Host "[$Label session cleanup] $cleanupStatus"
+  return $build
+}
+
 function Invoke-StructureInspection(
   [string] $ToolPath,
   [string] $AssemblyPath,
   [string] $JsonPath,
   [string] $Label,
-  [string] $WaitLabel
+  [string] $WaitLabel,
+  [bool] $RequireRebuild = $false
 ) {
   $lastError = $null
   for ($attempt = 1; $attempt -le 2; $attempt++) {
@@ -165,19 +258,61 @@ function Invoke-StructureInspection(
     }
     $attemptLabel = if ($attempt -eq 1) { $Label } else { "$Label retry $attempt" }
     try {
-      Invoke-External $ToolPath @($AssemblyPath, $JsonPath) $attemptLabel
+      Wait-NoRunningSolidWorks "$attemptLabel session start" 60
+      $inspectArgs = @($AssemblyPath, $JsonPath, '--exit-session')
+      if ($RequireRebuild) {
+        $inspectArgs += '--require-rebuild'
+      }
+      Invoke-ExternalWithTimeout $ToolPath $inspectArgs $attemptLabel $StructureInspectionTimeoutSeconds
       Wait-File $JsonPath $WaitLabel 30
+      $cleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $JsonPath $attemptLabel
+      Write-Host "[$attemptLabel session cleanup] $cleanupStatus"
       return
     }
     catch {
       $lastError = $_
+      $cleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $JsonPath $attemptLabel
       if ($attempt -lt 2) {
-        Write-Warning "$Label did not produce a usable structure JSON; retrying once. $($_.Exception.Message)"
+        Write-Warning "$Label did not produce a usable structure JSON; retrying once. $($_.Exception.Message). Cleanup: $cleanupStatus"
         Start-Sleep -Seconds 2
       }
     }
   }
   throw $lastError
+}
+
+function Invoke-VerifiedV43DoorPanelFeatureRepair(
+  [string] $ToolPath,
+  [string] $GeneratedRoot,
+  [string] $JsonPath,
+  [string] $Label
+) {
+  $targetPartName = TextFromCodes @(0x50A8, 0x7269, 0x67DC, 0x95E8, 0x677F, 0x32, 0x2571, 0x31, 0x32, 0x5F, 0x57, 0x33, 0x30, 0x37, 0x2E, 0x53, 0x4C, 0x44, 0x50, 0x52, 0x54)
+  $targets = @(Get-ChildItem -LiteralPath $GeneratedRoot -File | Where-Object { $_.Name -eq $targetPartName })
+  if ($targets.Count -eq 0) {
+    $notPresent = [ordered] @{
+      schema = 'winnsen.locker16029.repair_verified_v43_door_panel_feature.v1'
+      status = 'known_part_not_present'
+      success = $true
+      generated_root = $GeneratedRoot
+      target_part_file_name = $targetPartName
+      geometry_unchanged = $true
+      final_rebuilt = $true
+    }
+    $notPresent | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $JsonPath -Encoding UTF8
+    return [pscustomobject] $notPresent
+  }
+  if ($targets.Count -ne 1) {
+    throw "$Label expected at most one known v43 2/12 door-panel part copy in $GeneratedRoot, found $($targets.Count)"
+  }
+
+  Invoke-External $ToolPath @($targets[0].FullName, $GeneratedRoot, $JsonPath) $Label
+  Wait-File $JsonPath "$Label result json" 600
+  $result = Read-Json $JsonPath
+  if (-not $result.success) {
+    throw "$Label failed: $JsonPath"
+  }
+  return $result
 }
 
 function Get-JsonInt($Object, [string] $Name, [int] $Fallback = 0) {
@@ -288,6 +423,49 @@ function Find-ScaffoldPart($Manifest, [string] $Key) {
   return $null
 }
 
+function Get-FrontFrameBoundaryCentersBySide($RulePlan) {
+  $result = @{
+    L = @()
+    R = @()
+  }
+  foreach ($column in @($RulePlan.columns)) {
+    $side = (Get-ObjectString $column 'side').ToUpperInvariant()
+    if (-not $result.ContainsKey($side)) {
+      $result[$side] = @()
+    }
+    $rows = @($column.rows)
+    if ($rows.Count -le 1) {
+      continue
+    }
+    for ($index = 0; $index -lt ($rows.Count - 1); $index += 1) {
+      $topY = Get-ObjectNumber $rows[$index] 'topYmm' -1.0
+      if ($topY -le 0) {
+        $rowCenter = Get-ObjectNumber $rows[$index] 'centerYmm' 0.0
+        $rowHeight = Get-ObjectNumber $rows[$index] 'heightMm' 0.0
+        $topY = $rowCenter + ($rowHeight / 2.0)
+      }
+      # Source 1000W front-frame horizontal rail center is 2.5 mm below the door boundary.
+      $result[$side] = @($result[$side]) + @([Math]::Round(($topY - 2.5), 3))
+    }
+  }
+  return $result
+}
+
+function Test-NearNumber([double] $Value, $Targets, [double] $Tolerance = 1.0) {
+  foreach ($target in @($Targets)) {
+    if ([Math]::Abs($Value - [double] $target) -le $Tolerance) {
+      return $true
+    }
+  }
+  return $false
+}
+
+function Get-FrontFrameHorizontalPlacementY([double] $TargetCenterY) {
+  # Imported split rails retain their original source-Y center. The current SW2020
+  # native body reaches the desired rail center when mirrored around source Y=1700.
+  return (2.0 * $TargetCenterY) - 1700.0
+}
+
 function New-PlacementLine([string] $Role, [string] $Path, [double] $TxMm, [double] $TyMm, [double] $TzMm, [string] $Rotation = '1,0,0,0,1,0,0,0,1') {
   $safeRole = $Role.Replace("`t", ' ')
   $safePath = $Path.Replace("`t", ' ')
@@ -358,7 +536,13 @@ function New-GeneratedNativeDoorModuleRecord(
   Assert-File $originalAssembly 'generated native door module assembly'
 
   $ratioSeparator = TextFromCodes @(0x2571)
-  $ratioLabel = "{0}{1}12" -f $UnitText, $ratioSeparator
+  $doorSourceTemplateStatus = Get-ObjectString $DoorSummary 'doorSourceTemplateStatus'
+  $ratioLabel = if ($doorSourceTemplateStatus -like 'source_14door_*') {
+    '14' + (TextFromCodes @(0x95e8, 0x6e90, 0x94a3, 0x91d1))
+  }
+  else {
+    "{0}{1}12" -f $UnitText, $ratioSeparator
+  }
   $sideLabel = if ($Handedness -eq 'right' -or $Side.ToUpperInvariant() -eq 'R') { TextFromCodes @(0x53f3) } else { TextFromCodes @(0x5de6) }
   $storageDoor = TextFromCodes @(0x50a8, 0x7269, 0x67dc, 0x95e8)
   $doorPanel = $storageDoor + (TextFromCodes @(0x677f))
@@ -403,6 +587,7 @@ function New-GeneratedNativeDoorModuleRecord(
     weldAssembly = $namedWeldAssembly
     sheetMetalPanelPart = $namedPanelPart
     sheetMetalStiffenerPart = $namedStiffenerPart
+    doorSourceTemplateStatus = $doorSourceTemplateStatus
     sheetMetalRuleBindingStatus = Get-ObjectString $DoorSummary 'sheetMetalRuleBindingStatus'
     sheetMetalRuleClassId = Get-ObjectString $DoorSummary 'sheetMetalRuleClassId'
     sheetMetalSourceDxf = Get-ObjectString $DoorSummary 'sheetMetalSourceDxf'
@@ -466,7 +651,12 @@ function Remove-CabinetTargetPlacementRows([string] $PlacementPath, $Targets) {
   return $removed
 }
 
-function Write-RestoredV43TemplatePlacementRows([string] $SourcePlacementPath, [string] $OutputPlacementPath, [string[]] $AdditionalRows) {
+function Write-RestoredV43TemplatePlacementRows(
+  [string] $SourcePlacementPath,
+  [string] $OutputPlacementPath,
+  [string[]] $AdditionalRows,
+  [bool] $IncludeElectricalLockHardware = $false
+) {
   $sourceLines = [IO.File]::ReadAllLines($SourcePlacementPath, [Text.Encoding]::UTF8)
   if ($sourceLines.Count -le 0) {
     throw "Template placement table is empty: $SourcePlacementPath"
@@ -479,9 +669,11 @@ function Write-RestoredV43TemplatePlacementRows([string] $SourcePlacementPath, [
       continue
     }
     $text = $line.ToLowerInvariant()
-    $isExcludedElectricalOrCabinetLock = $text.Contains('gold_electronics_module') -or
+    $isExcludedElectricalOrCabinetLock = (-not $IncludeElectricalLockHardware) -and (
+      $text.Contains('gold_electronics_module') -or
       $text.Contains('cabinet_lock_body') -or
       $text.Contains('electric_lock_body')
+    )
     if ($isExcludedElectricalOrCabinetLock) {
       $excluded += 1
       continue
@@ -502,6 +694,8 @@ function Write-RestoredV43TemplatePlacementRows([string] $SourcePlacementPath, [
 
 $root = Split-Path -Parent $PSScriptRoot
 $toolDir = Join-Path $root 'workers\solidworks_tools'
+$goldSourceRoot = 'C:\sw16029_standard_ascii'
+Wait-NoRunningSolidWorks 'SolidWorks 2020 full assembly background generation start'
 $rulePlanner = Join-Path $root 'tools\locker_16029_template_rules.mjs'
 $moduleTargetsTool = Join-Path $root 'tools\locker_16029_gold_module_targets.mjs'
 $structureFeedbackTool = Join-Path $root 'tools\locker_16029_structure_feedback.mjs'
@@ -601,7 +795,9 @@ if ($forceGeneratedDoorModulesWithoutElectricLock -or $missingTemplateDoorModule
         continue
       }
       $handedness = if ($side -eq 'R') { 'right' } else { 'left' }
-      $doorOutDir = Join-Path $evidenceDir ("generated_door_modules\{0}_{1}_12" -f $side, (Token $unitValue))
+      # Keep this path short: the SolidWorks 2020 JScript clone helper still fails
+      # on long output paths before it can write its result JSON.
+      $doorOutDir = Join-Path $OutputDir ("gd\{0}_{1}" -f $side, (Token $unitValue))
       $doorRequestId = "$RequestId-$side-$(Token $unitValue)"
       $doorWidthForGenerator = [double] $rulePlan.derived.doorWidthMm
       $doorHeightForGenerator = [double] $row.heightMm
@@ -741,6 +937,7 @@ Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_rename_assembly_components.ps1')) 'compile assembly component rename tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_remove_assembly_components_by_pattern.ps1')) 'compile assembly component remover tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_restore_door_lock_tongues.ps1')) 'compile door lock tongue restore tool'
+Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_repair_verified_v43_door_panel_feature.ps1')) 'compile verified v43 door-panel failed-feature repair tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_placed_components_module.ps1')) 'compile placed-components assembly tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_probe_part_bodies.ps1')) 'compile part body probe tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_import_step_save_native.ps1')) 'compile step importer'
@@ -751,9 +948,9 @@ $fixedModuleAssembly = Join-Path $fixedModuleDir 'body_fixed.SLDASM'
 $fixedModuleBuildJson = Join-Path $fixedModuleDir 'body_fixed_build.json'
 $placedTool = Join-Path $toolDir 'bin\BuildPlacedComponentsModule.exe'
 Assert-File $placedTool 'placed-components assembly tool'
-$parametricScaffoldDir = Join-Path $evidenceDir 'parametric_scaffold'
-$parametricScaffoldManifestJson = Join-Path $parametricScaffoldDir 'parametric_scaffold_manifest.json'
-$parametricScaffoldPlacementsTsv = Join-Path $parametricScaffoldDir 'parametric_scaffold_placements.tsv'
+$parametricScaffoldDir = Join-Path $evidenceDir 'source_sheetmetal'
+$parametricScaffoldManifestJson = Join-Path $parametricScaffoldDir 'source_sheetmetal_manifest.json'
+$parametricScaffoldPlacementsTsv = Join-Path $parametricScaffoldDir 'source_sheetmetal_placements.tsv'
 $parametricScaffoldStatus = 'not_generated'
 $parametricScaffoldNativePartCount = 0
 $parametricScaffoldPlacementCount = 0
@@ -761,11 +958,29 @@ $parametricScaffoldVisiblePlacementCount = 0
 $parametricScaffoldReplacedPlacementCount = 0
 $parametricScaffoldPlacementMode = if ($restoreVerifiedV43NativeAssemblyBase) { 'evidence_only_kept_out_of_restored_v43_visible_candidate' } else { 'replace_cabinet_targets_for_non_template_structure_revision' }
 $parametricInternalSheetMetalRepairEnabled = $true
+$sourceSheetMetalRequiredDatumKeys = @(
+  'lock_mounting_hole_datum_left',
+  'lock_mounting_hole_datum_right',
+  'lock_side_mounting_datum_strip_left',
+  'lock_side_mounting_datum_strip_right',
+  'leveling_foot',
+  'partition_stiffener_left_front',
+  'partition_stiffener_left_rear',
+  'partition_stiffener_right_front',
+  'partition_stiffener_right_rear',
+  'top_cover_weldment_panel_041',
+  'top_cover_weldment_panel_042',
+  'top_cover_weldment_panel_043',
+  'top_cover_weldment_panel_044',
+  'shelf_locating_foot_datum',
+  'front_frame_locating_notch_datum'
+)
 $placementRows = [System.Collections.Generic.List[string]]::new()
 $restoredV43TemplatePlacementsTsv = Join-Path $evidenceDir 'v43_restored_internal_sheetmetal_candidate_placements.tsv'
 $restoredV43TemplatePlacementCount = 0
 $restoredV43TemplateExcludedPlacementCount = 0
 $restoredV43NativeAssemblyBaseUsed = $false
+$hardwareRestoredPlacementRows = [System.Collections.Generic.List[string]]::new()
 
 if ($true) {
   $softwareInstallDirName = TextFromCodes @(0x8f6f, 0x4ef6, 0x5b89, 0x88c5, 0x5f55)
@@ -790,21 +1005,28 @@ if ($true) {
   Assert-File $importer 'step importer'
 
   $nativeByKey = @{}
-  foreach ($part in @($parametricScaffoldManifest.parts)) {
+  $parametricScaffoldParts = @($parametricScaffoldManifest.parts)
+  for ($partIndex = 0; $partIndex -lt $parametricScaffoldParts.Count; $partIndex++) {
+    $part = $parametricScaffoldParts[$partIndex]
     $stepPath = Get-ObjectString $part 'sourceStepPath'
     $nativePreferredPath = Get-ObjectString $part 'nativePreferredPath'
     $roundtripStepPath = Get-ObjectString $part 'roundtripStepPath'
     $importJson = Get-ObjectString $part 'importResultJson'
     Assert-File $stepPath "parametric scaffold STEP $($part.key)"
-    Invoke-External $importer @($stepPath, $nativePreferredPath, $roundtripStepPath, $importJson) "save parametric scaffold $($part.key) as SolidWorks 2020 native"
+    $importArgs = @($stepPath, $nativePreferredPath, $roundtripStepPath, $importJson)
+    if ($partIndex -eq ($parametricScaffoldParts.Count - 1)) {
+      $importArgs += '--exit-session'
+    }
+    Invoke-External $importer $importArgs "save parametric scaffold $($part.key) as SolidWorks 2020 native"
     Wait-File $importJson "parametric scaffold import result $($part.key)"
     $importResult = Read-Json $importJson
     $nativePath = Get-ObjectString $importResult 'nativePath'
     Assert-File $nativePath "parametric scaffold native $($part.key)"
     $nativeByKey[[string] $part.key] = $nativePath
   }
+  Wait-NoRunningSolidWorks 'SolidWorks STEP import session shutdown' 60
   $parametricScaffoldNativePartCount = $nativeByKey.Count
-  $parametricSuffix = TextFromCodes @(0x53c2, 0x6570, 0x5316)
+  $parametricSuffix = TextFromCodes @(0x6E90, 0x94A3, 0x91D1)
   $namedNativeDir = Join-Path $parametricScaffoldDir 'native_named'
 
   $columnCenterBySide = @{}
@@ -815,6 +1037,7 @@ if ($true) {
       $columnCenterBySide[$side] = [double] $rows[0].centerXmm
     }
   }
+  $frontFrameBoundaryCentersBySide = Get-FrontFrameBoundaryCentersBySide $rulePlan
 
   if ($parametricInternalSheetMetalRepairEnabled -and ($replaceCabinetTargetsWithParametricScaffold -or $restoreVerifiedV43NativeAssemblyBase)) {
     foreach ($target in @($moduleTargets.targets)) {
@@ -847,6 +1070,53 @@ if ($true) {
     }
   }
 
+  foreach ($part in @($parametricScaffoldManifest.parts | Where-Object { ([string] $_.key) -like 'front_frame_weldment_body_*' })) {
+    $partKey = [string] $part.key
+    if (-not $nativeByKey.ContainsKey($partKey)) {
+      continue
+    }
+    $frontFrameBodyIndex = -1
+    if ($partKey -match '^front_frame_weldment_body_(\d+)$') {
+      $frontFrameBodyIndex = [int] $Matches[1]
+    }
+    if ($frontFrameBodyIndex -in @(5, 11)) {
+      # The center front-frame vertical dividers are fixed-width source parts.
+      # Do not use the width-scaled split bodies; they land inside the maintenance strip.
+      continue
+    }
+    $placement = $part.defaultPlacement
+    $tx = Get-ObjectNumber $placement 'txMm' 0
+    $ty = Get-ObjectNumber $placement 'tyMm' 0
+    $tz = Get-ObjectNumber $placement 'tzMm' 0
+    if (($frontFrameBodyIndex -ge 6 -and $frontFrameBodyIndex -le 10) -or ($frontFrameBodyIndex -ge 12 -and $frontFrameBodyIndex -le 16)) {
+      $frameSide = if ($frontFrameBodyIndex -le 10) { 'L' } else { 'R' }
+      $wantedCenters = @()
+      if ($frontFrameBoundaryCentersBySide.ContainsKey($frameSide)) {
+        $wantedCenters = @($frontFrameBoundaryCentersBySide[$frameSide])
+      }
+      if (-not (Test-NearNumber $ty $wantedCenters 1.0)) {
+        continue
+      }
+      $ty = Get-FrontFrameHorizontalPlacementY $ty
+    }
+    $role = [string] $part.role
+    $nativePathForRole = Use-NamedNativePart $nativeByKey[$partKey] $role $namedNativeDir
+    $placementRows.Add((New-PlacementLine $role $nativePathForRole $tx $ty $tz)) | Out-Null
+  }
+
+  foreach ($part in @($parametricScaffoldManifest.parts | Where-Object { ([string] $_.key) -like 'top_cover_weldment_panel_*' })) {
+    $partKey = [string] $part.key
+    if (-not $nativeByKey.ContainsKey($partKey)) {
+      continue
+    }
+    $placement = $part.defaultPlacement
+    $role = [string] $part.role
+    $nativePathForRole = Use-NamedNativePart $nativeByKey[$partKey] $role $namedNativeDir
+    $placementRows.Add((New-PlacementLine $role $nativePathForRole (Get-ObjectNumber $placement 'txMm' 0) (Get-ObjectNumber $placement 'tyMm' 0) (Get-ObjectNumber $placement 'tzMm' 0))) | Out-Null
+  }
+
+  $lockDatumAbsX = Get-ObjectNumber $rulePlan.derived 'lockBodyAbsXmm' 55.2
+  $lockDatumZ = Get-ObjectNumber $rulePlan.derived 'lockBodyZmm' -101.5
   foreach ($column in @($rulePlan.columns)) {
     $side = ([string] $column.side).ToUpperInvariant()
     $partKey = if ($side -eq 'R') { 'lock_mounting_hole_datum_right' } else { 'lock_mounting_hole_datum_left' }
@@ -854,15 +1124,28 @@ if ($true) {
     if ($null -eq $part -or -not $nativeByKey.ContainsKey($partKey)) {
       continue
     }
-    $nativePathForRole = Use-NamedNativePart $nativeByKey[$partKey] ([string] $part.role) $namedNativeDir
+    $nativePathForRoleBase = Use-NamedNativePart $nativeByKey[$partKey] ([string] $part.role) $namedNativeDir
     foreach ($row in @($column.rows)) {
-      $rowIndex = [int] $row.index
-      $rowY = [double] $row.centerYmm
-      $rowX = if ($side -eq 'R') { [Math]::Abs([double] $rulePlan.derived.lockBodyAbsXmm) } else { -[Math]::Abs([double] $rulePlan.derived.lockBodyAbsXmm) }
-      $rowZ = [double] $rulePlan.derived.lockBodyZmm
-      $role = "{0}_{1}_row{2}" -f ([string] $part.role), $side, ([string] $rowIndex).PadLeft(2, '0')
-      $placementRows.Add((New-PlacementLine $role $nativePathForRole $rowX $rowY $rowZ)) | Out-Null
+      $rowIndex = Get-ObjectNumber $row 'index' 0
+      $rowY = Get-ObjectNumber $row 'centerYmm' ($CabinetHeightMm / 2.0)
+      $rowX = if ($side -eq 'R') { [Math]::Abs($lockDatumAbsX) } else { -[Math]::Abs($lockDatumAbsX) }
+      $role = "{0}_{1}_row{2}" -f ([string] $part.role), $side, (Invariant $rowIndex)
+      $placementRows.Add((New-PlacementLine $role $nativePathForRoleBase $rowX $rowY $lockDatumZ)) | Out-Null
     }
+  }
+
+  foreach ($partKey in @(
+    'lock_side_mounting_datum_strip_left',
+    'lock_side_mounting_datum_strip_right'
+  )) {
+    $part = Find-ScaffoldPart $parametricScaffoldManifest $partKey
+    if ($null -eq $part -or -not $nativeByKey.ContainsKey($partKey)) {
+      continue
+    }
+    $placement = $part.defaultPlacement
+    $role = [string] $part.role
+    $nativePathForRole = Use-NamedNativePart $nativeByKey[$partKey] $role $namedNativeDir
+    $placementRows.Add((New-PlacementLine $role $nativePathForRole (Get-ObjectNumber $placement 'txMm' 0) (Get-ObjectNumber $placement 'tyMm' 0) (Get-ObjectNumber $placement 'tzMm' 0))) | Out-Null
   }
 
   foreach ($partKey in @(
@@ -883,32 +1166,32 @@ if ($true) {
 
   $shelfLocatorPart = Find-ScaffoldPart $parametricScaffoldManifest 'shelf_locating_foot_datum'
   $frontNotchPart = Find-ScaffoldPart $parametricScaffoldManifest 'front_frame_locating_notch_datum'
-  foreach ($column in @($rulePlan.columns)) {
-    $side = ([string] $column.side).ToUpperInvariant()
-    if ($side -ne 'R') {
-      $side = 'L'
+  foreach ($target in @($moduleTargets.targets)) {
+    $bindingType = Get-ObjectString $target.binding 'type'
+    if ($bindingType -ne 'row_boundary_shelf') {
+      continue
     }
-    $rows = @($column.rows)
+    $side = (Get-ObjectString $target.binding 'side').ToUpperInvariant()
+    $boundaryY = Get-ObjectNumber $target.binding 'boundaryYmm' (Get-ObjectNumber $target.placement 'targetTyMm' 0)
     $columnX = if ($columnCenterBySide.ContainsKey($side)) { [double] $columnCenterBySide[$side] } else { 0.0 }
-    foreach ($row in @($rows | Select-Object -First ([Math]::Max(0, $rows.Count - 1)))) {
-      $boundaryY = [double] $row.topYmm
-      if ($null -ne $shelfLocatorPart -and $nativeByKey.ContainsKey('shelf_locating_foot_datum')) {
-        $role = "{0}_{1}_after_row{2}" -f ([string] $shelfLocatorPart.role), $side, ([string] ([int] $row.index)).PadLeft(2, '0')
-        $nativePathForRole = Use-NamedNativePart $nativeByKey['shelf_locating_foot_datum'] ([string] $shelfLocatorPart.role) $namedNativeDir
-        $placementRows.Add((New-PlacementLine $role $nativePathForRole $columnX $boundaryY -30.0)) | Out-Null
-      }
-      if ($null -ne $frontNotchPart -and $nativeByKey.ContainsKey('front_frame_locating_notch_datum')) {
-        $role = "{0}_{1}_after_row{2}" -f ([string] $frontNotchPart.role), $side, ([string] ([int] $row.index)).PadLeft(2, '0')
-        $nativePathForRole = Use-NamedNativePart $nativeByKey['front_frame_locating_notch_datum'] ([string] $frontNotchPart.role) $namedNativeDir
-        $placementRows.Add((New-PlacementLine $role $nativePathForRole $columnX $boundaryY -12.0)) | Out-Null
-      }
+
+    if ($null -ne $shelfLocatorPart -and $nativeByKey.ContainsKey('shelf_locating_foot_datum')) {
+      $role = "{0}_{1}_Y{2}" -f ([string] $shelfLocatorPart.role), $side, (Token $boundaryY)
+      $nativePathForRole = Use-NamedNativePart $nativeByKey['shelf_locating_foot_datum'] $role $namedNativeDir
+      $placementRows.Add((New-PlacementLine $role $nativePathForRole $columnX $boundaryY -30.0)) | Out-Null
+    }
+
+    if ($null -ne $frontNotchPart -and $nativeByKey.ContainsKey('front_frame_locating_notch_datum')) {
+      $role = "{0}_{1}_Y{2}" -f ([string] $frontNotchPart.role), $side, (Token $boundaryY)
+      $nativePathForRole = Use-NamedNativePart $nativeByKey['front_frame_locating_notch_datum'] $role $namedNativeDir
+      $placementRows.Add((New-PlacementLine $role $nativePathForRole $columnX $boundaryY -12.0)) | Out-Null
     }
   }
 
-  $footPart = Find-ScaffoldPart $parametricScaffoldManifest 'leveling_foot'
-  if ($null -ne $footPart -and $nativeByKey.ContainsKey('leveling_foot')) {
-    $footRole = [string] $footPart.role
-    $footNativePath = Use-NamedNativePart $nativeByKey['leveling_foot'] $footRole $namedNativeDir
+  $sourceLevelingFoot = Join-Path $goldSourceRoot ((TextFromCodes @(0x8C03,0x6574,0x811A,0x20,0x4D,0x31,0x32,0x58,0x36,0x30,0x28,0x6A21,0x578B,0x29)) + '.SLDPRT')
+  if (Test-Path -LiteralPath $sourceLevelingFoot -PathType Leaf) {
+    $footRole = TextFromCodes @(0x8C03,0x8282,0x811A)
+    $footNativePath = $sourceLevelingFoot
     $footPlacements = @(
       @('LF', (-$CabinetWidthMm / 2.0 + 55.0), -17.0, -55.0),
       @('RF', ($CabinetWidthMm / 2.0 - 55.0), -17.0, -55.0),
@@ -917,6 +1200,89 @@ if ($true) {
     )
     foreach ($foot in $footPlacements) {
       $placementRows.Add((New-PlacementLine ("{0}_{1}" -f $footRole, $foot[0]) $footNativePath ([double] $foot[1]) ([double] $foot[2]) ([double] $foot[3]))) | Out-Null
+    }
+  }
+
+  $desktopReferenceRoot = Join-Path $root 'workers\analysis\desktop_reference'
+  $goldOriginalMaterialRoot = @(Get-ChildItem -LiteralPath $desktopReferenceRoot -Directory | Where-Object { $_.Name -like '16029_*_U*_20260526' } | Select-Object -First 1 -ExpandProperty FullName)
+  if (-not $goldOriginalMaterialRoot) {
+    throw "1000W source reference folder was not found under $desktopReferenceRoot"
+  }
+  $goldOriginalEngineeringRoot = Join-Path $goldOriginalMaterialRoot (TextFromCodes @(0x31,0x2E,0x5DE5,0x7A0B,0x56FE))
+  if ($restoreVerifiedV43NativeAssemblyBase) {
+    $mechanicalExteriorRowsTarget = $hardwareRestoredPlacementRows
+  } else {
+    $mechanicalExteriorRowsTarget = $placementRows
+  }
+  $frontFrameVerticalLeftName = (TextFromCodes @(0x95E8,0x6846,0x20,0x7AD6,0x9694,0x677F,0x4C)) + '.sldprt'
+  $frontFrameVerticalRightName = (TextFromCodes @(0x95E8,0x6846,0x20,0x7AD6,0x9694,0x677F,0x52)) + '.SLDPRT'
+  $frontFrameVerticalLeftSource = Resolve-FirstExistingFile @(
+    (Join-Path $goldOriginalEngineeringRoot $frontFrameVerticalLeftName)
+  ) '1000W source left center front-frame vertical divider'
+  $frontFrameVerticalRightSource = Resolve-FirstExistingFile @(
+    (Join-Path $goldOriginalEngineeringRoot $frontFrameVerticalRightName)
+  ) '1000W source right center front-frame vertical divider'
+  $frontFrameVerticalBaseRole = TextFromCodes @(0x95E8,0x6846,0x7AD6,0x9694,0x677F,0x5F,0x6E90,0x94A3,0x91D1,0x5F,0x56FA,0x5B9A,0x63A5,0x53E3)
+  if ($frontFrameVerticalLeftSource) {
+    $mechanicalExteriorRowsTarget.Add((New-PlacementLine ($frontFrameVerticalBaseRole + '_L') $frontFrameVerticalLeftSource 0 0 0)) | Out-Null
+  }
+  if ($frontFrameVerticalRightSource) {
+    $mechanicalExteriorRowsTarget.Add((New-PlacementLine ($frontFrameVerticalBaseRole + '_R') $frontFrameVerticalRightSource 0 0 0)) | Out-Null
+  }
+  $maintenanceDoorBaseName = TextFromCodes @(0x5E94,0x6025,0x7EF4,0x62A4,0x95E8)
+  $maintenanceDoorWeldName = $maintenanceDoorBaseName + (TextFromCodes @(0x710A,0x63A5)) + '.SLDASM'
+  $maintenanceDoorPartName = $maintenanceDoorBaseName + '.SLDPRT'
+  $maintenanceDoorRole = TextFromCodes @(0x9501,0x63A7,0x7EF4,0x62A4,0x6761,0x5F,0x6E90,0x94A3,0x91D1)
+  $maintenanceDoorWeldSource = Resolve-FirstExistingFile @(
+    (Join-Path $goldOriginalEngineeringRoot $maintenanceDoorWeldName),
+    (Join-Path $goldOriginalEngineeringRoot $maintenanceDoorPartName)
+  ) '1000W source center lock-control maintenance door weldment'
+  if ($maintenanceDoorWeldSource) {
+    # 1000W source probe: emergency maintenance door body is X=68, Y=1834.2, Z=18 with local Y [-921.7, 912.5].
+    $mechanicalExteriorRowsTarget.Add((New-PlacementLine $maintenanceDoorRole $maintenanceDoorWeldSource 0 948.1 -16.0)) | Out-Null
+  }
+
+  if ($IncludeElectricalLockHardware) {
+    if ($restoreVerifiedV43NativeAssemblyBase) {
+      $hardwareRowsTarget = $hardwareRestoredPlacementRows
+    } else {
+      $hardwareRowsTarget = $placementRows
+    }
+    $hardwarePackSource = Join-Path $root 'workers\generated_models\review_generation_requests\20260602T022002-2d0862\sw2020_full_900W_parametric_template\pack_and_go'
+    $electricalModuleSourcePart = Resolve-FirstExistingFile @(
+      (Join-Path $hardwarePackSource ((TextFromCodes @(0x7535,0x63A7,0x6A21,0x5757)) + '.SLDPRT')),
+      (Join-Path $templateRoot 'gold_shell\candidate_16029_740W_gold_electronics_module_v37.SLDPRT')
+    ) 'top electrical module and lockable-cover source part'
+    $electricLockBodySourcePart = Resolve-FirstExistingFile @(
+      (Join-Path $templateRoot 'sw2020_gold_compat_parts\electric_lock_body_zja_s500_from_23035_18door.SLDPRT'),
+      (Join-Path $goldSourceRoot ((TextFromCodes @(0x7535,0x63A7,0x9501,0x5A,0x4A,0x41,0x2D,0x53,0x35,0x30,0x30)) + '.SLDPRT'))
+    ) 'cabinet-side electric lock body source part'
+    $lockControlStripLeftSourcePart = Resolve-FirstExistingFile @(
+      (Join-Path $hardwarePackSource ((TextFromCodes @(0x9501,0x63A7,0x6761,0x5DE6)) + '.SLDPRT')),
+      (Join-Path $parametricScaffoldDir 'native_named\锁控条左.SLDPRT')
+    ) 'left lock-control strip source part'
+    $lockControlStripRightSourcePart = Resolve-FirstExistingFile @(
+      (Join-Path $hardwarePackSource ((TextFromCodes @(0x9501,0x63A7,0x6761,0x53F3)) + '.SLDPRT')),
+      (Join-Path $parametricScaffoldDir 'native_named\锁控条右.SLDPRT')
+    ) 'right lock-control strip source part'
+
+    $lockControlY = $CabinetHeightMm / 2.0
+    $hardwareRowsTarget.Add((New-PlacementLine (TextFromCodes @(0x9501,0x63A7,0x6761,0x5DE6)) $lockControlStripLeftSourcePart (-[Math]::Abs($lockDatumAbsX)) $lockControlY $lockDatumZ)) | Out-Null
+    $hardwareRowsTarget.Add((New-PlacementLine (TextFromCodes @(0x9501,0x63A7,0x6761,0x53F3)) $lockControlStripRightSourcePart ([Math]::Abs($lockDatumAbsX)) $lockControlY $lockDatumZ)) | Out-Null
+
+    if (-not $restoreVerifiedV43NativeAssemblyBase) {
+      $hardwareRowsTarget.Add((New-PlacementLine (TextFromCodes @(0x7535,0x63A7,0x6A21,0x5757)) $electricalModuleSourcePart 0 0 0)) | Out-Null
+      foreach ($column in @($rulePlan.columns)) {
+        $side = ([string] $column.side).ToUpperInvariant()
+        $rowX = if ($side -eq 'R') { [Math]::Abs($lockDatumAbsX) } else { -[Math]::Abs($lockDatumAbsX) }
+        foreach ($row in @($column.rows)) {
+          $rowIndex = Get-ObjectNumber $row 'index' 0
+          $rowY = Get-ObjectNumber $row 'centerYmm' ($CabinetHeightMm / 2.0)
+          $rowUnit = Get-ObjectNumber $row 'unit' 0
+          $role = "cabinet_lock_body_{0}_row{1}_{2}_12_hardware_restored" -f $side, ([string] $rowIndex).PadLeft(2, '0'), (Token $rowUnit)
+          $hardwareRowsTarget.Add((New-PlacementLine $role $electricLockBodySourcePart $rowX $rowY $lockDatumZ)) | Out-Null
+        }
+      }
     }
   }
 
@@ -929,22 +1295,17 @@ if ($true) {
     $parametricScaffoldVisiblePlacementCount = $placementRows.Count
   }
   $parametricScaffoldPlacementCount = $placementRows.Count
-  $parametricScaffoldStatus = 'generated_parametric_scaffold_needs_engineering_validation'
+  $parametricScaffoldStatus = if ($replaceCabinetTargetsWithParametricScaffold) { 'generated_source_sheetmetal_structure_revision_evidence' } else { 'generated_parametric_scaffold_needs_engineering_validation' }
 }
 
 if ($restoreVerifiedV43NativeAssemblyBase) {
-  $restorePlacementResult = Write-RestoredV43TemplatePlacementRows -SourcePlacementPath $sourcePlacements -OutputPlacementPath $restoredV43TemplatePlacementsTsv -AdditionalRows @()
+  $restorePlacementResult = Write-RestoredV43TemplatePlacementRows -SourcePlacementPath $sourcePlacements -OutputPlacementPath $restoredV43TemplatePlacementsTsv -AdditionalRows @($hardwareRestoredPlacementRows.ToArray()) -IncludeElectricalLockHardware ([bool] $IncludeElectricalLockHardware)
   $restoredV43TemplatePlacementCount = [int] $restorePlacementResult.placementCount
   $restoredV43TemplateExcludedPlacementCount = [int] $restorePlacementResult.excludedElectricalOrCabinetLockCount
   $restoredV43NativeAssemblyBaseUsed = $true
 }
 
-Invoke-External $placedTool @($moduleTargetsFixedPlacementsTsv, $fixedModuleAssembly, $fixedModuleBuildJson) 'build fixed cabinet source-reference module assembly'
-Wait-File $fixedModuleBuildJson 'fixed cabinet source-reference module build json'
-$fixedModuleBuild = Read-Json $fixedModuleBuildJson
-if (-not $fixedModuleBuild.saved) {
-  throw "Fixed cabinet source-reference module assembly was not saved: $fixedModuleBuildJson"
-}
+$fixedModuleBuild = Invoke-IsolatedPlacedAssemblyBuild $placedTool $moduleTargetsFixedPlacementsTsv $fixedModuleAssembly $fixedModuleBuildJson 'build fixed cabinet source-reference module assembly' $FixedModuleBuildTimeoutSeconds
 $fixedModuleStructureJson = Join-Path $fixedModuleDir 'body_fixed_structure.json'
 $inspectTool = Join-Path $toolDir 'bin\InspectAssemblyComponents.exe'
 Assert-File $inspectTool 'assembly structure inspection tool'
@@ -967,12 +1328,7 @@ $shelfCandidateStatus = 'not_generated_no_candidate_rows'
 $shelfCandidateTargetCount = Get-JsonInt $moduleTargets.derived 'shelfCandidateTargetCount' 0
 if ($shelfCandidateTargetCount -gt 0) {
   New-Item -ItemType Directory -Force -Path $shelfCandidateDir | Out-Null
-  Invoke-External $placedTool @($moduleTargetsShelfCandidatePlacementsTsv, $shelfCandidateAssembly, $shelfCandidateBuildJson) 'build shelf binding source-reference candidate assembly'
-  Wait-File $shelfCandidateBuildJson 'shelf binding candidate build json'
-  $shelfCandidateBuild = Read-Json $shelfCandidateBuildJson
-  if (-not $shelfCandidateBuild.saved) {
-    throw "Shelf binding candidate assembly was not saved: $shelfCandidateBuildJson"
-  }
+  $shelfCandidateBuild = Invoke-IsolatedPlacedAssemblyBuild $placedTool $moduleTargetsShelfCandidatePlacementsTsv $shelfCandidateAssembly $shelfCandidateBuildJson 'build shelf binding source-reference candidate assembly' $PlacedAssemblyBuildTimeoutSeconds
   Invoke-StructureInspection $inspectTool $shelfCandidateAssembly $shelfCandidateStructureJson 'inspect shelf binding source-reference candidate assembly' 'shelf binding candidate structure json'
   $shelfCandidateStructure = Read-Json $shelfCandidateStructureJson
   if (-not $shelfCandidateStructure.opened -or $shelfCandidateStructure.component_count -le 0) {
@@ -1000,12 +1356,7 @@ $cabinetCandidateBodyEnvelope = New-EmptyEnvelope
 $cabinetCandidateTargetCount = Get-JsonInt $moduleTargets.derived 'cabinetCandidateTargetCount' 0
 if ($cabinetCandidateTargetCount -gt 0) {
   New-Item -ItemType Directory -Force -Path $cabinetCandidateDir | Out-Null
-  Invoke-External $placedTool @($moduleTargetsCabinetCandidatePlacementsTsv, $cabinetCandidateAssembly, $cabinetCandidateBuildJson) 'build cabinet body source-reference candidate assembly'
-  Wait-File $cabinetCandidateBuildJson 'cabinet body candidate build json'
-  $cabinetCandidateBuild = Read-Json $cabinetCandidateBuildJson
-  if (-not $cabinetCandidateBuild.saved) {
-    throw "Cabinet body candidate assembly was not saved: $cabinetCandidateBuildJson"
-  }
+  $cabinetCandidateBuild = Invoke-IsolatedPlacedAssemblyBuild $placedTool $moduleTargetsCabinetCandidatePlacementsTsv $cabinetCandidateAssembly $cabinetCandidateBuildJson 'build cabinet body source-reference candidate assembly' $PlacedAssemblyBuildTimeoutSeconds
   Invoke-StructureInspection $inspectTool $cabinetCandidateAssembly $cabinetCandidateStructureJson 'inspect cabinet body source-reference candidate assembly' 'cabinet body candidate structure json'
   $cabinetCandidateStructure = Read-Json $cabinetCandidateStructureJson
   if (-not $cabinetCandidateStructure.opened -or $cabinetCandidateStructure.component_count -le 0) {
@@ -1043,6 +1394,12 @@ $fullCandidateDir = Join-Path $evidenceDir 'ref_full'
 $fullCandidateAssembly = Join-Path $fullCandidateDir 'full_candidate.SLDASM'
 $fullCandidateBuildJson = Join-Path $fullCandidateDir 'full_candidate_build.json'
 $fullCandidateStructureJson = Join-Path $fullCandidateDir 'full_candidate_structure.json'
+$frontFrameSplitDir = Join-Path $evidenceDir 'ref_front_frame_split'
+$frontFrameSplitAssembly = Join-Path $frontFrameSplitDir '门框焊接_源钣金_split.SLDASM'
+$frontFrameSplitBuildJson = Join-Path $frontFrameSplitDir 'front_frame_split_build.json'
+$frontFrameSplitPlacementsTsv = Join-Path $frontFrameSplitDir 'front_frame_split_placements.tsv'
+$fullCandidateNestedPlacementsTsv = Join-Path $fullCandidateDir 'full_candidate_nested_placements.tsv'
+$fullCandidateUsesNestedFrontFrame = $false
 $fullCandidateBuild = $null
 $fullCandidateStructure = $null
 $fullCandidateTopLevelCount = 0
@@ -1074,18 +1431,41 @@ $doorLockTongueRestoreAddedCount = 0
 $doorLockTongueRestoreSkippedExistingCount = 0
 $doorLockTongueRestoreFailedCount = 0
 $doorLockTongueSourcePart = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-740W-1917H-550D-L642-R246-ORDINARY-20260528\sw2020_gold_compat_parts\electric_lock_hook_zja_s500_SW2020_from_ascii_step.SLDPRT'
+$verifiedV43DoorPanelFeatureRepairTool = Join-Path $toolDir 'bin\RepairVerifiedV43DoorPanelFeature.exe'
+$verifiedV43DoorPanelFeatureRepairIntermediateJson = Join-Path $evidenceDir 'solidworks_2020_verified_v43_door_panel_feature_repair_intermediate.json'
+$verifiedV43DoorPanelFeatureRepairJson = Join-Path $evidenceDir 'solidworks_2020_verified_v43_door_panel_feature_repair.json'
+$verifiedV43DoorPanelFeatureRepairStatus = 'not_applicable'
+$verifiedV43DoorPanelFeatureRepairGeometryUnchanged = $false
+$verifiedV43DoorPanelFeatureRepairFinalRebuilt = $false
 $internalSheetMetalRepairSeedAssembly = Join-Path $root 'workers\generated_models\review_generation_requests\v43-int-v9-internal-sheetmetal-role-named-full\pack_and_go_after_hook_cleanup_no_electric_lock\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM'
 $internalSheetMetalRepairSeedUsed = $false
 $internalSheetMetalRepairSeedStatus = 'not_applicable'
 $fullCandidatePlacementSourceTsv = if ($restoreVerifiedV43NativeAssemblyBase) { $restoredV43TemplatePlacementsTsv } else { $moduleTargetsFullCandidatePlacementsTsv }
+if ((-not $restoreVerifiedV43NativeAssemblyBase) -and (Test-Path -LiteralPath $moduleTargetsFullCandidatePlacementsTsv -PathType Leaf)) {
+  $fullCandidatePlacementRows = @(Get-Content -LiteralPath $moduleTargetsFullCandidatePlacementsTsv -Encoding UTF8)
+  if ($fullCandidatePlacementRows.Count -gt 1) {
+    $fullCandidatePlacementHeader = $fullCandidatePlacementRows[0]
+    $frontFrameBodyRows = @($fullCandidatePlacementRows | Select-Object -Skip 1 | Where-Object { $_ -match '^门框焊接_源钣金_body' })
+    if ($frontFrameBodyRows.Count -gt 1) {
+      New-Item -ItemType Directory -Force -Path $frontFrameSplitDir | Out-Null
+      @($fullCandidatePlacementHeader) + $frontFrameBodyRows | Set-Content -LiteralPath $frontFrameSplitPlacementsTsv -Encoding UTF8
+      $frontFrameSplitBuild = Invoke-IsolatedPlacedAssemblyBuild $placedTool $frontFrameSplitPlacementsTsv $frontFrameSplitAssembly $frontFrameSplitBuildJson 'build front-frame source sheet-metal split subassembly' $PlacedAssemblyBuildTimeoutSeconds
+
+      New-Item -ItemType Directory -Force -Path $fullCandidateDir | Out-Null
+      $nonFrontFrameRows = @($fullCandidatePlacementRows | Select-Object -Skip 1 | Where-Object { $_ -notmatch '^门框焊接_源钣金_body' })
+      $frontFrameAssemblyRow = "门框焊接_源钣金_split`t$frontFrameSplitAssembly`t0`t0`t0`t1,0,0,0,1,0,0,0,1"
+      @($fullCandidatePlacementHeader) + $nonFrontFrameRows + $frontFrameAssemblyRow | Set-Content -LiteralPath $fullCandidateNestedPlacementsTsv -Encoding UTF8
+      $fullCandidatePlacementSourceTsv = $fullCandidateNestedPlacementsTsv
+      $fullCandidateUsesNestedFrontFrame = $true
+    }
+  }
+}
 if ($restoreVerifiedV43NativeAssemblyBase -or $cabinetCandidateTargetCount -gt 0) {
   New-Item -ItemType Directory -Force -Path $fullCandidateDir | Out-Null
   $fullCandidateBuild = $null
   for ($buildAttempt = 1; $buildAttempt -le 2; $buildAttempt++) {
     $buildLabel = if ($buildAttempt -eq 1) { 'build full assembly candidate' } else { 'build full assembly candidate retry' }
-    Invoke-External $placedTool @($fullCandidatePlacementSourceTsv, $fullCandidateAssembly, $fullCandidateBuildJson) $buildLabel
-    Wait-File $fullCandidateBuildJson 'full assembly candidate build json' 600
-    $fullCandidateBuild = Read-Json $fullCandidateBuildJson
+    $fullCandidateBuild = Invoke-IsolatedPlacedAssemblyBuild $placedTool $fullCandidatePlacementSourceTsv $fullCandidateAssembly $fullCandidateBuildJson $buildLabel $PlacedAssemblyBuildTimeoutSeconds
     if ($fullCandidateBuild.saved) {
       break
     }
@@ -1165,30 +1545,40 @@ if ($centeredBackSeamCanUseV43Geometry) {
   $centeredBackSeamCenterXMm = [double] (Get-ObjectNumber $backSheetMetalRepairBuild.right.afterBox 'xmin_mm' 0.5)
   $centeredBackSeamGapMm = $null
   $packSourceAssembly = $backSheetMetalRepairAssembly
-  $doorLockTongueRestoreEnabled = $true
-  $doorLockTongueRestoreTool = Join-Path $toolDir 'bin\RestoreDoorLockTongues.exe'
-  Assert-File $doorLockTongueRestoreTool 'door lock tongue restore tool'
-  Assert-File $doorLockTongueSourcePart 'frozen v43 mechanical door lock tongue source part'
-  $doorLockTongueRestoreDoorWidthMm = [double] (Get-ObjectNumber $rulePlan.derived 'doorWidthMm' 307.0)
-  if ([double]::IsNaN($doorLockTongueRestoreDoorWidthMm) -or [double]::IsInfinity($doorLockTongueRestoreDoorWidthMm) -or $doorLockTongueRestoreDoorWidthMm -le 0) {
-    $doorLockTongueRestoreDoorWidthMm = 307.0
+  Assert-File $verifiedV43DoorPanelFeatureRepairTool 'verified v43 door-panel failed-feature repair tool'
+  $verifiedV43DoorPanelFeatureRepairIntermediate = Invoke-VerifiedV43DoorPanelFeatureRepair `
+    $verifiedV43DoorPanelFeatureRepairTool `
+    $backSheetMetalRepairPackDir `
+    $verifiedV43DoorPanelFeatureRepairIntermediateJson `
+    'repair known failed v43 2/12 door-panel feature in intermediate generated copy'
+  if (-not $IncludeElectricalLockHardware) {
+    $doorLockTongueRestoreEnabled = $true
+    $doorLockTongueRestoreTool = Join-Path $toolDir 'bin\RestoreDoorLockTongues.exe'
+    Assert-File $doorLockTongueRestoreTool 'door lock tongue restore tool'
+    Assert-File $doorLockTongueSourcePart 'frozen v43 mechanical door lock tongue source part'
+    $doorLockTongueRestoreDoorWidthMm = [double] (Get-ObjectNumber $rulePlan.derived 'doorWidthMm' 307.0)
+    if ([double]::IsNaN($doorLockTongueRestoreDoorWidthMm) -or [double]::IsInfinity($doorLockTongueRestoreDoorWidthMm) -or $doorLockTongueRestoreDoorWidthMm -le 0) {
+      $doorLockTongueRestoreDoorWidthMm = 307.0
+    }
+    Invoke-External $doorLockTongueRestoreTool @(
+      $backSheetMetalRepairPackDir,
+      $doorLockTongueSourcePart,
+      $doorLockTongueRestoreJson,
+      (Invariant $doorLockTongueRestoreDoorWidthMm)
+    ) 'restore mechanical door lock tongue geometry from frozen v43 route'
+    Wait-File $doorLockTongueRestoreJson 'door lock tongue restore json' 600
+    $doorLockTongueRestore = Read-Json $doorLockTongueRestoreJson
+    if (-not $doorLockTongueRestore.success) {
+      throw "Door lock tongue restore failed: $doorLockTongueRestoreJson"
+    }
+    $doorLockTongueRestoreStatus = Get-ObjectString $doorLockTongueRestore 'status'
+    $doorLockTongueRestorePart = Get-ObjectString $doorLockTongueRestore 'lock_tongue_part'
+    $doorLockTongueRestoreAddedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'added_count' 0)
+    $doorLockTongueRestoreSkippedExistingCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'skipped_existing_count' 0)
+    $doorLockTongueRestoreFailedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'failed_count' 0)
+  } else {
+    $doorLockTongueRestoreStatus = 'skipped_hardware_restored_keeps_electric_lock_hooks'
   }
-  Invoke-External $doorLockTongueRestoreTool @(
-    $backSheetMetalRepairPackDir,
-    $doorLockTongueSourcePart,
-    $doorLockTongueRestoreJson,
-    (Invariant $doorLockTongueRestoreDoorWidthMm)
-  ) 'restore mechanical door lock tongue geometry from frozen v43 route'
-  Wait-File $doorLockTongueRestoreJson 'door lock tongue restore json' 600
-  $doorLockTongueRestore = Read-Json $doorLockTongueRestoreJson
-  if (-not $doorLockTongueRestore.success) {
-    throw "Door lock tongue restore failed: $doorLockTongueRestoreJson"
-  }
-  $doorLockTongueRestoreStatus = Get-ObjectString $doorLockTongueRestore 'status'
-  $doorLockTongueRestorePart = Get-ObjectString $doorLockTongueRestore 'lock_tongue_part'
-  $doorLockTongueRestoreAddedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'added_count' 0)
-  $doorLockTongueRestoreSkippedExistingCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'skipped_existing_count' 0)
-  $doorLockTongueRestoreFailedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'failed_count' 0)
 } elseif ($freezeVerifiedV43DoorRoute) {
   $centeredBackSeamStatus = 'skipped_non_v43_740w_geometry'
   $backSheetMetalRepairStatus = 'skipped_non_v43_740w_geometry'
@@ -1197,6 +1587,7 @@ if ($centeredBackSeamCanUseV43Geometry) {
 $packJson = Join-Path $evidenceDir 'solidworks_2020_pack_and_go_result.json'
 $packTool = Join-Path $toolDir 'bin\PackAndGoAssembly.exe'
 Assert-File $packTool 'pack-and-go assembly tool'
+Wait-NoRunningSolidWorks 'Pack-and-Go background session start' 60
 Invoke-External $packTool @($packSourceAssembly, $packDir, $packJson) 'pack SolidWorks 2020 full assembly'
 Wait-File $packJson 'pack-and-go result json'
 $packResult = Read-Json $packJson
@@ -1212,6 +1603,48 @@ if (-not (Test-Path -LiteralPath $primaryAssembly -PathType Leaf)) {
   Copy-Item -LiteralPath $packSourceAssembly -Destination $primaryAssembly -Force
 }
 
+if ($freezeVerifiedV43DoorRoute) {
+  Assert-File $verifiedV43DoorPanelFeatureRepairTool 'verified v43 door-panel failed-feature repair tool'
+  $verifiedV43DoorPanelFeatureRepair = Invoke-VerifiedV43DoorPanelFeatureRepair `
+    $verifiedV43DoorPanelFeatureRepairTool `
+    $packDir `
+    $verifiedV43DoorPanelFeatureRepairJson `
+    'repair known failed v43 2/12 door-panel feature in final Pack-and-Go copy'
+  $verifiedV43DoorPanelFeatureRepairStatus = Get-ObjectString $verifiedV43DoorPanelFeatureRepair 'status'
+  $verifiedV43DoorPanelFeatureRepairGeometryUnchanged = [bool] $verifiedV43DoorPanelFeatureRepair.geometry_unchanged
+  $verifiedV43DoorPanelFeatureRepairFinalRebuilt = [bool] $verifiedV43DoorPanelFeatureRepair.final_rebuilt
+}
+
+if (-not $IncludeElectricalLockHardware) {
+  $doorLockTongueRestoreEnabled = $true
+  $doorLockTongueRestoreTool = Join-Path $toolDir 'bin\RestoreDoorLockTongues.exe'
+  Assert-File $doorLockTongueRestoreTool 'door lock tongue restore tool'
+  Assert-File $doorLockTongueSourcePart 'frozen v43 mechanical door lock tongue source part'
+  $doorLockTongueRestoreDoorWidthMm = [double] (Get-ObjectNumber $rulePlan.derived 'doorWidthMm' 307.0)
+  if ([double]::IsNaN($doorLockTongueRestoreDoorWidthMm) -or [double]::IsInfinity($doorLockTongueRestoreDoorWidthMm) -or $doorLockTongueRestoreDoorWidthMm -le 0) {
+    $doorLockTongueRestoreDoorWidthMm = 307.0
+  }
+  Invoke-External $doorLockTongueRestoreTool @(
+    $packDir,
+    $doorLockTongueSourcePart,
+    $doorLockTongueRestoreJson,
+    (Invariant $doorLockTongueRestoreDoorWidthMm)
+  ) 'restore mechanical door lock tongue geometry in final Pack-and-Go'
+  Wait-File $doorLockTongueRestoreJson 'door lock tongue restore json' 600
+  $doorLockTongueRestore = Read-Json $doorLockTongueRestoreJson
+  if (-not $doorLockTongueRestore.success) {
+    throw "Door lock tongue restore failed in final Pack-and-Go: $doorLockTongueRestoreJson"
+  }
+  $doorLockTongueRestoreStatus = Get-ObjectString $doorLockTongueRestore 'status'
+  $doorLockTongueRestorePart = Get-ObjectString $doorLockTongueRestore 'lock_tongue_part'
+  $doorLockTongueRestoreAddedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'added_count' 0)
+  $doorLockTongueRestoreSkippedExistingCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'skipped_existing_count' 0)
+  $doorLockTongueRestoreFailedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'failed_count' 0)
+} else {
+  $doorLockTongueRestoreStatus = 'skipped_hardware_restored_keeps_electric_lock_hooks'
+  $doorLockTongueRestoreEnabled = $false
+}
+
 $electricLockHookCleanupJson = Join-Path $evidenceDir 'solidworks_2020_electric_lock_hook_cleanup.json'
 $removeComponentTool = Join-Path $toolDir 'bin\RemoveAssemblyComponentsByPattern.exe'
 $electricLockHookCleanup = New-Object System.Collections.Generic.List[object]
@@ -1219,7 +1652,8 @@ $electricLockHookCleanupRemovedCount = 0
 $electricLockHookCleanupRemainingCount = 0
 $electricLockHookCleanupDeletedOrphanFileCount = 0
 $electricLockHookCleanupPattern = 'electric_lock_hook|zja_s500|ZJA-S500'
-if ($freezeVerifiedV43DoorRoute) {
+$electricLockHookCleanupEnabled = $freezeVerifiedV43DoorRoute -and (-not $IncludeElectricalLockHardware)
+if ($electricLockHookCleanupEnabled) {
   Assert-File $removeComponentTool 'assembly component remover tool'
   $packAssemblies = @(
     Get-ChildItem -LiteralPath $packDir -Filter '*.SLDASM' -File |
@@ -1243,7 +1677,7 @@ if ($freezeVerifiedV43DoorRoute) {
 }
 $electricLockHookCleanupSummary = [ordered] @{
   schema = 'winnsen.locker16029.electric_lock_hook_cleanup.v1'
-  enabled = $freezeVerifiedV43DoorRoute
+  enabled = $electricLockHookCleanupEnabled
   pattern = $electricLockHookCleanupPattern
   assemblyCount = @($electricLockHookCleanup.ToArray()).Count
   removedCount = $electricLockHookCleanupRemovedCount
@@ -1299,7 +1733,10 @@ else {
 
 $structureRecordJson = Join-Path $evidenceDir 'solidworks_2020_structure_record.json'
 Assert-File $inspectTool 'assembly structure inspection tool'
-Invoke-StructureInspection $inspectTool $primaryAssembly $structureRecordJson 'inspect Pack-and-Go SolidWorks 2020 assembly structure' 'SolidWorks 2020 structure record json'
+$packPostProcessCleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $packJson 'Pack-and-Go post-processing'
+Write-Host "[Pack-and-Go post-processing session cleanup] $packPostProcessCleanupStatus"
+Wait-NoRunningSolidWorks 'Pack-and-Go post-processing session shutdown' 60
+Invoke-StructureInspection $inspectTool $primaryAssembly $structureRecordJson 'inspect Pack-and-Go SolidWorks 2020 assembly structure' 'SolidWorks 2020 structure record json' $true
 $structureRecord = Read-Json $structureRecordJson
 if (-not $structureRecord.opened -or $structureRecord.component_count -le 0) {
   throw "SolidWorks structure inspection did not produce usable component data: $structureRecordJson"
@@ -1314,12 +1751,16 @@ $structureRecordTopLevelCount = @($structureRecord.components | Where-Object { $
 $structureRecordMaxDepth = ($structureRecord.components.depth | Measure-Object -Maximum).Maximum
 
 $goldStructureGateJson = Join-Path $evidenceDir 'gold_source_structure_gate.json'
-Invoke-External $NodeExe @(
+$goldStructureGateArgs = @(
   $goldStructureGateTool,
   '--candidate', $structureRecordJson,
   '--expected-door-count', ([string] $DoorCount),
   '--out', $goldStructureGateJson
-) 'analyze Pack-and-Go assembly against 1000W gold-source structure gate' @(0, 1)
+)
+if ($IncludeElectricalLockHardware) {
+  $goldStructureGateArgs += @('--allow-electrical-lock-hardware', 'true')
+}
+Invoke-External $NodeExe $goldStructureGateArgs 'analyze Pack-and-Go assembly against 1000W gold-source structure gate' @(0, 1)
 Wait-File $goldStructureGateJson '1000W gold-source structure gate json'
 $goldStructureGate = Read-Json $goldStructureGateJson
 $goldStructureGateStatus = [string] $goldStructureGate.status
@@ -1327,17 +1768,23 @@ $goldStructureGateIssueCount = Get-JsonInt $goldStructureGate.summary 'issueCoun
 $goldStructureGateP0Count = Get-JsonInt $goldStructureGate.summary 'p0Count' 0
 $goldStructureGateP1Count = Get-JsonInt $goldStructureGate.summary 'p1Count' 0
 $goldStructureGateWarningCount = Get-JsonInt $goldStructureGate.summary 'warningCount' 0
+$goldStructureGateVisibleCabinetBodyBoxScaffoldCount = Get-JsonInt $goldStructureGate.summary 'visibleCabinetBodyBoxScaffoldCount' 0
+$goldStructureGateGeneratedDoorPanelBoxEnvelopeCount = Get-JsonInt $goldStructureGate.summary 'generatedDoorPanelBoxEnvelopeCount' 0
 $electricalOrElectricLockComponentCount = Get-JsonInt $goldStructureGate.summary 'electricalOrElectricLockComponentCount' 0
 $doorLockTongueCount = Get-JsonInt $goldStructureGate.summary 'doorLockTongueCount' 0
 
 $structureFeedbackJson = Join-Path $evidenceDir 'structure_feedback.json'
-Invoke-External $NodeExe @(
+$structureFeedbackArgs = @(
   $structureFeedbackTool,
   '--plan', $planJson,
   '--structure', $structureRecordJson,
   '--module-targets', $moduleTargetsJson,
   '--out', $structureFeedbackJson
-) 'analyze SolidWorks 2020 structure against gold-source feedback'
+)
+if ($IncludeElectricalLockHardware) {
+  $structureFeedbackArgs += @('--allow-electrical-lock-hardware', 'true')
+}
+Invoke-External $NodeExe $structureFeedbackArgs 'analyze SolidWorks 2020 structure against gold-source feedback'
 Wait-File $structureFeedbackJson 'SolidWorks 2020 structure feedback json'
 $structureFeedback = Read-Json $structureFeedbackJson
 $componentRenameFallbackCount = @($componentRename.renames).Count
@@ -1348,10 +1795,16 @@ $structureFeedbackIssueCount = Get-JsonInt $structureFeedback.derived 'issueCoun
 $structureFeedbackP0Count = Get-JsonInt $structureFeedback.derived 'p0Count' 0
 $structureFeedbackP1Count = Get-JsonInt $structureFeedback.derived 'p1Count' 0
 $structureFeedbackP2Count = Get-JsonInt $structureFeedback.derived 'p2Count' 0
+$structureFeedbackVisibleCabinetBodyBoxScaffoldCount = Get-JsonInt $structureFeedback.derived 'visibleCabinetBodyBoxScaffoldCount' 0
+$structureFeedbackGeneratedDoorPanelBoxEnvelopeCount = Get-JsonInt $structureFeedback.derived 'generatedDoorPanelBoxEnvelopeCount' 0
+$visibleCabinetBodyBoxScaffoldCount = [Math]::Max($goldStructureGateVisibleCabinetBodyBoxScaffoldCount, $structureFeedbackVisibleCabinetBodyBoxScaffoldCount)
+$generatedDoorPanelBoxEnvelopeCount = [Math]::Max($goldStructureGateGeneratedDoorPanelBoxEnvelopeCount, $structureFeedbackGeneratedDoorPanelBoxEnvelopeCount)
 $structureNeedsRevision = $structureFeedbackIssueCount -gt 0 -or $goldStructureGateIssueCount -gt 0
+$goldRuleDerivedSheetMetalVisibleModel = $parametricScaffoldStatus -eq 'generated_gold_rule_derived_sheetmetal_model' -and $parametricScaffoldVisiblePlacementCount -gt 0
 $parametricScaffoldNeedsEngineeringValidation = $parametricScaffoldStatus -eq 'generated_parametric_scaffold_needs_engineering_validation' -and $parametricScaffoldVisiblePlacementCount -gt 0
+$derivedSheetMetalModelReadyForReview = $goldRuleDerivedSheetMetalVisibleModel -and -not $structureNeedsRevision -and -not $nativeDoorModuleNeedsGeneration
 $componentNamingStatus = if ($structureFeedbackP2Count -gt 0) { 'still_flagged_by_structure_feedback' } else { 'clean_after_solidworks_reopen_inspection' }
-$handoffReadinessStatus = if ($structureNeedsRevision) { 'needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'needs_parametric_scaffold_engineering_validation' } else { 'sw2020_review_ready' }
+$handoffReadinessStatus = if ($structureNeedsRevision) { 'needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'needs_parametric_scaffold_engineering_validation' } elseif ($derivedSheetMetalModelReadyForReview) { 'sw2020_derived_sheetmetal_review_ready' } else { 'sw2020_review_ready' }
 
 Copy-Item -LiteralPath $sourceResult -Destination (Join-Path $evidenceDir 'template_build_result.json') -Force
 Copy-Item -LiteralPath $sourceComponents -Destination (Join-Path $evidenceDir 'template_components.json') -Force
@@ -1370,6 +1823,11 @@ $fullCandidateRouteLine = if ($restoreVerifiedV43NativeAssemblyBase) {
 } else {
   "- Full assembly candidate: $fullCandidateStatus, SolidWorks top-level candidate count: $fullCandidateTopLevelCount, component count: $fullCandidateComponentCount. Non-template structure revision uses cabinet weldment module candidates before Pack-and-Go."
 }
+$electricalHardwareModeLine = if ($IncludeElectricalLockHardware) {
+  "- Electrical-lock hardware restored mode: enabled. The visible candidate keeps/adds the top electrical module, lock-control strips, cabinet-side ZJA-S500 lock bodies, and electric-lock hook hardware from the v43/gold reference path for engineering review."
+} else {
+  "- Electrical-lock hardware restored mode: disabled. Cabinet-side electrical boards, electric-lock bodies, and electric-lock hooks are excluded from the default generated package; only holes, lock tongues, datums, and mounting interfaces are carried."
+}
 
 $readme = @(
   '# SolidWorks 2020 Full Assembly Review Package',
@@ -1386,22 +1844,26 @@ $readme = @(
   "- Native door module binding: $nativeDoorModuleBindingStatus, template binding: $templateDoorModuleBindingStatus, generated native door modules: $generatedNativeDoorModuleCount, unresolved ratio units: $missingNativeDoorModuleUnitsText.",
   "- Generated native door sheet-metal evidence: hole datums=$generatedNativeDoorModuleHoleDatumCount, active template cut features=$generatedNativeDoorModuleDetectedCutFeatureCount, suppressed template cut features=$generatedNativeDoorModuleSuppressedCutFeatureCount, status=$($generatedNativeDoorModuleHoleFeatureStatuses -join ', ').",
   "- Native door module generation policy: $nativeDoorModuleGenerationPolicy. The verified v43 door route is frozen for this internal sheet-metal repair pass; door sheet metal, door size, door sequence, and door mirroring are not regenerated.",
+  $electricalHardwareModeLine,
   "- 1000W gold-source sheet-metal rules: $($rulePlan.derived.sheetMetalRuleEvidence.status), flat width extra=$($rulePlan.derived.sheetMetalRuleEvidence.doorFlatWidthExtraMm), flat height extra=$($rulePlan.derived.sheetMetalRuleEvidence.doorFlatHeightExtraMm), hole status=$($rulePlan.derived.sheetMetalRuleEvidence.commonHoleStatus), SW cut-feature status=$($rulePlan.derived.sheetMetalRuleEvidence.solidWorksHoleFeatureStatus).",
   "- Rule boundary: $($rulePlan.boundary)",
   "- Gold-source module target count: $($moduleTargets.derived.targetCount), fixed cabinet modules: $($moduleTargets.derived.fixedCabinetModuleCount), fixed non-electrical accessories: $($moduleTargets.derived.fixedAccessoryModuleCount), shelves from row boundaries: $($moduleTargets.derived.shelfModuleCount), build-ready fixed modules: $($moduleTargets.derived.buildReadyTargetCount), source-reference fixed module top-level count: $fixedModuleTopLevelCount.",
   "- Shelf binding candidate: $shelfCandidateStatus, requested candidate shelves: $shelfCandidateTargetCount, SolidWorks top-level candidate count: $shelfCandidateTopLevelCount. This is evidence only, not engineer-ready geometry.",
   "- Cabinet body candidate: $cabinetCandidateStatus, requested cabinet candidate modules: $cabinetCandidateTargetCount, SolidWorks top-level candidate count: $cabinetCandidateTopLevelCount. This combines fixed cabinet weldments and row-boundary shelf candidates for validation.",
   "- Cabinet body candidate bbox check: $cabinetCandidateBboxStatus, shelf bbox count: $cabinetCandidateShelfBboxCount, fixed body bbox count: $cabinetCandidateFixedBodyBboxCount.",
-  "- Parametric internal sheet-metal repair: $parametricScaffoldStatus, enabled=$parametricInternalSheetMetalRepairEnabled, mode=$parametricScaffoldPlacementMode, native parts: $parametricScaffoldNativePartCount, evidence placements: $parametricScaffoldPlacementCount, visible candidate placements: $parametricScaffoldVisiblePlacementCount, replaced source-reference cabinet placements: $parametricScaffoldReplacedPlacementCount. FreeCAD is internal parameter evidence only; in restored v43 mode these scaffold parts are not packed into the engineer-visible full candidate. Cabinet-side electrical boards and electric-lock bodies are excluded from cabinet placements; final residual electrical/electric-lock component count from the gate is $electricalOrElectricLockComponentCount. Row-specific lock-hole datums, shelf locating feet/notches, inner vertical partition stiffeners, and leveling-foot interfaces preserve the required hole/interface positions as evidence.",
+  "- Parametric internal sheet-metal repair: $parametricScaffoldStatus, enabled=$parametricInternalSheetMetalRepairEnabled, mode=$parametricScaffoldPlacementMode, native parts: $parametricScaffoldNativePartCount, evidence placements: $parametricScaffoldPlacementCount, visible candidate placements: $parametricScaffoldVisiblePlacementCount, replaced source-reference cabinet placements: $parametricScaffoldReplacedPlacementCount. FreeCAD is internal parameter evidence only; in restored v43 mode these scaffold parts are not packed into the engineer-visible full candidate. Electrical hardware mode is $([bool] $IncludeElectricalLockHardware); final residual electrical/electric-lock component count from the gate is $electricalOrElectricLockComponentCount. Row-specific lock-hole datums, shelf locating feet/notches, inner vertical partition stiffeners, leveling-foot interfaces, and restored hardware datums preserve the required positions as evidence.",
   "- Restored v43 native base: used=$restoredV43NativeAssemblyBaseUsed, restored placement rows=$restoredV43TemplatePlacementCount, filtered top-level electrical/cabinet-lock rows=$restoredV43TemplateExcludedPlacementCount.",
   $fullCandidateRouteLine,
   "- Internal sheet-metal repair seed: $internalSheetMetalRepairSeedStatus, used=$internalSheetMetalRepairSeedUsed. This keeps the current v43 door route while preserving the repaired internal cabinet sheet-metal package.",
   "- Rear back seam repair: $backSheetMetalRepairStatus, enabled=$backSheetMetalRepairEnabled, repaired side-panel sheet-metal parts=$backSheetMetalRepairRepairedPartCount, center datum X=$centeredBackSeamCenterXMm mm. This trims the copied cabinet side-panel sheet metal; door sheet metal is not modified and no rear overlay panels are added.",
-  "- Mechanical door lock tongue restore: $doorLockTongueRestoreStatus, enabled=$doorLockTongueRestoreEnabled, added=$doorLockTongueRestoreAddedCount, skipped existing=$doorLockTongueRestoreSkippedExistingCount, failed=$doorLockTongueRestoreFailedCount. This restores the frozen v43 door-route lock tongue geometry without adding cabinet-side electric lock bodies, lock-control boards, or electric-lock hook named components.",
+  "- Verified v43 2/12 door-panel failed-feature repair: $verifiedV43DoorPanelFeatureRepairStatus, final rebuild=$verifiedV43DoorPanelFeatureRepairFinalRebuilt, body count/bounding box unchanged=$verifiedV43DoorPanelFeatureRepairGeometryUnchanged. The source v43 door file is not edited; only generated package copies are repaired.",
+  "- Mechanical door lock tongue restore: $doorLockTongueRestoreStatus, enabled=$doorLockTongueRestoreEnabled, added=$doorLockTongueRestoreAddedCount, skipped existing=$doorLockTongueRestoreSkippedExistingCount, failed=$doorLockTongueRestoreFailedCount. In default mode this restores the frozen v43 door-route lock tongue geometry without adding cabinet-side electric-lock hardware; in hardware-restored mode electric-lock hardware is intentionally retained for review.",
   "- Pack-and-Go Chinese save-name normalization: mapped $packAndGoChineseSaveNameMapCount document save names, SetDocumentSaveToNames=$packAndGoSetDocumentSaveToNames.",
-  "- Electric-lock hook package cleanup: removed=$electricLockHookCleanupRemovedCount, remaining=$electricLockHookCleanupRemainingCount, deleted orphan files=$electricLockHookCleanupDeletedOrphanFileCount. Door sheet-metal geometry is not regenerated or edited.",
+  "- Electric-lock hook package cleanup: enabled=$electricLockHookCleanupEnabled, removed=$electricLockHookCleanupRemovedCount, remaining=$electricLockHookCleanupRemainingCount, deleted orphan files=$electricLockHookCleanupDeletedOrphanFileCount. Door sheet-metal geometry is not regenerated or edited.",
   $componentNameLine,
   "- Engineer structure feedback: $($structureFeedback.status), P0=$structureFeedbackP0Count, P1=$structureFeedbackP1Count, P2=$structureFeedbackP2Count.",
+  "- Visible cabinet body box/scaffold count: $visibleCabinetBodyBoxScaffoldCount.",
+  "- Generated door panel box envelope count: $generatedDoorPanelBoxEnvelopeCount.",
   "- 1000W gold-source structure gate: $goldStructureGateStatus, issues: $goldStructureGateIssueCount, P0=$goldStructureGateP0Count, P1=$goldStructureGateP1Count, warnings=$goldStructureGateWarningCount.",
   "- Handoff readiness: $handoffReadinessStatus.",
   '- The historical direct per-part assembly generation route remains disabled because of transform reliability issues.',
@@ -1429,8 +1891,8 @@ $outputFiles = Get-ChildItem -LiteralPath $OutputDir -Recurse -File |
 
 $summaryJson = Join-Path $OutputDir 'solidworks_2020_full_assembly_generation_summary.json'
 $compatibleWithNativeTemplate = [bool] $rulePlan.derived.compatibleWithNativeTemplate
-$summaryStatus = if ($structureNeedsRevision) { 'solidworks_2020_full_assembly_needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'solidworks_2020_template_rule_needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'solidworks_2020_parametric_scaffold_needs_engineering_validation' } elseif ($compatibleWithNativeTemplate) { 'solidworks_2020_full_assembly_ready' } else { 'solidworks_2020_template_rule_package_ready' }
-$summaryResultKind = if ($structureNeedsRevision -or $parametricScaffoldNeedsEngineeringValidation) { 'solidworks2020_structure_revision_evidence_package' } elseif ($compatibleWithNativeTemplate) { 'solidworks2020_full_assembly_model' } else { 'solidworks2020_template_rule_full_assembly_package' }
+$summaryStatus = if ($structureNeedsRevision) { 'solidworks_2020_full_assembly_needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'solidworks_2020_template_rule_needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'solidworks_2020_parametric_scaffold_needs_engineering_validation' } elseif ($derivedSheetMetalModelReadyForReview) { 'solidworks_2020_derived_sheetmetal_model_ready_for_review' } elseif ($compatibleWithNativeTemplate) { 'solidworks_2020_full_assembly_ready' } else { 'solidworks_2020_template_rule_package_ready' }
+$summaryResultKind = if ($structureNeedsRevision -or $parametricScaffoldNeedsEngineeringValidation) { 'solidworks2020_structure_revision_evidence_package' } elseif ($derivedSheetMetalModelReadyForReview) { 'solidworks2020_derived_sheetmetal_full_assembly_model' } elseif ($compatibleWithNativeTemplate) { 'solidworks2020_full_assembly_model' } else { 'solidworks2020_template_rule_full_assembly_package' }
 $summary = [ordered] @{
   status = $summaryStatus
   resultKind = $summaryResultKind
@@ -1439,9 +1901,11 @@ $summary = [ordered] @{
   cadMainline = 'SolidWorks 2020'
   goldSourceReference = '1000W x 1917H x 550D'
   templateSeed = '740W / L642-R246 / v43'
+  includeElectricalLockHardware = [bool] $IncludeElectricalLockHardware
   electricalAndElectricLockComponentsExcluded = ($electricalOrElectricLockComponentCount -eq 0)
-  cabinetSideElectricalAndElectricLockComponentsExcluded = $true
+  cabinetSideElectricalAndElectricLockComponentsExcluded = (-not [bool] $IncludeElectricalLockHardware)
   lockInterfaceCarriedBy = 'lock_mounting_hole_datum'
+  sourceSheetMetalRequiredDatumKeys = $sourceSheetMetalRequiredDatumKeys
   doorLockTongueCount = $doorLockTongueCount
   goldSheetMetalRules = $goldSheetMetalRulesJson
   goldSheetMetalRuleEvidence = $rulePlan.derived.sheetMetalRuleEvidence
@@ -1462,6 +1926,7 @@ $summary = [ordered] @{
   freezeVerifiedV43DoorRoute = $freezeVerifiedV43DoorRoute
   restoreVerifiedV43NativeAssemblyBase = $restoreVerifiedV43NativeAssemblyBase
   generatedModulesRequiredForNoElectricLock = $forceGeneratedDoorModulesWithoutElectricLock
+  derivedSheetMetalModelReadyForReview = $derivedSheetMetalModelReadyForReview
   generatedNativeDoorModules = $generatedDoorModulesJson
   generatedNativeDoorModuleCount = $generatedNativeDoorModuleCount
   generatedNativeDoorModuleHoleDatumCount = $generatedNativeDoorModuleHoleDatumCount
@@ -1497,6 +1962,13 @@ $summary = [ordered] @{
   parametricScaffoldPlacementCount = $parametricScaffoldPlacementCount
   parametricScaffoldVisiblePlacementCount = $parametricScaffoldVisiblePlacementCount
   parametricScaffoldReplacedPlacementCount = $parametricScaffoldReplacedPlacementCount
+  visibleCabinetBodyBoxScaffoldGateApplied = $true
+  visibleCabinetBodyBoxScaffoldCount = $visibleCabinetBodyBoxScaffoldCount
+  goldStructureGateVisibleCabinetBodyBoxScaffoldCount = $goldStructureGateVisibleCabinetBodyBoxScaffoldCount
+  structureFeedbackVisibleCabinetBodyBoxScaffoldCount = $structureFeedbackVisibleCabinetBodyBoxScaffoldCount
+  generatedDoorPanelBoxEnvelopeCount = $generatedDoorPanelBoxEnvelopeCount
+  goldStructureGateGeneratedDoorPanelBoxEnvelopeCount = $goldStructureGateGeneratedDoorPanelBoxEnvelopeCount
+  structureFeedbackGeneratedDoorPanelBoxEnvelopeCount = $structureFeedbackGeneratedDoorPanelBoxEnvelopeCount
   restoredV43NativeAssemblyBaseUsed = $restoredV43NativeAssemblyBaseUsed
   restoredV43TemplatePlacementsTsv = $restoredV43TemplatePlacementsTsv
   restoredV43TemplatePlacementCount = $restoredV43TemplatePlacementCount
@@ -1530,6 +2002,10 @@ $summary = [ordered] @{
   fullAssemblyCandidateAssembly = $fullCandidateAssembly
   fullAssemblyCandidateBuild = $fullCandidateBuildJson
   fullAssemblyCandidateStructure = $fullCandidateStructureJson
+  fullAssemblyCandidateUsesNestedFrontFrame = $fullCandidateUsesNestedFrontFrame
+  frontFrameSplitAssembly = $frontFrameSplitAssembly
+  frontFrameSplitBuild = $frontFrameSplitBuildJson
+  frontFrameSplitPlacementsTsv = $frontFrameSplitPlacementsTsv
   fullAssemblyCandidateComponentCount = $fullCandidateComponentCount
   fullAssemblyCandidateTopLevelCount = $fullCandidateTopLevelCount
   centeredBackSeamEnabled = $centeredBackSeamEnabled
@@ -1553,6 +2029,11 @@ $summary = [ordered] @{
   doorLockTongueRestoreSkippedExistingCount = $doorLockTongueRestoreSkippedExistingCount
   doorLockTongueRestoreFailedCount = $doorLockTongueRestoreFailedCount
   doorLockTongueSourcePart = $doorLockTongueSourcePart
+  verifiedV43DoorPanelFeatureRepair = $verifiedV43DoorPanelFeatureRepairJson
+  verifiedV43DoorPanelFeatureRepairIntermediate = $verifiedV43DoorPanelFeatureRepairIntermediateJson
+  verifiedV43DoorPanelFeatureRepairStatus = $verifiedV43DoorPanelFeatureRepairStatus
+  verifiedV43DoorPanelFeatureRepairGeometryUnchanged = $verifiedV43DoorPanelFeatureRepairGeometryUnchanged
+  verifiedV43DoorPanelFeatureRepairFinalRebuilt = $verifiedV43DoorPanelFeatureRepairFinalRebuilt
   sourceAssembly = $sourceAssembly
   packSourceAssembly = $packSourceAssembly
   outputDir = $OutputDir

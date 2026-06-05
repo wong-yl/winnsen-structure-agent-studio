@@ -2,6 +2,11 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync 
 import { dirname, relative, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { planTemplateFullAssemblyRequest } from './locker_16029_template_rules.mjs'
+import {
+  controlled16029ReleaseState,
+  validateControlled16029GenerationRequest,
+  wantsElectricalLockHardwareRestore,
+} from './locker_16029_controlled_generation_policy.mjs'
 
 const ROOT = resolve('D:/Winnsen_Structure_Agent_Studio')
 const DATA_DIR = resolve(ROOT, 'data')
@@ -165,7 +170,9 @@ function candidateRequests(options) {
     if (options.force) return true
     if (item.downloadUrl || item.zipPath) return false
     const status = String(item.status || '')
-    return !status.includes('failed') && status !== 'cad_worker_payload_ready'
+    return status.includes('queued_by_user') &&
+      !status.includes('failed') &&
+      status !== 'cad_worker_payload_ready'
   })
   return pending.slice(0, options.limit)
 }
@@ -174,6 +181,30 @@ function shouldGenerateSolidWorksSingleDoor(request) {
   if (request.taskMode !== 'single_model') return false
   const doorType = String(request.doorType || 'ordinary_door_panel').toLowerCase()
   return doorType.includes('ordinary') || doorType.includes('storage') || doorType.includes('door')
+}
+
+function blockControlledGenerationPolicy(request, policy, options) {
+  if (options.dryRun) {
+    console.log(`${request.id}\t${request.status}\tblocked_controlled_generation_policy\t${policy.reason}`)
+    return request
+  }
+  return updateRequest(request.id, {
+    status: policy.status,
+    queueStartedAt: nowIso(),
+    queueFinishedAt: nowIso(),
+    downloadUrl: '',
+    zipPath: '',
+    resultKind: '',
+    outputFiles: [],
+    error: policy.reason,
+    controlledGenerationPolicy: {
+      status: policy.status,
+      reason: policy.reason,
+      normalized: policy.normalized,
+      message: policy.message,
+    },
+    message: policy.message,
+  })
 }
 
 function isFullAssemblyRequest(request) {
@@ -267,6 +298,12 @@ function processSolidWorksSingleDoorRequest(request, options) {
       primaryAssembly: summary.primaryAssembly,
       sheetMetalPanelPart: summary.sheetMetalPanelPart,
       sheetMetalStiffenerPart: summary.sheetMetalStiffenerPart,
+      controlledGenerationPolicy: request.controlledGenerationPolicy,
+      controlledReleaseState: controlled16029ReleaseState({
+        ...request,
+        downloadUrl: `/generation-download/${request.id}`,
+        resultKind: 'solidworks2020_sheetmetal_model',
+      }),
       outputFiles: Array.isArray(summary.outputFiles) ? summary.outputFiles : [],
       error: '',
       message: 'SolidWorks 2020 native sheet-metal door model generated. Download contains .SLDPRT, .SLDASM, STEP, and evidence JSON.',
@@ -301,7 +338,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     zipPath: '',
     outputFiles: [],
     error: '',
-    message: 'SolidWorks 2020 template-backed full assembly package is generating.',
+    message: 'SolidWorks 2020 template-backed full assembly package is generating. Keep SolidWorks closed until the task finishes so the background worker can use clean CAD sessions.',
   })
 
   try {
@@ -312,6 +349,9 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const doorCount = Math.max(1, Math.round(asNumber(request.doorCount, 6)))
     const doorWidth = asNumber(request.doorWidth, 0)
     const doorHeight = asNumber(request.doorHeight, 0)
+    const includeElectricalLockHardware = wantsElectricalLockHardwareRestore(request) ||
+      request.includeElectricalLockHardware === true ||
+      request.allowElectricalLockHardware === true
     const generator = resolve(ROOT, 'tools/generate_review_solidworks_full_assembly.ps1')
     if (!existsSync(generator)) throw new Error(`SolidWorks full assembly generator was not found: ${generator}`)
 
@@ -335,6 +375,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     ]
     if (doorWidth > 0) generatorArgs.push('-DoorWidthMm', String(doorWidth))
     if (doorHeight > 0) generatorArgs.push('-DoorHeightMm', String(doorHeight))
+    if (includeElectricalLockHardware) generatorArgs.push('-IncludeElectricalLockHardware')
 
     const output = runPowerShellScript(generator, generatorArgs, 'SolidWorks 2020 template full assembly generation')
     const summaryPath = lastSummaryPath(output, 'solidworks_2020_full_assembly_generation_summary.json')
@@ -348,6 +389,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       'solidworks_2020_template_rule_needs_native_door_generation',
       'solidworks_2020_full_assembly_needs_structure_revision',
       'solidworks_2020_parametric_scaffold_needs_engineering_validation',
+      'solidworks_2020_derived_sheetmetal_model_ready_for_review',
     ])
     if (!summary || !readyStatuses.has(summary.status)) {
       throw new Error(`SolidWorks full assembly generation did not report ready status: ${summaryPath}`)
@@ -366,6 +408,13 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const goldStructureGateP0Count = Number(summary.goldStructureGateP0Count || 0)
     const goldStructureGateP1Count = Number(summary.goldStructureGateP1Count || 0)
     const goldStructureGateWarningCount = Number(summary.goldStructureGateWarningCount || 0)
+    const visibleCabinetBodyBoxScaffoldGateApplied = summary.visibleCabinetBodyBoxScaffoldGateApplied === true
+    const visibleCabinetBodyBoxScaffoldCount = Number(summary.visibleCabinetBodyBoxScaffoldCount || 0)
+    const goldStructureGateVisibleCabinetBodyBoxScaffoldCount = Number(summary.goldStructureGateVisibleCabinetBodyBoxScaffoldCount || 0)
+    const structureFeedbackVisibleCabinetBodyBoxScaffoldCount = Number(summary.structureFeedbackVisibleCabinetBodyBoxScaffoldCount || 0)
+    const generatedDoorPanelBoxEnvelopeCount = Number(summary.generatedDoorPanelBoxEnvelopeCount || 0)
+    const goldStructureGateGeneratedDoorPanelBoxEnvelopeCount = Number(summary.goldStructureGateGeneratedDoorPanelBoxEnvelopeCount || 0)
+    const structureFeedbackGeneratedDoorPanelBoxEnvelopeCount = Number(summary.structureFeedbackGeneratedDoorPanelBoxEnvelopeCount || 0)
     const goldSheetMetalRuleEvidence = summary.goldSheetMetalRuleEvidence &&
       typeof summary.goldSheetMetalRuleEvidence === 'object'
       ? summary.goldSheetMetalRuleEvidence
@@ -397,6 +446,16 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const parametricScaffoldNeedsEngineeringValidation = Boolean(summary.parametricScaffoldNeedsEngineeringValidation) ||
       String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_parametric_scaffold_engineering_validation' ||
       String(summary.status || '').toLowerCase() === 'solidworks_2020_parametric_scaffold_needs_engineering_validation'
+    const derivedSheetMetalModelReadyForReview = !structureNeedsRevision &&
+      visibleCabinetBodyBoxScaffoldGateApplied &&
+      visibleCabinetBodyBoxScaffoldCount === 0 &&
+      (Boolean(summary.derivedSheetMetalModelReadyForReview) ||
+        String(summary.handoffReadinessStatus || '').toLowerCase() === 'sw2020_derived_sheetmetal_review_ready' ||
+        String(summary.status || '').toLowerCase() === 'solidworks_2020_derived_sheetmetal_model_ready_for_review' ||
+        String(summary.resultKind || '').toLowerCase() === 'solidworks2020_derived_sheetmetal_full_assembly_model')
+    const resultKind = structureNeedsRevision || parametricScaffoldNeedsEngineeringValidation
+      ? 'solidworks2020_structure_revision_evidence_package'
+      : summary.resultKind || 'solidworks2020_full_assembly_model'
     const result = updateRequest(request.id, {
       status: structureNeedsRevision
         ? 'solidworks2020_full_assembly_needs_structure_revision'
@@ -404,10 +463,10 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
         ? 'solidworks2020_template_rule_needs_native_door_generation'
         : parametricScaffoldNeedsEngineeringValidation
         ? 'solidworks2020_parametric_scaffold_needs_engineering_validation'
+        : derivedSheetMetalModelReadyForReview
+        ? 'solidworks2020_derived_sheetmetal_review_ready'
         : 'solidworks2020_full_assembly_ready',
-      resultKind: structureNeedsRevision || parametricScaffoldNeedsEngineeringValidation
-        ? 'solidworks2020_structure_revision_evidence_package'
-        : summary.resultKind || 'solidworks2020_full_assembly_model',
+      resultKind,
       outputDir,
       zipPath,
       downloadUrl: `/generation-download/${request.id}`,
@@ -423,6 +482,8 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       templateRuleMode: summary.templateRuleMode,
       compatibleWithNativeTemplate: summary.compatibleWithNativeTemplate,
       electricalAndElectricLockComponentsExcluded: summary.electricalAndElectricLockComponentsExcluded,
+      includeElectricalLockHardware: summary.includeElectricalLockHardware === true || includeElectricalLockHardware,
+      allowElectricalLockHardware: summary.includeElectricalLockHardware === true || includeElectricalLockHardware,
       cabinetSideElectricalAndElectricLockComponentsExcluded: summary.cabinetSideElectricalAndElectricLockComponentsExcluded,
       electricalOrElectricLockComponentCount,
       lockInterfaceCarriedBy: summary.lockInterfaceCarriedBy,
@@ -499,6 +560,13 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       goldStructureGateP0Count,
       goldStructureGateP1Count,
       goldStructureGateWarningCount,
+      visibleCabinetBodyBoxScaffoldGateApplied,
+      visibleCabinetBodyBoxScaffoldCount,
+      goldStructureGateVisibleCabinetBodyBoxScaffoldCount,
+      structureFeedbackVisibleCabinetBodyBoxScaffoldCount,
+      generatedDoorPanelBoxEnvelopeCount,
+      goldStructureGateGeneratedDoorPanelBoxEnvelopeCount,
+      structureFeedbackGeneratedDoorPanelBoxEnvelopeCount,
       structureFeedback: summary.structureFeedback,
       structureFeedbackStatus: summary.structureFeedbackStatus,
       structureFeedbackIssueCount: summary.structureFeedbackIssueCount,
@@ -508,6 +576,20 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       handoffReadinessStatus: summary.handoffReadinessStatus,
       parametricScaffoldStatus: summary.parametricScaffoldStatus,
       parametricScaffoldNeedsEngineeringValidation,
+      derivedSheetMetalModelReadyForReview,
+      controlledGenerationPolicy: request.controlledGenerationPolicy,
+      controlledReleaseState: controlled16029ReleaseState({
+        ...request,
+        downloadUrl: `/generation-download/${request.id}`,
+        resultKind,
+        visibleCabinetBodyBoxScaffoldCount,
+        generatedDoorPanelBoxEnvelopeCount,
+        electricalOrElectricLockComponentCount,
+        allowElectricalLockHardware: summary.includeElectricalLockHardware === true || includeElectricalLockHardware,
+        includeElectricalLockHardware: summary.includeElectricalLockHardware === true || includeElectricalLockHardware,
+        derivedSheetMetalModelReadyForReview,
+        handoffReadinessStatus: summary.handoffReadinessStatus,
+      }),
       parametricInternalSheetMetalRepairEnabled: summary.parametricInternalSheetMetalRepairEnabled,
       parametricScaffoldPlacementMode: summary.parametricScaffoldPlacementMode,
       parametricScaffoldManifest: summary.parametricScaffoldManifest,
@@ -534,6 +616,8 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
         ? `SolidWorks 2020 template-rule package generated, but native door modules still need generation for ratio unit(s): ${missingNativeDoorModuleUnits.join(', ') || 'unknown'}. Download is evidence/parameter package, not engineer-ready Pack-and-Go.`
       : parametricScaffoldNeedsEngineeringValidation
         ? `SolidWorks 2020 package generated with frozen v43 shell and door route; parametric internal cabinet sheet-metal scaffold rows are kept as evidence only and are not appended to the restored v43 visible candidate. Row-specific lock-hole datums, shelf locating feet/notches, inner vertical partition stiffeners, and leveling feet are preserved in evidence. Cabinet-side electrical boards and electric-lock bodies are excluded; residual electrical/electric-lock component count from the gate=${electricalOrElectricLockComponentCount}. SW cut-feature status=${goldSheetMetalRuleHoleFeatureStatus || 'unknown'}, generated door cut-feature status=${generatedNativeDoorModuleHoleFeatureStatusText}; download is an engineering-validation evidence package, not an engineer-ready release.`
+        : derivedSheetMetalModelReadyForReview
+        ? `SolidWorks 2020 derived sheet-metal model generated from the 1000W gold/source rule path. Gold gate PASS; download contains Pack-and-Go, generated cabinet sheet-metal modules, lock-hole datums, shelf/front-frame locating interfaces, rear center seam sheet-metal connector, and evidence JSON. Use for engineering review before production drawings.`
         : summary.compatibleWithNativeTemplate
         ? 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.'
         : generatedNativeDoorModuleCount > 0
@@ -548,7 +632,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       status: 'failed_solidworks2020_full_assembly',
       queueFinishedAt: failedAt,
       error: error instanceof Error ? error.message : String(error),
-      message: 'SolidWorks 2020 full assembly generation failed; check workers/generation_logs and queue stdout/stderr.',
+      message: 'SolidWorks 2020 full assembly generation failed. Keep SolidWorks closed during background generation, then check workers/generation_logs and queue stdout/stderr.',
     })
     console.error(`failed\t${request.id}\t${result.error}`)
     return result
@@ -694,6 +778,21 @@ function writeReadme(path, request, payload) {
 }
 
 function processRequest(request, options) {
+  const policy = validateControlled16029GenerationRequest(request)
+  if (!policy.ok) return blockControlledGenerationPolicy(request, policy, options)
+  if (!request.controlledGenerationPolicy || request.controlledGenerationPolicy.policyKey !== policy.policyKey) {
+    updateRequest(request.id, {
+      controlledGenerationPolicy: {
+        status: policy.status,
+        reason: policy.reason,
+        policyKey: policy.policyKey,
+        releaseLevel: policy.releaseLevel,
+        normalized: policy.normalized,
+        message: policy.message,
+      },
+    })
+    request = { ...request, controlledGenerationPolicy: { ...policy } }
+  }
   if (shouldGenerateSolidWorksSingleDoor(request)) {
     return processSolidWorksSingleDoorRequest(request, options)
   }

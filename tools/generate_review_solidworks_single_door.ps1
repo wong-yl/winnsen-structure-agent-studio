@@ -238,6 +238,24 @@ New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 
 $panelTemplate = Join-Path $sourceRoot 'door_panel_2_12.SLDPRT'
 $stiffenerTemplate = Join-Path $sourceRoot 'rib_2_12.SLDPRT'
+$doorSourceTemplateStatus = 'default_2_12_template_scaled'
+$doorSourceTemplateNote = ''
+if (-not [string]::IsNullOrWhiteSpace($DoorUnit)) {
+  $doorUnitNumber = [double]::NaN
+  if ([double]::TryParse($DoorUnit, [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref] $doorUnitNumber)) {
+    $fourteenDoorUnit = 12.0 / 7.0
+    $fourteenDoorPanelTemplate = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-DOOR-PANEL-SERIES-20260521\native_16029_door_panel_14door_H254p429.SLDPRT'
+    $fourteenDoorStiffenerTemplate = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-DOOR-STIFFENER-SERIES-20260521\native_16029_door_stiffener_14door_L243p929.SLDPRT'
+    if ([Math]::Abs($doorUnitNumber - $fourteenDoorUnit) -le 0.02 -and
+      (Test-Path -LiteralPath $fourteenDoorPanelTemplate -PathType Leaf) -and
+      (Test-Path -LiteralPath $fourteenDoorStiffenerTemplate -PathType Leaf)) {
+      $panelTemplate = $fourteenDoorPanelTemplate
+      $stiffenerTemplate = $fourteenDoorStiffenerTemplate
+      $doorSourceTemplateStatus = 'source_14door_native_series'
+      $doorSourceTemplateNote = '14-door generated module uses the existing SW2020 native 14door panel and rib series instead of stretching the 2/12 template.'
+    }
+  }
+}
 $plasticBushing = Join-Path $sourceRoot ("{0}.SLDPRT" -f (TextFromCodes @(0x5851,0x6599,0x8f74,0x5957,0x28,0x4e91,0x7ec5,0x6a21,0x5177,0x29)))
 $hingePin = Join-Path $sourceRoot ("{0}.SLDPRT" -f (TextFromCodes @(0x95e8,0x8f74,0x9500)))
 
@@ -328,7 +346,16 @@ if (-not [string]::IsNullOrWhiteSpace($DoorUnit)) {
     }
   }
   else {
-    $sheetMetalRuleBindingStatus = 'missing_gold_dxf_class'
+    if ($doorSourceTemplateStatus -like 'source_14door_*') {
+      $sheetMetalRuleBindingStatus = 'bound_to_14door_native_series'
+      $sheetMetalSourceDxf = 'workers/generated_models/SW-NATIVE-16029-DOOR-PANEL-SERIES-20260521/flat_dxf/native_16029_door_panel_14door_H254p429_flat.dxf'
+      $sheetMetalExpectedFlatWidthMm = [Math]::Round($DoorWidthMm + 36.4, 3)
+      $sheetMetalExpectedFlatHeightMm = [Math]::Round($DoorHeightMm + 36.4, 3)
+      $sheetMetalHoleFeatureStatus = 'source_14door_candidate_template_features'
+    }
+    else {
+      $sheetMetalRuleBindingStatus = 'missing_gold_dxf_class'
+    }
   }
 }
 else {
@@ -345,32 +372,89 @@ $stiffenerLengthMm = [Math]::Round($DoorHeightMm - 10.5, 3)
 $stiffenerToken = Token $stiffenerLengthMm
 $sketch1 = (TextFromCodes @(0x8349,0x56fe)) + '1'
 
-$panelPart = Join-Path $OutputDir "review_single_door_panel_W${widthToken}_H${heightToken}_sheetmetal.SLDPRT"
-$panelStep = Join-Path $OutputDir "review_single_door_panel_W${widthToken}_H${heightToken}_sheetmetal.step"
-$panelJson = Join-Path $OutputDir "review_single_door_panel_W${widthToken}_H${heightToken}_sheetmetal_result.json"
-$stiffenerPart = Join-Path $OutputDir "review_single_door_stiffener_L${stiffenerToken}_sheetmetal.SLDPRT"
-$stiffenerStep = Join-Path $OutputDir "review_single_door_stiffener_L${stiffenerToken}_sheetmetal.step"
-$stiffenerJson = Join-Path $OutputDir "review_single_door_stiffener_L${stiffenerToken}_sheetmetal_result.json"
+$panelStem = if ($doorSourceTemplateStatus -like 'source_14door_*') { "review_14door_source_panel_W${widthToken}_H${heightToken}_sheetmetal" } else { "review_single_door_panel_W${widthToken}_H${heightToken}_sheetmetal" }
+$stiffenerStem = if ($doorSourceTemplateStatus -like 'source_14door_*') { "review_14door_source_stiffener_L${stiffenerToken}_sheetmetal" } else { "review_single_door_stiffener_L${stiffenerToken}_sheetmetal" }
+$panelPart = Join-Path $OutputDir "${panelStem}.SLDPRT"
+$panelStep = Join-Path $OutputDir "${panelStem}.step"
+$panelJson = Join-Path $OutputDir "${panelStem}_result.json"
+$panelRoundtripStep = Join-Path $OutputDir "${panelStem}_roundtrip.step"
+$panelImportJson = Join-Path $OutputDir "${panelStem}_import.json"
+$panelScaleJson = Join-Path $OutputDir "${panelStem}_scale.json"
+$stiffenerPart = Join-Path $OutputDir "${stiffenerStem}.SLDPRT"
+$stiffenerStep = Join-Path $OutputDir "${stiffenerStem}.step"
+$stiffenerJson = Join-Path $OutputDir "${stiffenerStem}_result.json"
+$stiffenerRoundtripStep = Join-Path $OutputDir "${stiffenerStem}_roundtrip.step"
+$stiffenerImportJson = Join-Path $OutputDir "${stiffenerStem}_import.json"
+$stiffenerScaleJson = Join-Path $OutputDir "${stiffenerStem}_scale.json"
 $topLatchStep = Join-Path $OutputDir "top_latch_from_bottom_mirror_W${widthToken}_H${heightToken}_${Handedness}.step"
 $topLatchReport = Join-Path $OutputDir "top_latch_from_bottom_mirror_W${widthToken}_H${heightToken}_${Handedness}_report.json"
 $topLatchPart = Join-Path $OutputDir "top_latch_from_bottom_mirror_W${widthToken}_H${heightToken}_${Handedness}.SLDPRT"
 $topLatchRoundtripStep = Join-Path $OutputDir "top_latch_from_bottom_mirror_W${widthToken}_H${heightToken}_${Handedness}_roundtrip.step"
 $topLatchImportJson = Join-Path $OutputDir "top_latch_from_bottom_mirror_W${widthToken}_H${heightToken}_${Handedness}_import.json"
-$weldAsm = Join-Path $OutputDir "review_single_door_weld_W${widthToken}_H${heightToken}_${Handedness}.SLDASM"
-$weldJson = Join-Path $OutputDir "review_single_door_weld_W${widthToken}_H${heightToken}_${Handedness}_result.json"
-$weldStep = Join-Path $OutputDir "review_single_door_weld_W${widthToken}_H${heightToken}_${Handedness}.step"
-$weldExportJson = Join-Path $OutputDir "review_single_door_weld_W${widthToken}_H${heightToken}_${Handedness}_export.json"
-$ordinaryAsm = Join-Path $OutputDir "review_single_ordinary_door_W${widthToken}_H${heightToken}_${Handedness}.SLDASM"
-$ordinaryJson = Join-Path $OutputDir "review_single_ordinary_door_W${widthToken}_H${heightToken}_${Handedness}_result.json"
-$ordinaryStep = Join-Path $OutputDir "review_single_ordinary_door_W${widthToken}_H${heightToken}_${Handedness}.step"
-$ordinaryExportJson = Join-Path $OutputDir "review_single_ordinary_door_W${widthToken}_H${heightToken}_${Handedness}_export.json"
+$doorAssemblyStemPrefix = if ($doorSourceTemplateStatus -like 'source_14door_*') { 'review_14door_source' } else { 'review_single' }
+$weldStem = "${doorAssemblyStemPrefix}_door_weld_W${widthToken}_H${heightToken}_${Handedness}"
+$ordinaryStem = "${doorAssemblyStemPrefix}_ordinary_door_W${widthToken}_H${heightToken}_${Handedness}"
+$weldAsm = Join-Path $OutputDir "${weldStem}.SLDASM"
+$weldJson = Join-Path $OutputDir "${weldStem}_result.json"
+$weldStep = Join-Path $OutputDir "${weldStem}.step"
+$weldExportJson = Join-Path $OutputDir "${weldStem}_export.json"
+$ordinaryAsm = Join-Path $OutputDir "${ordinaryStem}.SLDASM"
+$ordinaryJson = Join-Path $OutputDir "${ordinaryStem}_result.json"
+$ordinaryStep = Join-Path $OutputDir "${ordinaryStem}.step"
+$ordinaryExportJson = Join-Path $OutputDir "${ordinaryStem}_export.json"
+$lockTongueName = TextFromCodes @(0x9501,0x820c)
+$lockTonguePart = Join-Path $OutputDir "${lockTongueName}_W${widthToken}_H${heightToken}_${Handedness}.SLDPRT"
 $summaryJson = Join-Path $OutputDir 'solidworks_2020_native_generation_summary.json'
 
 $cloneScript = Join-Path $toolDir 'sw_clone_master_model_height_probe.js'
-$panelCloneArgs = @('//Nologo', $cloneScript, $panelTemplate, $panelPart, $panelStep, $panelJson, $sketch1, 'D1', (Invariant $DoorHeightMm), $sketch1, 'D2', (Invariant $DoorWidthMm)) + $panelCloneExtraArgs
-Invoke-External $cscript $panelCloneArgs 'generate sheet-metal door panel' @(0, 4)
-Assert-CloneSaved $panelJson $panelPart $panelStep 'sheet-metal door panel'
-$panelResult = Read-Json $panelJson
+$sourceStepScaler = Join-Path $root 'tools\scale_16029_source_step_freecad.py'
+$importer = Join-Path $toolDir 'bin\ImportStepSaveNative.exe'
+$useSource14StepScale = $doorSourceTemplateStatus -like 'source_14door_*'
+if ($useSource14StepScale) {
+  Assert-File $sourceStepScaler 'source STEP scaler'
+  $sourcePanelStep = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-DOOR-PANEL-SERIES-20260521\native_16029_door_panel_14door_H254p429.step'
+  Assert-File $sourcePanelStep '14door source panel STEP'
+  $env:WINNSEN_16029_SCALE_SOURCE_STEP = $sourcePanelStep
+  $env:WINNSEN_16029_SCALE_OUTPUT_STEP = $panelStep
+  $env:WINNSEN_16029_SCALE_REPORT_JSON = $panelScaleJson
+  $env:WINNSEN_16029_SCALE_X = Invariant ($DoorWidthMm / 437.0)
+  $env:WINNSEN_16029_SCALE_Y = Invariant ($DoorHeightMm / 254.429)
+  $env:WINNSEN_16029_SCALE_Z = '1'
+  try {
+    $scaleCode = "import runpy; runpy.run_path(r'$sourceStepScaler', run_name='__main__')"
+    Invoke-External $freecad @('-c', $scaleCode) 'scale 14door source panel STEP'
+  }
+  finally {
+    Remove-Item Env:\WINNSEN_16029_SCALE_SOURCE_STEP, Env:\WINNSEN_16029_SCALE_OUTPUT_STEP, Env:\WINNSEN_16029_SCALE_REPORT_JSON, Env:\WINNSEN_16029_SCALE_X, Env:\WINNSEN_16029_SCALE_Y, Env:\WINNSEN_16029_SCALE_Z -ErrorAction SilentlyContinue
+  }
+  Wait-File $panelStep 'scaled 14door source panel STEP'
+  Invoke-External $importer @($panelStep, $panelPart, $panelRoundtripStep, $panelImportJson) 'save scaled 14door panel as SolidWorks native'
+  Wait-File $panelPart 'scaled 14door source panel native part'
+  Wait-File $panelImportJson 'scaled 14door source panel import json'
+  $panelResult = [pscustomobject] ([ordered] @{
+    templatePath = $sourcePanelStep
+    outPartPath = $panelPart
+    outStepPath = $panelStep
+    outJsonPath = $panelJson
+    sourceScaleReport = $panelScaleJson
+    copied = $false
+    opened = $true
+    rebuilt = $true
+    savedPart = $true
+    savedStep = $true
+    features = @([pscustomobject] @{ name = 'source_14door_step_scaled'; type = 'ImportedStepGeometry'; is_suppressed = $false })
+    dimensions = @()
+    bodies = @()
+    importJson = $panelImportJson
+  })
+  $panelResult | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $panelJson -Encoding UTF8
+}
+else {
+  $panelCloneArgs = @('//Nologo', $cloneScript, $panelTemplate, $panelPart, $panelStep, $panelJson, $sketch1, 'D1', (Invariant $DoorHeightMm), $sketch1, 'D2', (Invariant $DoorWidthMm)) + $panelCloneExtraArgs
+  Invoke-External $cscript $panelCloneArgs 'generate sheet-metal door panel' @(0, 4)
+  Assert-CloneSaved $panelJson $panelPart $panelStep 'sheet-metal door panel'
+  $panelResult = Read-Json $panelJson
+}
 $detectedCutFeatures = Get-DetectedCutFeatures $panelResult
 $sheetMetalDetectedCutFeatureNames = @($detectedCutFeatures.featureNames)
 $sheetMetalDetectedCutFeatureCount = [int] $detectedCutFeatures.featureCount
@@ -390,8 +474,48 @@ if ($sheetMetalRuleBindingStatus -eq 'bound_to_1000w_gold_dxf' -and $sheetMetalH
   }
 }
 
-Invoke-External $cscript @('//Nologo', $cloneScript, $stiffenerTemplate, $stiffenerPart, $stiffenerStep, $stiffenerJson, $sketch1, 'D2', (Invariant $stiffenerLengthMm)) 'generate sheet-metal stiffener' @(0, 4)
-Assert-CloneSaved $stiffenerJson $stiffenerPart $stiffenerStep 'sheet-metal stiffener'
+if ($useSource14StepScale) {
+  $sourceStiffenerStep = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-DOOR-STIFFENER-SERIES-20260521\native_16029_door_stiffener_14door_L243p929.step'
+  Assert-File $sourceStiffenerStep '14door source stiffener STEP'
+  $env:WINNSEN_16029_SCALE_SOURCE_STEP = $sourceStiffenerStep
+  $env:WINNSEN_16029_SCALE_OUTPUT_STEP = $stiffenerStep
+  $env:WINNSEN_16029_SCALE_REPORT_JSON = $stiffenerScaleJson
+  $env:WINNSEN_16029_SCALE_X = '1'
+  $env:WINNSEN_16029_SCALE_Y = Invariant ($stiffenerLengthMm / 243.929)
+  $env:WINNSEN_16029_SCALE_Z = '1'
+  try {
+    $scaleCode = "import runpy; runpy.run_path(r'$sourceStepScaler', run_name='__main__')"
+    Invoke-External $freecad @('-c', $scaleCode) 'scale 14door source stiffener STEP'
+  }
+  finally {
+    Remove-Item Env:\WINNSEN_16029_SCALE_SOURCE_STEP, Env:\WINNSEN_16029_SCALE_OUTPUT_STEP, Env:\WINNSEN_16029_SCALE_REPORT_JSON, Env:\WINNSEN_16029_SCALE_X, Env:\WINNSEN_16029_SCALE_Y, Env:\WINNSEN_16029_SCALE_Z -ErrorAction SilentlyContinue
+  }
+  Wait-File $stiffenerStep 'scaled 14door source stiffener STEP'
+  Invoke-External $importer @($stiffenerStep, $stiffenerPart, $stiffenerRoundtripStep, $stiffenerImportJson) 'save scaled 14door stiffener as SolidWorks native'
+  Wait-File $stiffenerPart 'scaled 14door source stiffener native part'
+  Wait-File $stiffenerImportJson 'scaled 14door source stiffener import json'
+  $stiffenerResult = [pscustomobject] ([ordered] @{
+    templatePath = $sourceStiffenerStep
+    outPartPath = $stiffenerPart
+    outStepPath = $stiffenerStep
+    outJsonPath = $stiffenerJson
+    sourceScaleReport = $stiffenerScaleJson
+    copied = $false
+    opened = $true
+    rebuilt = $true
+    savedPart = $true
+    savedStep = $true
+    features = @([pscustomobject] @{ name = 'source_14door_step_scaled'; type = 'ImportedStepGeometry'; is_suppressed = $false })
+    dimensions = @()
+    bodies = @()
+    importJson = $stiffenerImportJson
+  })
+  $stiffenerResult | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $stiffenerJson -Encoding UTF8
+}
+else {
+  Invoke-External $cscript @('//Nologo', $cloneScript, $stiffenerTemplate, $stiffenerPart, $stiffenerStep, $stiffenerJson, $sketch1, 'D2', (Invariant $stiffenerLengthMm)) 'generate sheet-metal stiffener' @(0, 4)
+  Assert-CloneSaved $stiffenerJson $stiffenerPart $stiffenerStep 'sheet-metal stiffener'
+}
 
 $side = if ($Handedness -eq 'right') { -1.0 } else { 1.0 }
 $latchTxMm = -(($DoorWidthMm / 2.0) - 10.0) * $side
@@ -420,7 +544,9 @@ Wait-File $weldAsm 'door weld assembly'
 Wait-File $weldJson 'door weld assembly result json'
 
 $ordinaryBuilder = Join-Path $toolDir 'bin\BuildOrdinaryDoorModule.exe'
-Invoke-External $ordinaryBuilder @($ordinaryAsm, $ordinaryJson, (Invariant $DoorHeightMm), $weldAsm, $plasticBushing, $hingePin, $circlip, $lockHook, $Handedness, (Invariant $DoorWidthMm), 'skip-electric-lock-hook') 'build ordinary door assembly'
+Copy-Item -LiteralPath $lockHook -Destination $lockTonguePart -Force
+Wait-File $lockTonguePart 'mechanical lock tongue part'
+Invoke-External $ordinaryBuilder @($ordinaryAsm, $ordinaryJson, (Invariant $DoorHeightMm), $weldAsm, $plasticBushing, $hingePin, $circlip, $lockTonguePart, $Handedness, (Invariant $DoorWidthMm), 'mechanical-lock-tongue') 'build ordinary door assembly'
 Wait-File $ordinaryAsm 'ordinary door assembly'
 Wait-File $ordinaryJson 'ordinary door assembly result json'
 
@@ -457,6 +583,10 @@ $summary = [ordered] @{
   handedness = $Handedness
   doorUnit = $DoorUnit
   sheetMetalRule = $SheetMetalRuleJson
+  doorSourceTemplateStatus = $doorSourceTemplateStatus
+  doorSourceTemplateNote = $doorSourceTemplateNote
+  doorPanelTemplate = $panelTemplate
+  doorStiffenerTemplate = $stiffenerTemplate
   sheetMetalRuleBindingStatus = $sheetMetalRuleBindingStatus
   sheetMetalRuleClassId = $sheetMetalRuleClassId
   sheetMetalSourceDxf = $sheetMetalSourceDxf
@@ -476,13 +606,14 @@ $summary = [ordered] @{
   sheetMetalPanelStep = $panelStep
   sheetMetalStiffenerPart = $stiffenerPart
   sheetMetalStiffenerStep = $stiffenerStep
+  lockTonguePart = $lockTonguePart
   weldAssembly = $weldAsm
   weldStep = $weldStep
   primaryAssembly = $ordinaryAsm
   ordinaryStep = $ordinaryStep
   openedInSolidWorks = $opened
   modelGeneratedAt = (Get-Date).ToUniversalTime().ToString('o')
-  boundary = 'SolidWorks 2020 native sheet-metal model; FreeCAD was used only for internal mirrored latch evidence. Gold DXF hole data is carried as datum evidence until direct SolidWorks cut-feature generation is implemented.'
+  boundary = 'SolidWorks 2020 native sheet-metal model with mechanical lock tongue restored in the single-door assembly; FreeCAD was used only for internal mirrored latch evidence. Gold DXF hole data is carried as datum evidence until direct SolidWorks cut-feature generation is implemented.'
   outputFiles = @($outputFiles)
 }
 
