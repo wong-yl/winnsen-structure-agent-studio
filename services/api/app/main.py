@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import platform
 import re
 import shlex
 import shutil
@@ -12,6 +13,8 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
+
+IS_WINDOWS = platform.system() == "Windows"
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -277,11 +280,16 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+_VALID_SQL_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+
 def ensure_column(connection: sqlite3.Connection, table_name: str, column_name: str, column_type: str) -> None:
-    columns = connection.execute(f"PRAGMA table_info({table_name})").fetchall()
+    if not (_VALID_SQL_IDENTIFIER.match(table_name) and _VALID_SQL_IDENTIFIER.match(column_name)):
+        raise ValueError(f"Invalid SQL identifier: table={table_name!r}, column={column_name!r}")
+    columns = connection.execute(f'PRAGMA table_info("{table_name}")').fetchall()
     if any(column["name"] == column_name for column in columns):
         return
-    connection.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}")
+    connection.execute(f'ALTER TABLE "{table_name}" ADD COLUMN "{column_name}" {column_type}')
 
 
 def make_task_id() -> str:
@@ -377,16 +385,28 @@ def checked_local_action_path(raw_path: str) -> Path:
     return resolved
 
 
-def open_path_with_windows(path: Path, mode: Literal["open", "reveal"]) -> str:
+def open_path_local(path: Path, mode: Literal["open", "reveal"]) -> str:
     try:
-        if path.is_dir():
-            subprocess.Popen(["explorer.exe", str(path)])
-            return "已打开输出目录。"
-        if mode == "reveal":
-            subprocess.Popen(["explorer.exe", f"/select,{path}"])
-            return "已在资源管理器中定位文件。"
-        os.startfile(str(path))  # type: ignore[attr-defined]
-        return "已请求 Windows 使用默认程序打开文件。"
+        system = platform.system()
+        if system == "Windows":
+            if path.is_dir():
+                subprocess.Popen(["explorer.exe", str(path)])
+                return "已打开输出目录。"
+            if mode == "reveal":
+                subprocess.Popen(["explorer.exe", f"/select,{path}"])
+                return "已在资源管理器中定位文件。"
+            os.startfile(str(path))  # type: ignore[attr-defined]
+            return "已请求 Windows 使用默认程序打开文件。"
+        elif system == "Darwin":
+            if mode == "reveal" and not path.is_dir():
+                subprocess.Popen(["open", "-R", str(path)])
+                return "已在 Finder 中定位文件。"
+            subprocess.Popen(["open", str(path)])
+            return "已用 macOS 默认程序打开。"
+        else:
+            target = str(path.parent) if not path.is_dir() and mode == "reveal" else str(path)
+            subprocess.Popen(["xdg-open", target])
+            return "已用系统默认程序打开。"
     except OSError as error:
         raise HTTPException(status_code=500, detail=f"Open path failed: {error}") from error
 
@@ -404,13 +424,19 @@ def first_output_with_suffix(output_dir: Path, suffix: str) -> Path | None:
     return None
 
 
+def _strip_one_quote_pair(token: str) -> str:
+    if len(token) >= 2 and token[0] == '"' and token[-1] == '"':
+        return token[1:-1]
+    return token
+
+
 def command_tokens(command: str) -> list[str]:
     if command == "not_enabled":
         return []
     try:
-        return [token.strip('"') for token in shlex.split(command, posix=False)]
+        return [_strip_one_quote_pair(token) for token in shlex.split(command, posix=False)]
     except ValueError:
-        return [token.strip('"') for token in command.split()]
+        return [_strip_one_quote_pair(token) for token in command.split()]
 
 
 def resolve_freecad_cmd(executable: str) -> tuple[bool, str]:
@@ -746,7 +772,7 @@ def build_solidworks_run_summary(result: WorkerExecutionResult) -> SolidWorksRun
         return None
 
     output_dir = Path(result.output_dir)
-    outputs = output_files(output_dir)
+    outputs = result.outputs if result.outputs else output_files(output_dir)
     assembly_path = next((Path(path) for path in outputs if path.lower().endswith(".sldasm")), None)
     build_report_path = first_output_path(outputs, "_build_report.md")
     validation_report_path = first_output_path(outputs, "_solidworks_validation_report.md")
@@ -1111,12 +1137,19 @@ def read_rule_extraction_result(output_dir: Path) -> RuleExtractionResult | None
     return result
 
 
+def _safe_mtime(path: Path) -> float:
+    try:
+        return path.stat().st_mtime
+    except OSError:
+        return 0.0
+
+
 def list_rule_extraction_results(limit: int = 20) -> list[RuleExtractionResult]:
     if not RULE_EXTRACTION_DIR.exists():
         return []
     results = [
         result
-        for output_dir in sorted(RULE_EXTRACTION_DIR.iterdir(), key=lambda item: item.stat().st_mtime, reverse=True)
+        for output_dir in sorted(RULE_EXTRACTION_DIR.iterdir(), key=_safe_mtime, reverse=True)
         if output_dir.is_dir()
         for result in [read_rule_extraction_result(output_dir)]
         if result is not None
@@ -1137,7 +1170,7 @@ def create_rule_extraction_package(payload: RuleExtractionCreate) -> RuleExtract
     extractor_script = CAD_WORKSPACE / "scripts" / "sw_extract_structure_queue_item.js"
     if not extractor_script.exists():
         raise HTTPException(status_code=404, detail=f"SolidWorks extractor script was not found: {extractor_script}")
-    if shutil.which("cscript.exe") is None:
+    if IS_WINDOWS and shutil.which("cscript.exe") is None:
         raise HTTPException(status_code=409, detail="cscript.exe was not found in PATH.")
 
     run_id = make_rule_extraction_id()
@@ -1223,6 +1256,15 @@ def summarize_rule_extraction_output(output_dir: Path) -> None:
 
 
 def run_rule_extraction_step_bbox_postprocess(result: RuleExtractionResult, output_dir: Path) -> None:
+    try:
+        validated_assembly_path = checked_template_assembly_path(result.assembly_path)
+    except HTTPException as exc:
+        (output_dir / "step_bbox_postprocess_error.txt").write_text(
+            f"assembly_path validation failed: {exc.detail}",
+            encoding="utf-8",
+        )
+        return
+
     export_script = CAD_WORKSPACE / "scripts" / "sw_export_step_ascii.js"
     inspect_script = ROOT_DIR / "workers" / "maintenance" / "inspect_step_assembly_bboxes_freecad.py"
     binding_script = ROOT_DIR / "workers" / "maintenance" / "bind_step_bbox_component_roles.py"
@@ -1230,7 +1272,7 @@ def run_rule_extraction_step_bbox_postprocess(result: RuleExtractionResult, outp
 
     if export_script.exists() and shutil.which("cscript.exe") is not None:
         export_completed = subprocess.run(
-            ["cscript.exe", "//Nologo", str(export_script), result.assembly_path, str(step_path)],
+            ["cscript.exe", "//Nologo", str(export_script), str(validated_assembly_path), str(step_path)],
             cwd=CAD_WORKSPACE,
             capture_output=True,
             text=True,
@@ -1500,16 +1542,16 @@ def build_solidworks_manual_result(task: GenerationTask) -> WorkerExecutionResul
         "\n".join(
             [
                 "$ErrorActionPreference = 'Stop'",
-                f"Set-Location -LiteralPath '{CAD_WORKSPACE}'",
-                "& " + " ".join(shlex.quote(part) for part in command),
-                f"$assemblyPath = '{assembly_path}'",
-                f"$cleanScript = '{clean_script}'",
+                f"Set-Location -LiteralPath {ps_single_quote(CAD_WORKSPACE)}",
+                "& " + " ".join(ps_single_quote(part) for part in command),
+                f"$assemblyPath = {ps_single_quote(assembly_path)}",
+                f"$cleanScript = {ps_single_quote(clean_script)}",
                 "if ((Test-Path -LiteralPath $assemblyPath) -and (Test-Path -LiteralPath $cleanScript)) {",
                 "  & cscript.exe //Nologo $cleanScript $assemblyPath",
                 "}",
-                f"$diagnosticScript = '{diagnostic_script}'",
+                f"$diagnosticScript = {ps_single_quote(diagnostic_script)}",
                 "if ((Test-Path -LiteralPath $assemblyPath) -and (Test-Path -LiteralPath $diagnosticScript)) {",
-                f"  & cscript.exe //Nologo $diagnosticScript $assemblyPath '{output_dir}'",
+                f"  & cscript.exe //Nologo $diagnosticScript $assemblyPath {ps_single_quote(output_dir)}",
                 "}",
                 "",
             ]
@@ -1844,7 +1886,7 @@ def get_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/local-actions/open-path", response_model=LocalActionResult)
 def open_local_path(payload: LocalOpenRequest) -> LocalActionResult:
     path = checked_local_action_path(payload.path)
-    message = open_path_with_windows(path, payload.mode)
+    message = open_path_local(path, payload.mode)
     return LocalActionResult(status="opened", path=str(path), message=message)
 
 
@@ -1855,14 +1897,23 @@ def open_freecad_model(payload: FreeCadOpenRequest) -> LocalActionResult:
     fcstd = first_output_with_suffix(output_dir, ".fcstd")
     if not fcstd:
         raise HTTPException(status_code=404, detail=f"No FCStd model found in {output_dir}")
-    if not FREECAD_EXE.exists():
-        raise HTTPException(status_code=409, detail=f"FreeCAD.exe not found: {FREECAD_EXE}")
+
+    freecad_exe: str | None = None
+    if FREECAD_EXE.exists():
+        freecad_exe = str(FREECAD_EXE)
+    else:
+        freecad_exe = shutil.which("FreeCAD") or shutil.which("freecad") or shutil.which("FreeCAD.exe")
+    if freecad_exe is None:
+        raise HTTPException(
+            status_code=409,
+            detail=f"FreeCAD not found. Set STUDIO_FREECAD_EXE or add FreeCAD to PATH. Checked: {FREECAD_EXE}",
+        )
 
     write_freecad_opening_files(output_dir)
     launcher = output_dir / "open_in_freecad_with_view.py"
     launch_target = launcher if launcher.exists() else fcstd
     try:
-        subprocess.Popen([str(FREECAD_EXE), str(launch_target)], cwd=str(output_dir))
+        subprocess.Popen([freecad_exe, str(launch_target)], cwd=str(output_dir))
     except OSError as error:
         raise HTTPException(status_code=500, detail=f"FreeCAD launch failed: {error}") from error
 

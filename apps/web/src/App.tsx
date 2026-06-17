@@ -987,6 +987,7 @@ function RulesPage() {
       setExtractionState(updated.status === 'running' ? 'running' : 'online')
       setExtractionMessage(ruleExtractionFeedbackMessage(updated))
     } catch (error) {
+      setExtractionRuns((runs) => [run, ...runs.filter((item) => item.id !== run.id)])
       setExtractionState('offline')
       setExtractionMessage(`运行规则提取失败: ${error instanceof Error ? error.message : 'unknown error'}`)
     } finally {

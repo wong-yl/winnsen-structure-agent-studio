@@ -2,6 +2,9 @@
 
 Winnsen 硬件结构知识与智能钣金模型生成平台。
 
+> 📖 **Operator manual:** step-by-step install/run/use guide for Windows **and**
+> macOS / Linux is in [`docs/03_user_manual.md`](docs/03_user_manual.md).
+
 ## Current MVP
 
 已在 `apps/web` 搭建本地 React/Vite 控制台 MVP，第一版包含五个页面：

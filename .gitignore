@@ -10,6 +10,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+.venv_test/
 
 # Local environment and secrets
 .env
@@ -55,3 +56,7 @@ workers/**/__pycache__/
 *.tmp
 *.bak
 ~$*
+
+# AI agent
+.codex/
+.claude/
