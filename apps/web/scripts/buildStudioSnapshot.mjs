@@ -5,18 +5,18 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const appRoot = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(appRoot, '..', '..')
-const cadWorkspace = 'D:\\机械结构工程师智能体'
+const cadWorkspace = process.env.STUDIO_CAD_WORKSPACE ?? path.join(repoRoot, 'cad_workspace')
 
 const sources = {
-  intakeStatus: path.join(cadWorkspace, 'outputs\\intake\\intake_pipeline_status_v1.md'),
-  outdoorStatus: path.join(cadWorkspace, 'outputs\\intake\\outdoor_courier_family_intake_status.md'),
-  strictQueueCsv: path.join(cadWorkspace, 'outputs\\freecad\\locker_16029_strict_geometry_upgrade_queue.csv'),
-  strictQueueMd: path.join(cadWorkspace, 'outputs\\freecad\\locker_16029_strict_geometry_upgrade_queue.md'),
-  outdoorGateCsv: path.join(cadWorkspace, 'outputs\\freecad\\outdoor_courier_production_gate_queue.csv'),
-  outdoorGateMd: path.join(cadWorkspace, 'outputs\\freecad\\outdoor_courier_production_gate_queue.md'),
+  intakeStatus: path.join(cadWorkspace, 'outputs/intake/intake_pipeline_status_v1.md'),
+  outdoorStatus: path.join(cadWorkspace, 'outputs/intake/outdoor_courier_family_intake_status.md'),
+  strictQueueCsv: path.join(cadWorkspace, 'outputs/freecad/locker_16029_strict_geometry_upgrade_queue.csv'),
+  strictQueueMd: path.join(cadWorkspace, 'outputs/freecad/locker_16029_strict_geometry_upgrade_queue.md'),
+  outdoorGateCsv: path.join(cadWorkspace, 'outputs/freecad/outdoor_courier_production_gate_queue.csv'),
+  outdoorGateMd: path.join(cadWorkspace, 'outputs/freecad/outdoor_courier_production_gate_queue.md'),
   outdoorSingleDoorAudit: path.join(
     cadWorkspace,
-    'outputs\\freecad\\outdoor_courier_single_door\\outdoor_courier_waterproof_door_1_12_R_single_panel_v1_source_signature_audit.md',
+    'outputs/freecad/outdoor_courier_single_door/outdoor_courier_waterproof_door_1_12_R_single_panel_v1_source_signature_audit.md',
   ),
 }
 

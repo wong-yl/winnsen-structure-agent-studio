@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field
 ROOT_DIR = Path(__file__).resolve().parents[3]
 DEFAULT_DB_PATH = ROOT_DIR / "data" / "studio.sqlite"
 DB_PATH = Path(os.getenv("STUDIO_DB_PATH", DEFAULT_DB_PATH))
-CAD_WORKSPACE = Path(os.getenv("STUDIO_CAD_WORKSPACE", r"D:\机械结构工程师智能体"))
+CAD_WORKSPACE = Path(os.getenv("STUDIO_CAD_WORKSPACE", ROOT_DIR / "cad_workspace"))
 WORKER_LOG_DIR = Path(os.getenv("STUDIO_WORKER_LOG_DIR", ROOT_DIR / "workers" / "generation_logs"))
 GENERATED_MODEL_DIR = Path(os.getenv("STUDIO_GENERATED_MODEL_DIR", ROOT_DIR / "workers" / "generated_models"))
 MANUAL_RUN_DIR = Path(os.getenv("STUDIO_MANUAL_RUN_DIR", ROOT_DIR / "workers" / "manual_runs"))
@@ -467,13 +467,17 @@ def find_script_token(tokens: list[str]) -> str:
 
 
 def resolve_script(script_token: str) -> tuple[bool, str]:
-    script_path = Path(script_token)
+    # Commands may carry Windows-style backslash separators (e.g. "scripts\\foo.py").
+    # Normalize to forward slashes so relative script paths resolve on POSIX too,
+    # where a backslash is a literal filename character rather than a separator.
+    normalized_token = script_token.replace("\\", "/")
+    script_path = Path(normalized_token)
     if script_path.is_absolute():
         return script_path.exists(), str(script_path)
 
     candidate = CAD_WORKSPACE / script_path
-    if "*" in script_token:
-        matches = list(CAD_WORKSPACE.glob(script_token.replace("\\", "/")))
+    if "*" in normalized_token:
+        matches = list(CAD_WORKSPACE.glob(normalized_token))
         if len(matches) == 1:
             return True, str(matches[0])
         if len(matches) > 1:

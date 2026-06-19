@@ -3464,9 +3464,9 @@ function openButtonLabelFor(path: string) {
 }
 
 function solidworksScriptFor(capabilityId: string) {
-  if (capabilityId === 'locker_16029_door_panel') return 'scripts\\sw_make_parametric_door_panel.js'
-  if (capabilityId === 'locker_16038_variant_template') return 'scripts\\sw_clone_16038_variant_template.js'
-  return 'scripts\\sw_build_locker_16029_direct_assembly.js'
+  if (capabilityId === 'locker_16029_door_panel') return 'scripts/sw_make_parametric_door_panel.js'
+  if (capabilityId === 'locker_16038_variant_template') return 'scripts/sw_clone_16038_variant_template.js'
+  return 'scripts/sw_build_locker_16029_direct_assembly.js'
 }
 
 function solidworksGeneratorFor(capability: { id: string; generator: string }) {
@@ -3475,7 +3475,7 @@ function solidworksGeneratorFor(capability: { id: string; generator: string }) {
 }
 
 function freecadScriptFor(capabilityId: string, fallback: string) {
-  if (capabilityId === 'locker_16029_door_panel') return 'scripts\\generate_locker_16029_freecad.py'
+  if (capabilityId === 'locker_16029_door_panel') return 'scripts/generate_locker_16029_freecad.py'
   return fallback
 }
 
