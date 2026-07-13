@@ -867,11 +867,12 @@ function renderShell(content, username = '') {
   .asset-list { border-top:1px solid var(--line); }
   .asset-row { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:20px; padding:16px 0; border-bottom:1px solid var(--line); }
   .asset-row.current:first-child { padding-top:18px; }
-  .asset-copy { min-width:0; display:grid; gap:7px; }
+  .asset-copy { min-width:0; display:grid; grid-template-columns:minmax(0,1fr); gap:7px; }
   .asset-title-line { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
   .asset-title-line h3 { margin:0; font-size:18px; line-height:1.35; }
   .asset-row p { margin:0; max-width:86ch; color:var(--muted); line-height:1.6; font-size:15px; }
   .asset-file-meta { display:flex; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:13px; }
+  .asset-file-meta span { min-width:0; overflow-wrap:anywhere; }
   .asset-download { min-width:120px; }
   .history-assets { border:1px solid var(--line); border-radius:8px; background:var(--soft); }
   .history-assets > summary { min-height:46px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; color:var(--brand); font-weight:700; }
