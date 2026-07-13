@@ -64,7 +64,7 @@ const reviewRound = {
   project: '16029 740W / L642-R246 / v43',
   cadMainline: 'SolidWorks 2020',
   boundary: '740W x 1917H x 550D / L642-R246 / v43 door route frozen',
-  gateStatus: 'v23 controlled_candidate_pass / 等待结构工程签核',
+  gateStatus: 'v23 自动结构检查通过 / 等待结构工程签核',
   gateBlocker: '自动证据已通过；反馈记录不等于工程签字，进入样机仍需完整结构签核，生产释放资格固定为 false。',
   instruction: '下载 v43-int-v23-all-sources-isolated 受控候选，每个结构问题单独编号并上传标注截图；v18 和 800W 仅作历史参考。',
 }
@@ -83,7 +83,7 @@ const assets = [
     id: '16029-v43-internal-sheetmetal-v23-controlled-candidate-zip',
     title: '16029 740W v43 v23 受控候选复核包',
     category: '最新受控候选（未释放）',
-    description: 'v43-int-v23-all-sources-isolated：精确结构 gate 11/11 PASS，302 个受控源文件 changed=0，39 个模块放置与 7 个 restored-v43 放置全部使用候选本地副本，最终装配外部引用 0；releaseEligible=false，仍需结构工程师和样机签核。',
+    description: 'v43-int-v23-all-sources-isolated：精确结构检查 11/11 通过，302 个受控源文件未改动；39 个模块与 7 个恢复放置均使用候选本地副本，最终装配外部引用为 0。当前未释放，仍需结构工程师和样机签核。',
     fileName: 'review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip',
     sourcePath: resolve(ROOT, 'workers/generation_logs/review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip'),
     path: resolve(MODEL_DOWNLOAD_DIR, 'review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip'),
@@ -1097,7 +1097,7 @@ function renderPage(request) {
             </div>
             <div>
               <span>自动证据</span>
-              <strong>controlled_candidate_pass</strong>
+              <strong>自动结构检查通过</strong>
             </div>
             <div>
               <span>问题反馈</span>
@@ -1219,7 +1219,7 @@ function renderPage(request) {
         <section id="downloads" class="panel">
           <div class="top">
             <div>
-              <h2>审核包下载</h2>
+              <h2>模型与审核资料</h2>
               <p class="muted">当前主入口为 v23 受控候选、预签核证据和签核模板；模型文件从指定共享目录提供，v18 与 800W 仅作历史参考。</p>
             </div>
             <span class="chip good">受保护下载</span>
@@ -1283,7 +1283,7 @@ function renderPage(request) {
                   <label>标注截图/PDF<input name="attachments" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" multiple required /></label>
                   <p class="feedback-upload-note">最多 ${MAX_ATTACHMENT_COUNT} 个附件；单个不超过 ${formatBytes(MAX_ATTACHMENT_BYTES)}，合计不超过 ${formatBytes(MAX_ATTACHMENT_TOTAL_BYTES)}。只接受 PNG、JPG、WEBP、PDF。</p>
                 </div>
-                <div class="feedback-boundary">反馈会保存到共享目录“参数化模型下载及反馈/工程反馈”。反馈记录不是工程签核，不会自动改变样机资格或 production_release_eligible=false。</div>
+                <div class="feedback-boundary">反馈保存到共享目录“参数化模型下载及反馈/工程反馈”。反馈仅作为问题记录，不是工程签核，也不会授予样机或生产释放资格。</div>
               </div>
               <div class="feedback-submit-row">
                 <button id="feedbackSubmitButton" type="submit">提交并生成问题编号</button>
