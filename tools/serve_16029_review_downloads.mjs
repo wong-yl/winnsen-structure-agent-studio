@@ -794,7 +794,7 @@ function renderShell(content, username = '') {
   .side-card { margin-top: 18px; padding: 14px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: rgba(255,255,255,.07); }
   .side-card strong, .side-card span { display:block; }
   .side-card span { color:#c6d2e4; font-size:12px; }
-  main { padding: 28px; }
+  main { padding: 28px; display:flex; flex-direction:column; }
   .auth-wrap { min-height: 100vh; display:grid; place-items:center; padding:24px; }
   .auth-card, .panel, .asset-card, .feedback-row { border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: 0 12px 32px rgba(20,35,70,.08); }
   .auth-card { width: min(460px, 100%); padding: 24px; }
@@ -813,6 +813,7 @@ function renderShell(content, username = '') {
   button.danger, .button.danger { background:#fff5f5; color:var(--risk); border:1px solid #f4c2c2; }
   .top { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; margin-bottom:18px; }
   .top p { margin:8px 0 0; }
+  .top-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
   .nav-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
   .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
   .chip { padding:6px 10px; border-radius:999px; background:#eef3ff; border:1px solid #c8d5ee; color:#28476d; font-size:12px; font-weight:700; }
@@ -820,6 +821,20 @@ function renderShell(content, username = '') {
   .chip.warn { color:var(--warn); border-color:#f5d08d; background:#fff8e8; }
   .gate-warning { margin-top:14px; padding:12px 14px; border:1px solid #f5d08d; border-radius:8px; background:#fff8e8; color:#8a4f00; line-height:1.55; }
   .panel { padding:18px; margin-bottom:16px; }
+  .review-overview { order:0; }
+  #feedback { order:1; }
+  #feedback-history { order:2; }
+  #downloads { order:3; }
+  #generate { order:4; }
+  .auxiliary-panel { padding:0; }
+  .auxiliary-panel > summary { list-style:none; cursor:pointer; padding:18px; }
+  .auxiliary-panel > summary::-webkit-details-marker { display:none; }
+  .auxiliary-summary { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .auxiliary-summary-copy { display:grid; gap:4px; }
+  .auxiliary-summary-copy p { margin:0; }
+  .auxiliary-summary-action { color:var(--brand); font-weight:700; white-space:nowrap; }
+  .auxiliary-panel[open] .auxiliary-summary { border-bottom:1px solid var(--line); }
+  .auxiliary-body { padding:18px; }
   .mode-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
   .mode-card { min-height:96px; padding:14px; border:1px solid var(--line); border-radius:8px; background:#f8fbff; color:var(--ink); text-align:left; display:grid; gap:6px; align-content:start; cursor:pointer; }
   .mode-card strong, .mode-card span { display:block; }
@@ -970,9 +985,9 @@ function renderPage(request) {
         <h2>16029 审核系统</h2>
         <p>登录后可下载 v23 受控候选、提交结构问题和标注截图，也保留完整装配体与单模型任务入口。</p>
         <div class="nav-links">
-          <a class="button secondary" href="#generate">模型任务</a>
-          <a class="button secondary" href="#downloads">下载</a>
-          <a class="button secondary" href="#feedback">反馈</a>
+          <a class="button" href="#feedback">提交问题</a>
+          <a class="button secondary" href="#downloads">下载模型</a>
+          <a class="button secondary" href="#generate">辅助生成</a>
         </div>
         <div class="side-card">
           <span>当前轮次</span>
@@ -985,7 +1000,7 @@ function renderPage(request) {
         </div>
       </aside>
       <main>
-        <section class="panel">
+        <section class="panel review-overview">
           <div class="top">
             <div>
               <p class="eyebrow">ENGINEER REVIEW</p>
@@ -997,7 +1012,10 @@ function renderPage(request) {
                 <span class="chip">v23 受控候选</span>
               </div>
             </div>
-            <a class="button" href="#feedback">上传问题</a>
+            <div class="top-actions">
+              <a class="button" href="#feedback">提交问题</a>
+              <a class="button secondary" href="#downloads">下载模型</a>
+            </div>
           </div>
           <div class="quick-status">
             <div>
@@ -1015,14 +1033,15 @@ function renderPage(request) {
           </div>
         </section>
 
-        <section id="generate" class="panel">
-          <div class="top">
-            <div>
-              <h2>模型任务</h2>
-              <p class="muted">默认自动判断生成完整装配体还是单个模型。需要改时，直接点下面两张卡。</p>
+        <details id="generate" class="panel auxiliary-panel">
+          <summary class="auxiliary-summary">
+            <div class="auxiliary-summary-copy">
+              <h2>辅助生成工具</h2>
+              <p class="muted">需要补充完整装配体或单模型任务时再展开，不影响当前审核与反馈。</p>
             </div>
-            <span class="chip warn">审核页</span>
-          </div>
+            <span class="auxiliary-summary-action">展开工具</span>
+          </summary>
+          <div class="auxiliary-body">
           <div class="studio-grid">
             <form id="generationForm" class="generator-form">
               <label>自然语言/参数化提示词
@@ -1121,7 +1140,8 @@ function renderPage(request) {
               </div>
             </div>
           </div>
-        </section>
+          </div>
+        </details>
 
         <section id="downloads" class="panel">
           <div class="top">
