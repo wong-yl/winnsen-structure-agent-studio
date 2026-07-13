@@ -870,7 +870,19 @@ function renderShell(content, username = '') {
   .history-assets .asset-list { margin:0 14px 14px; background:#fff; border:1px solid var(--line); border-bottom:0; border-radius:7px; padding:0 14px; }
   .meta { display:grid; gap:6px; font-size:12px; color:var(--muted); }
   .meta b { color:var(--ink); word-break:break-all; }
-  .feedback-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; }
+  .feedback-form { display:grid; gap:20px; }
+  .feedback-section { min-width:0; margin:0; padding:0; border:0; }
+  .feedback-section legend { width:100%; margin:0 0 12px; padding:0; color:var(--ink); font-size:16px; font-weight:700; }
+  .feedback-step { display:inline-flex; width:26px; height:26px; margin-right:8px; align-items:center; justify-content:center; border-radius:50%; background:var(--brand); color:#fff; font-size:12px; vertical-align:middle; }
+  .feedback-meta-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  .feedback-detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; padding-top:18px; border-top:1px solid var(--line); }
+  .feedback-column { display:grid; align-content:start; gap:12px; }
+  .feedback-column label { margin:0; }
+  .feedback-column textarea { min-height:112px; }
+  .feedback-evidence { padding-top:18px; border-top:1px solid var(--line); }
+  .feedback-evidence-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.72fr); gap:20px; align-items:start; }
+  .feedback-submit-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:14px; }
+  .feedback-submit-row .muted { margin:0; font-size:13px; }
   .studio-grid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(360px, .9fr); gap:16px; align-items:start; }
   .generator-form { display:grid; gap:12px; }
   .field-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:10px; }
@@ -922,7 +934,7 @@ function renderShell(content, username = '') {
   .alert { padding:10px 12px; margin-top:14px; border-radius:8px; background:#fff5f5; color:var(--risk); border:1px solid #f4c2c2; }
   .ok { padding:10px 12px; margin-top:12px; border-radius:8px; background:#edf9f1; color:var(--good); border:1px solid #bfe5cf; }
   @media (max-width: 1100px) { .studio-grid { grid-template-columns:1fr; } }
-  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .feedback-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
+  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
   @media (max-width: 640px) { .asset-row { grid-template-columns:1fr; gap:12px; } .asset-download { width:100%; } }
 </style>
 </head>
@@ -1185,9 +1197,10 @@ function renderPage(request) {
         <section id="feedback" class="panel" style="margin-top:16px">
           <h2>上传结构问题反馈</h2>
           <p class="muted">一个问题提交一条记录。请填写模型位置、当前问题、期望结果和验收标准，并上传带红框或箭头的截图。</p>
-          <div class="feedback-boundary">反馈会保存到共享目录“参数化模型下载及反馈/工程反馈”。反馈记录不是工程签核，不会自动改变样机资格或 production_release_eligible=false。</div>
-          <form id="feedbackForm" class="feedback-grid">
-            <div>
+          <form id="feedbackForm" class="feedback-form">
+            <fieldset class="feedback-section">
+              <legend><span class="feedback-step">1</span>审核范围</legend>
+              <div class="feedback-meta-grid">
               <label>审核人姓名<input name="reviewerName" value="${htmlEscape(username)}" required /></label>
               <label>专业/角色<input name="discipline" placeholder="结构 / 工艺 / 项目" /></label>
               <label>审核对象
@@ -1213,20 +1226,38 @@ function renderPage(request) {
                   <option value="pass">未发现问题（仅反馈）</option>
                 </select>
               </label>
-            </div>
-            <div>
+              </div>
+            </fieldset>
+            <div class="feedback-detail-grid">
+              <fieldset class="feedback-section feedback-column">
+                <legend><span class="feedback-step">2</span>问题定位</legend>
               <label>模型/零件名称<input name="componentName" required placeholder="例如：储物柜门装配_L6 / 锁孔基准" /></label>
               <label>具体位置<input name="modelLocation" required placeholder="例如：左列 6/12 门后，锁侧中部" /></label>
               <label>当前问题<textarea name="currentProblem" required placeholder="说明现在看到了什么，不要只写“这里不对”"></textarea></label>
+              </fieldset>
+              <fieldset class="feedback-section feedback-column">
+                <legend><span class="feedback-step">3</span>处理与验收</legend>
               <label>期望结果<textarea name="expectedResult" required placeholder="说明应移动、删除、补强或按哪个基准对齐"></textarea></label>
-              <label>关键尺寸/公差<textarea name="keyDimensionTolerance" placeholder="没有确认尺寸可填写“待工程师测量”"></textarea></label>
-              <label>参考模型或图纸<textarea name="referenceBasis" placeholder="例如：1000W gold/source、正式图号或现场样件"></textarea></label>
               <label>验收标准<textarea name="acceptanceCriteria" required placeholder="修改后如何判断这一条已经关闭"></textarea></label>
-              <label>标注截图/PDF<input name="attachments" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" multiple required /></label>
-              <p class="feedback-upload-note">最多 ${MAX_ATTACHMENT_COUNT} 个附件；单个不超过 ${formatBytes(MAX_ATTACHMENT_BYTES)}，合计不超过 ${formatBytes(MAX_ATTACHMENT_TOTAL_BYTES)}。只接受 PNG、JPG、WEBP、PDF。</p>
-              <button id="feedbackSubmitButton" type="submit">提交并生成问题编号</button>
-              <div id="feedbackStatus"></div>
+              <label>关键尺寸/公差<input name="keyDimensionTolerance" placeholder="没有确认尺寸可填写“待工程师测量”" /></label>
+              <label>参考模型或图纸<input name="referenceBasis" placeholder="1000W gold/source、正式图号或现场样件" /></label>
+              </fieldset>
             </div>
+            <fieldset class="feedback-section feedback-evidence">
+              <legend><span class="feedback-step">4</span>附件与提交</legend>
+              <div class="feedback-evidence-grid">
+                <div>
+                  <label>标注截图/PDF<input name="attachments" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" multiple required /></label>
+                  <p class="feedback-upload-note">最多 ${MAX_ATTACHMENT_COUNT} 个附件；单个不超过 ${formatBytes(MAX_ATTACHMENT_BYTES)}，合计不超过 ${formatBytes(MAX_ATTACHMENT_TOTAL_BYTES)}。只接受 PNG、JPG、WEBP、PDF。</p>
+                </div>
+                <div class="feedback-boundary">反馈会保存到共享目录“参数化模型下载及反馈/工程反馈”。反馈记录不是工程签核，不会自动改变样机资格或 production_release_eligible=false。</div>
+              </div>
+              <div class="feedback-submit-row">
+                <button id="feedbackSubmitButton" type="submit">提交并生成问题编号</button>
+                <p class="muted">提交后生成独立 V23-Q 编号，可在下方团队反馈中查看。</p>
+              </div>
+              <div id="feedbackStatus"></div>
+            </fieldset>
           </form>
         </section>
         <section id="feedback-history" class="panel">
