@@ -853,10 +853,21 @@ function renderShell(content, username = '') {
   .progress-track { height:8px; overflow:hidden; border-radius:999px; background:#e3eaf5; }
   .progress-track span { display:block; height:100%; width:0; background:linear-gradient(90deg, var(--hot), #ff8a4b); transition:width .35s ease; }
   .progress-label { color:var(--muted); font-size:12px; }
-  .asset-grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; }
-  .asset-card { padding:16px; display:grid; gap:12px; }
-  .asset-card strong { font-size:17px; }
-  .asset-card p { margin:0; color:var(--muted); line-height:1.5; font-size:13px; }
+  .asset-library { display:grid; gap:16px; }
+  .asset-list { border-top:1px solid var(--line); }
+  .asset-row { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:20px; padding:16px 0; border-bottom:1px solid var(--line); }
+  .asset-row.current:first-child { padding-top:18px; }
+  .asset-copy { min-width:0; display:grid; gap:7px; }
+  .asset-title-line { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+  .asset-title-line h3 { margin:0; font-size:18px; line-height:1.35; }
+  .asset-row p { margin:0; max-width:86ch; color:var(--muted); line-height:1.55; font-size:14px; }
+  .asset-file-meta { display:flex; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:13px; }
+  .asset-download { min-width:120px; }
+  .history-assets { border:1px solid var(--line); border-radius:8px; background:var(--soft); }
+  .history-assets > summary { min-height:46px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; color:var(--brand); font-weight:700; }
+  .history-assets > summary::after { content:'展开'; color:var(--muted); font-size:13px; font-weight:400; }
+  .history-assets[open] > summary::after { content:'收起'; }
+  .history-assets .asset-list { margin:0 14px 14px; background:#fff; border:1px solid var(--line); border-bottom:0; border-radius:7px; padding:0 14px; }
   .meta { display:grid; gap:6px; font-size:12px; color:var(--muted); }
   .meta b { color:var(--ink); word-break:break-all; }
   .feedback-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; }
@@ -911,7 +922,8 @@ function renderShell(content, username = '') {
   .alert { padding:10px 12px; margin-top:14px; border-radius:8px; background:#fff5f5; color:var(--risk); border:1px solid #f4c2c2; }
   .ok { padding:10px 12px; margin-top:12px; border-radius:8px; background:#edf9f1; color:var(--good); border:1px solid #bfe5cf; }
   @media (max-width: 1100px) { .studio-grid { grid-template-columns:1fr; } }
-  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .asset-grid, .feedback-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
+  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .feedback-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
+  @media (max-width: 640px) { .asset-row { grid-template-columns:1fr; gap:12px; } .asset-download { width:100%; } }
 </style>
 </head>
 <body>${content}</body>
@@ -919,16 +931,32 @@ function renderShell(content, username = '') {
 }
 
 function renderAssetCards() {
-  return orderedAssets().map(assetInfo).map((asset) => `
-    <article class="asset-card">
-      <div>
-        <h2>${htmlEscape(asset.title)}</h2>
-        <span class="chip">${htmlEscape(asset.category)}</span>
+  const assets = orderedAssets().map(assetInfo)
+  const renderRow = (asset, current) => `
+    <article class="asset-row${current ? ' current' : ''}">
+      <div class="asset-copy">
+        <div class="asset-title-line">
+          <h3>${htmlEscape(asset.title)}</h3>
+          <span class="chip${current && asset.id === CURRENT_V23_ASSET_ID ? ' good' : ''}">${htmlEscape(asset.category)}</span>
+        </div>
+        <p>${htmlEscape(asset.description)}</p>
+        <div class="asset-file-meta">
+          <span>${htmlEscape(asset.fileName)}</span>
+          ${asset.available ? `<span>${formatBytes(asset.sizeBytes)}</span>` : '<span>共享目录文件缺失</span>'}
+        </div>
       </div>
-      <p>${htmlEscape(asset.description)}</p>
-      ${asset.available ? `<a class="button" href="/download/${asset.id}">下载</a>` : '<button disabled>共享目录文件缺失</button>'}
+      ${asset.available ? `<a class="button${current ? '' : ' secondary'} asset-download" href="/download/${asset.id}">下载文件</a>` : '<button class="asset-download" disabled>文件缺失</button>'}
     </article>
-  `).join('')
+  `
+  const currentAssets = assets.slice(0, 3)
+  const historicalAssets = assets.slice(3)
+  return `
+    <div class="asset-list current-assets">${currentAssets.map((asset) => renderRow(asset, true)).join('')}</div>
+    <details class="history-assets">
+      <summary>历史参考文件（${historicalAssets.length}）</summary>
+      <div class="asset-list">${historicalAssets.map((asset) => renderRow(asset, false)).join('')}</div>
+    </details>
+  `
 }
 
 function feedbackRows(rows) {
@@ -1151,7 +1179,7 @@ function renderPage(request) {
             </div>
             <span class="chip good">受保护下载</span>
           </div>
-          <div class="asset-grid">${assetCards}</div>
+          <div class="asset-library">${assetCards}</div>
         </section>
 
         <section id="feedback" class="panel" style="margin-top:16px">
