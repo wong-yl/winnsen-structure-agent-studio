@@ -909,6 +909,22 @@ function renderShell(content, username = '') {
   .feedback-evidence-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.72fr); gap:20px; align-items:start; }
   .feedback-submit-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:14px; }
   .feedback-submit-row .muted { margin:0; font-size:13px; }
+  .feedback-simple { max-width:860px; }
+  .feedback-simple-intro { margin:8px 0 0; }
+  .feedback-core { display:grid; gap:18px; }
+  .feedback-core label { color:var(--ink); font-weight:700; font-size:16px; }
+  .feedback-core label input,
+  .feedback-core label textarea { margin-top:2px; font-weight:400; }
+  .feedback-core textarea { min-height:140px; }
+  .feedback-core input[type="file"] { padding:8px 10px; }
+  .feedback-field-number { display:inline-flex; width:24px; height:24px; margin-right:8px; align-items:center; justify-content:center; border-radius:50%; background:var(--brand); color:#fff; font-size:12px; font-weight:800; vertical-align:middle; }
+  .feedback-field-hint { margin:5px 0 0; color:var(--muted); font-size:13px; font-weight:400; }
+  .feedback-options { border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .feedback-options > summary { min-height:48px; display:flex; align-items:center; cursor:pointer; color:var(--brand); font-weight:700; }
+  .feedback-options-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:0 0 16px; }
+  .feedback-options-grid .wide { grid-column:1 / -1; }
+  .feedback-simple .feedback-boundary { margin:0; padding:0; border:0; background:transparent; color:var(--muted); font-size:13px; }
+  .feedback-simple .feedback-submit-row { justify-content:flex-start; margin-top:0; }
   .studio-grid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(360px, .9fr); gap:16px; align-items:start; }
   .generator-form { display:grid; gap:12px; }
   .field-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:10px; }
@@ -972,7 +988,8 @@ function renderShell(content, username = '') {
     .account-card .button { min-height:44px; margin:0 !important; padding:0 10px; font-size:14px; }
     main { padding:16px; }
     section, details { scroll-margin-top:72px; }
-    .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; }
+    .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .feedback-options-grid, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; }
+    .feedback-options-grid .wide { grid-column:auto; }
     .quick-status { gap:12px; }
     .quick-status div, .quick-status div:first-child { padding:12px 0 0; border-left:0; border-top:1px solid var(--line); }
     .quick-status div:first-child { padding-top:0; border-top:0; }
@@ -1236,70 +1253,65 @@ function renderPage(request) {
           <div class="asset-library">${assetCards}</div>
         </section>
 
-        <section id="feedback" class="panel">
-          <h2>上传结构问题反馈</h2>
-          <p class="muted">一个问题提交一条记录。请填写模型位置、当前问题、期望结果和验收标准，并上传带红框或箭头的截图。</p>
-          <form id="feedbackForm" class="feedback-form">
-            <fieldset class="feedback-section">
-              <legend><span class="feedback-step">1</span>审核范围</legend>
-              <div class="feedback-meta-grid">
-              <label>审核人姓名<input name="reviewerName" value="${htmlEscape(username)}" required /></label>
-              <label>专业/角色<input name="discipline" placeholder="结构 / 工艺 / 项目" /></label>
-              <label>审核对象
-                <select name="reviewTarget">
-                  ${orderedAssets().map((asset) => `<option value="${asset.id}"${asset.id === CURRENT_V23_ASSET_ID ? ' selected' : ''}>${htmlEscape(asset.title)}</option>`).join('')}
-                </select>
+        <section id="feedback" class="panel" aria-label="上传结构问题反馈">
+          <h2>上传问题和截图</h2>
+          <p class="muted feedback-simple-intro">只填下面三项。账号、当前模型和默认处理要求由系统自动记录。</p>
+          <form id="feedbackForm" class="feedback-form feedback-simple">
+            <input type="hidden" name="reviewerName" value="${htmlEscape(username)}" />
+            <input type="hidden" name="discipline" value="结构审核" />
+            <div class="feedback-core">
+              <label><span class="feedback-field-number">1</span>问题位置
+                <input name="componentName" required placeholder="例如：左列第 6 门 / 锁孔附近" />
+                <span class="feedback-field-hint">写到能让工程师在模型里找到即可。</span>
               </label>
-              <label>问题分类
-                <select name="issueCategory">
-                  ${Object.entries(ISSUE_CATEGORY_LABELS).map(([value, label]) => `<option value="${value}">${htmlEscape(label)}</option>`).join('')}
-                </select>
+              <label><span class="feedback-field-number">2</span>问题描述
+                <textarea name="currentProblem" required placeholder="例如：锁舌中心与锁孔中心没有对齐，关门时会碰撞。"></textarea>
+                <span class="feedback-field-hint">说明现在看到了什么；一次只提交一个问题。</span>
               </label>
-              <label>严重度
-                <select name="severity">
-                  ${Object.entries(SEVERITY_LABELS).map(([value, label]) => `<option value="${value}"${value === 'P1' ? ' selected' : ''}>${htmlEscape(label)}</option>`).join('')}
-                </select>
+              <label><span class="feedback-field-number">3</span>问题截图或 PDF
+                <input name="attachments" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" multiple required />
+                <span class="feedback-field-hint">请尽量画红框或箭头。最多 ${MAX_ATTACHMENT_COUNT} 个，合计不超过 ${formatBytes(MAX_ATTACHMENT_TOTAL_BYTES)}。</span>
               </label>
-              <label>结论
-                <select name="decision">
-                  <option value="needs_changes" selected>需修改</option>
-                  <option value="blocked">阻塞</option>
-                  <option value="cannot_judge">无法判断</option>
-                  <option value="pass">未发现问题（仅反馈）</option>
-                </select>
-              </label>
-              </div>
-            </fieldset>
-            <div class="feedback-detail-grid">
-              <fieldset class="feedback-section feedback-column">
-                <legend><span class="feedback-step">2</span>问题定位</legend>
-              <label>模型/零件名称<input name="componentName" required placeholder="例如：储物柜门装配_L6 / 锁孔基准" /></label>
-              <label>具体位置<input name="modelLocation" required placeholder="例如：左列 6/12 门后，锁侧中部" /></label>
-              <label>当前问题<textarea name="currentProblem" required placeholder="说明现在看到了什么，不要只写“这里不对”"></textarea></label>
-              </fieldset>
-              <fieldset class="feedback-section feedback-column">
-                <legend><span class="feedback-step">3</span>处理与验收</legend>
-              <label>期望结果<textarea name="expectedResult" required placeholder="说明应移动、删除、补强或按哪个基准对齐"></textarea></label>
-              <label>验收标准<textarea name="acceptanceCriteria" required placeholder="修改后如何判断这一条已经关闭"></textarea></label>
-              <label>关键尺寸/公差<input name="keyDimensionTolerance" placeholder="没有确认尺寸可填写“待工程师测量”" /></label>
-              <label>参考模型或图纸<input name="referenceBasis" placeholder="1000W gold/source、正式图号或现场样件" /></label>
-              </fieldset>
             </div>
-            <fieldset class="feedback-section feedback-evidence">
-              <legend><span class="feedback-step">4</span>附件与提交</legend>
-              <div class="feedback-evidence-grid">
-                <div>
-                  <label>标注截图/PDF<input name="attachments" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" multiple required /></label>
-                  <p class="feedback-upload-note">最多 ${MAX_ATTACHMENT_COUNT} 个附件；单个不超过 ${formatBytes(MAX_ATTACHMENT_BYTES)}，合计不超过 ${formatBytes(MAX_ATTACHMENT_TOTAL_BYTES)}。只接受 PNG、JPG、WEBP、PDF。</p>
-                </div>
-                <div class="feedback-boundary">反馈保存到共享目录“参数化模型下载及反馈/工程反馈”。反馈仅作为问题记录，不是工程签核，也不会授予样机或生产释放资格。</div>
+            <details class="feedback-options">
+              <summary>补充信息（可选）</summary>
+              <div class="feedback-options-grid">
+                <label>更具体的位置<input name="modelLocation" placeholder="例如：左列 6/12 门后，锁侧中部" /></label>
+                <label>审核对象
+                  <select name="reviewTarget">
+                    ${orderedAssets().map((asset) => `<option value="${asset.id}"${asset.id === CURRENT_V23_ASSET_ID ? ' selected' : ''}>${htmlEscape(asset.title)}</option>`).join('')}
+                  </select>
+                </label>
+                <label>问题分类
+                  <select name="issueCategory">
+                    ${Object.entries(ISSUE_CATEGORY_LABELS).map(([value, label]) => `<option value="${value}"${value === 'other_structure_issue' ? ' selected' : ''}>${htmlEscape(label)}</option>`).join('')}
+                  </select>
+                </label>
+                <label>严重度
+                  <select name="severity">
+                    ${Object.entries(SEVERITY_LABELS).map(([value, label]) => `<option value="${value}"${value === 'P1' ? ' selected' : ''}>${htmlEscape(label)}</option>`).join('')}
+                  </select>
+                </label>
+                <label>处理结论
+                  <select name="decision">
+                    <option value="needs_changes" selected>需修改</option>
+                    <option value="blocked">阻塞</option>
+                    <option value="cannot_judge">无法判断</option>
+                    <option value="pass">未发现问题（仅反馈）</option>
+                  </select>
+                </label>
+                <label>关键尺寸/公差<input name="keyDimensionTolerance" placeholder="没有确认尺寸可留空" /></label>
+                <label class="wide">期望处理<textarea name="expectedResult" placeholder="如有明确处理方式可填写；不填则按问题描述和截图处理。"></textarea></label>
+                <label class="wide">验收说明<textarea name="acceptanceCriteria" placeholder="如有明确验收条件可填写；不填则由提交人复核确认。"></textarea></label>
+                <label class="wide">参考模型或图纸<input name="referenceBasis" placeholder="正式图号、参考模型或现场样件" /></label>
               </div>
-              <div class="feedback-submit-row">
-                <button id="feedbackSubmitButton" type="submit">提交并生成问题编号</button>
-                <p class="muted">提交后生成独立 V23-Q 编号，可在下方团队反馈中查看。</p>
-              </div>
-              <div id="feedbackStatus"></div>
-            </fieldset>
+            </details>
+            <div class="feedback-boundary">反馈会保存到共享目录；它是问题记录，不是工程签核。</div>
+            <div class="feedback-submit-row">
+              <button id="feedbackSubmitButton" type="submit">上传问题</button>
+              <p class="muted">成功后会生成 V23-Q 编号。</p>
+            </div>
+            <div id="feedbackStatus"></div>
           </form>
         </section>
         <section id="feedback-history" class="panel">
@@ -2168,6 +2180,7 @@ function renderPage(request) {
         feedbackSubmitButton.disabled = true
         try {
           const attachments = await Promise.all(files.map(fileToEntry))
+          const componentName = String(data.get('componentName') || '').trim()
           const response = await fetch('/feedback', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2178,13 +2191,13 @@ function renderPage(request) {
               issueCategory: data.get('issueCategory'),
               severity: data.get('severity'),
               decision: data.get('decision'),
-              componentName: data.get('componentName'),
-              modelLocation: data.get('modelLocation'),
+              componentName,
+              modelLocation: data.get('modelLocation') || componentName,
               currentProblem: data.get('currentProblem'),
-              expectedResult: data.get('expectedResult'),
+              expectedResult: data.get('expectedResult') || '请按问题描述和标注截图修正',
               keyDimensionTolerance: data.get('keyDimensionTolerance'),
               referenceBasis: data.get('referenceBasis'),
-              acceptanceCriteria: data.get('acceptanceCriteria'),
+              acceptanceCriteria: data.get('acceptanceCriteria') || '修改后由提交人复核确认',
               attachments,
             }),
           })
