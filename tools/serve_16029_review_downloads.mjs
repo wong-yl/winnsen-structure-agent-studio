@@ -787,7 +787,7 @@ function renderShell(content, username = '') {
   a { color: inherit; }
   a:not(.button):visited { color:#5c3d87; }
   .shell { min-height: 100vh; display: grid; grid-template-columns: 280px minmax(0, 1fr); }
-  aside { padding: 24px 18px; background: linear-gradient(180deg, #1f3585, #102055); color: #fff; }
+  aside { position:sticky; top:0; height:100vh; padding: 24px 18px; background: linear-gradient(180deg, #1f3585, #102055); color: #fff; }
   .portal-logo { width: 156px; height: 56px; margin-bottom: 18px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:#fff; overflow:hidden; }
   .portal-logo img { max-width: 138px; max-height: 42px; object-fit:contain; }
   aside h2 { margin: 0 0 8px; font-size: 18px; }
@@ -941,7 +941,26 @@ function renderShell(content, username = '') {
   .alert { padding:10px 12px; margin-top:14px; border-radius:8px; background:#fff5f5; color:var(--risk); border:1px solid #f4c2c2; }
   .ok { padding:10px 12px; margin-top:12px; border-radius:8px; background:#edf9f1; color:var(--good); border:1px solid #bfe5cf; }
   @media (max-width: 1100px) { .studio-grid { grid-template-columns:1fr; } }
-  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:sticky; top:0; z-index:20; height:auto; padding:10px 14px 12px; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:8px 10px; box-shadow:0 8px 24px rgba(16,32,85,.18); }
+    .portal-logo { grid-column:1; grid-row:1; width:92px; height:40px; margin:0; }
+    .portal-logo img { max-width:82px; max-height:30px; }
+    aside h2 { grid-column:2; grid-row:1; margin:0; font-size:16px; }
+    .side-intro, .round-card { display:none; }
+    .nav-links { grid-column:1 / -1; grid-row:2; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0; }
+    .nav-links .button { min-width:0; padding:0 8px; font-size:14px; }
+    .account-card { grid-column:3; grid-row:1; margin:0; padding:0; border:0; background:transparent; }
+    .account-card span, .account-card strong { display:none; }
+    .account-card .button { min-height:44px; margin:0 !important; padding:0 10px; font-size:14px; }
+    main { padding:16px; }
+    section, details { scroll-margin-top:112px; }
+    .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; }
+    .top { flex-direction:column; }
+    #cabinetPreview { height:360px; }
+    .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; }
+    .viewport-hud { position:static; margin:8px; max-width:none; }
+  }
   @media (max-width: 640px) { .asset-row { grid-template-columns:1fr; gap:12px; } .asset-download { width:100%; } }
 </style>
 </head>
@@ -1030,17 +1049,17 @@ function renderPage(request) {
           <img src="/brand/winnsen-logo.jpg" alt="Winnsen" />
         </div>
         <h2>16029 审核系统</h2>
-        <p>登录后可下载 v23 受控候选、提交结构问题和标注截图，也保留完整装配体与单模型任务入口。</p>
+        <p class="side-intro">登录后可下载 v23 受控候选、提交结构问题和标注截图，也保留完整装配体与单模型任务入口。</p>
         <div class="nav-links">
           <a class="button" href="#feedback">提交问题</a>
           <a class="button secondary" href="#downloads">下载模型</a>
           <a class="button secondary" href="#generate">辅助生成</a>
         </div>
-        <div class="side-card">
+        <div class="side-card round-card">
           <span>当前轮次</span>
           <strong>16029 740W v43 内部钣金</strong>
         </div>
-        <div class="side-card">
+        <div class="side-card account-card">
           <span>登录账号</span>
           <strong>${htmlEscape(username)}</strong>
           <a class="button secondary" href="/logout" style="margin-top:10px">退出</a>
