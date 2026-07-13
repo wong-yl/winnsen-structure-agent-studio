@@ -1,0 +1,81 @@
+{
+  "schema": "winnsen.locker16029.v43_exact_structure_contract.v1",
+  "route": {
+    "product": "16029",
+    "cabinetWidthMm": 740,
+    "cabinetHeightMm": 1917,
+    "cabinetDepthMm": 550,
+    "rowSequence": "L642-R246",
+    "doorCount": 6,
+    "templateSeed": "740W / L642-R246 / v43",
+    "structuralReference": "1000W x 1917H x 550D gold/source"
+  },
+  "expected": {
+    "topLevelDoorModules": {
+      "exactCount": 6,
+      "names": [
+        "储物柜门装配_L6",
+        "储物柜门装配_L4",
+        "储物柜门装配_L2",
+        "储物柜门装配_R2",
+        "储物柜门装配_R4",
+        "储物柜门装配_R6"
+      ]
+    },
+    "doorLockTongues": {
+      "exactVisibleCount": 6
+    },
+    "lockHoleDatums": {
+      "exactTopLevelCount": 6,
+      "rule": "one visible cabinet-side datum for each visible door lock tongue; copied historical datums must be removed or suppressed"
+    },
+    "centerMaintenanceSheetMetal": {
+      "exactTopLevelCount": 1
+    },
+    "electricalOrElectricLockComponents": {
+      "exactVisibleCount": 0
+    },
+    "exactTopLevelRoles": [
+      {
+        "id": "left_side_weldment",
+        "contains": "箱体左侧板焊接",
+        "exactCount": 1
+      },
+      {
+        "id": "right_side_weldment",
+        "contains": "箱体右侧板焊接",
+        "exactCount": 1
+      },
+      {
+        "id": "left_partition_weldment",
+        "contains": "箱体竖隔板L焊接",
+        "exactCount": 1
+      },
+      {
+        "id": "right_partition_weldment",
+        "contains": "箱体竖隔板R焊接",
+        "exactCount": 1
+      }
+    ],
+    "shelfBands": {
+      "toleranceMm": 30,
+      "clusterToleranceMm": 30,
+      "sides": {
+        "L": [940, 1550],
+        "R": [330, 940]
+      },
+      "rule": "every visible shelf-weldment body must belong to a requested row boundary; historical 638/1248 mm shelf bands are not allowed"
+    }
+  },
+  "statusBoundary": {
+    "passClassification": "controlled_candidate_pass",
+    "failureClassification": "needs_structure_revision",
+    "releaseEligible": false,
+    "note": "A PASS closes the exact visible-structure contract only. It does not release drawings, DXF, BOM, supplier process, tolerance stack, load, coating, or prototype validation."
+  },
+  "manualValidationStillRequired": [
+    "shelf locating foot to front-frame notch physical fit and tolerance",
+    "external face through-hole topology rather than name-only detection",
+    "door sag, lock engagement allowance, weld distortion, coating allowance, and prototype signoff"
+  ]
+}

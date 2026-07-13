@@ -2819,6 +2819,11 @@ td strong {
   background: #f7fdf9;
 }
 
+.handoff-gate-panel.gate-awaiting {
+  border-color: #f0d39b;
+  background: #fffbf2;
+}
+
 .handoff-gate-panel span,
 .handoff-gate-panel p,
 .handoff-gate-panel small {
@@ -2854,12 +2859,21 @@ td strong {
   color: #145f39;
 }
 
+.handoff-gate-panel.gate-awaiting .handoff-gate-checks > span {
+  color: #8a5a08;
+}
+
 .handoff-gate-checks small {
   padding: 7px 9px;
   border: 1px solid rgba(185, 28, 28, 0.16);
   border-radius: 7px;
   background: white;
   overflow-wrap: anywhere;
+}
+
+.signoff-template-link {
+  width: max-content;
+  margin-top: 12px;
 }
 
 .download-grid {

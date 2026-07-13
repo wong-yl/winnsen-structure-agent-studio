@@ -211,6 +211,12 @@ function Stop-IsolatedSolidWorksSessionFromBuildJson([string] $BuildJsonPath, [s
   }
 }
 
+function Stop-ToolSolidWorksSessionFromJson([string] $JsonPath, [string] $Label) {
+  $cleanupStatus = Stop-IsolatedSolidWorksSessionFromBuildJson $JsonPath $Label
+  Write-Host "[$Label session cleanup] $cleanupStatus"
+  Wait-NoRunningSolidWorks "$Label session shutdown" 60
+}
+
 function Invoke-IsolatedPlacedAssemblyBuild(
   [string] $ToolPath,
   [string] $PlacementsPath,
@@ -692,6 +698,100 @@ function Write-RestoredV43TemplatePlacementRows(
   }
 }
 
+function Get-ControlledSourceIntegrityRecord([string] $Path) {
+  $item = Get-Item -LiteralPath $Path -ErrorAction Stop
+  return [pscustomobject] @{
+    path = $item.FullName
+    length = [long] $item.Length
+    lastWriteTimeUtc = $item.LastWriteTimeUtc.ToString('o')
+    sha256 = (Get-FileHash -LiteralPath $item.FullName -Algorithm SHA256).Hash
+  }
+}
+
+function Add-ControlledSourceBaselineRecord($Baseline, [hashtable] $PathIndex, [string] $Path) {
+  $fullPath = [IO.Path]::GetFullPath($Path)
+  $key = $fullPath.ToLowerInvariant()
+  if (-not $PathIndex.ContainsKey($key)) {
+    $PathIndex[$key] = $true
+    $Baseline.Add((Get-ControlledSourceIntegrityRecord $fullPath)) | Out-Null
+  }
+}
+
+function Get-ControlledSourceDirectoryToken([string] $DirectoryPath) {
+  $sha = [Security.Cryptography.SHA256]::Create()
+  try {
+    $bytes = [Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($DirectoryPath)).ToLowerInvariant())
+    $hash = $sha.ComputeHash($bytes)
+    return ([BitConverter]::ToString($hash).Replace('-', '').Substring(0, 12)).ToLowerInvariant()
+  }
+  finally {
+    $sha.Dispose()
+  }
+}
+
+function Localize-PlacementSourceDirectories(
+  [string[]] $PlacementPaths,
+  [string] $CandidateRoot,
+  [string] $WorkingRoot,
+  $Baseline,
+  [hashtable] $PathIndex,
+  [hashtable] $DirectoryCopies
+) {
+  $candidatePrefix = [IO.Path]::GetFullPath($CandidateRoot).TrimEnd('\') + '\'
+  $workingPrefix = [IO.Path]::GetFullPath($WorkingRoot).TrimEnd('\') + '\'
+  $rewritten = 0
+  foreach ($placementPath in @($PlacementPaths)) {
+    if (-not (Test-Path -LiteralPath $placementPath -PathType Leaf)) {
+      continue
+    }
+    $lines = @(Get-Content -LiteralPath $placementPath -Encoding UTF8)
+    if ($lines.Count -le 1) {
+      continue
+    }
+    $out = New-Object System.Collections.Generic.List[string]
+    $out.Add($lines[0]) | Out-Null
+    foreach ($line in @($lines | Select-Object -Skip 1)) {
+      if ([string]::IsNullOrWhiteSpace($line)) {
+        continue
+      }
+      $columns = @($line -split "`t", -1)
+      if ($columns.Count -lt 2 -or [string]::IsNullOrWhiteSpace($columns[1])) {
+        $out.Add($line) | Out-Null
+        continue
+      }
+      $sourcePath = [IO.Path]::GetFullPath($columns[1])
+      if ($sourcePath.StartsWith($candidatePrefix, [StringComparison]::OrdinalIgnoreCase) -or
+          $sourcePath.StartsWith($workingPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        $out.Add($line) | Out-Null
+        continue
+      }
+      Assert-File $sourcePath 'placement source before candidate localization'
+      $sourceDir = [IO.Path]::GetDirectoryName($sourcePath)
+      $directoryKey = $sourceDir.ToLowerInvariant()
+      if (-not $DirectoryCopies.ContainsKey($directoryKey)) {
+        $targetDir = Join-Path $WorkingRoot ('placement_source_' + (Get-ControlledSourceDirectoryToken $sourceDir))
+        New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+        $nativeFiles = @(Get-ChildItem -LiteralPath $sourceDir -File | Where-Object { @('.sldasm', '.sldprt') -contains $_.Extension.ToLowerInvariant() })
+        if ($nativeFiles.Count -eq 0) {
+          throw "No SolidWorks native dependencies were found beside placement source: $sourcePath"
+        }
+        foreach ($nativeFile in $nativeFiles) {
+          Add-ControlledSourceBaselineRecord $Baseline $PathIndex $nativeFile.FullName
+          Copy-Item -LiteralPath $nativeFile.FullName -Destination (Join-Path $targetDir $nativeFile.Name) -Force
+        }
+        $DirectoryCopies[$directoryKey] = $targetDir
+      }
+      $localizedPath = Join-Path ([string] $DirectoryCopies[$directoryKey]) ([IO.Path]::GetFileName($sourcePath))
+      Assert-File $localizedPath 'candidate-local placement source'
+      $columns[1] = $localizedPath
+      $out.Add(($columns -join "`t")) | Out-Null
+      $rewritten += 1
+    }
+    [IO.File]::WriteAllLines($placementPath, $out, [Text.UTF8Encoding]::new($false))
+  }
+  return $rewritten
+}
+
 $root = Split-Path -Parent $PSScriptRoot
 $toolDir = Join-Path $root 'workers\solidworks_tools'
 $goldSourceRoot = 'C:\sw16029_standard_ascii'
@@ -700,6 +800,9 @@ $rulePlanner = Join-Path $root 'tools\locker_16029_template_rules.mjs'
 $moduleTargetsTool = Join-Path $root 'tools\locker_16029_gold_module_targets.mjs'
 $structureFeedbackTool = Join-Path $root 'tools\locker_16029_structure_feedback.mjs'
 $goldStructureGateTool = Join-Path $root 'tools\verify_16029_gold_structure_gate.mjs'
+$v43ExactStructureGateTool = Join-Path $root 'tools\verify_16029_v43_exact_structure_contract.mjs'
+$v43ExactStructureContract = Join-Path $root 'configs\locker_16029_v43_exact_structure_contract.json'
+$reviewCaptureTool = Join-Path $root 'workers\solidworks_tools\sw_capture_named_views.js'
 $goldSheetMetalRulesJson = Join-Path $root 'data\locker_16029_gold_sheetmetal_rules.json'
 $parametricScaffoldTool = Join-Path $root 'tools\generate_16029_parametric_scaffold_freecad.py'
 $templateRoot = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-740W-1917H-550D-L642-R246-ORDINARY-20260528'
@@ -707,7 +810,6 @@ $sourceAssembly = Join-Path $templateRoot 'v43_full\candidate_16029_740W_L642_R2
 $sourceResult = Join-Path $templateRoot 'v43_full\candidate_16029_740W_L642_R246_gold_hybrid_v43_hidden_lock_body_restored_tongue_result.json'
 $sourceComponents = Join-Path $templateRoot 'v43_full\candidate_16029_740W_L642_R246_gold_hybrid_v43_hidden_lock_body_restored_tongue_components.json'
 $sourcePlacements = Join-Path $templateRoot 'v43_full\candidate_16029_740W_L642_R246_gold_hybrid_v43_hidden_lock_body_restored_tongue_placements.tsv'
-$captureDir = Join-Path $templateRoot 'v43_full\review_captures_latest'
 $goldStructureTrace = Join-Path $root 'workers\generation_logs\gold_source_trace_16029\original_16029_total_assembly_structure.json'
 $NodeExe = $env:STUDIO_NODE_EXE
 if ([string]::IsNullOrWhiteSpace($NodeExe) -or -not (Test-Path -LiteralPath $NodeExe -PathType Leaf)) {
@@ -719,11 +821,13 @@ Assert-File $sourceAssembly 'template full assembly'
 Assert-File $sourceResult 'template build result'
 Assert-File $sourceComponents 'template component inspection'
 Assert-File $sourcePlacements 'template placement table'
-Assert-Dir $captureDir 'template review captures'
 Assert-File $rulePlanner 'template rule planner'
 Assert-File $moduleTargetsTool 'gold-source module target planner'
 Assert-File $structureFeedbackTool 'template structure feedback analyzer'
 Assert-File $goldStructureGateTool '1000W gold-source structure gate'
+Assert-File $v43ExactStructureGateTool 'v43 exact visible-structure gate'
+Assert-File $v43ExactStructureContract 'v43 exact visible-structure contract'
+Assert-File $reviewCaptureTool 'SolidWorks current-candidate review capture tool'
 Assert-File $goldSheetMetalRulesJson '1000W gold-source sheet-metal rules'
 Assert-File $parametricScaffoldTool 'parametric scaffold generator'
 
@@ -740,6 +844,19 @@ $captureOutDir = Join-Path $OutputDir 'review_captures'
 Reset-GeneratedSubdir $packDir $OutputDir 'Pack-and-Go output'
 Reset-GeneratedSubdir $evidenceDir $OutputDir 'evidence output'
 Reset-GeneratedSubdir $captureOutDir $OutputDir 'review capture output'
+$controlledSourceWorkingBase = Join-Path $root 'workers\tmp_16029_controlled_sources'
+New-Item -ItemType Directory -Force -Path $controlledSourceWorkingBase | Out-Null
+$controlledSourceWorkingToken = [regex]::Replace($RequestId, '[^A-Za-z0-9_-]', '_')
+$controlledSourceWorkingRoot = Join-Path $controlledSourceWorkingBase $controlledSourceWorkingToken
+Reset-GeneratedSubdir $controlledSourceWorkingRoot $controlledSourceWorkingBase 'controlled source working copy'
+$controlledSourceBaseline = New-Object System.Collections.Generic.List[object]
+$controlledSourcePathIndex = @{}
+$controlledSourceDirectoryCopies = @{}
+Add-ControlledSourceBaselineRecord $controlledSourceBaseline $controlledSourcePathIndex $sourceAssembly
+$controlledSourceSnapshotBeforeJson = Join-Path $evidenceDir 'controlled_source_integrity_before.json'
+$controlledSourceIntegrityJson = Join-Path $evidenceDir 'controlled_source_integrity_result.json'
+$controlledSourceImmutabilityStatus = 'pending'
+$controlledSourceChangedCount = 0
 
 $planJson = Join-Path $evidenceDir 'template_rule_plan.json'
 $planArgs = @(
@@ -931,12 +1048,21 @@ Wait-File $moduleTargetsShelfCandidatePlacementsTsv 'gold-source shelf binding c
 Wait-File $moduleTargetsCabinetCandidatePlacementsTsv 'gold-source cabinet body candidate placements tsv'
 Wait-File $moduleTargetsFullCandidatePlacementsTsv 'gold-source full assembly candidate placements tsv'
 $moduleTargets = Read-Json $moduleTargetsJson
+$localizedModuleTargetPlacementCount = Localize-PlacementSourceDirectories @(
+  $moduleTargetsFixedPlacementsTsv,
+  $moduleTargetsShelfCandidatePlacementsTsv,
+  $moduleTargetsCabinetCandidatePlacementsTsv,
+  $moduleTargetsFullCandidatePlacementsTsv
+) $OutputDir $controlledSourceWorkingRoot $controlledSourceBaseline $controlledSourcePathIndex $controlledSourceDirectoryCopies
 
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_pack_and_go_assembly.ps1')) 'compile pack-and-go assembly tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_inspect_assembly_components.ps1')) 'compile assembly structure inspection tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_rename_assembly_components.ps1')) 'compile assembly component rename tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_remove_assembly_components_by_pattern.ps1')) 'compile assembly component remover tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_restore_door_lock_tongues.ps1')) 'compile door lock tongue restore tool'
+Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_add_16029_v43_lock_hole_datums.ps1')) 'compile v43 lock-hole datum alignment tool'
+Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_normalize_16029_v43_shelf_bands.ps1')) 'compile v43 shelf-band normalization tool'
+Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_add_16029_center_maintenance_sheetmetal.ps1')) 'compile center maintenance sheet-metal add tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_repair_verified_v43_door_panel_feature.ps1')) 'compile verified v43 door-panel failed-feature repair tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_placed_components_module.ps1')) 'compile placed-components assembly tool'
 Invoke-External 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $toolDir 'build_probe_part_bodies.ps1')) 'compile part body probe tool'
@@ -1190,8 +1316,12 @@ if ($true) {
 
   $sourceLevelingFoot = Join-Path $goldSourceRoot ((TextFromCodes @(0x8C03,0x6574,0x811A,0x20,0x4D,0x31,0x32,0x58,0x36,0x30,0x28,0x6A21,0x578B,0x29)) + '.SLDPRT')
   if (Test-Path -LiteralPath $sourceLevelingFoot -PathType Leaf) {
+    Add-ControlledSourceBaselineRecord $controlledSourceBaseline $controlledSourcePathIndex $sourceLevelingFoot
     $footRole = TextFromCodes @(0x8C03,0x8282,0x811A)
-    $footNativePath = $sourceLevelingFoot
+    $footWorkingDir = Join-Path $controlledSourceWorkingRoot 'solidworks_standard'
+    New-Item -ItemType Directory -Force -Path $footWorkingDir | Out-Null
+    $footNativePath = Join-Path $footWorkingDir ([IO.Path]::GetFileName($sourceLevelingFoot))
+    Copy-Item -LiteralPath $sourceLevelingFoot -Destination $footNativePath -Force
     $footPlacements = @(
       @('LF', (-$CabinetWidthMm / 2.0 + 55.0), -17.0, -55.0),
       @('RF', ($CabinetWidthMm / 2.0 - 55.0), -17.0, -55.0),
@@ -1208,7 +1338,22 @@ if ($true) {
   if (-not $goldOriginalMaterialRoot) {
     throw "1000W source reference folder was not found under $desktopReferenceRoot"
   }
-  $goldOriginalEngineeringRoot = Join-Path $goldOriginalMaterialRoot (TextFromCodes @(0x31,0x2E,0x5DE5,0x7A0B,0x56FE))
+  $goldOriginalEngineeringSourceRoot = Join-Path $goldOriginalMaterialRoot (TextFromCodes @(0x31,0x2E,0x5DE5,0x7A0B,0x56FE))
+  $goldOriginalEngineeringRoot = Join-Path $controlledSourceWorkingRoot 'gold_original_engineering'
+  New-Item -ItemType Directory -Force -Path $goldOriginalEngineeringRoot | Out-Null
+  $goldOriginalNativeFiles = @(Get-ChildItem -LiteralPath $goldOriginalEngineeringSourceRoot -File | Where-Object { @('.sldasm', '.sldprt') -contains $_.Extension.ToLowerInvariant() })
+  if ($goldOriginalNativeFiles.Count -eq 0) {
+    throw "No SolidWorks native source files were found under $goldOriginalEngineeringSourceRoot"
+  }
+  foreach ($sourceFile in $goldOriginalNativeFiles) {
+    Add-ControlledSourceBaselineRecord $controlledSourceBaseline $controlledSourcePathIndex $sourceFile.FullName
+    Copy-Item -LiteralPath $sourceFile.FullName -Destination (Join-Path $goldOriginalEngineeringRoot $sourceFile.Name) -Force
+  }
+  [ordered] @{
+    schema = 'winnsen.locker16029.controlled_source_integrity_snapshot.v1'
+    capturedAt = (Get-Date).ToUniversalTime().ToString('o')
+    files = $controlledSourceBaseline.ToArray()
+  } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $controlledSourceSnapshotBeforeJson -Encoding UTF8
   if ($restoreVerifiedV43NativeAssemblyBase) {
     $mechanicalExteriorRowsTarget = $hardwareRestoredPlacementRows
   } else {
@@ -1233,6 +1378,9 @@ if ($true) {
   $maintenanceDoorWeldName = $maintenanceDoorBaseName + (TextFromCodes @(0x710A,0x63A5)) + '.SLDASM'
   $maintenanceDoorPartName = $maintenanceDoorBaseName + '.SLDPRT'
   $maintenanceDoorRole = TextFromCodes @(0x9501,0x63A7,0x7EF4,0x62A4,0x6761,0x5F,0x6E90,0x94A3,0x91D1)
+  $maintenanceDoorPartSource = Resolve-FirstExistingFile @(
+    (Join-Path $goldOriginalEngineeringRoot $maintenanceDoorPartName)
+  ) '1000W source center lock-control maintenance door sheet-metal part'
   $maintenanceDoorWeldSource = Resolve-FirstExistingFile @(
     (Join-Path $goldOriginalEngineeringRoot $maintenanceDoorWeldName),
     (Join-Path $goldOriginalEngineeringRoot $maintenanceDoorPartName)
@@ -1298,11 +1446,15 @@ if ($true) {
   $parametricScaffoldStatus = if ($replaceCabinetTargetsWithParametricScaffold) { 'generated_source_sheetmetal_structure_revision_evidence' } else { 'generated_parametric_scaffold_needs_engineering_validation' }
 }
 
+$localizedRestoredV43PlacementCount = 0
 if ($restoreVerifiedV43NativeAssemblyBase) {
   $restorePlacementResult = Write-RestoredV43TemplatePlacementRows -SourcePlacementPath $sourcePlacements -OutputPlacementPath $restoredV43TemplatePlacementsTsv -AdditionalRows @($hardwareRestoredPlacementRows.ToArray()) -IncludeElectricalLockHardware ([bool] $IncludeElectricalLockHardware)
   $restoredV43TemplatePlacementCount = [int] $restorePlacementResult.placementCount
   $restoredV43TemplateExcludedPlacementCount = [int] $restorePlacementResult.excludedElectricalOrCabinetLockCount
   $restoredV43NativeAssemblyBaseUsed = $true
+  $localizedRestoredV43PlacementCount = Localize-PlacementSourceDirectories @(
+    $restoredV43TemplatePlacementsTsv
+  ) $OutputDir $controlledSourceWorkingRoot $controlledSourceBaseline $controlledSourcePathIndex $controlledSourceDirectoryCopies
 }
 
 $fixedModuleBuild = Invoke-IsolatedPlacedAssemblyBuild $placedTool $moduleTargetsFixedPlacementsTsv $fixedModuleAssembly $fixedModuleBuildJson 'build fixed cabinet source-reference module assembly' $FixedModuleBuildTimeoutSeconds
@@ -1431,6 +1583,29 @@ $doorLockTongueRestoreAddedCount = 0
 $doorLockTongueRestoreSkippedExistingCount = 0
 $doorLockTongueRestoreFailedCount = 0
 $doorLockTongueSourcePart = Join-Path $root 'workers\generated_models\SW-NATIVE-16029-740W-1917H-550D-L642-R246-ORDINARY-20260528\sw2020_gold_compat_parts\electric_lock_hook_zja_s500_SW2020_from_ascii_step.SLDPRT'
+$lockHoleDatumAlignmentJson = Join-Path $evidenceDir 'solidworks_2020_lock_hole_datum_alignment.json'
+$lockHoleDatumAlignmentEnabled = $false
+$lockHoleDatumAlignmentSuccess = $false
+$lockHoleDatumAlignmentAddedCount = 0
+$lockHoleDatumAlignmentUpdatedCount = 0
+$lockHoleDatumAlignmentMatchedCount = 0
+$lockHoleDatumAlignmentTongueCount = 0
+$lockHoleDatumExistingCountBefore = 0
+$lockHoleDatumRemovedCount = 0
+$lockHoleDatumFinalCount = 0
+$shelfBandNormalizationJson = Join-Path $evidenceDir 'solidworks_2020_v43_shelf_band_normalization.json'
+$shelfBandNormalizationEnabled = $false
+$shelfBandNormalizationSuccess = $false
+$shelfBandNormalizationSeenCount = 0
+$shelfBandNormalizationKeptCount = 0
+$shelfBandNormalizationRemovedCount = 0
+$shelfBandNormalizationRemainingUnexpectedCount = 0
+$centerMaintenanceSheetMetalJson = Join-Path $evidenceDir 'solidworks_2020_center_maintenance_sheetmetal.json'
+$centerMaintenanceSheetMetalEnabled = $false
+$centerMaintenanceSheetMetalSuccess = $false
+$centerMaintenanceSheetMetalAdded = $false
+$centerMaintenanceSheetMetalUpdated = $false
+$centerMaintenanceSheetMetalPath = ''
 $verifiedV43DoorPanelFeatureRepairTool = Join-Path $toolDir 'bin\RepairVerifiedV43DoorPanelFeature.exe'
 $verifiedV43DoorPanelFeatureRepairIntermediateJson = Join-Path $evidenceDir 'solidworks_2020_verified_v43_door_panel_feature_repair_intermediate.json'
 $verifiedV43DoorPanelFeatureRepairJson = Join-Path $evidenceDir 'solidworks_2020_verified_v43_door_panel_feature_repair.json'
@@ -1460,6 +1635,11 @@ if ((-not $restoreVerifiedV43NativeAssemblyBase) -and (Test-Path -LiteralPath $m
     }
   }
 }
+[ordered] @{
+  schema = 'winnsen.locker16029.controlled_source_integrity_snapshot.v1'
+  capturedAt = (Get-Date).ToUniversalTime().ToString('o')
+  files = $controlledSourceBaseline.ToArray()
+} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $controlledSourceSnapshotBeforeJson -Encoding UTF8
 if ($restoreVerifiedV43NativeAssemblyBase -or $cabinetCandidateTargetCount -gt 0) {
   New-Item -ItemType Directory -Force -Path $fullCandidateDir | Out-Null
   $fullCandidateBuild = $null
@@ -1576,6 +1756,7 @@ if ($centeredBackSeamCanUseV43Geometry) {
     $doorLockTongueRestoreAddedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'added_count' 0)
     $doorLockTongueRestoreSkippedExistingCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'skipped_existing_count' 0)
     $doorLockTongueRestoreFailedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'failed_count' 0)
+    Stop-ToolSolidWorksSessionFromJson $doorLockTongueRestoreJson 'intermediate door lock tongue restore'
   } else {
     $doorLockTongueRestoreStatus = 'skipped_hardware_restored_keeps_electric_lock_hooks'
   }
@@ -1640,9 +1821,65 @@ if (-not $IncludeElectricalLockHardware) {
   $doorLockTongueRestoreAddedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'added_count' 0)
   $doorLockTongueRestoreSkippedExistingCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'skipped_existing_count' 0)
   $doorLockTongueRestoreFailedCount = [int] (Get-ObjectNumber $doorLockTongueRestore 'failed_count' 0)
+  Stop-ToolSolidWorksSessionFromJson $doorLockTongueRestoreJson 'final door lock tongue restore'
 } else {
   $doorLockTongueRestoreStatus = 'skipped_hardware_restored_keeps_electric_lock_hooks'
   $doorLockTongueRestoreEnabled = $false
+}
+
+if ($freezeVerifiedV43DoorRoute) {
+  $shelfBandNormalizationEnabled = $true
+  $shelfBandNormalizationTool = Join-Path $toolDir 'bin\Normalize16029V43ShelfBands.exe'
+  Assert-File $shelfBandNormalizationTool 'v43 shelf-band normalization tool'
+  Invoke-External $shelfBandNormalizationTool @(
+    $primaryAssembly,
+    '940,1550',
+    '330,940',
+    '30',
+    $shelfBandNormalizationJson
+  ) 'remove historical shelf bands outside the L642-R246 row-boundary contract'
+  Wait-File $shelfBandNormalizationJson 'v43 shelf-band normalization json' 600
+  $shelfBandNormalization = Read-Json $shelfBandNormalizationJson
+  $shelfBandNormalizationSuccess = [bool] $shelfBandNormalization.success
+  $shelfBandNormalizationSeenCount = [int] (Get-ObjectNumber $shelfBandNormalization 'seen_count' 0)
+  $shelfBandNormalizationKeptCount = [int] (Get-ObjectNumber $shelfBandNormalization 'kept_count' 0)
+  $shelfBandNormalizationRemovedCount = [int] (Get-ObjectNumber $shelfBandNormalization 'removed_count' 0)
+  $shelfBandNormalizationRemainingUnexpectedCount = [int] (Get-ObjectNumber $shelfBandNormalization 'remaining_unexpected_count' 0)
+  Stop-ToolSolidWorksSessionFromJson $shelfBandNormalizationJson 'v43 shelf-band normalization'
+  if (-not $shelfBandNormalizationSuccess -or $shelfBandNormalizationRemainingUnexpectedCount -ne 0) {
+    throw "V43 shelf-band normalization failed: $shelfBandNormalizationJson"
+  }
+}
+
+if ($freezeVerifiedV43DoorRoute -and (-not $IncludeElectricalLockHardware)) {
+  $lockHoleDatumAlignmentEnabled = $true
+  $lockHoleDatumTool = Join-Path $toolDir 'bin\Add16029V43LockHoleDatums.exe'
+  $lockHoleDatumName = TextFromCodes @(0x9501,0x5B54,0x57FA,0x51C6)
+  $leftLockHoleDatumPart = Join-Path $packDir ($lockHoleDatumName + '_body028.SLDPRT')
+  $rightLockHoleDatumPart = Join-Path $packDir ($lockHoleDatumName + '_body009.SLDPRT')
+  Assert-File $lockHoleDatumTool 'v43 lock-hole datum alignment tool'
+  Assert-File $leftLockHoleDatumPart 'left lock-hole datum source part from Pack-and-Go'
+  Assert-File $rightLockHoleDatumPart 'right lock-hole datum source part from Pack-and-Go'
+  Invoke-External $lockHoleDatumTool @(
+    $primaryAssembly,
+    $leftLockHoleDatumPart,
+    $rightLockHoleDatumPart,
+    $lockHoleDatumAlignmentJson
+  ) 'align six cabinet-side lock-hole datum parts to restored door lock tongues'
+  Wait-File $lockHoleDatumAlignmentJson 'lock-hole datum alignment json' 600
+  $lockHoleDatumAlignment = Read-Json $lockHoleDatumAlignmentJson
+  $lockHoleDatumAlignmentSuccess = [bool] $lockHoleDatumAlignment.success
+  $lockHoleDatumAlignmentAddedCount = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'added_count' 0)
+  $lockHoleDatumAlignmentUpdatedCount = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'updated_count' 0)
+  $lockHoleDatumAlignmentMatchedCount = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'matched_count' 0)
+  $lockHoleDatumAlignmentTongueCount = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'lock_tongue_count' 0)
+  $lockHoleDatumExistingCountBefore = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'existing_datum_count_before' 0)
+  $lockHoleDatumRemovedCount = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'existing_datum_removed_count' 0)
+  $lockHoleDatumFinalCount = [int] (Get-ObjectNumber $lockHoleDatumAlignment 'final_datum_count' 0)
+  Stop-ToolSolidWorksSessionFromJson $lockHoleDatumAlignmentJson 'cabinet-side lock-hole datum alignment'
+  if (-not $lockHoleDatumAlignmentSuccess -or $lockHoleDatumAlignmentMatchedCount -ne 6 -or $lockHoleDatumFinalCount -ne 6) {
+    throw "Cabinet-side lock-hole datum alignment failed: $lockHoleDatumAlignmentJson"
+  }
 }
 
 $electricLockHookCleanupJson = Join-Path $evidenceDir 'solidworks_2020_electric_lock_hook_cleanup.json'
@@ -1668,6 +1905,7 @@ if ($electricLockHookCleanupEnabled) {
     $electricLockHookCleanup.Add($cleanupItem) | Out-Null
     $electricLockHookCleanupRemovedCount += Get-JsonInt $cleanupItem 'removed_count' 0
     $electricLockHookCleanupRemainingCount += Get-JsonInt $cleanupItem 'remaining_count' 0
+    Stop-ToolSolidWorksSessionFromJson $cleanupItemJson "electric-lock hook cleanup $($assemblyFile.Name)"
   }
   $orphanFiles = @(Get-ChildItem -LiteralPath $packDir -File | Where-Object { $_.Name -match $electricLockHookCleanupPattern })
   foreach ($orphanFile in $orphanFiles) {
@@ -1686,6 +1924,32 @@ $electricLockHookCleanupSummary = [ordered] @{
   results = @($electricLockHookCleanup.ToArray())
 }
 $electricLockHookCleanupSummary | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $electricLockHookCleanupJson -Encoding UTF8
+
+if (-not $IncludeElectricalLockHardware) {
+  $centerMaintenanceSheetMetalEnabled = $true
+  $centerMaintenanceTool = Join-Path $toolDir 'bin\Add16029CenterMaintenanceSheetMetal.exe'
+  Assert-File $centerMaintenanceTool 'center maintenance sheet-metal add tool'
+  Assert-File $maintenanceDoorPartSource '1000W center lock-control maintenance sheet-metal source part'
+  Invoke-External $centerMaintenanceTool @(
+    $primaryAssembly,
+    $maintenanceDoorPartSource,
+    $maintenanceDoorRole,
+    '0',
+    '948.1',
+    '-16',
+    $centerMaintenanceSheetMetalJson
+  ) 'add center lock-control maintenance sheet-metal strip to final Pack-and-Go'
+  Wait-File $centerMaintenanceSheetMetalJson 'center maintenance sheet-metal add json' 600
+  $centerMaintenanceSheetMetal = Read-Json $centerMaintenanceSheetMetalJson
+  $centerMaintenanceSheetMetalSuccess = [bool] $centerMaintenanceSheetMetal.success
+  $centerMaintenanceSheetMetalAdded = [bool] $centerMaintenanceSheetMetal.added
+  $centerMaintenanceSheetMetalUpdated = [bool] $centerMaintenanceSheetMetal.updated
+  $centerMaintenanceSheetMetalPath = Get-ObjectString $centerMaintenanceSheetMetal 'path'
+  Stop-ToolSolidWorksSessionFromJson $centerMaintenanceSheetMetalJson 'center maintenance sheet-metal add'
+  if (-not $centerMaintenanceSheetMetalSuccess) {
+    throw "Center maintenance sheet-metal add failed: $centerMaintenanceSheetMetalJson"
+  }
+}
 
 $componentRenameJson = Join-Path $evidenceDir 'solidworks_2020_component_rename.json'
 $renameTool = Join-Path $toolDir 'bin\RenameAssemblyComponents.exe'
@@ -1773,6 +2037,30 @@ $goldStructureGateGeneratedDoorPanelBoxEnvelopeCount = Get-JsonInt $goldStructur
 $electricalOrElectricLockComponentCount = Get-JsonInt $goldStructureGate.summary 'electricalOrElectricLockComponentCount' 0
 $doorLockTongueCount = Get-JsonInt $goldStructureGate.summary 'doorLockTongueCount' 0
 
+$v43ExactStructureGateJson = Join-Path $evidenceDir 'v43_exact_structure_gate.json'
+$v43ExactStructureGateApplied = [bool] $freezeVerifiedV43DoorRoute
+$v43ExactStructureGateStatus = 'NOT_APPLICABLE'
+$v43ExactStructureGateClassification = 'not_applicable'
+$v43ExactStructureGateIssueCount = 0
+$v43ExactStructureGateLockHoleDatumCount = 0
+$v43ExactStructureGateReleaseEligible = $false
+if ($v43ExactStructureGateApplied) {
+  $v43ExactStructureGateArgs = @(
+    $v43ExactStructureGateTool,
+    '--candidate', $structureRecordJson,
+    '--contract', $v43ExactStructureContract,
+    '--out', $v43ExactStructureGateJson
+  )
+  Invoke-External $NodeExe $v43ExactStructureGateArgs 'verify exact v43 door, lock-datum, and shelf-band structure contract' @(0, 1)
+  Wait-File $v43ExactStructureGateJson 'v43 exact visible-structure gate json'
+  $v43ExactStructureGate = Read-Json $v43ExactStructureGateJson
+  $v43ExactStructureGateStatus = [string] $v43ExactStructureGate.status
+  $v43ExactStructureGateClassification = [string] $v43ExactStructureGate.classification
+  $v43ExactStructureGateIssueCount = Get-JsonInt $v43ExactStructureGate.summary 'checksFailed' 0
+  $v43ExactStructureGateLockHoleDatumCount = Get-JsonInt $v43ExactStructureGate.summary 'lockHoleDatumTopLevelCount' 0
+  $v43ExactStructureGateReleaseEligible = [bool] $v43ExactStructureGate.releaseEligible
+}
+
 $structureFeedbackJson = Join-Path $evidenceDir 'structure_feedback.json'
 $structureFeedbackArgs = @(
   $structureFeedbackTool,
@@ -1799,19 +2087,55 @@ $structureFeedbackVisibleCabinetBodyBoxScaffoldCount = Get-JsonInt $structureFee
 $structureFeedbackGeneratedDoorPanelBoxEnvelopeCount = Get-JsonInt $structureFeedback.derived 'generatedDoorPanelBoxEnvelopeCount' 0
 $visibleCabinetBodyBoxScaffoldCount = [Math]::Max($goldStructureGateVisibleCabinetBodyBoxScaffoldCount, $structureFeedbackVisibleCabinetBodyBoxScaffoldCount)
 $generatedDoorPanelBoxEnvelopeCount = [Math]::Max($goldStructureGateGeneratedDoorPanelBoxEnvelopeCount, $structureFeedbackGeneratedDoorPanelBoxEnvelopeCount)
-$structureNeedsRevision = $structureFeedbackIssueCount -gt 0 -or $goldStructureGateIssueCount -gt 0
+$structureNeedsRevision = $structureFeedbackIssueCount -gt 0 -or
+  $goldStructureGateIssueCount -gt 0 -or
+  ($v43ExactStructureGateApplied -and $v43ExactStructureGateStatus -ne 'PASS')
 $goldRuleDerivedSheetMetalVisibleModel = $parametricScaffoldStatus -eq 'generated_gold_rule_derived_sheetmetal_model' -and $parametricScaffoldVisiblePlacementCount -gt 0
 $parametricScaffoldNeedsEngineeringValidation = $parametricScaffoldStatus -eq 'generated_parametric_scaffold_needs_engineering_validation' -and $parametricScaffoldVisiblePlacementCount -gt 0
 $derivedSheetMetalModelReadyForReview = $goldRuleDerivedSheetMetalVisibleModel -and -not $structureNeedsRevision -and -not $nativeDoorModuleNeedsGeneration
 $componentNamingStatus = if ($structureFeedbackP2Count -gt 0) { 'still_flagged_by_structure_feedback' } else { 'clean_after_solidworks_reopen_inspection' }
-$handoffReadinessStatus = if ($structureNeedsRevision) { 'needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'needs_parametric_scaffold_engineering_validation' } elseif ($derivedSheetMetalModelReadyForReview) { 'sw2020_derived_sheetmetal_review_ready' } else { 'sw2020_review_ready' }
+$handoffReadinessStatus = if ($structureNeedsRevision) { 'needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'needs_parametric_scaffold_engineering_validation' } elseif ($derivedSheetMetalModelReadyForReview) { 'sw2020_derived_sheetmetal_review_ready' } elseif ($v43ExactStructureGateApplied -and $v43ExactStructureGateStatus -eq 'PASS') { 'controlled_candidate_pass' } else { 'sw2020_review_ready' }
 
 Copy-Item -LiteralPath $sourceResult -Destination (Join-Path $evidenceDir 'template_build_result.json') -Force
 Copy-Item -LiteralPath $sourceComponents -Destination (Join-Path $evidenceDir 'template_components.json') -Force
 Copy-Item -LiteralPath $sourcePlacements -Destination (Join-Path $evidenceDir 'template_placements.tsv') -Force
-Get-ChildItem -LiteralPath $captureDir -File |
-  Where-Object { -not $_.Name.StartsWith('~$') } |
-  Copy-Item -Destination $captureOutDir -Force
+$reviewCaptureJson = Join-Path $evidenceDir 'review_capture_result.json'
+Wait-NoRunningSolidWorks 'current-candidate review capture start'
+Invoke-External 'cscript.exe' @('//nologo', $reviewCaptureTool, $primaryAssembly, $captureOutDir, $reviewCaptureJson, 'close') 'capture current Pack-and-Go candidate views'
+Wait-File $reviewCaptureJson 'current-candidate review capture json'
+$reviewCapture = Read-Json $reviewCaptureJson
+$reviewCaptureSavedCount = @($reviewCapture.views | Where-Object { [bool] $_.saved }).Count
+$reviewCaptureAllViewsSaved = [bool] $reviewCapture.opened -and $reviewCaptureSavedCount -eq 6
+if (-not $reviewCaptureAllViewsSaved) {
+  throw "Current-candidate review capture is incomplete: opened=$($reviewCapture.opened), saved views=$reviewCaptureSavedCount/6."
+}
+Wait-NoRunningSolidWorks 'current-candidate review capture completion' 30
+
+$controlledSourceChanges = New-Object System.Collections.Generic.List[object]
+foreach ($before in $controlledSourceBaseline) {
+  if (-not (Test-Path -LiteralPath $before.path -PathType Leaf)) {
+    $controlledSourceChanges.Add([pscustomobject] @{ path = $before.path; reason = 'missing_after_generation'; before = $before; after = $null }) | Out-Null
+    continue
+  }
+  $after = Get-ControlledSourceIntegrityRecord $before.path
+  if ($after.length -ne $before.length -or $after.sha256 -ne $before.sha256 -or $after.lastWriteTimeUtc -ne $before.lastWriteTimeUtc) {
+    $controlledSourceChanges.Add([pscustomobject] @{ path = $before.path; reason = 'content_or_mtime_changed'; before = $before; after = $after }) | Out-Null
+  }
+}
+$controlledSourceChangedCount = $controlledSourceChanges.Count
+$controlledSourceImmutabilityStatus = if ($controlledSourceChangedCount -eq 0) { 'PASS' } else { 'FAIL' }
+[ordered] @{
+  schema = 'winnsen.locker16029.controlled_source_integrity_result.v1'
+  status = $controlledSourceImmutabilityStatus
+  checkedAt = (Get-Date).ToUniversalTime().ToString('o')
+  sourceFileCount = $controlledSourceBaseline.Count
+  changedFileCount = $controlledSourceChangedCount
+  workingCopyRoot = $controlledSourceWorkingRoot
+  changes = $controlledSourceChanges.ToArray()
+} | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $controlledSourceIntegrityJson -Encoding UTF8
+if ($controlledSourceChangedCount -gt 0) {
+  throw "Controlled source immutability gate failed: $controlledSourceChangedCount source file(s) changed. See $controlledSourceIntegrityJson"
+}
 
 $componentNameLine = if ($ComponentRenameTimeoutSeconds -le 0) {
   "- Engineer-visible component naming: Pack-and-Go/reopen post-inspection status: $componentNamingStatus; optional SolidWorks Name2 assignment skipped."
@@ -1827,6 +2151,21 @@ $electricalHardwareModeLine = if ($IncludeElectricalLockHardware) {
   "- Electrical-lock hardware restored mode: enabled. The visible candidate keeps/adds the top electrical module, lock-control strips, cabinet-side ZJA-S500 lock bodies, and electric-lock hook hardware from the v43/gold reference path for engineering review."
 } else {
   "- Electrical-lock hardware restored mode: disabled. Cabinet-side electrical boards, electric-lock bodies, and electric-lock hooks are excluded from the default generated package; only holes, lock tongues, datums, and mounting interfaces are carried."
+}
+$lockHoleDatumAlignmentLine = if ($lockHoleDatumAlignmentEnabled) {
+  "- Cabinet-side lock-hole datum normalization: enabled, success=$lockHoleDatumAlignmentSuccess, lock tongues=$lockHoleDatumAlignmentTongueCount, existing datum count=$lockHoleDatumExistingCountBefore, removed=$lockHoleDatumRemovedCount, final datum count=$lockHoleDatumFinalCount, matched datum rows=$lockHoleDatumAlignmentMatchedCount, added=$lockHoleDatumAlignmentAddedCount, updated=$lockHoleDatumAlignmentUpdatedCount. This does not move the approved door lock tongue/pad subassembly; it replaces copied historical cabinet-side datums with one datum per door lock tongue."
+} else {
+  "- Cabinet-side lock-hole datum alignment: not applicable for this route."
+}
+$shelfBandNormalizationLine = if ($shelfBandNormalizationEnabled) {
+  "- V43 shelf-band normalization: success=$shelfBandNormalizationSuccess, seen=$shelfBandNormalizationSeenCount, kept=$shelfBandNormalizationKeptCount, removed historical bodies=$shelfBandNormalizationRemovedCount, remaining unexpected=$shelfBandNormalizationRemainingUnexpectedCount. Allowed bands are L=[940,1550] mm and R=[330,940] mm with 30 mm inspection tolerance."
+} else {
+  "- V43 shelf-band normalization: not applicable for this route."
+}
+$centerMaintenanceSheetMetalLine = if ($centerMaintenanceSheetMetalEnabled) {
+  "- Center lock-control maintenance sheet-metal: enabled, success=$centerMaintenanceSheetMetalSuccess, added=$centerMaintenanceSheetMetalAdded, updated=$centerMaintenanceSheetMetalUpdated. This restores the mechanical center maintenance strip from the 1000W source part without restoring lock-control boards, cabinet-side electric-lock bodies, or electric-lock hooks."
+} else {
+  "- Center lock-control maintenance sheet-metal: not applicable for this route."
 }
 
 $readme = @(
@@ -1858,6 +2197,10 @@ $readme = @(
   "- Rear back seam repair: $backSheetMetalRepairStatus, enabled=$backSheetMetalRepairEnabled, repaired side-panel sheet-metal parts=$backSheetMetalRepairRepairedPartCount, center datum X=$centeredBackSeamCenterXMm mm. This trims the copied cabinet side-panel sheet metal; door sheet metal is not modified and no rear overlay panels are added.",
   "- Verified v43 2/12 door-panel failed-feature repair: $verifiedV43DoorPanelFeatureRepairStatus, final rebuild=$verifiedV43DoorPanelFeatureRepairFinalRebuilt, body count/bounding box unchanged=$verifiedV43DoorPanelFeatureRepairGeometryUnchanged. The source v43 door file is not edited; only generated package copies are repaired.",
   "- Mechanical door lock tongue restore: $doorLockTongueRestoreStatus, enabled=$doorLockTongueRestoreEnabled, added=$doorLockTongueRestoreAddedCount, skipped existing=$doorLockTongueRestoreSkippedExistingCount, failed=$doorLockTongueRestoreFailedCount. In default mode this restores the frozen v43 door-route lock tongue geometry without adding cabinet-side electric-lock hardware; in hardware-restored mode electric-lock hardware is intentionally retained for review.",
+  $shelfBandNormalizationLine,
+  $lockHoleDatumAlignmentLine,
+  $centerMaintenanceSheetMetalLine,
+  "- Controlled source immutability: $controlledSourceImmutabilityStatus, checked source files=$($controlledSourceBaseline.Count), changed=$controlledSourceChangedCount. All SolidWorks placement dependencies from the 1000W source are copied into the candidate evidence area before use.",
   "- Pack-and-Go Chinese save-name normalization: mapped $packAndGoChineseSaveNameMapCount document save names, SetDocumentSaveToNames=$packAndGoSetDocumentSaveToNames.",
   "- Electric-lock hook package cleanup: enabled=$electricLockHookCleanupEnabled, removed=$electricLockHookCleanupRemovedCount, remaining=$electricLockHookCleanupRemainingCount, deleted orphan files=$electricLockHookCleanupDeletedOrphanFileCount. Door sheet-metal geometry is not regenerated or edited.",
   $componentNameLine,
@@ -1865,6 +2208,7 @@ $readme = @(
   "- Visible cabinet body box/scaffold count: $visibleCabinetBodyBoxScaffoldCount.",
   "- Generated door panel box envelope count: $generatedDoorPanelBoxEnvelopeCount.",
   "- 1000W gold-source structure gate: $goldStructureGateStatus, issues: $goldStructureGateIssueCount, P0=$goldStructureGateP0Count, P1=$goldStructureGateP1Count, warnings=$goldStructureGateWarningCount.",
+  "- V43 exact visible-structure gate: applied=$v43ExactStructureGateApplied, status=$v43ExactStructureGateStatus, classification=$v43ExactStructureGateClassification, failed checks=$v43ExactStructureGateIssueCount, visible lock-hole datums=$v43ExactStructureGateLockHoleDatumCount, release eligible=$v43ExactStructureGateReleaseEligible.",
   "- Handoff readiness: $handoffReadinessStatus.",
   '- The historical direct per-part assembly generation route remains disabled because of transform reliability issues.',
   '',
@@ -1873,7 +2217,7 @@ $readme = @(
   '- `pack_and_go/`: flattened SolidWorks Pack-and-Go output containing `.SLDASM` and `.SLDPRT` files.',
   '- `br/`: short-path copied seed assembly plus side-panel sheet-metal back-flange trim evidence used before final Pack-and-Go.',
   '- `evidence/`: template rule plan, gold-source module targets/rebuild plan, cabinet-body/full-assembly source-reference evidence, build result, component inspection, placement table, Pack-and-Go result JSON, and SolidWorks 2020 structure record JSON.',
-  '- `review_captures/`: reference screenshots from the current verified assembly.',
+  '- `review_captures/`: six views captured read-only from this package current Pack-and-Go primary assembly.',
   '- `solidworks_2020_full_assembly_generation_summary.json`: normalized queue summary.',
   ''
 )
@@ -1891,12 +2235,13 @@ $outputFiles = Get-ChildItem -LiteralPath $OutputDir -Recurse -File |
 
 $summaryJson = Join-Path $OutputDir 'solidworks_2020_full_assembly_generation_summary.json'
 $compatibleWithNativeTemplate = [bool] $rulePlan.derived.compatibleWithNativeTemplate
-$summaryStatus = if ($structureNeedsRevision) { 'solidworks_2020_full_assembly_needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'solidworks_2020_template_rule_needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'solidworks_2020_parametric_scaffold_needs_engineering_validation' } elseif ($derivedSheetMetalModelReadyForReview) { 'solidworks_2020_derived_sheetmetal_model_ready_for_review' } elseif ($compatibleWithNativeTemplate) { 'solidworks_2020_full_assembly_ready' } else { 'solidworks_2020_template_rule_package_ready' }
-$summaryResultKind = if ($structureNeedsRevision -or $parametricScaffoldNeedsEngineeringValidation) { 'solidworks2020_structure_revision_evidence_package' } elseif ($derivedSheetMetalModelReadyForReview) { 'solidworks2020_derived_sheetmetal_full_assembly_model' } elseif ($compatibleWithNativeTemplate) { 'solidworks2020_full_assembly_model' } else { 'solidworks2020_template_rule_full_assembly_package' }
+$summaryStatus = if ($structureNeedsRevision) { 'solidworks_2020_full_assembly_needs_structure_revision' } elseif ($nativeDoorModuleNeedsGeneration) { 'solidworks_2020_template_rule_needs_native_door_generation' } elseif ($parametricScaffoldNeedsEngineeringValidation) { 'solidworks_2020_parametric_scaffold_needs_engineering_validation' } elseif ($derivedSheetMetalModelReadyForReview) { 'solidworks_2020_derived_sheetmetal_model_ready_for_review' } elseif ($v43ExactStructureGateApplied -and $v43ExactStructureGateStatus -eq 'PASS') { 'solidworks_2020_controlled_candidate_pass' } elseif ($compatibleWithNativeTemplate) { 'solidworks_2020_full_assembly_ready' } else { 'solidworks_2020_template_rule_package_ready' }
+$summaryResultKind = if ($structureNeedsRevision -or $parametricScaffoldNeedsEngineeringValidation) { 'solidworks2020_structure_revision_evidence_package' } elseif ($derivedSheetMetalModelReadyForReview) { 'solidworks2020_derived_sheetmetal_full_assembly_model' } elseif ($v43ExactStructureGateApplied -and $v43ExactStructureGateStatus -eq 'PASS') { 'solidworks2020_controlled_candidate_model' } elseif ($compatibleWithNativeTemplate) { 'solidworks2020_full_assembly_model' } else { 'solidworks2020_template_rule_full_assembly_package' }
 $summary = [ordered] @{
   status = $summaryStatus
   resultKind = $summaryResultKind
   handoffReadinessStatus = $handoffReadinessStatus
+  releaseEligible = $false
   requestId = $RequestId
   cadMainline = 'SolidWorks 2020'
   goldSourceReference = '1000W x 1917H x 550D'
@@ -1969,6 +2314,14 @@ $summary = [ordered] @{
   generatedDoorPanelBoxEnvelopeCount = $generatedDoorPanelBoxEnvelopeCount
   goldStructureGateGeneratedDoorPanelBoxEnvelopeCount = $goldStructureGateGeneratedDoorPanelBoxEnvelopeCount
   structureFeedbackGeneratedDoorPanelBoxEnvelopeCount = $structureFeedbackGeneratedDoorPanelBoxEnvelopeCount
+  v43ExactStructureGate = $v43ExactStructureGateJson
+  v43ExactStructureContract = $v43ExactStructureContract
+  v43ExactStructureGateApplied = $v43ExactStructureGateApplied
+  v43ExactStructureGateStatus = $v43ExactStructureGateStatus
+  v43ExactStructureGateClassification = $v43ExactStructureGateClassification
+  v43ExactStructureGateIssueCount = $v43ExactStructureGateIssueCount
+  v43ExactStructureGateLockHoleDatumCount = $v43ExactStructureGateLockHoleDatumCount
+  v43ExactStructureGateReleaseEligible = $v43ExactStructureGateReleaseEligible
   restoredV43NativeAssemblyBaseUsed = $restoredV43NativeAssemblyBaseUsed
   restoredV43TemplatePlacementsTsv = $restoredV43TemplatePlacementsTsv
   restoredV43TemplatePlacementCount = $restoredV43TemplatePlacementCount
@@ -2029,6 +2382,29 @@ $summary = [ordered] @{
   doorLockTongueRestoreSkippedExistingCount = $doorLockTongueRestoreSkippedExistingCount
   doorLockTongueRestoreFailedCount = $doorLockTongueRestoreFailedCount
   doorLockTongueSourcePart = $doorLockTongueSourcePart
+  lockHoleDatumAlignmentEnabled = $lockHoleDatumAlignmentEnabled
+  lockHoleDatumAlignmentSuccess = $lockHoleDatumAlignmentSuccess
+  lockHoleDatumAlignmentJson = $lockHoleDatumAlignmentJson
+  lockHoleDatumAlignmentTongueCount = $lockHoleDatumAlignmentTongueCount
+  lockHoleDatumAlignmentAddedCount = $lockHoleDatumAlignmentAddedCount
+  lockHoleDatumAlignmentUpdatedCount = $lockHoleDatumAlignmentUpdatedCount
+  lockHoleDatumAlignmentMatchedCount = $lockHoleDatumAlignmentMatchedCount
+  lockHoleDatumExistingCountBefore = $lockHoleDatumExistingCountBefore
+  lockHoleDatumRemovedCount = $lockHoleDatumRemovedCount
+  lockHoleDatumFinalCount = $lockHoleDatumFinalCount
+  shelfBandNormalizationEnabled = $shelfBandNormalizationEnabled
+  shelfBandNormalizationSuccess = $shelfBandNormalizationSuccess
+  shelfBandNormalizationJson = $shelfBandNormalizationJson
+  shelfBandNormalizationSeenCount = $shelfBandNormalizationSeenCount
+  shelfBandNormalizationKeptCount = $shelfBandNormalizationKeptCount
+  shelfBandNormalizationRemovedCount = $shelfBandNormalizationRemovedCount
+  shelfBandNormalizationRemainingUnexpectedCount = $shelfBandNormalizationRemainingUnexpectedCount
+  centerMaintenanceSheetMetalEnabled = $centerMaintenanceSheetMetalEnabled
+  centerMaintenanceSheetMetalSuccess = $centerMaintenanceSheetMetalSuccess
+  centerMaintenanceSheetMetalJson = $centerMaintenanceSheetMetalJson
+  centerMaintenanceSheetMetalAdded = $centerMaintenanceSheetMetalAdded
+  centerMaintenanceSheetMetalUpdated = $centerMaintenanceSheetMetalUpdated
+  centerMaintenanceSheetMetalPath = $centerMaintenanceSheetMetalPath
   verifiedV43DoorPanelFeatureRepair = $verifiedV43DoorPanelFeatureRepairJson
   verifiedV43DoorPanelFeatureRepairIntermediate = $verifiedV43DoorPanelFeatureRepairIntermediateJson
   verifiedV43DoorPanelFeatureRepairStatus = $verifiedV43DoorPanelFeatureRepairStatus
@@ -2039,6 +2415,19 @@ $summary = [ordered] @{
   outputDir = $OutputDir
   packAndGoDir = $packDir
   primaryAssembly = $primaryAssembly
+  reviewCapture = $reviewCaptureJson
+  reviewCaptureInputAssembly = $reviewCapture.input_path
+  reviewCaptureReadOnlyRequested = [bool] $reviewCapture.read_only_requested
+  reviewCaptureSavedViewCount = $reviewCaptureSavedCount
+  reviewCaptureAllViewsSaved = $reviewCaptureAllViewsSaved
+  controlledSourceWorkingCopyRoot = $controlledSourceWorkingRoot
+  controlledSourceIntegrityBefore = $controlledSourceSnapshotBeforeJson
+  controlledSourceIntegrityResult = $controlledSourceIntegrityJson
+  controlledSourceImmutabilityStatus = $controlledSourceImmutabilityStatus
+  controlledSourceFileCount = $controlledSourceBaseline.Count
+  controlledSourceChangedCount = $controlledSourceChangedCount
+  localizedModuleTargetPlacementCount = $localizedModuleTargetPlacementCount
+  localizedRestoredV43PlacementCount = $localizedRestoredV43PlacementCount
   packAndGoResult = $packJson
   packAndGoChineseSaveNameMapCount = $packAndGoChineseSaveNameMapCount
   packAndGoGotDocumentSaveToNames = $packAndGoGotDocumentSaveToNames

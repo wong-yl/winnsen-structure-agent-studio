@@ -98,10 +98,34 @@ type ReviewDownloadAsset = {
   download_url: string
 }
 
+type V23EngineeringSignoffStatus = {
+  generated_at: string | null
+  candidate_request_id: string
+  status: string
+  automatic_evidence_pass: boolean
+  template_valid: boolean
+  template_available: boolean
+  signed_file_exists: boolean
+  signed_file_valid: boolean
+  engineering_review_accepted: boolean
+  ready_for_prototype: boolean
+  prototype_validation_status: string
+  production_release_eligible: boolean
+  review_decision: string
+  failed_review_item_ids: string[]
+  checks_total: number
+  checks_failed: number
+  validation_errors: string[]
+  template_download_url: string
+  signed_file_path: string
+  next_action: string
+}
+
 type ReviewDownloadIndex = {
   generated_at: string
   scope: string
   assets: ReviewDownloadAsset[]
+  engineering_signoff: V23EngineeringSignoffStatus
 }
 
 type CurrentHandoffScopeGate = {
@@ -929,7 +953,7 @@ const pages: Array<{
     id: 'overview',
     label: '项目总览',
     navLabel: '总览',
-    description: '16029 740W / L642-R246 / v43 内部钣金最终包 / 当前只看 v18',
+    description: '16029 740W / L642-R246 / v43：v18 历史确认包 + v23 最新受控候选',
     section: 'delivery',
     purpose: '给工程师和项目负责人快速看当前主线、门数规则和交付包。',
     nextAction: '先看当前审核包，再看待确认项；模型生成入口不作为收尾主入口。',
@@ -942,14 +966,14 @@ const pages: Array<{
     description: '只保留 16029 740W / L642-R246 / v43 当前交付边界',
     section: 'delivery',
     purpose: '结构工程师需要模型时从这里查看当前门数边界与验证门槛。',
-    nextAction: '只看当前 v43-int-v18-lockfix，旧同路线生成包不再作为主入口。',
+    nextAction: 'v18 保留为已目视确认的历史复核入口；v23 是全受控源隔离、精确结构门禁通过且尚待工程签核的最新受控候选。',
     icon: Boxes,
   },
   {
     id: 'handoff',
     label: '审核包下载',
     navLabel: '审核包',
-    description: 'v43-int-v18-lockfix 当前交付包下载入口',
+    description: 'v18 历史工程复核包与 v23 最新受控候选、预签核证据下载入口',
     section: 'delivery',
     purpose: '给结构工程师直接下载当前 v43 内部钣金 SW2020 复核包。',
     nextAction: '发给工程师局域网地址；当前 scope gate 已通过，后续重点是结构签核而不是重新找文件。',
@@ -1158,7 +1182,7 @@ function App() {
         <div className="sidebar-panel">
           <span className="panel-label">当前交付口径</span>
           <strong>只看 16029 740W v43</strong>
-          <small>v43-int-v18-lockfix 当前审核包；旧 800W 仅历史参考。</small>
+          <small>v18 为已确认历史复核包；v23 为未释放受控候选并附预签核证据；旧 800W 仅历史参考。</small>
         </div>
       </aside>
 
@@ -1294,6 +1318,7 @@ function OverviewPage({
             <span>当前审核包</span>
             <code>review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip</code>
             <code>v43-int-v18-lockfix / 740W / L642-R246 / SW2020</code>
+            <code>v43-int-v23-all-sources-isolated / controlled_candidate_pass / releaseEligible=false</code>
             <code>800W LMS/SML/DUAL 仅保留为历史参考</code>
           </div>
         </article>
@@ -4647,6 +4672,26 @@ function ReviewDownloadPage() {
   const gateStatus = scopeGate?.status ?? 'UNKNOWN'
   const gateTone: StatusTone = gateStatus === 'PASS' ? 'good' : gateStatus === 'FAIL' ? 'risk' : 'warn'
   const failedGateChecks = (scopeGate?.checks ?? []).filter((check) => !check.ok).slice(0, 4)
+  const signoff = downloadIndex?.engineering_signoff
+  const signoffStatus = signoff?.status ?? 'LOADING'
+  const signoffTone: StatusTone =
+    signoffStatus === 'READY_FOR_PROTOTYPE'
+      ? 'good'
+      : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
+        ? 'warn'
+        : signoffStatus === 'LOADING'
+          ? 'idle'
+          : 'risk'
+  const signoffTitle =
+    signoffStatus === 'READY_FOR_PROTOTYPE'
+      ? '结构工程预签核通过，可进入样机阶段'
+      : signoffStatus === 'STRUCTURE_REVISION_REQUIRED'
+        ? '结构工程师已退回修订'
+        : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
+          ? '等待结构工程师填写并签署'
+          : signoffStatus === 'LOADING'
+            ? '正在读取 v23 签核状态'
+            : '签核数据需要重新校验'
 
   return (
     <div className="page-grid handoff-page">
@@ -4698,11 +4743,43 @@ function ReviewDownloadPage() {
         </div>
       </section>
 
+      <section
+        className={`handoff-gate-panel signoff-panel ${
+          signoffStatus === 'READY_FOR_PROTOTYPE'
+            ? 'gate-pass'
+            : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
+              ? 'gate-awaiting'
+              : ''
+        }`}
+      >
+        <div>
+          <span>v23 结构工程签核</span>
+          <strong>{signoffTitle}</strong>
+          <p>{signoff?.next_action ?? '正在读取签核模板与门禁结果。'}</p>
+          {signoff?.template_available ? (
+            <a className="secondary-action signoff-template-link" href={`${API_BASE_URL}${signoff.template_download_url}`}>
+              <ClipboardList size={16} />
+              下载签核模板
+            </a>
+          ) : null}
+        </div>
+        <div className="handoff-gate-checks">
+          <StatusPill tone={signoffTone}>{signoffStatus}</StatusPill>
+          <small>自动证据：{signoff?.automatic_evidence_pass ? 'PASS' : '未通过或未读取'}</small>
+          <small>正式签字文件：{signoff?.signed_file_exists ? (signoff.signed_file_valid ? '有效' : '存在但无效') : '尚未提交'}</small>
+          <small>样机验证：{signoff?.prototype_validation_status ?? '尚未开始'}</small>
+          <small>production_release_eligible=false</small>
+          {(signoff?.validation_errors ?? []).slice(0, 3).map((error) => (
+            <small key={error}>{error}</small>
+          ))}
+        </div>
+      </section>
+
       <section className="section-block">
         <div className="section-heading">
           <div>
             <h2>16029 740W / L642-R246 / v43 审核文件</h2>
-            <p>当前主包为 v43-int-v18-lockfix；锁舌 6 个、后背接缝居中、内部层板/前框配合已目视确认。旧 800W 包只作历史参考。</p>
+            <p>v18 保留为已目视确认的历史复核包；v23 已通过精确结构和全受控源完整性 gate，并附独立预签核证据包，作为未释放受控候选供工程签核。旧 800W 包只作历史参考。</p>
           </div>
           <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
         </div>
@@ -4715,8 +4792,26 @@ function ReviewDownloadPage() {
                   <span>{asset.category}</span>
                   <strong>{asset.title}</strong>
                 </div>
-                <StatusPill tone={asset.available && asset.id.includes('v43-internal-sheetmetal') ? 'good' : asset.available ? 'warn' : 'risk'}>
-                  {asset.available && asset.id.includes('v43-internal-sheetmetal') ? '当前包可下载' : asset.available ? '历史可下载' : '缺失'}
+                <StatusPill
+                  tone={
+                    !asset.available
+                      ? 'risk'
+                      : asset.status === 'sw2020_review_ready' && asset.id.includes('v43-internal-sheetmetal')
+                        ? 'good'
+                        : 'warn'
+                  }
+                >
+                  {!asset.available
+                    ? '缺失'
+                    : asset.status === 'controlled_candidate_pass'
+                      ? '受控候选'
+                      : asset.status === 'pre_signoff_review_evidence'
+                        ? '预签核证据'
+                        : asset.status === 'engineering_signoff_template'
+                          ? '待填写模板'
+                          : asset.status === 'sw2020_review_ready'
+                            ? '历史确认包'
+                            : '历史可下载'}
                 </StatusPill>
               </div>
               <p>{asset.description}</p>

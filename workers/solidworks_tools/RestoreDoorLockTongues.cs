@@ -75,6 +75,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 sw.Visible = true;
+                result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
                 MathUtility math = TryValue(() => sw.GetMathUtility() as MathUtility, null);
                 if (math == null)
                 {
@@ -469,6 +470,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "lock_tongue_part", result.LockTonguePart).Append(",");
             Field(sb, "lock_tongue_copied", result.LockTongueCopied).Append(",");
             Field(sb, "door_width_mm", result.DoorWidthMm).Append(",");
+            Field(sb, "solidworks_process_id", result.SolidWorksProcessId).Append(",");
             Field(sb, "assembly_count", result.AssemblyCount).Append(",");
             Field(sb, "added_count", result.AddedCount).Append(",");
             Field(sb, "skipped_existing_count", result.SkippedExistingCount).Append(",");
@@ -577,6 +579,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string LockTonguePart = "";
             public bool LockTongueCopied;
             public double DoorWidthMm;
+            public int SolidWorksProcessId;
             public int AssemblyCount;
             public int AddedCount;
             public int SkippedExistingCount;

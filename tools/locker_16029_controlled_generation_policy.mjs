@@ -391,7 +391,11 @@ export function controlled16029ReleaseState(item = {}) {
   const policy = item.controlledGenerationPolicy || {}
   const status = text(item.status).toLowerCase()
   const resultKind = text(item.resultKind).toLowerCase()
-  if (policy.releaseLevel === 'current_v43_template_seed' && item.downloadUrl) return 'current_delivery'
+  const exactGateApplied = item.v43ExactStructureGateApplied === true
+  const exactGateStatus = text(item.v43ExactStructureGateStatus).toLowerCase()
+  if (exactGateApplied && exactGateStatus !== 'pass') return 'structure_revision_evidence'
+  if (exactGateApplied && exactGateStatus === 'pass' && item.downloadUrl) return 'controlled_candidate_pass'
+  if (policy.releaseLevel === 'current_v43_template_seed' && item.downloadUrl) return 'legacy_sw2020_review_package'
   if (item.derivedSheetMetalModelReadyForReview === true || status.includes('derived_sheetmetal_review')) {
     return 'derived_sheetmetal_review'
   }

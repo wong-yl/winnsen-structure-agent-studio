@@ -390,6 +390,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       'solidworks_2020_full_assembly_needs_structure_revision',
       'solidworks_2020_parametric_scaffold_needs_engineering_validation',
       'solidworks_2020_derived_sheetmetal_model_ready_for_review',
+      'solidworks_2020_controlled_candidate_pass',
     ])
     if (!summary || !readyStatuses.has(summary.status)) {
       throw new Error(`SolidWorks full assembly generation did not report ready status: ${summaryPath}`)
@@ -415,6 +416,11 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const generatedDoorPanelBoxEnvelopeCount = Number(summary.generatedDoorPanelBoxEnvelopeCount || 0)
     const goldStructureGateGeneratedDoorPanelBoxEnvelopeCount = Number(summary.goldStructureGateGeneratedDoorPanelBoxEnvelopeCount || 0)
     const structureFeedbackGeneratedDoorPanelBoxEnvelopeCount = Number(summary.structureFeedbackGeneratedDoorPanelBoxEnvelopeCount || 0)
+    const v43ExactStructureGateApplied = summary.v43ExactStructureGateApplied === true
+    const v43ExactStructureGateStatus = String(summary.v43ExactStructureGateStatus || 'NOT_APPLICABLE')
+    const v43ExactStructureGateClassification = String(summary.v43ExactStructureGateClassification || 'not_applicable')
+    const v43ExactStructureGateIssueCount = Number(summary.v43ExactStructureGateIssueCount || 0)
+    const v43ExactStructureGateLockHoleDatumCount = Number(summary.v43ExactStructureGateLockHoleDatumCount || 0)
     const goldSheetMetalRuleEvidence = summary.goldSheetMetalRuleEvidence &&
       typeof summary.goldSheetMetalRuleEvidence === 'object'
       ? summary.goldSheetMetalRuleEvidence
@@ -426,6 +432,7 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
     const goldSheetMetalRuleHoleFeatureStatus = String(goldSheetMetalRuleEvidence.solidWorksHoleFeatureStatus || '')
     const structureNeedsRevision = structureFeedbackIssueCount > 0 ||
       goldStructureGateIssueCount > 0 ||
+      (v43ExactStructureGateApplied && v43ExactStructureGateStatus.toLowerCase() !== 'pass') ||
       String(summary.structureFeedbackStatus || '').toLowerCase() === 'issues_found' ||
       String(summary.goldStructureGateStatus || '').toLowerCase() === 'fail' ||
       String(summary.handoffReadinessStatus || '').toLowerCase() === 'needs_structure_revision'
@@ -465,6 +472,8 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
         ? 'solidworks2020_parametric_scaffold_needs_engineering_validation'
         : derivedSheetMetalModelReadyForReview
         ? 'solidworks2020_derived_sheetmetal_review_ready'
+        : v43ExactStructureGateApplied && v43ExactStructureGateStatus.toLowerCase() === 'pass'
+        ? 'solidworks2020_controlled_candidate_pass'
         : 'solidworks2020_full_assembly_ready',
       resultKind,
       outputDir,
@@ -567,6 +576,14 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       generatedDoorPanelBoxEnvelopeCount,
       goldStructureGateGeneratedDoorPanelBoxEnvelopeCount,
       structureFeedbackGeneratedDoorPanelBoxEnvelopeCount,
+      v43ExactStructureGate: summary.v43ExactStructureGate,
+      v43ExactStructureContract: summary.v43ExactStructureContract,
+      v43ExactStructureGateApplied,
+      v43ExactStructureGateStatus,
+      v43ExactStructureGateClassification,
+      v43ExactStructureGateIssueCount,
+      v43ExactStructureGateLockHoleDatumCount,
+      releaseEligible: false,
       structureFeedback: summary.structureFeedback,
       structureFeedbackStatus: summary.structureFeedbackStatus,
       structureFeedbackIssueCount: summary.structureFeedbackIssueCount,
@@ -585,6 +602,9 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
         visibleCabinetBodyBoxScaffoldCount,
         generatedDoorPanelBoxEnvelopeCount,
         electricalOrElectricLockComponentCount,
+        v43ExactStructureGateApplied,
+        v43ExactStructureGateStatus,
+        v43ExactStructureGateIssueCount,
         allowElectricalLockHardware: summary.includeElectricalLockHardware === true || includeElectricalLockHardware,
         includeElectricalLockHardware: summary.includeElectricalLockHardware === true || includeElectricalLockHardware,
         derivedSheetMetalModelReadyForReview,
@@ -611,13 +631,15 @@ function processSolidWorksTemplateFullAssemblyRequest(request, options) {
       outputFiles: Array.isArray(summary.outputFiles) ? summary.outputFiles : [],
       error: '',
       message: structureNeedsRevision
-        ? `SolidWorks 2020 package generated as a structure-revision evidence package. Compare against the 1000W gold/source reference; feedback has ${structureFeedbackIssueCount} issue(s): P0=${structureFeedbackP0Count}, P1=${structureFeedbackP1Count}, P2=${structureFeedbackP2Count}; gold gate has ${goldStructureGateIssueCount} issue(s): P0=${goldStructureGateP0Count}, P1=${goldStructureGateP1Count}, warnings=${goldStructureGateWarningCount}; gold DXF sheet-metal rule status=${goldSheetMetalRuleStatus || 'unknown'}, hole datums=${goldSheetMetalRuleCommonHoleStatus || 'unknown'}, generated door hole datums=${generatedNativeDoorModuleHoleDatumCount}, active template cut features=${generatedNativeDoorModuleDetectedCutFeatureCount}, suppressed template cut features=${generatedNativeDoorModuleSuppressedCutFeatureCount}, generated door cut-feature status=${generatedNativeDoorModuleHoleFeatureStatusText}; do not treat it as engineer-ready.`
+        ? `SolidWorks 2020 package generated as a structure-revision evidence package. Compare against the 1000W gold/source reference; feedback has ${structureFeedbackIssueCount} issue(s): P0=${structureFeedbackP0Count}, P1=${structureFeedbackP1Count}, P2=${structureFeedbackP2Count}; gold gate has ${goldStructureGateIssueCount} issue(s): P0=${goldStructureGateP0Count}, P1=${goldStructureGateP1Count}, warnings=${goldStructureGateWarningCount}; v43 exact gate=${v43ExactStructureGateStatus}, failed checks=${v43ExactStructureGateIssueCount}, visible lock-hole datums=${v43ExactStructureGateLockHoleDatumCount}; gold DXF sheet-metal rule status=${goldSheetMetalRuleStatus || 'unknown'}, hole datums=${goldSheetMetalRuleCommonHoleStatus || 'unknown'}, generated door hole datums=${generatedNativeDoorModuleHoleDatumCount}, active template cut features=${generatedNativeDoorModuleDetectedCutFeatureCount}, suppressed template cut features=${generatedNativeDoorModuleSuppressedCutFeatureCount}, generated door cut-feature status=${generatedNativeDoorModuleHoleFeatureStatusText}; do not treat it as engineer-ready.`
         : nativeDoorModuleNeedsGeneration
         ? `SolidWorks 2020 template-rule package generated, but native door modules still need generation for ratio unit(s): ${missingNativeDoorModuleUnits.join(', ') || 'unknown'}. Download is evidence/parameter package, not engineer-ready Pack-and-Go.`
       : parametricScaffoldNeedsEngineeringValidation
         ? `SolidWorks 2020 package generated with frozen v43 shell and door route; parametric internal cabinet sheet-metal scaffold rows are kept as evidence only and are not appended to the restored v43 visible candidate. Row-specific lock-hole datums, shelf locating feet/notches, inner vertical partition stiffeners, and leveling feet are preserved in evidence. Cabinet-side electrical boards and electric-lock bodies are excluded; residual electrical/electric-lock component count from the gate=${electricalOrElectricLockComponentCount}. SW cut-feature status=${goldSheetMetalRuleHoleFeatureStatus || 'unknown'}, generated door cut-feature status=${generatedNativeDoorModuleHoleFeatureStatusText}; download is an engineering-validation evidence package, not an engineer-ready release.`
         : derivedSheetMetalModelReadyForReview
         ? `SolidWorks 2020 derived sheet-metal model generated from the 1000W gold/source rule path. Gold gate PASS; download contains Pack-and-Go, generated cabinet sheet-metal modules, lock-hole datums, shelf/front-frame locating interfaces, rear center seam sheet-metal connector, and evidence JSON. Use for engineering review before production drawings.`
+        : v43ExactStructureGateApplied && v43ExactStructureGateStatus.toLowerCase() === 'pass'
+        ? 'SolidWorks 2020 controlled candidate passed the exact v43 visible-structure contract. Download is for engineering review; release_eligible remains false until drawing, tolerance, supplier-process, and prototype signoff.'
         : summary.compatibleWithNativeTemplate
         ? 'SolidWorks 2020 full assembly Pack-and-Go package generated. Download contains .SLDASM, .SLDPRT, evidence JSON, and review captures.'
         : generatedNativeDoorModuleCount > 0

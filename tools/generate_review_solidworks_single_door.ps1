@@ -133,32 +133,66 @@ function New-SheetMetalHoleDatumRecord(
   [double] $GeneratedFlatHeightMm,
   [string] $Handedness
 ) {
+  function New-EdgeAnchoredAxisDatum(
+    [double] $SizeMm,
+    [double] $MinEdgeDistanceMm,
+    [double] $MaxEdgeDistanceMm,
+    [string] $MinAnchor,
+    [string] $MaxAnchor
+  ) {
+    $halfMm = $SizeMm / 2.0
+    if ($MinEdgeDistanceMm -le $MaxEdgeDistanceMm) {
+      $coordinateFromCenterMm = -$halfMm + $MinEdgeDistanceMm
+      $anchor = $MinAnchor
+      $offsetFromAnchorMm = $MinEdgeDistanceMm
+    }
+    else {
+      $coordinateFromCenterMm = $halfMm - $MaxEdgeDistanceMm
+      $anchor = $MaxAnchor
+      $offsetFromAnchorMm = $MaxEdgeDistanceMm
+    }
+    return [pscustomobject] ([ordered] @{
+      coordinateFromCenterMm = [Math]::Round($coordinateFromCenterMm, 3)
+      anchor = $anchor
+      offsetFromAnchorMm = [Math]::Round($offsetFromAnchorMm, 3)
+      distanceToMinMm = [Math]::Round($coordinateFromCenterMm + $halfMm, 3)
+      distanceToMaxMm = [Math]::Round($halfMm - $coordinateFromCenterMm, 3)
+    })
+  }
+
   $distanceToLeftMm = Get-ObjectNumber $Hole 'distanceToLeftMm'
   $distanceToRightMm = Get-ObjectNumber $Hole 'distanceToRightMm'
   $distanceToBottomMm = Get-ObjectNumber $Hole 'distanceToBottomMm'
   $distanceToTopMm = Get-ObjectNumber $Hole 'distanceToTopMm'
   $sourceCxFromCenterMm = Get-ObjectNumber $Hole 'cxFromCenterMm'
   $sourceCyFromCenterMm = Get-ObjectNumber $Hole 'cyFromCenterMm'
-  $generatedFlatCxFromCenterMm = [Math]::Round(-($GeneratedFlatWidthMm / 2.0) + $distanceToLeftMm, 3)
-  if ($Handedness -eq 'right') {
-    $generatedFlatCxFromCenterMm = -$generatedFlatCxFromCenterMm
-  }
-  $generatedFlatCyFromCenterMm = [Math]::Round(-($GeneratedFlatHeightMm / 2.0) + $distanceToBottomMm, 3)
+  $xDatum = New-EdgeAnchoredAxisDatum $GeneratedFlatWidthMm $distanceToLeftMm $distanceToRightMm 'left_flat_edge' 'right_flat_edge'
+  $yDatum = New-EdgeAnchoredAxisDatum $GeneratedFlatHeightMm $distanceToBottomMm $distanceToTopMm 'bottom_flat_edge' 'top_flat_edge'
   return [pscustomobject] ([ordered] @{
     role = Get-ObjectString $Hole 'role'
     diameterMm = [Math]::Round((Get-ObjectNumber $Hole 'diameterMm'), 3)
     radiusMm = [Math]::Round((Get-ObjectNumber $Hole 'radiusMm'), 3)
     sourceCxFromCenterMm = [Math]::Round($sourceCxFromCenterMm, 3)
     sourceCyFromCenterMm = [Math]::Round($sourceCyFromCenterMm, 3)
-    generatedFlatCxFromCenterMm = $generatedFlatCxFromCenterMm
-    generatedFlatCyFromCenterMm = $generatedFlatCyFromCenterMm
-    distanceToLeftMm = [Math]::Round($distanceToLeftMm, 3)
-    distanceToRightMm = [Math]::Round($distanceToRightMm, 3)
-    distanceToBottomMm = [Math]::Round($distanceToBottomMm, 3)
-    distanceToTopMm = [Math]::Round($distanceToTopMm, 3)
+    sourceDistanceToLeftMm = [Math]::Round($distanceToLeftMm, 3)
+    sourceDistanceToRightMm = [Math]::Round($distanceToRightMm, 3)
+    sourceDistanceToBottomMm = [Math]::Round($distanceToBottomMm, 3)
+    sourceDistanceToTopMm = [Math]::Round($distanceToTopMm, 3)
+    generatedFlatCxFromCenterMm = $xDatum.coordinateFromCenterMm
+    generatedFlatCyFromCenterMm = $yDatum.coordinateFromCenterMm
+    horizontalAnchor = $xDatum.anchor
+    horizontalOffsetFromAnchorMm = $xDatum.offsetFromAnchorMm
+    verticalAnchor = $yDatum.anchor
+    verticalOffsetFromAnchorMm = $yDatum.offsetFromAnchorMm
+    distanceToLeftMm = $xDatum.distanceToMinMm
+    distanceToRightMm = $xDatum.distanceToMaxMm
+    distanceToBottomMm = $yDatum.distanceToMinMm
+    distanceToTopMm = $yDatum.distanceToMaxMm
     generatedFlatWidthMm = [Math]::Round($GeneratedFlatWidthMm, 3)
     generatedFlatHeightMm = [Math]::Round($GeneratedFlatHeightMm, 3)
-    handednessMirror = if ($Handedness -eq 'right') { 'mirrored_from_gold_left_reference' } else { 'gold_left_reference' }
+    handednessMirror = 'not_applied_edge_anchored_to_target_blank'
+    handednessHandling = "edge_anchored_${Handedness}_without_coordinate_mirror"
+    sourceDatumMapping = 'nearest_source_edge_offset_preserved_on_generated_flat'
     featureImplementationStatus = 'datum_ready_for_solidworks_cut_feature'
   })
 }

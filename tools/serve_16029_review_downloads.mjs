@@ -1,7 +1,7 @@
-import { createReadStream, existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { copyFileSync, createReadStream, existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { networkInterfaces } from 'node:os'
-import { dirname, isAbsolute, relative, resolve } from 'node:path'
+import { basename, dirname, extname, isAbsolute, relative, resolve } from 'node:path'
 import { spawn } from 'node:child_process'
 import { pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto'
 import {
@@ -11,11 +11,15 @@ import {
   validateControlled16029GenerationRequest,
 } from './locker_16029_controlled_generation_policy.mjs'
 
-const ROOT = resolve('D:/Winnsen_Structure_Agent_Studio')
+const ROOT = resolve(process.env.STUDIO_REVIEW_ROOT || 'D:/Winnsen_Structure_Agent_Studio')
 const PORT = Number(process.env.STUDIO_REVIEW_PORT || 5180)
 const HOST = process.env.STUDIO_REVIEW_HOST || '0.0.0.0'
-const DATA_DIR = resolve(ROOT, 'data')
-const FEEDBACK_DIR = resolve(DATA_DIR, 'review_feedback')
+const DATA_DIR = resolve(process.env.STUDIO_REVIEW_DATA_DIR || resolve(ROOT, 'data'))
+const REVIEW_STORAGE_ROOT = resolve(
+  process.env.STUDIO_REVIEW_STORAGE_ROOT || '\\\\192.168.100.243\\ys8870\\参数化模型下载及反馈',
+)
+const MODEL_DOWNLOAD_DIR = resolve(REVIEW_STORAGE_ROOT, '模型下载')
+const FEEDBACK_DIR = resolve(REVIEW_STORAGE_ROOT, '工程反馈')
 const GENERATION_REQUEST_DIR = resolve(DATA_DIR, 'review_generation_requests')
 const USER_DB_PATH = resolve(DATA_DIR, 'review_download_users.json')
 const FEEDBACK_INDEX_PATH = resolve(FEEDBACK_DIR, 'feedback_index.json')
@@ -33,6 +37,8 @@ const SESSION_TTL_MS = 8 * 60 * 60 * 1000
 const PASSWORD_ITERATIONS = 120000
 const MAX_BODY_BYTES = 32 * 1024 * 1024
 const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024
+const MAX_ATTACHMENT_TOTAL_BYTES = 20 * 1024 * 1024
+const MAX_ATTACHMENT_COUNT = 6
 const sessions = new Map()
 
 function childProcessEnv(extra = {}) {
@@ -53,24 +59,52 @@ function childProcessEnv(extra = {}) {
 }
 
 const reviewRound = {
-  id: '16029-v43-internal-sheetmetal-review-20260603',
-  title: '16029 740W / L642-R246 / v43 内部钣金收尾审核',
+  id: '16029-v43-v23-engineering-feedback-20260713',
+  title: '16029 740W / L642-R246 / v43 v23 结构工程审核',
   project: '16029 740W / L642-R246 / v43',
   cadMainline: 'SolidWorks 2020',
   boundary: '740W x 1917H x 550D / L642-R246 / v43 door route frozen',
-  gateStatus: 'v18 gate PASS / 用户目视确认',
-  gateBlocker: '当前包恢复 6 个机械锁舌，电器板、电控锁和电控锁钩仍排除；生产图纸释放前仍需结构工程师签核。',
-  instruction: '本轮只把 v43-int-v18-lockfix 作为当前交付入口；同路线旧生成包保留为历史，不作为当前下载入口。',
+  gateStatus: 'v23 controlled_candidate_pass / 等待结构工程签核',
+  gateBlocker: '自动证据已通过；反馈记录不等于工程签字，进入样机仍需完整结构签核，生产释放资格固定为 false。',
+  instruction: '下载 v43-int-v23-all-sources-isolated 受控候选，每个结构问题单独编号并上传标注截图；v18 和 800W 仅作历史参考。',
 }
 
 const assets = [
   {
     id: '16029-v43-internal-sheetmetal-lockfix-zip',
-    title: '16029 740W v43 内部钣金最终包',
-    category: '当前交付包',
+    title: '16029 740W v43 历史工程复核包（已目视确认）',
+    category: '历史工程复核包',
     description: 'v43-int-v18-lockfix：SolidWorks 2020 Pack-and-Go，沿用 740W / L642-R246 / v43 柜门路线，恢复 6 个机械锁舌，后背接缝按侧板钣金居中，电器板、电控锁、电控锁钩排除。',
     fileName: 'review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip',
-    path: resolve(ROOT, 'workers/generation_logs/review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip'),
+    sourcePath: resolve(ROOT, 'workers/generation_logs/review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip'),
+    path: resolve(MODEL_DOWNLOAD_DIR, 'review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip'),
+  },
+  {
+    id: '16029-v43-internal-sheetmetal-v23-controlled-candidate-zip',
+    title: '16029 740W v43 v23 受控候选复核包',
+    category: '最新受控候选（未释放）',
+    description: 'v43-int-v23-all-sources-isolated：精确结构 gate 11/11 PASS，302 个受控源文件 changed=0，39 个模块放置与 7 个 restored-v43 放置全部使用候选本地副本，最终装配外部引用 0；releaseEligible=false，仍需结构工程师和样机签核。',
+    fileName: 'review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip',
+    sourcePath: resolve(ROOT, 'workers/generation_logs/review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip'),
+    path: resolve(MODEL_DOWNLOAD_DIR, 'review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip'),
+  },
+  {
+    id: '16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip',
+    title: '16029 740W v43 v23 工程预签核证据包',
+    category: '最新签核证据（非生产包）',
+    description: '包含 6 张隐藏柜门后的内部结构视图、历史源文件几何指标对比、零写入 manifest 和工程签核清单。几何指标相似不代表历史字节版本一致，不允许据此自动覆盖源文件。',
+    fileName: 'review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip',
+    sourcePath: resolve(ROOT, 'workers/generation_logs/review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip'),
+    path: resolve(MODEL_DOWNLOAD_DIR, 'review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip'),
+  },
+  {
+    id: '16029-v43-internal-sheetmetal-v23-engineering-signoff-template',
+    title: '16029 740W v43 v23 结构工程签核模板',
+    category: '待结构工程师填写（不是签核结果）',
+    description: '模板绑定当前 v23 摘要、结构 gate、源完整性、来源报告和两个 ZIP 的 SHA256。模板本身不构成签核，也不授予生产释放资格。',
+    fileName: 'locker_16029_v23_engineering_signoff.template.json',
+    sourcePath: resolve(ROOT, 'data/locker_16029_v23_engineering_signoff.template.json'),
+    path: resolve(MODEL_DOWNLOAD_DIR, 'locker_16029_v23_engineering_signoff.template.json'),
   },
   {
     id: 'lms-gold-variable',
@@ -78,7 +112,8 @@ const assets = [
     category: '保留参考',
     description: '旧 800W gold-variable LMS 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。',
     fileName: '16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip',
-    path: resolve(ROOT, 'workers/handoffs/16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip'),
+    sourcePath: resolve(ROOT, 'workers/handoffs/16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip'),
+    path: resolve(MODEL_DOWNLOAD_DIR, '16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
   {
     id: 'sml-gold-variable',
@@ -86,7 +121,8 @@ const assets = [
     category: '保留参考',
     description: '旧 800W gold-variable SML 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。',
     fileName: '16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip',
-    path: resolve(ROOT, 'workers/handoffs/16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip'),
+    sourcePath: resolve(ROOT, 'workers/handoffs/16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip'),
+    path: resolve(MODEL_DOWNLOAD_DIR, '16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
   {
     id: 'dual-gold-variable',
@@ -94,16 +130,44 @@ const assets = [
     category: '保留参考',
     description: '旧 LMS/SML 双方案合包，保留作历史对照；不是当前 v43 内部钣金交付入口。',
     fileName: '16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip',
-    path: resolve(ROOT, 'workers/handoffs/16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip'),
+    sourcePath: resolve(ROOT, 'workers/handoffs/16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip'),
+    path: resolve(MODEL_DOWNLOAD_DIR, '16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip'),
   },
 ]
 
+const CURRENT_V23_ASSET_ID = '16029-v43-internal-sheetmetal-v23-controlled-candidate-zip'
+const ISSUE_CATEGORY_LABELS = {
+  lock_common_datum_and_engagement: '锁舌/锁孔/定位基准与啮合',
+  shelf_front_frame_interface: '层板与前框定位接口',
+  partition_reinforcement_and_weldability: '竖隔板加强与焊接可达性',
+  external_through_hole_disposition: '非预期外穿孔',
+  door_gap_sag_and_collision: '门缝/下垂/碰撞',
+  sheetmetal_process_and_tolerance: '钣金工艺与公差',
+  touched_source_file_disposition: '历史受触碰源文件处置',
+  other_structure_issue: '其他结构问题',
+}
+const SEVERITY_LABELS = { P0: 'P0 阻断/安全', P1: 'P1 样机前必须修改', P2: 'P2 优化项' }
+const DECISION_LABELS = { pass: '通过反馈检查', needs_changes: '需修改', blocked: '阻塞', cannot_judge: '无法判断' }
 const byId = new Map(assets.map((asset) => [asset.id, asset]))
 
 function ensureDirs() {
   mkdirSync(DATA_DIR, { recursive: true })
+  mkdirSync(REVIEW_STORAGE_ROOT, { recursive: true })
+  mkdirSync(MODEL_DOWNLOAD_DIR, { recursive: true })
   mkdirSync(FEEDBACK_DIR, { recursive: true })
   mkdirSync(GENERATION_REQUEST_DIR, { recursive: true })
+}
+
+function syncAssetsToSharedStorage() {
+  if (process.env.STUDIO_REVIEW_SKIP_ASSET_SYNC === '1') return
+  for (const asset of assets) {
+    if (!asset.sourcePath || !existsSync(asset.sourcePath)) continue
+    const source = statSync(asset.sourcePath)
+    const target = existsSync(asset.path) ? statSync(asset.path) : null
+    if (target && target.size === source.size && target.mtimeMs >= source.mtimeMs) continue
+    copyFileSync(asset.sourcePath, asset.path)
+    if (statSync(asset.path).size !== source.size) throw new Error(`shared asset copy size mismatch: ${asset.fileName}`)
+  }
 }
 
 function readJson(path, fallback) {
@@ -269,10 +333,41 @@ function formatBytes(value) {
   return `${(mb / 1024).toFixed(1)} GB`
 }
 
+function contentTypeForPath(path) {
+  const extension = extname(path).toLowerCase()
+  if (extension === '.json') return 'application/json; charset=utf-8'
+  if (extension === '.png') return 'image/png'
+  if (extension === '.jpg' || extension === '.jpeg') return 'image/jpeg'
+  if (extension === '.webp') return 'image/webp'
+  if (extension === '.pdf') return 'application/pdf'
+  if (extension === '.zip') return 'application/zip'
+  return 'application/octet-stream'
+}
+
+function safeResponseFilename(value, fallback = 'download') {
+  const name = basename(String(value || fallback)).replace(/["\r\n]/g, '_')
+  return name || fallback
+}
+
 function assetInfo(asset) {
   if (!existsSync(asset.path)) return { ...asset, available: false, sizeBytes: null, modifiedAt: null }
   const stat = statSync(asset.path)
   return { ...asset, available: true, sizeBytes: stat.size, modifiedAt: stat.mtime.toISOString() }
+}
+
+function publicAssetInfo(asset) {
+  const { path, sourcePath, ...publicAsset } = assetInfo(asset)
+  return publicAsset
+}
+
+function orderedAssets() {
+  const priority = new Map([
+    [CURRENT_V23_ASSET_ID, 0],
+    ['16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip', 1],
+    ['16029-v43-internal-sheetmetal-v23-engineering-signoff-template', 2],
+    ['16029-v43-internal-sheetmetal-lockfix-zip', 3],
+  ])
+  return [...assets].sort((left, right) => (priority.get(left.id) ?? 10) - (priority.get(right.id) ?? 10))
 }
 
 function readFeedbackIndex() {
@@ -402,7 +497,7 @@ function generationStatusText(item) {
   if (String(item.status || '').includes('blocked_controlled_generation_policy')) {
     return item.message || 'Blocked by controlled generation policy'
   }
-  if (item.id === currentDeliveryRequestId() && item.downloadUrl) return '当前交付包：SW2020 gate PASS，用户已目视确认'
+  if (item.id === currentDeliveryRequestId() && item.downloadUrl) return '当前工程复核包：旧结构 gate PASS，精确结构门禁待补'
   if (item.downloadUrl && isDerivedSheetMetalReviewModel(item)) return '派生钣金模型已生成，等待工程复核'
   if (item.downloadUrl && hasParametricScaffoldValidation(item)) return '非 v43 原生模板：参数化结构证据包已生成，不能作为交付模型'
   if (item.downloadUrl && hasStructureRevisionFeedback(item)) return '结构反馈待整改，证据包已生成，不能作为交付模型'
@@ -420,7 +515,7 @@ function generationActionHtml(item) {
     return '<button type="button" disabled>Box regression blocked</button>'
   }
   if (item.id === currentDeliveryRequestId() && item.downloadUrl) {
-    return `<a class="button" href="${htmlEscape(item.downloadUrl)}">下载当前 v43 交付包</a>`
+    return `<a class="button" href="${htmlEscape(item.downloadUrl)}">下载当前 v43 工程复核包</a>`
   }
   if (item.downloadUrl && hasParametricScaffoldValidation(item)) {
     return `<a class="button secondary" href="${htmlEscape(item.downloadUrl)}">下载非交付结构证据包</a>`
@@ -664,7 +759,7 @@ function renderAuthPage(error = '', mode = 'login') {
         </div>
         <p class="eyebrow">WINNSEN REVIEW PORTAL</p>
         <h1>${isRegister ? '注册审核账号' : '结构审核登录'}</h1>
-        <p class="muted">${htmlEscape(reviewRound.title)}，登录后只看到两条生成入口和一个预览窗口；内部 gate、日志和多余数据默认收起。</p>
+        <p class="muted">${htmlEscape(reviewRound.title)}，登录后可下载 v23 模型、上传标注截图并查看团队反馈；内部 gate、日志和多余数据默认收起。</p>
         ${error ? `<div class="alert">${htmlEscape(error)}</div>` : ''}
         <form method="post" action="${isRegister ? '/register' : '/login'}" class="auth-form">
           <label>账号<input name="username" autocomplete="username" required /></label>
@@ -787,10 +882,21 @@ function renderShell(content, username = '') {
   .request-row-actions button[disabled] { cursor:not-allowed; opacity:.68; background:#eef3ff; color:var(--muted); border:1px solid var(--line); }
   .feedback-row { padding:12px; margin-top:10px; }
   .feedback-row p { margin:5px 0 0; color:var(--muted); }
+  .feedback-row-head { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  .feedback-row-head strong { margin-right:auto; }
+  .feedback-detail { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-top:10px; }
+  .feedback-detail div { padding:9px; border:1px solid var(--line); border-radius:7px; background:#f8fbff; }
+  .feedback-detail span, .feedback-detail b { display:block; }
+  .feedback-detail span { color:var(--muted); font-size:11px; }
+  .feedback-detail b { margin-top:3px; font-size:13px; line-height:1.45; white-space:pre-wrap; }
+  .attachment-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .attachment-links a { padding:6px 9px; border:1px solid #c8d5ee; border-radius:6px; background:#eef3ff; color:var(--brand); font-size:12px; text-decoration:none; }
+  .feedback-boundary { margin:12px 0; padding:10px 12px; border:1px solid #f5d08d; border-radius:8px; background:#fff8e8; color:#8a4f00; font-size:12px; line-height:1.55; }
+  .feedback-upload-note { margin-top:6px; color:var(--muted); font-size:12px; line-height:1.5; }
   .alert { padding:10px 12px; margin-top:14px; border-radius:8px; background:#fff5f5; color:var(--risk); border:1px solid #f4c2c2; }
   .ok { padding:10px 12px; margin-top:12px; border-radius:8px; background:#edf9f1; color:var(--good); border:1px solid #bfe5cf; }
   @media (max-width: 1100px) { .studio-grid { grid-template-columns:1fr; } }
-  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .asset-grid, .feedback-grid, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
+  @media (max-width: 900px) { .shell { grid-template-columns:1fr; } aside { position:static; } main { padding:16px; } .asset-grid, .feedback-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; } .top { flex-direction:column; } #cabinetPreview { height:360px; } .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; } .viewport-hud { position:static; margin:8px; max-width:none; } }
 </style>
 </head>
 <body>${content}</body>
@@ -798,14 +904,14 @@ function renderShell(content, username = '') {
 }
 
 function renderAssetCards() {
-  return assets.map(assetInfo).map((asset) => `
+  return orderedAssets().map(assetInfo).map((asset) => `
     <article class="asset-card">
       <div>
         <h2>${htmlEscape(asset.title)}</h2>
-        <span class="chip">${asset.available ? '可下载' : '文件缺失'}</span>
+        <span class="chip">${htmlEscape(asset.category)}</span>
       </div>
-      <p>${asset.id === 'dual-gold-variable' ? '统一下载 LMS/SML 总包。' : '下载后用 SolidWorks 2020 打开审核。'}</p>
-      ${asset.available ? `<a class="button" href="/download/${asset.id}">下载</a>` : '<button disabled>文件缺失</button>'}
+      <p>${htmlEscape(asset.description)}</p>
+      ${asset.available ? `<a class="button" href="/download/${asset.id}">下载</a>` : '<button disabled>共享目录文件缺失</button>'}
     </article>
   `).join('')
 }
@@ -814,9 +920,20 @@ function feedbackRows(rows) {
   if (!rows.length) return '<p class="muted">当前轮次还没有提交记录。</p>'
   return rows.map((item) => `
     <div class="feedback-row">
-      <strong>${htmlEscape(item.reviewerName || item.username)} / ${htmlEscape(item.decisionLabel || item.decision)}</strong>
-      <p>${htmlEscape(item.summary || '已提交反馈')}</p>
-      <p>${htmlEscape(item.reviewTargetLabel || item.reviewTarget)} / ${new Date(item.submittedAt).toLocaleString('zh-CN', { hour12: false })}</p>
+      <div class="feedback-row-head">
+        <strong>${htmlEscape(item.id)} / ${htmlEscape(item.reviewerName || item.username)}</strong>
+        ${item.severity ? `<span class="chip ${item.severity === 'P0' ? 'warn' : ''}">${htmlEscape(item.severity)}</span>` : ''}
+        <span class="chip">${htmlEscape(item.decisionLabel || item.decision)}</span>
+      </div>
+      <p>${htmlEscape(item.issueCategoryLabel || '结构反馈')} / ${htmlEscape(item.reviewTargetLabel || item.reviewTarget)}</p>
+      <div class="feedback-detail">
+        <div><span>模型/零件</span><b>${htmlEscape(item.componentName || '-')}</b></div>
+        <div><span>位置</span><b>${htmlEscape(item.modelLocation || '-')}</b></div>
+        <div><span>当前问题</span><b>${htmlEscape(item.currentProblem || item.summary || '已提交反馈')}</b></div>
+        <div><span>期望与验收</span><b>${htmlEscape(item.expectedResult || '-')}\n${htmlEscape(item.acceptanceCriteria || '')}</b></div>
+      </div>
+      ${item.attachmentCount ? `<div class="attachment-links">${Array.from({ length: item.attachmentCount }, (_, index) => `<a href="/feedback/${encodeURIComponent(item.id)}/attachment/${index + 1}" target="_blank" rel="noopener">查看附件 ${index + 1}</a>`).join('')}</div>` : ''}
+      <p>${new Date(item.submittedAt).toLocaleString('zh-CN', { hour12: false })} · 此记录不是工程签核。</p>
     </div>
   `).join('')
 }
@@ -842,7 +959,8 @@ function renderPage(request) {
   const username = currentUser(request)
   const assetCards = renderAssetCards()
   const myGenerationRequests = generationRows(currentGenerationRequests(username))
-  const mine = feedbackRows(currentRoundFeedback(username))
+  const teamFeedback = currentRoundFeedback()
+  const teamFeedbackRows = feedbackRows(teamFeedback)
   return renderShell(`
     <div class="shell">
       <aside>
@@ -850,7 +968,7 @@ function renderPage(request) {
           <img src="/brand/winnsen-logo.jpg" alt="Winnsen" />
         </div>
         <h2>16029 审核系统</h2>
-        <p>登录后只看两条生成入口：完整装配体和单个模型。内部数据默认收起。</p>
+        <p>登录后可下载 v23 受控候选、提交结构问题和标注截图，也保留完整装配体与单模型任务入口。</p>
         <div class="nav-links">
           <a class="button secondary" href="#generate">模型任务</a>
           <a class="button secondary" href="#downloads">下载</a>
@@ -871,28 +989,28 @@ function renderPage(request) {
           <div class="top">
             <div>
               <p class="eyebrow">ENGINEER REVIEW</p>
-              <h1>16029 740W / L642-R246 / v43 审核入口</h1>
-              <p class="muted">当前交付入口为 v43-int-v18-lockfix。后台生成完成后才显示下载；旧同路线包默认隐藏，不作为当前交付。</p>
+              <h1>16029 740W / L642-R246 / v43 v23 审核入口</h1>
+              <p class="muted">当前审核对象为 v43-int-v23-all-sources-isolated 受控候选。工程师可下载模型、逐项提交结构问题和标注截图；旧包只作历史参考。</p>
               <div class="chips">
                 <span class="chip good">${htmlEscape(reviewRound.cadMainline)}</span>
-                <span class="chip warn">工程复核</span>
-                <span class="chip">v18 当前包</span>
+                <span class="chip warn">等待结构签核</span>
+                <span class="chip">v23 受控候选</span>
               </div>
             </div>
-            <a class="button" href="#generate">开始生成</a>
+            <a class="button" href="#feedback">上传问题</a>
           </div>
           <div class="quick-status">
             <div>
-              <span>入口</span>
-              <strong>完整装配体 / 单个模型</strong>
+              <span>审核对象</span>
+              <strong>v23 受控候选</strong>
             </div>
             <div>
-              <span>生成状态</span>
-              <strong>提交后显示进度条</strong>
+              <span>自动证据</span>
+              <strong>controlled_candidate_pass</strong>
             </div>
             <div>
-              <span>下载</span>
-              <strong>完成后出现</strong>
+              <span>问题反馈</span>
+              <strong>生成 V23-Q 编号</strong>
             </div>
           </div>
         </section>
@@ -921,9 +1039,9 @@ function renderPage(request) {
                   <span>用于单门板 / 单柜门件审核。适合先把一个门做对。</span>
                 </button>
               </div>
-              <p class="mode-warning">注意：950W、14门、400D 等非 v43 原生模板参数会进入参数化结构证据路线，不能按当前 v43 交付模型质量使用。</p>
+              <p class="mode-warning">注意：950W、14门、400D 等非 v43 原生模板参数会进入参数化结构证据路线，不能按当前 v43 工程复核模型质量使用。</p>
               <div class="prompt-actions">
-                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, ordinary locker doors, mechanical door lock tongue restored, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.">当前 v43 交付样例</button>
+                <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, ordinary locker doors, mechanical door lock tongue restored, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.">当前 v43 工程复核样例</button>
                 <button class="button secondary" type="button" data-example="740W x 1917H x 550D, two columns, L642-R246, W307, freeze verified v43 door sheet metal, repair internal shelf/front-frame and centered rear seam.">内部钣金样例</button>
                 <button class="button secondary" type="button" data-example="1000W x 1917H x 550D, source reference only, compare side-panel welding, shelves/front frame, inner vertical reinforcement, top/bottom frame, leveling-foot datums, and lock-side locating datums.">1000W 金标准对照</button>
                 <button class="button secondary" type="button" data-example="Single ordinary door panel, door width 307, 0.8mm galvanized sheet, mechanical lock tongue interface, hinge holes, vertical reinforcement rib, no electric lock body.">单门界面样例</button>
@@ -1009,7 +1127,7 @@ function renderPage(request) {
           <div class="top">
             <div>
               <h2>审核包下载</h2>
-              <p class="muted">当前主入口为 v18 内部钣金最终包；旧 800W LMS/SML/DUAL 仅保留为历史参考。</p>
+              <p class="muted">当前主入口为 v23 受控候选、预签核证据和签核模板；模型文件从指定共享目录提供，v18 与 800W 仅作历史参考。</p>
             </div>
             <span class="chip good">受保护下载</span>
           </div>
@@ -1017,37 +1135,56 @@ function renderPage(request) {
         </section>
 
         <section id="feedback" class="panel" style="margin-top:16px">
-          <h2>提交审核意见</h2>
-          <p class="muted">通过、需修改、无法判断都可以提交。截图会随反馈归档在本机 review_feedback 目录。</p>
+          <h2>上传结构问题反馈</h2>
+          <p class="muted">一个问题提交一条记录。请填写模型位置、当前问题、期望结果和验收标准，并上传带红框或箭头的截图。</p>
+          <div class="feedback-boundary">反馈会保存到共享目录“参数化模型下载及反馈/工程反馈”。反馈记录不是工程签核，不会自动改变样机资格或 production_release_eligible=false。</div>
           <form id="feedbackForm" class="feedback-grid">
             <div>
               <label>审核人姓名<input name="reviewerName" value="${htmlEscape(username)}" required /></label>
               <label>专业/角色<input name="discipline" placeholder="结构 / 工艺 / 项目" /></label>
               <label>审核对象
                 <select name="reviewTarget">
-                  ${assets.map((asset) => `<option value="${asset.id}">${htmlEscape(asset.title)}</option>`).join('')}
+                  ${orderedAssets().map((asset) => `<option value="${asset.id}"${asset.id === CURRENT_V23_ASSET_ID ? ' selected' : ''}>${htmlEscape(asset.title)}</option>`).join('')}
+                </select>
+              </label>
+              <label>问题分类
+                <select name="issueCategory">
+                  ${Object.entries(ISSUE_CATEGORY_LABELS).map(([value, label]) => `<option value="${value}">${htmlEscape(label)}</option>`).join('')}
+                </select>
+              </label>
+              <label>严重度
+                <select name="severity">
+                  ${Object.entries(SEVERITY_LABELS).map(([value, label]) => `<option value="${value}"${value === 'P1' ? ' selected' : ''}>${htmlEscape(label)}</option>`).join('')}
                 </select>
               </label>
               <label>结论
                 <select name="decision">
-                  <option value="pass">通过</option>
-                  <option value="needs_changes">需修改</option>
+                  <option value="needs_changes" selected>需修改</option>
                   <option value="blocked">阻塞</option>
                   <option value="cannot_judge">无法判断</option>
+                  <option value="pass">未发现问题（仅反馈）</option>
                 </select>
               </label>
             </div>
             <div>
-              <label>问题摘要<textarea name="summary" required placeholder="例如：SML 中门锁孔偏移 / DUAL 包可正常打开"></textarea></label>
-              <label>截图/附件<input name="attachments" type="file" multiple /></label>
-              <button type="submit">提交反馈</button>
+              <label>模型/零件名称<input name="componentName" required placeholder="例如：储物柜门装配_L6 / 锁孔基准" /></label>
+              <label>具体位置<input name="modelLocation" required placeholder="例如：左列 6/12 门后，锁侧中部" /></label>
+              <label>当前问题<textarea name="currentProblem" required placeholder="说明现在看到了什么，不要只写“这里不对”"></textarea></label>
+              <label>期望结果<textarea name="expectedResult" required placeholder="说明应移动、删除、补强或按哪个基准对齐"></textarea></label>
+              <label>关键尺寸/公差<textarea name="keyDimensionTolerance" placeholder="没有确认尺寸可填写“待工程师测量”"></textarea></label>
+              <label>参考模型或图纸<textarea name="referenceBasis" placeholder="例如：1000W gold/source、正式图号或现场样件"></textarea></label>
+              <label>验收标准<textarea name="acceptanceCriteria" required placeholder="修改后如何判断这一条已经关闭"></textarea></label>
+              <label>标注截图/PDF<input name="attachments" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" multiple required /></label>
+              <p class="feedback-upload-note">最多 ${MAX_ATTACHMENT_COUNT} 个附件；单个不超过 ${formatBytes(MAX_ATTACHMENT_BYTES)}，合计不超过 ${formatBytes(MAX_ATTACHMENT_TOTAL_BYTES)}。只接受 PNG、JPG、WEBP、PDF。</p>
+              <button id="feedbackSubmitButton" type="submit">提交并生成问题编号</button>
               <div id="feedbackStatus"></div>
             </div>
           </form>
         </section>
-        <section class="panel">
-          <h2>我的反馈</h2>
-          <div id="feedbackList">${mine}</div>
+        <section id="feedback-history" class="panel">
+          <h2>本轮团队反馈（${teamFeedback.length}）</h2>
+          <p class="muted">登录用户可查看本轮全部工程问题及附件，便于避免重复反馈。</p>
+          <div id="feedbackList">${teamFeedbackRows}</div>
         </section>
       </main>
     </div>
@@ -1160,7 +1297,7 @@ function renderPage(request) {
           return 'Controlled gate blocked download: ' + controlledGenerationBlockersForClient(item).join('; ')
         }
         if (status.includes('blocked_controlled_generation_policy')) return item.message || 'Blocked by controlled generation policy'
-        if (item.id === CURRENT_DELIVERY_REQUEST_ID && item.downloadUrl) return '当前交付包：SW2020 gate PASS，用户已目视确认'
+        if (item.id === CURRENT_DELIVERY_REQUEST_ID && item.downloadUrl) return '当前工程复核包：旧结构 gate PASS，精确结构门禁待补'
         if (item.downloadUrl && isDerivedSheetMetalReviewModelForClient(item)) return '派生钣金模型已生成，等待工程复核'
         if (item.downloadUrl && hasParametricScaffoldValidationForClient(item)) return '非 v43 原生模板：参数化结构证据包已生成，不能作为交付模型'
         if (item.downloadUrl && hasStructureRevisionFeedbackForClient(item)) return '结构反馈待整改，证据包已生成，不能作为交付模型'
@@ -1208,7 +1345,7 @@ function renderPage(request) {
           link.className = 'button'
           link.href = item.downloadUrl
           link.textContent = item.id === CURRENT_DELIVERY_REQUEST_ID
-            ? '下载当前 v43 交付包'
+            ? '下载当前 v43 工程复核包'
             : isDerivedSheetMetalReviewModelForClient(item)
             ? '下载派生钣金模型'
             : hasStructureRevisionFeedbackForClient(item)
@@ -1877,6 +2014,10 @@ function renderPage(request) {
 
       const form = document.getElementById('feedbackForm')
       const statusBox = document.getElementById('feedbackStatus')
+      const feedbackSubmitButton = document.getElementById('feedbackSubmitButton')
+      const feedbackMaxAttachmentCount = ${MAX_ATTACHMENT_COUNT}
+      const feedbackMaxAttachmentBytes = ${MAX_ATTACHMENT_BYTES}
+      const feedbackMaxAttachmentTotalBytes = ${MAX_ATTACHMENT_TOTAL_BYTES}
       function fileToEntry(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader()
@@ -1888,31 +2029,55 @@ function renderPage(request) {
       form.addEventListener('submit', async (event) => {
         event.preventDefault()
         statusBox.className = ''
-        statusBox.textContent = '提交中...'
+        statusBox.textContent = '正在校验并上传反馈...'
         const data = new FormData(form)
         const files = Array.from(form.elements.attachments.files || [])
-        const attachments = await Promise.all(files.map(fileToEntry))
-        const response = await fetch('/feedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            reviewerName: data.get('reviewerName'),
-            discipline: data.get('discipline'),
-            reviewTarget: data.get('reviewTarget'),
-            decision: data.get('decision'),
-            summary: data.get('summary'),
-            attachments,
-          }),
-        })
-        const result = await response.json()
-        if (!response.ok) {
+        const totalBytes = files.reduce((total, file) => total + file.size, 0)
+        if (!files.length || files.length > feedbackMaxAttachmentCount) {
           statusBox.className = 'alert'
-          statusBox.textContent = result.error || '提交失败'
+          statusBox.textContent = '请上传 1-' + feedbackMaxAttachmentCount + ' 个标注截图或 PDF。'
           return
         }
-        statusBox.className = 'ok'
-        statusBox.textContent = '已提交：' + result.feedbackId
-        setTimeout(() => location.reload(), 800)
+        if (files.some((file) => file.size > feedbackMaxAttachmentBytes) || totalBytes > feedbackMaxAttachmentTotalBytes) {
+          statusBox.className = 'alert'
+          statusBox.textContent = '附件大小超过限制，请压缩图片或拆分为多个问题。'
+          return
+        }
+
+        feedbackSubmitButton.disabled = true
+        try {
+          const attachments = await Promise.all(files.map(fileToEntry))
+          const response = await fetch('/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reviewerName: data.get('reviewerName'),
+              discipline: data.get('discipline'),
+              reviewTarget: data.get('reviewTarget'),
+              issueCategory: data.get('issueCategory'),
+              severity: data.get('severity'),
+              decision: data.get('decision'),
+              componentName: data.get('componentName'),
+              modelLocation: data.get('modelLocation'),
+              currentProblem: data.get('currentProblem'),
+              expectedResult: data.get('expectedResult'),
+              keyDimensionTolerance: data.get('keyDimensionTolerance'),
+              referenceBasis: data.get('referenceBasis'),
+              acceptanceCriteria: data.get('acceptanceCriteria'),
+              attachments,
+            }),
+          })
+          const result = await response.json().catch(() => ({ error: '服务器返回了不可读取的结果' }))
+          if (!response.ok) throw new Error(result.error || '提交失败')
+          statusBox.className = 'ok'
+          statusBox.textContent = '已提交：' + result.feedbackId + '，附件 ' + result.savedFiles + ' 个。'
+          setTimeout(() => location.reload(), 900)
+        } catch (error) {
+          statusBox.className = 'alert'
+          statusBox.textContent = error instanceof Error ? error.message : '提交失败'
+        } finally {
+          feedbackSubmitButton.disabled = false
+        }
       })
     </script>
   `, username)
@@ -1935,50 +2100,132 @@ function safeSlug(value) {
   return String(value || 'user').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 48)
 }
 
+function badRequest(message) {
+  const error = new Error(message)
+  error.statusCode = 400
+  return error
+}
+
+function textField(payload, name, { required = false, maxLength = 1000, fallback = '' } = {}) {
+  const value = String(payload[name] ?? fallback).trim()
+  if (required && !value) throw badRequest(`${name} is required`)
+  if (value.length > maxLength) throw badRequest(`${name} is too long (max ${maxLength})`)
+  return value
+}
+
 function dataUrlToBuffer(dataUrl) {
   const match = String(dataUrl || '').match(/^data:([^;,]+)?;base64,(.*)$/)
-  if (!match) throw new Error('invalid attachment data')
-  return { mime: match[1] || 'application/octet-stream', buffer: Buffer.from(match[2], 'base64') }
+  if (!match) throw badRequest('invalid attachment data')
+  const encoded = match[2].replace(/\s/g, '')
+  if (!encoded || encoded.length % 4 !== 0 || !/^[a-zA-Z0-9+/]*={0,2}$/.test(encoded)) {
+    throw badRequest('invalid attachment base64')
+  }
+  return Buffer.from(encoded, 'base64')
+}
+
+function detectAttachmentKind(buffer) {
+  if (buffer.length >= 8 && buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
+    return { extension: '.png', extensions: new Set(['.png']), mime: 'image/png' }
+  }
+  if (buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return { extension: '.jpg', extensions: new Set(['.jpg', '.jpeg']), mime: 'image/jpeg' }
+  }
+  if (buffer.length >= 12 && buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP') {
+    return { extension: '.webp', extensions: new Set(['.webp']), mime: 'image/webp' }
+  }
+  if (buffer.length >= 5 && buffer.subarray(0, 5).toString('ascii') === '%PDF-') {
+    return { extension: '.pdf', extensions: new Set(['.pdf']), mime: 'application/pdf' }
+  }
+  throw badRequest('attachments must be PNG, JPG, WEBP, or PDF files')
+}
+
+function prepareFeedbackAttachments(rawAttachments) {
+  if (!Array.isArray(rawAttachments) || rawAttachments.length < 1 || rawAttachments.length > MAX_ATTACHMENT_COUNT) {
+    throw badRequest(`attachments must contain 1-${MAX_ATTACHMENT_COUNT} files`)
+  }
+  let totalBytes = 0
+  return rawAttachments.map((attachment, index) => {
+    const originalName = String(attachment?.name || `attachment-${index + 1}`).trim().slice(0, 240)
+    const buffer = dataUrlToBuffer(attachment?.dataUrl)
+    if (buffer.length > MAX_ATTACHMENT_BYTES) throw badRequest(`attachment ${index + 1} is too large`)
+    totalBytes += buffer.length
+    if (totalBytes > MAX_ATTACHMENT_TOTAL_BYTES) throw badRequest('total attachment size is too large')
+    const kind = detectAttachmentKind(buffer)
+    const declaredExtension = extname(originalName).toLowerCase()
+    if (declaredExtension && !kind.extensions.has(declaredExtension)) {
+      throw badRequest(`attachment ${index + 1} extension does not match its content`)
+    }
+    return {
+      originalName: originalName || `attachment-${index + 1}${kind.extension}`,
+      savedAs: `attachment-${String(index + 1).padStart(2, '0')}${kind.extension}`,
+      mime: kind.mime,
+      bytes: buffer.length,
+      buffer,
+    }
+  })
 }
 
 function submitFeedback(username, payload) {
   const reviewTarget = String(payload.reviewTarget || '').trim()
   const asset = byId.get(reviewTarget)
-  if (!asset) throw new Error('invalid review target')
+  if (!asset) throw badRequest('invalid review target')
   const decision = String(payload.decision || '').trim()
-  const decisionLabels = { pass: '通过', needs_changes: '需修改', blocked: '阻塞', cannot_judge: '无法判断' }
-  if (!decisionLabels[decision]) throw new Error('invalid decision')
+  if (!DECISION_LABELS[decision]) throw badRequest('invalid decision')
+  const issueCategory = String(payload.issueCategory || '').trim()
+  if (!ISSUE_CATEGORY_LABELS[issueCategory]) throw badRequest('invalid issue category')
+  const severity = String(payload.severity || '').trim().toUpperCase()
+  if (!SEVERITY_LABELS[severity]) throw badRequest('invalid severity')
+
+  const reviewerName = textField(payload, 'reviewerName', { required: true, maxLength: 80, fallback: username })
+  const discipline = textField(payload, 'discipline', { maxLength: 80 })
+  const componentName = textField(payload, 'componentName', { required: true, maxLength: 200 })
+  const modelLocation = textField(payload, 'modelLocation', { required: true, maxLength: 400 })
+  const currentProblem = textField(payload, 'currentProblem', { required: true, maxLength: 2000, fallback: payload.summary })
+  const expectedResult = textField(payload, 'expectedResult', { required: true, maxLength: 2000 })
+  const keyDimensionTolerance = textField(payload, 'keyDimensionTolerance', { maxLength: 1000 })
+  const referenceBasis = textField(payload, 'referenceBasis', { maxLength: 1000 })
+  const acceptanceCriteria = textField(payload, 'acceptanceCriteria', { required: true, maxLength: 1500 })
+  const preparedAttachments = prepareFeedbackAttachments(payload.attachments)
 
   const submittedAt = new Date().toISOString()
-  const feedbackId = `${submittedAt.replace(/[-:.]/g, '').slice(0, 15)}-${randomBytes(3).toString('hex')}`
-  const folderName = `${submittedAt.replace(/[-:.]/g, '').slice(0, 15)}-${safeSlug(username)}-${feedbackId.slice(-6)}`
+  const stamp = submittedAt.replace(/[-:.]/g, '').slice(0, 15)
+  const feedbackId = `V23-Q-${stamp}-${randomBytes(3).toString('hex').toUpperCase()}`
+  const folderName = `${feedbackId}-${safeSlug(username)}`
   const folderPath = resolve(FEEDBACK_DIR, folderName)
   mkdirSync(folderPath, { recursive: true })
 
-  const attachments = []
-  for (const [index, attachment] of (payload.attachments || []).entries()) {
-    const { mime, buffer } = dataUrlToBuffer(attachment.dataUrl)
-    if (buffer.length > MAX_ATTACHMENT_BYTES) throw new Error('attachment too large')
-    const safeName = safeSlug(attachment.name || `attachment-${index + 1}`)
-    const outName = `${index + 1}-${safeName}`
-    writeFileSync(resolve(folderPath, outName), buffer)
-    attachments.push({ name: attachment.name || outName, savedAs: outName, mime, bytes: buffer.length })
-  }
+  const attachments = preparedAttachments.map(({ buffer, originalName, ...attachment }) => {
+    writeFileSync(resolve(folderPath, attachment.savedAs), buffer)
+    return { name: originalName, ...attachment }
+  })
 
   const feedback = {
     id: feedbackId,
     submittedAt,
     username,
-    reviewerName: String(payload.reviewerName || username).trim(),
-    discipline: String(payload.discipline || '').trim(),
+    reviewerName,
+    discipline,
     decision,
-    decisionLabel: decisionLabels[decision],
-    summary: String(payload.summary || '').trim(),
+    decisionLabel: DECISION_LABELS[decision],
+    issueCategory,
+    issueCategoryLabel: ISSUE_CATEGORY_LABELS[issueCategory],
+    severity,
+    severityLabel: SEVERITY_LABELS[severity],
+    componentName,
+    modelLocation,
+    currentProblem,
+    expectedResult,
+    keyDimensionTolerance,
+    referenceBasis,
+    acceptanceCriteria,
+    summary: currentProblem,
     reviewRound,
     reviewRoundId: reviewRound.id,
     reviewTarget,
     reviewTargetLabel: asset.title,
     attachments,
+    feedbackIsEngineeringSignoff: false,
+    productionReleaseEligible: false,
   }
   writeJson(resolve(folderPath, 'feedback.json'), feedback)
 
@@ -1991,12 +2238,25 @@ function submitFeedback(username, payload) {
     discipline: feedback.discipline,
     decision: feedback.decision,
     decisionLabel: feedback.decisionLabel,
+    issueCategory: feedback.issueCategory,
+    issueCategoryLabel: feedback.issueCategoryLabel,
+    severity: feedback.severity,
+    severityLabel: feedback.severityLabel,
+    componentName: feedback.componentName,
+    modelLocation: feedback.modelLocation,
+    currentProblem: feedback.currentProblem,
+    expectedResult: feedback.expectedResult,
+    keyDimensionTolerance: feedback.keyDimensionTolerance,
+    referenceBasis: feedback.referenceBasis,
+    acceptanceCriteria: feedback.acceptanceCriteria,
     summary: feedback.summary,
     reviewRoundId: feedback.reviewRoundId,
     reviewTarget: feedback.reviewTarget,
     reviewTargetLabel: feedback.reviewTargetLabel,
     folderName,
     attachmentCount: attachments.length,
+    feedbackIsEngineeringSignoff: false,
+    productionReleaseEligible: false,
   }
   index.feedback = [summary, ...index.feedback.filter((item) => item.id !== summary.id)].slice(0, 300)
   writeJson(FEEDBACK_INDEX_PATH, index)
@@ -2014,6 +2274,7 @@ function localAddresses() {
 }
 
 ensureDirs()
+syncAssetsToSharedStorage()
 
 const server = createServer(async (request, response) => {
   try {
@@ -2044,7 +2305,13 @@ const server = createServer(async (request, response) => {
       return
     }
     if (request.method === 'GET' && url.pathname === '/status.json') {
-      sendJson(response, 200, { status: 'ok', auth: 'enabled', reviewRound: reviewRound.id, assets: assets.map(assetInfo) })
+      sendJson(response, 200, {
+        status: 'ok',
+        auth: 'enabled',
+        reviewRound: reviewRound.id,
+        sharedStorageReady: true,
+        assets: orderedAssets().map(publicAssetInfo),
+      })
       return
     }
     if (request.method === 'GET' && url.pathname === '/login') {
@@ -2110,11 +2377,42 @@ const server = createServer(async (request, response) => {
       return
     }
     if (request.method === 'GET' && url.pathname === '/assets.json') {
-      sendJson(response, 200, { reviewRound, assets: assets.map(assetInfo).map(({ path, ...asset }) => ({ ...asset, downloadUrl: `/download/${asset.id}` })) })
+      sendJson(response, 200, { reviewRound, assets: orderedAssets().map(publicAssetInfo).map((asset) => ({ ...asset, downloadUrl: `/download/${asset.id}` })) })
       return
     }
     if (request.method === 'GET' && url.pathname === '/feedback.json') {
       sendJson(response, 200, { feedback: currentRoundFeedback(username) })
+      return
+    }
+    const feedbackAttachmentMatch = url.pathname.match(/^\/feedback\/([a-zA-Z0-9_.-]+)\/attachment\/([1-9][0-9]*)$/)
+    if (request.method === 'GET' && feedbackAttachmentMatch) {
+      const feedbackId = feedbackAttachmentMatch[1]
+      const attachmentIndex = Number(feedbackAttachmentMatch[2]) - 1
+      const item = readFeedbackIndex().feedback.find((entry) => entry.id === feedbackId && entry.reviewRoundId === reviewRound.id)
+      if (!item) {
+        sendJson(response, 404, { error: 'feedback not found' })
+        return
+      }
+      const folderPath = resolve(FEEDBACK_DIR, String(item.folderName || ''))
+      if (!isUnderRoot(folderPath, FEEDBACK_DIR)) {
+        sendJson(response, 403, { error: 'feedback path is outside storage root' })
+        return
+      }
+      const feedback = readJson(resolve(folderPath, 'feedback.json'), null)
+      const attachment = feedback?.attachments?.[attachmentIndex]
+      const filePath = attachment ? resolve(folderPath, String(attachment.savedAs || '')) : ''
+      if (!attachment || !filePath || !isUnderRoot(filePath, folderPath) || !existsSync(filePath)) {
+        sendJson(response, 404, { error: 'feedback attachment not found' })
+        return
+      }
+      const stat = statSync(filePath)
+      response.writeHead(200, {
+        'Content-Type': String(attachment.mime || contentTypeForPath(filePath)),
+        'Content-Length': stat.size,
+        'Content-Disposition': `inline; filename="${safeResponseFilename(attachment.savedAs, 'attachment')}"`,
+        'Cache-Control': 'private, no-store',
+      })
+      createReadStream(filePath).pipe(response)
       return
     }
     if (request.method === 'GET' && url.pathname === '/generation-requests.json') {
@@ -2224,9 +2522,9 @@ const server = createServer(async (request, response) => {
       }
       const stat = statSync(asset.path)
       response.writeHead(200, {
-        'Content-Type': 'application/zip',
+        'Content-Type': contentTypeForPath(asset.path),
         'Content-Length': stat.size,
-        'Content-Disposition': `attachment; filename="${asset.fileName}"`,
+        'Content-Disposition': `attachment; filename="${safeResponseFilename(asset.fileName)}"`,
         'Cache-Control': 'no-store',
       })
       createReadStream(asset.path).pipe(response)

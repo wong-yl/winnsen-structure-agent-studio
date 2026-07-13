@@ -108,6 +108,7 @@ check('api_current_scope_v43', apiText.includes('16029 740W / L642-R246 / v43'),
 
 const portalText = readText(resolve(ROOT, 'tools/serve_16029_review_downloads.mjs'))
 check('portal_current_request_id', portalText.includes(requestId), requestId, 'listed in review portal')
+check('portal_v23_feedback_round', portalText.includes('16029-v43-v23-engineering-feedback-20260713') && portalText.includes('v43-int-v23-all-sources-isolated'), 'v23 engineering feedback round', 'controlled candidate listed in review portal')
 check('portal_manifest_filter', portalText.includes('readCurrentDeliveryManifest') && portalText.includes('isVisibleCurrentGenerationRequest'), 'portal current request filtering', 'manifest-based current list')
 check('portal_default_prompt_no_electric_lock_body', portalText.includes('no electrical board') && portalText.includes('no cabinet-side electric lock body'), 'portal default prompt', 'electrical hardware exclusion text')
 check('portal_not_800w_current_round', !portalText.includes('<strong>16029 800W gold-variable</strong>'), 'old 800W current round label absent', 'not current')

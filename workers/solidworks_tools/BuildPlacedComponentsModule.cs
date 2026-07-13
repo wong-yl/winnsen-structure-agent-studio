@@ -30,6 +30,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             {
                 PlacementPath = placementPath,
                 OutAsmPath = outAsm,
+                OutStepPath = Path.ChangeExtension(outAsm, ".step"),
                 BuildStatus = "starting",
                 SolidWorksSessionMode = isolatedSession ? "isolated_new_instance" : "reuse_or_create",
             };
@@ -78,7 +79,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 result.SolidWorksSessionOwned = ownsSolidWorksSession;
                 result.BuildStatus = "solidworks_session_started";
                 WriteJson(outJson, result);
-                Try(() => sw.CloseAllDocuments(true));
+                Try(() => { sw.CommandInProgress = true; });
 
                 ModelDoc2 model = NewAssemblyDocument(sw);
                 AssemblyDoc asm = model as AssemblyDoc;
@@ -116,6 +117,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
                 result.Saved = SaveModelWithRetry(model, outAsm, result);
+                if (result.Saved)
+                {
+                    result.StepSaved = SaveStepWithRetry(model, result.OutStepPath, result);
+                    result.StepExists = File.Exists(result.OutStepPath);
+                }
                 result.ReferenceCount = CountReferenceFeatures(model);
                 Try(() => sw.CloseDoc(model.GetTitle()));
 
@@ -138,6 +144,10 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 {
                     Try(() => sw.CloseAllDocuments(true));
                     Try(() => sw.ExitApp());
+                }
+                else if (sw != null)
+                {
+                    Try(() => { sw.CommandInProgress = false; });
                 }
             }
         }
@@ -185,9 +195,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
         private static ModelDoc2 NewAssemblyDocument(ISldWorks sw)
         {
-            ModelDoc2 model = TryValue(() => sw.NewAssembly() as ModelDoc2, null);
-            if (model != null) return model;
-
+            ModelDoc2 model = null;
             string template = TryValue(
                 () => sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplateAssembly),
                 "");
@@ -208,6 +216,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 model = TryValue(() => sw.NewDocument(candidate, 0, 0, 0) as ModelDoc2, null);
                 if (model != null) return model;
             }
+
+            ModelDoc2 direct = TryValue(() => sw.NewAssembly() as ModelDoc2, null);
+            if (direct != null) return direct;
 
             return null;
         }
@@ -292,28 +303,15 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return row;
             }
 
-            int errors = 0;
-            int warnings = 0;
-            int docType = p.Path.EndsWith(".SLDASM", StringComparison.OrdinalIgnoreCase)
-                ? (int)swDocumentTypes_e.swDocASSEMBLY
-                : (int)swDocumentTypes_e.swDocPART;
-            ModelDoc2 partDoc = TryValue(
-                () => sw.OpenDoc6(p.Path, docType, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errors, ref warnings) as ModelDoc2,
-                null);
+            ModelDoc2 partDoc = OpenSourceModel(sw, p, row);
             if (partDoc == null)
             {
-                partDoc = TryValue(() => sw.OpenDoc(p.Path, docType) as ModelDoc2, null);
-            }
-            row.Opened = partDoc != null;
-            row.OpenErrors = errors;
-            row.OpenWarnings = warnings;
-            if (partDoc == null)
-            {
-                row.Error = "open failed";
+                row.Error = "silent open failed";
                 return row;
             }
 
             string sourceTitle = TryValue(() => partDoc.GetTitle(), "");
+            int errors = 0;
             try
             {
                 Try(() => sw.ActivateDoc2(asmModel.GetTitle(), false, ref errors));
@@ -357,6 +355,79 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     Try(() => sw.CloseDoc(sourceTitle));
                 }
                 Try(() => sw.ActivateDoc2(asmModel.GetTitle(), false, ref errors));
+            }
+        }
+
+        private static ModelDoc2 OpenSourceModel(ISldWorks sw, Placement p, PlacementResult row)
+        {
+            int docType = p.Path.EndsWith(".SLDASM", StringComparison.OrdinalIgnoreCase)
+                ? (int)swDocumentTypes_e.swDocASSEMBLY
+                : (int)swDocumentTypes_e.swDocPART;
+
+            row.ReadOnlyRequested = true;
+            ModelDoc2 doc = TryOpenDoc7(sw, p.Path, docType, true, row, "OpenDoc7_silent_readonly");
+            if (doc != null) return doc;
+
+            int readOnlyOptions = (int)swOpenDocOptions_e.swOpenDocOptions_Silent |
+                (int)swOpenDocOptions_e.swOpenDocOptions_ReadOnly;
+            doc = TryOpenDoc6(sw, p.Path, docType, readOnlyOptions, row, "OpenDoc6_silent_readonly");
+            if (doc != null) return doc;
+
+            doc = TryOpenDoc6(sw, p.Path, 0, readOnlyOptions, row, "OpenDoc6_none_silent_readonly");
+            if (doc != null) return doc;
+
+            return null;
+        }
+
+        private static ModelDoc2 TryOpenDoc7(ISldWorks sw, string path, int docType, bool silent, PlacementResult row, string method)
+        {
+            try
+            {
+                object specObject = sw.GetOpenDocSpec(path);
+                IDocumentSpecification spec = specObject as IDocumentSpecification;
+                if (spec == null) return null;
+                spec.FileName = path;
+                spec.DocumentType = docType;
+                spec.Silent = silent;
+                spec.ReadOnly = true;
+                spec.LoadModel = true;
+                spec.AutoRepair = true;
+                spec.CriticalDataRepair = true;
+                ModelDoc2 doc = sw.OpenDoc7(specObject) as ModelDoc2;
+                row.OpenErrors = spec.Error;
+                row.OpenWarnings = spec.Warning;
+                if (doc != null)
+                {
+                    row.Opened = true;
+                    row.OpenMethod = method;
+                }
+                return doc;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static ModelDoc2 TryOpenDoc6(ISldWorks sw, string path, int docType, int options, PlacementResult row, string method)
+        {
+            try
+            {
+                int errors = 0;
+                int warnings = 0;
+                ModelDoc2 doc = sw.OpenDoc6(path, docType, options, "", ref errors, ref warnings) as ModelDoc2;
+                row.OpenErrors = errors;
+                row.OpenWarnings = warnings;
+                if (doc != null)
+                {
+                    row.Opened = true;
+                    row.OpenMethod = method;
+                }
+                return doc;
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -419,6 +490,40 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 System.Threading.Thread.Sleep(750);
             }
             return File.Exists(outAsm);
+        }
+
+        private static bool SaveStepWithRetry(ModelDoc2 model, string outStep, BuildResult result)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(outStep));
+            for (int attempt = 1; attempt <= 3; attempt++)
+            {
+                result.StepSaveAttempts = attempt;
+                Try(() => model.ForceRebuild3(false));
+                bool saved = TryValue(() => model.SaveAs(outStep), false);
+                if (saved && File.Exists(outStep)) return true;
+
+                int errors = 0;
+                int warnings = 0;
+                ModelDocExtension extension = TryValue(() => model.Extension, null);
+                if (extension != null)
+                {
+                    saved = TryValue(
+                        () => extension.SaveAs(
+                            outStep,
+                            (int)swSaveAsVersion_e.swSaveAsCurrentVersion,
+                            (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+                            null,
+                            ref errors,
+                            ref warnings),
+                        false);
+                    result.StepSaveErrors = errors;
+                    result.StepSaveWarnings = warnings;
+                    if (saved && File.Exists(outStep)) return true;
+                }
+
+                System.Threading.Thread.Sleep(750);
+            }
+            return File.Exists(outStep);
         }
 
         private static double[] Identity()
@@ -486,6 +591,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             sb.Append("{");
             Prop(sb, "placement_path", r.PlacementPath, true);
             Prop(sb, "out_asm_path", r.OutAsmPath);
+            Prop(sb, "out_step_path", r.OutStepPath);
             Prop(sb, "build_status", r.BuildStatus);
             Prop(sb, "solidworks_session_mode", r.SolidWorksSessionMode);
             Prop(sb, "solidworks_session_owned", r.SolidWorksSessionOwned);
@@ -497,6 +603,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "save_attempts", r.SaveAttempts);
             Prop(sb, "save_errors", r.SaveErrors);
             Prop(sb, "save_warnings", r.SaveWarnings);
+            Prop(sb, "step_saved", r.StepSaved);
+            Prop(sb, "step_exists", r.StepExists);
+            Prop(sb, "step_save_attempts", r.StepSaveAttempts);
+            Prop(sb, "step_save_errors", r.StepSaveErrors);
+            Prop(sb, "step_save_warnings", r.StepSaveWarnings);
             Prop(sb, "reference_count", r.ReferenceCount);
             Prop(sb, "error", r.Error);
             sb.Append(",\"components\":[");
@@ -509,6 +620,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 Prop(sb, "path", p.Path);
                 Prop(sb, "exists", p.Exists);
                 Prop(sb, "opened", p.Opened);
+                Prop(sb, "open_method", p.OpenMethod);
+                Prop(sb, "read_only_requested", p.ReadOnlyRequested);
                 Prop(sb, "added", p.Added);
                 Prop(sb, "transform_created", p.TransformCreated);
                 Prop(sb, "transform_applied", p.TransformApplied);
@@ -590,6 +703,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             public string PlacementPath = "";
             public string OutAsmPath = "";
+            public string OutStepPath = "";
             public string BuildStatus = "";
             public string SolidWorksSessionMode = "";
             public bool SolidWorksSessionOwned;
@@ -601,6 +715,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public int SaveAttempts;
             public int SaveErrors;
             public int SaveWarnings;
+            public bool StepSaved;
+            public bool StepExists;
+            public int StepSaveAttempts;
+            public int StepSaveErrors;
+            public int StepSaveWarnings;
             public int ReferenceCount;
             public string Error = "";
             public readonly List<PlacementResult> Components = new List<PlacementResult>();
@@ -613,6 +732,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public bool Exists;
             public double[] Rotation = new double[0];
             public bool Opened;
+            public string OpenMethod = "";
+            public bool ReadOnlyRequested;
             public bool Added;
             public bool TransformCreated;
             public bool TransformApplied;

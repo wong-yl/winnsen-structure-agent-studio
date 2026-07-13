@@ -48,6 +48,70 @@ function roundMm(value) {
   return Math.round(value * 1000) / 1000
 }
 
+function edgeAnchoredAxisDatum({ flatSizeMm, distanceToMinMm, distanceToMaxMm, minAnchor, maxAnchor }) {
+  const size = Number(flatSizeMm)
+  const minDistance = Number(distanceToMinMm)
+  const maxDistance = Number(distanceToMaxMm)
+  if (!Number.isFinite(size) || !Number.isFinite(minDistance) || !Number.isFinite(maxDistance)) return null
+  const half = size / 2
+  if (minDistance <= maxDistance) {
+    const coordinate = -half + minDistance
+    return {
+      coordinateFromCenterMm: roundMm(coordinate),
+      anchor: minAnchor,
+      offsetFromAnchorMm: roundMm(minDistance),
+      distanceToMinMm: roundMm(coordinate + half),
+      distanceToMaxMm: roundMm(half - coordinate),
+    }
+  }
+  const coordinate = half - maxDistance
+  return {
+    coordinateFromCenterMm: roundMm(coordinate),
+    anchor: maxAnchor,
+    offsetFromAnchorMm: roundMm(maxDistance),
+    distanceToMinMm: roundMm(coordinate + half),
+    distanceToMaxMm: roundMm(half - coordinate),
+  }
+}
+
+function generatedDoorHoleDatum(hole, generatedFlatWidthMm, generatedFlatHeightMm) {
+  const x = edgeAnchoredAxisDatum({
+    flatSizeMm: generatedFlatWidthMm,
+    distanceToMinMm: hole.distanceToLeftMm,
+    distanceToMaxMm: hole.distanceToRightMm,
+    minAnchor: 'left_flat_edge',
+    maxAnchor: 'right_flat_edge',
+  })
+  const y = edgeAnchoredAxisDatum({
+    flatSizeMm: generatedFlatHeightMm,
+    distanceToMinMm: hole.distanceToBottomMm,
+    distanceToMaxMm: hole.distanceToTopMm,
+    minAnchor: 'bottom_flat_edge',
+    maxAnchor: 'top_flat_edge',
+  })
+  return {
+    role: hole.role,
+    diameterMm: hole.diameterMm,
+    sourceDistanceToLeftMm: hole.distanceToLeftMm,
+    sourceDistanceToRightMm: hole.distanceToRightMm,
+    sourceDistanceToBottomMm: hole.distanceToBottomMm,
+    sourceDistanceToTopMm: hole.distanceToTopMm,
+    distanceToLeftMm: x?.distanceToMinMm ?? hole.distanceToLeftMm,
+    distanceToRightMm: x?.distanceToMaxMm ?? hole.distanceToRightMm,
+    distanceToBottomMm: y?.distanceToMinMm ?? hole.distanceToBottomMm,
+    distanceToTopMm: y?.distanceToMaxMm ?? hole.distanceToTopMm,
+    horizontalAnchor: x?.anchor ?? null,
+    horizontalOffsetFromAnchorMm: x?.offsetFromAnchorMm ?? null,
+    verticalAnchor: y?.anchor ?? null,
+    verticalOffsetFromAnchorMm: y?.offsetFromAnchorMm ?? null,
+    cxFromCenterMm: hole.cxFromCenterMm,
+    cyFromCenterMm: hole.cyFromCenterMm,
+    generatedFlatCxFromCenterMm: x?.coordinateFromCenterMm ?? null,
+    generatedFlatCyFromCenterMm: y?.coordinateFromCenterMm ?? null,
+    datumMapping: x && y ? 'nearest_source_edge_offset_preserved_on_generated_flat' : 'source_datum_only',
+  }
+}
+
 function compactNumber(value) {
   return Number(value).toFixed(3).replace(/\.?0+$/, '')
 }
@@ -79,6 +143,8 @@ function sheetMetalForRow(row, doorWidthMm, rules) {
   const common = rules?.commonDoorHoleRules || {}
   const hasFlatWidthRule = Number.isFinite(flatWidthExtraMm)
   const hasFlatHeightRule = Number.isFinite(flatHeightExtraMm)
+  const generatedFlatWidthMm = hasFlatWidthRule ? roundMm(doorWidthMm + flatWidthExtraMm) : null
+  const generatedFlatHeightMm = hasFlatHeightRule ? roundMm(row.heightMm + flatHeightExtraMm) : null
   return {
     status: sourceClass ? 'bound_to_1000w_gold_dxf' : 'no_direct_gold_dxf_class',
     sourceClassId: sourceClass?.classId || `${compactNumber(row.unit)}/12`,
@@ -90,8 +156,8 @@ function sheetMetalForRow(row, doorWidthMm, rules) {
     baselineFlatHeightMm: sourceClass?.baselineFlatHeightMm ?? null,
     generatedInstalledWidthMm: doorWidthMm,
     generatedInstalledHeightMm: row.heightMm,
-    generatedFlatWidthMm: hasFlatWidthRule ? roundMm(doorWidthMm + flatWidthExtraMm) : null,
-    generatedFlatHeightMm: hasFlatHeightRule ? roundMm(row.heightMm + flatHeightExtraMm) : null,
+    generatedFlatWidthMm,
+    generatedFlatHeightMm,
     flatWidthExtraMm: hasFlatWidthRule ? flatWidthExtraMm : null,
     flatHeightExtraMm: hasFlatHeightRule ? flatHeightExtraMm : null,
     holeDatumStatus: sourceClass ? 'hole_datums_from_gold_dxf' : 'missing_direct_hole_datum_source',
@@ -99,16 +165,7 @@ function sheetMetalForRow(row, doorWidthMm, rules) {
     commonHingeHoleDiameterMm: common.hingePinHoleDiameterMm ?? null,
     commonHingeHoleFromSideMm: common.hingeHoleFromSideMm ?? null,
     commonHingeHoleFromTopBottomMm: common.hingeHoleFromTopBottomMm ?? null,
-    holeDatums: (sourceClass?.holes || []).map((hole) => ({
-      role: hole.role,
-      diameterMm: hole.diameterMm,
-      distanceToLeftMm: hole.distanceToLeftMm,
-      distanceToRightMm: hole.distanceToRightMm,
-      distanceToBottomMm: hole.distanceToBottomMm,
-      distanceToTopMm: hole.distanceToTopMm,
-      cxFromCenterMm: hole.cxFromCenterMm,
-      cyFromCenterMm: hole.cyFromCenterMm,
-    })),
+    holeDatums: (sourceClass?.holes || []).map((hole) => generatedDoorHoleDatum(hole, generatedFlatWidthMm, generatedFlatHeightMm)),
   }
 }
 

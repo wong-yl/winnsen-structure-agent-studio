@@ -1,6 +1,6 @@
 # 16029 Gold Sheet-Metal Rules
 
-- Generated at: `2026-06-03T10:07:16+08:00`
+- Generated at: `2026-07-13T10:27:27+08:00`
 - Source evidence: `data/locker_16029_gold_sheetmetal_evidence.json`
 - Generator binding: `ready_for_rule_plan_binding`
 - SW hole feature status: `datum_ready_not_cut_feature`

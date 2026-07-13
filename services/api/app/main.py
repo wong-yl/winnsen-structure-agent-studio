@@ -115,10 +115,34 @@ class ReviewDownloadAsset(BaseModel):
     download_url: str
 
 
+class V23EngineeringSignoffStatus(BaseModel):
+    generated_at: str | None = None
+    candidate_request_id: str
+    status: str
+    automatic_evidence_pass: bool
+    template_valid: bool
+    template_available: bool
+    signed_file_exists: bool
+    signed_file_valid: bool
+    engineering_review_accepted: bool
+    ready_for_prototype: bool
+    prototype_validation_status: str
+    production_release_eligible: bool
+    review_decision: str
+    failed_review_item_ids: list[str]
+    checks_total: int
+    checks_failed: int
+    validation_errors: list[str]
+    template_download_url: str
+    signed_file_path: str
+    next_action: str
+
+
 class ReviewDownloadIndex(BaseModel):
     generated_at: str
     scope: str
     assets: list[ReviewDownloadAsset]
+    engineering_signoff: V23EngineeringSignoffStatus
 
 
 class SolidWorksRunSummary(BaseModel):
@@ -3061,12 +3085,36 @@ def summarize_rule_extraction_output(output_dir: Path) -> None:
 def review_download_catalog() -> dict[str, dict[str, str | Path]]:
     return {
         "16029-v43-internal-sheetmetal-lockfix-zip": {
-            "title": "16029 740W v43 内部钣金最终包",
-            "category": "当前交付包",
+            "title": "16029 740W v43 历史工程复核包（已目视确认）",
+            "category": "当前工程复核包",
             "description": "v43-int-v18-lockfix：SolidWorks 2020 Pack-and-Go，沿用 740W / L642-R246 / v43 柜门路线，恢复 6 个机械锁舌，后背接缝按侧板钣金居中，电器板、电控锁、电控锁钩排除。",
             "status": "sw2020_review_ready",
             "path": WORKER_LOG_DIR / "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
             "file_name": "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
+        },
+        "16029-v43-internal-sheetmetal-v23-controlled-candidate-zip": {
+            "title": "16029 740W v43 v23 受控候选复核包",
+            "category": "最新受控候选（未释放）",
+            "description": "v43-int-v23-all-sources-isolated：精确结构 gate 11/11 PASS，302 个受控源文件 changed=0，39 个模块放置与 7 个 restored-v43 放置全部使用候选本地副本，最终装配外部引用 0；releaseEligible=false，仍需结构工程师和样机签核。",
+            "status": "controlled_candidate_pass",
+            "path": WORKER_LOG_DIR / "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+            "file_name": "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+        },
+        "16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip": {
+            "title": "16029 740W v43 v23 工程预签核证据包",
+            "category": "最新签核证据（非生产包）",
+            "description": "包含 6 张隐藏柜门后的内部结构视图、历史源文件几何指标对比、零写入 manifest 和工程签核清单。几何指标相似不代表历史字节版本一致，不允许据此自动覆盖源文件。",
+            "status": "pre_signoff_review_evidence",
+            "path": WORKER_LOG_DIR / "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+            "file_name": "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+        },
+        "16029-v43-internal-sheetmetal-v23-engineering-signoff-template": {
+            "title": "16029 740W v43 v23 结构工程签核模板",
+            "category": "待结构工程师填写（不是签核结果）",
+            "description": "模板绑定当前 v23 摘要、结构 gate、源完整性、来源报告和两个 ZIP 的 SHA256。请下载副本后完整填写；模板本身不构成签核，也不授予生产释放资格。",
+            "status": "engineering_signoff_template",
+            "path": ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.template.json",
+            "file_name": "locker_16029_v23_engineering_signoff.template.json",
         },
         "16029-800w-lms-gold-variable-review-zip": {
             "title": "16029 800W LMS 历史参考包",
@@ -3110,6 +3158,82 @@ def review_download_asset(asset_id: str, meta: dict[str, str | Path]) -> ReviewD
         modified_at=datetime.fromtimestamp(stat.st_mtime, timezone.utc).isoformat() if stat else None,
         available=available,
         download_url=f"/api/review-downloads/{asset_id}",
+    )
+
+
+V23_ENGINEERING_SIGNOFF_TEMPLATE_PATH = ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.template.json"
+V23_ENGINEERING_SIGNOFF_PATH = ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.json"
+V23_ENGINEERING_SIGNOFF_GATE_PATH = ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff_gate.json"
+V23_ENGINEERING_SIGNOFF_TEMPLATE_URL = (
+    "/api/review-downloads/16029-v43-internal-sheetmetal-v23-engineering-signoff-template"
+)
+V23_CANDIDATE_ROOT = (
+    ROOT_DIR
+    / "workers"
+    / "generated_models"
+    / "review_generation_requests"
+    / "v43-int-v23-all-sources-isolated"
+    / "sw2020_full_740W_parametric_template"
+)
+
+
+def read_v23_engineering_signoff_status() -> V23EngineeringSignoffStatus:
+    payload: dict[str, Any] = {}
+    validation_errors: list[str] = []
+    if V23_ENGINEERING_SIGNOFF_GATE_PATH.exists():
+        try:
+            payload = json.loads(V23_ENGINEERING_SIGNOFF_GATE_PATH.read_text(encoding="utf-8-sig"))
+        except (OSError, json.JSONDecodeError) as error:
+            validation_errors.append(f"signoff gate is unreadable: {error}")
+    else:
+        validation_errors.append("signoff gate has not been generated")
+
+    status = str(payload.get("status") or "GATE_NOT_GENERATED")
+    watched_paths = [
+        V23_ENGINEERING_SIGNOFF_TEMPLATE_PATH,
+        V23_ENGINEERING_SIGNOFF_PATH,
+        V23_CANDIDATE_ROOT / "solidworks_2020_full_assembly_generation_summary.json",
+        V23_CANDIDATE_ROOT / "evidence" / "v43_exact_structure_gate.json",
+        V23_CANDIDATE_ROOT / "evidence" / "controlled_source_integrity_result.json",
+        V23_CANDIDATE_ROOT / "evidence" / "pre_signoff_review" / "source_provenance_report.json",
+        ROOT_DIR / "workers" / "generation_logs" / "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+        ROOT_DIR / "workers" / "generation_logs" / "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+    ]
+    if V23_ENGINEERING_SIGNOFF_GATE_PATH.exists():
+        gate_mtime = V23_ENGINEERING_SIGNOFF_GATE_PATH.stat().st_mtime
+        newer_inputs = [str(path.relative_to(ROOT_DIR)) for path in watched_paths if path.exists() and path.stat().st_mtime > gate_mtime]
+        if newer_inputs:
+            status = "STALE_REVERIFY_REQUIRED"
+            validation_errors.append(f"newer signoff inputs: {', '.join(newer_inputs)}")
+
+    payload_errors = payload.get("validation_errors")
+    if isinstance(payload_errors, list):
+        validation_errors.extend(str(item) for item in payload_errors)
+    next_action = str(payload.get("next_action") or "Run node tools/verify_16029_v23_engineering_signoff.mjs.")
+    if status == "STALE_REVERIFY_REQUIRED":
+        next_action = "签核输入或候选证据已更新，请重跑 v23 工程签核门禁后再判断状态。"
+
+    return V23EngineeringSignoffStatus(
+        generated_at=payload.get("generated_at"),
+        candidate_request_id=str(payload.get("candidate_request_id") or "v43-int-v23-all-sources-isolated"),
+        status=status,
+        automatic_evidence_pass=bool(payload.get("automatic_evidence_pass", False)),
+        template_valid=bool(payload.get("template_valid", False)),
+        template_available=V23_ENGINEERING_SIGNOFF_TEMPLATE_PATH.is_file(),
+        signed_file_exists=V23_ENGINEERING_SIGNOFF_PATH.is_file(),
+        signed_file_valid=bool(payload.get("signed_file_valid", False)),
+        engineering_review_accepted=bool(payload.get("engineering_review_accepted", False)),
+        ready_for_prototype=bool(payload.get("ready_for_prototype", False)),
+        prototype_validation_status=str(payload.get("prototype_validation_status") or "NOT_RUN_REQUIRED_BEFORE_RELEASE"),
+        production_release_eligible=False,
+        review_decision=str(payload.get("review_decision") or "UNREVIEWED"),
+        failed_review_item_ids=[str(item) for item in payload.get("failed_review_item_ids", [])],
+        checks_total=int(payload.get("checks_total", 0)),
+        checks_failed=int(payload.get("checks_failed", 0)),
+        validation_errors=validation_errors,
+        template_download_url=V23_ENGINEERING_SIGNOFF_TEMPLATE_URL,
+        signed_file_path=str(V23_ENGINEERING_SIGNOFF_PATH),
+        next_action=next_action,
     )
 
 
@@ -4012,6 +4136,7 @@ def list_review_downloads() -> ReviewDownloadIndex:
         generated_at=datetime.now(timezone.utc).isoformat(),
         scope="16029 740W / L642-R246 / v43 internal sheet-metal SW2020 review package; production release still requires drawings, DXF/flat patterns, BOM, supplier process review, and structural signoff",
         assets=[review_download_asset(asset_id, meta) for asset_id, meta in catalog.items()],
+        engineering_signoff=read_v23_engineering_signoff_status(),
     )
 
 

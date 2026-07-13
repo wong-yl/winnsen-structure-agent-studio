@@ -1,6 +1,6 @@
 {
   "schema": "winnsen.locker16029.gold_sheetmetal_rules.v1",
-  "generated_at": "2026-06-03T10:07:16+08:00",
+  "generated_at": "2026-07-13T10:27:27+08:00",
   "generated_at_basis": "source_evidence_generated_at",
   "sourceEvidence": "data/locker_16029_gold_sheetmetal_evidence.json",
   "goldSourceReference": "1000W x 1917H x 550D / 16029 source-reference DXF flat patterns",

@@ -1,0 +1,135 @@
+{
+  "schema": "winnsen.locker16029.v43_engineering_signoff.v1",
+  "status": "TEMPLATE_NOT_SIGNED",
+  "candidate_request_id": "v43-int-v23-all-sources-isolated",
+  "candidate_classification": "controlled_candidate_pass",
+  "scope": "16029 / 740W / L642-R246 / v43 structure engineering pre-signoff for prototype entry",
+  "save_signed_copy_as": "data/locker_16029_v23_engineering_signoff.json",
+  "decision": "UNREVIEWED",
+  "allowed_decisions": [
+    "ACCEPT_FOR_PROTOTYPE",
+    "RETURN_FOR_STRUCTURE_REVISION"
+  ],
+  "accepted_for_prototype": false,
+  "production_release_eligible": false,
+  "evidence_binding": [
+    {
+      "path": "workers/generated_models/review_generation_requests/v43-int-v23-all-sources-isolated/sw2020_full_740W_parametric_template/solidworks_2020_full_assembly_generation_summary.json",
+      "length": 75920,
+      "sha256": "AA9264E0B95F70D115D465E006C42BC31632C4FB29FC3F069C106C2EA8FA520E"
+    },
+    {
+      "path": "workers/generated_models/review_generation_requests/v43-int-v23-all-sources-isolated/sw2020_full_740W_parametric_template/evidence/v43_exact_structure_gate.json",
+      "length": 4585,
+      "sha256": "9BEF09C0616B580DB1A7F518A99979EB451C15698617CA38433A66B76834E4F2"
+    },
+    {
+      "path": "workers/generated_models/review_generation_requests/v43-int-v23-all-sources-isolated/sw2020_full_740W_parametric_template/evidence/controlled_source_integrity_result.json",
+      "length": 396,
+      "sha256": "FBEDE8055FB92DB2FB85F8DE4F1E64F3BBA741FD4E1B1D32589A718AE4DEDC9F"
+    },
+    {
+      "path": "workers/generated_models/review_generation_requests/v43-int-v23-all-sources-isolated/sw2020_full_740W_parametric_template/evidence/pre_signoff_review/source_provenance_report.json",
+      "length": 45541,
+      "sha256": "E0239D03800DD5B0DA5038BE12F6BD7C0214040169EB6D481DE1B4CE0CF6CB4F"
+    },
+    {
+      "path": "workers/generation_logs/review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+      "length": 128007497,
+      "sha256": "DF8DF56185780F75AD472C9DB67CCB7A7923ED9F65DA8859290A7B71A58C964B"
+    },
+    {
+      "path": "workers/generation_logs/review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+      "length": 500915,
+      "sha256": "9B26AFD50D943B78286078AF7C0CE89B567376136A53AA722F669E156CE1B443"
+    }
+  ],
+  "review_items": [
+    {
+      "id": "lock_common_datum_and_engagement",
+      "title": "锁舌、锁钩、锁孔共同基准与啮合",
+      "question": "六个门位是否使用正确共同基准，并保留门下垂、喷涂和装配偏差后的有效啮合量？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "逐门测量或标注截图，至少记录啮合深度、横向偏差和调整余量",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "shelf_front_frame_interface",
+      "title": "层板定位脚与前框定位缺口",
+      "question": "定位方向、装配间隙、承载接触和工具可达性是否满足实际装配？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "接口局部截图或图纸标注，记录目标间隙和装配顺序",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "partition_reinforcement_and_weldability",
+      "title": "内侧竖隔板加强与焊接可制造性",
+      "question": "加强板数量、位置、受力路径、焊枪可达性和焊接变形风险是否可接受？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "加强件位置截图、焊接说明或结构工程评语",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "external_through_hole_disposition",
+      "title": "柜外非预期贯穿孔处置",
+      "question": "所有外露贯穿孔是否已逐一确认用途、外观影响、防水/防尘和封堵方式？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "外表面孔位清单或带编号截图及处置结论",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "door_gap_sag_and_collision",
+      "title": "门缝、下垂、开闭与碰撞",
+      "question": "六门的目标门缝、平齐度、开门角度、下垂余量和相邻件碰撞风险是否明确？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "门缝/平齐度目标、运动检查记录或结构工程批注",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "sheetmetal_process_and_tolerance",
+      "title": "钣金工艺与公差链",
+      "question": "板厚、折弯半径/K 因子、孔到折弯边距离、焊缝、喷涂余量和关键公差链是否确认？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "图纸/工艺评审记录，至少覆盖材料、折弯、焊接、涂层和关键公差",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "touched_source_file_disposition",
+      "title": "v21/v22 曾触碰源文件的人工处置",
+      "question": "5 个 current 文件与 2 个 mirror 文件应保留、从受控备份恢复还是重建？是否明确禁止仅凭几何相似自动覆盖？",
+      "result": "UNREVIEWED",
+      "allowed_results": ["PASS", "FAIL"],
+      "required_evidence": "七个文件的逐项处置记录及批准人；必须确认历史字节来源仍为 partial",
+      "evidence": "",
+      "notes": ""
+    }
+  ],
+  "historical_source_provenance_acknowledged": false,
+  "prototype_boundary_acknowledged": false,
+  "prototype_requirements_after_acceptance": [
+    "实物装配与六门重复开闭/锁具寿命",
+    "层板和柜体目标载荷",
+    "倾覆与固定方式",
+    "喷涂后门缝、锁舌啮合和装配复测"
+  ],
+  "signer": {
+    "structure_engineer": "",
+    "department": "",
+    "signed_at": ""
+  },
+  "revision": "",
+  "notes": ""
+}
+

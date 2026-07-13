@@ -66,15 +66,20 @@ function openModel(sw, path, docType) {
   var errors = 0;
   var warnings = 0;
   var attempts = [];
-  var doc = safe(function () { return sw.OpenDoc6(path, docType, 1, "", errors, warnings); }, null);
-  attempts.push({ method: "OpenDoc6_silent", opened: !!doc });
-  if (!doc) {
-    doc = safe(function () { return sw.OpenDoc6(path, docType, 0, "", errors, warnings); }, null);
-    attempts.push({ method: "OpenDoc6_interactive", opened: !!doc });
+  var spec = safe(function () { return sw.GetOpenDocSpec(path); }, null);
+  var doc = null;
+  if (spec) {
+    safe(function () { spec.DocumentType = docType; return true; }, false);
+    safe(function () { spec.Silent = true; return true; }, false);
+    safe(function () { spec.ReadOnly = true; return true; }, false);
+    doc = safe(function () { return sw.OpenDoc7(spec); }, null);
+    errors = safe(function () { return Number(spec.Error); }, 0);
+    warnings = safe(function () { return Number(spec.Warning); }, 0);
   }
+  attempts.push({ method: "OpenDoc7_silent_read_only", spec_created: !!spec, opened: !!doc });
   if (!doc) {
-    doc = safe(function () { return sw.OpenDoc(path, docType); }, null);
-    attempts.push({ method: "OpenDoc_legacy", opened: !!doc });
+    doc = safe(function () { return sw.OpenDoc6(path, docType, 3, "", errors, warnings); }, null);
+    attempts.push({ method: "OpenDoc6_silent_read_only", opened: !!doc });
   }
   return { doc: doc, errors: errors, warnings: warnings, attempts: attempts };
 }
@@ -122,6 +127,35 @@ function hideMatchingComponents(doc, pattern) {
   if (!pattern) return result;
   result.attempted = true;
   try {
+    if (String(pattern).indexOf("names:") === 0) {
+      result.mode = "exact_component_names";
+      var names = String(pattern).substring(6).split(";");
+      for (var n = 0; n < names.length; n++) {
+        var exactName = String(names[n]).replace(/^\s+|\s+$/g, "");
+        if (!exactName) continue;
+        var component = safe(function () { return doc.GetComponentByName(exactName); }, null);
+        var hidden = component && safe(function () { component.Visible = 0; return true; }, false);
+        if (!hidden) {
+          safe(function () { doc.ClearSelection2(true); return true; }, false);
+          var title = safe(function () { return String(doc.GetTitle()); }, "");
+          var stem = title.replace(/\.SLDASM$/i, "");
+          var selectionNames = [exactName, exactName + "@" + title, exactName + "@" + stem];
+          for (var s = 0; s < selectionNames.length && !hidden; s++) {
+            var selected = safe(function () {
+              return !!doc.Extension.SelectByID2(selectionNames[s], "COMPONENT", 0, 0, 0, false, 0, null, 0);
+            }, false);
+            hidden = selected && safe(function () { doc.HideComponent2(); return true; }, false);
+          }
+        }
+        if (hidden) {
+          result.hidden_count++;
+          result.matched.push({ name: exactName, path: "" });
+        }
+      }
+      safe(function () { doc.ClearSelection2(true); return true; }, false);
+      safe(function () { doc.GraphicsRedraw2(); return true; }, false);
+      return result;
+    }
     var re = new RegExp(pattern, "i");
     var components = collectComponents(doc);
     result.component_count = components.length;
@@ -162,6 +196,9 @@ var result = {
   out_dir: outDir,
   input_exists: fso.FileExists(inPath),
   prog_id_used: "",
+  solidworks_process_id: 0,
+  solidworks_session_owned: true,
+  read_only_requested: true,
   opened: false,
   open_errors: 0,
   open_warnings: 0,
@@ -169,6 +206,7 @@ var result = {
   hide_components: { pattern: hidePattern, attempted: false, hidden_count: 0, matched: [], error: "" },
   views: [],
   closed: false,
+  exited: false,
   error: ""
 };
 
@@ -179,6 +217,7 @@ var sw = created.app;
 if (!sw) {
   result.error = "SolidWorks unavailable";
 } else {
+  result.solidworks_process_id = safe(function () { return Number(sw.GetProcessID()); }, 0);
   safe(function () { sw.Visible = true; return true; }, false);
   safe(function () { sw.CloseAllDocuments(true); return true; }, false);
   var opened = openModel(sw, inPath, docTypeFor(inPath));
@@ -200,6 +239,7 @@ if (!sw) {
     }
     if (shouldClose) result.closed = safe(function () { sw.CloseDoc(doc.GetTitle()); return true; }, false);
   }
+  if (shouldClose) result.exited = safe(function () { sw.ExitApp(); return true; }, false);
 }
 
 writeUtf8(resultPath, stringify(result));

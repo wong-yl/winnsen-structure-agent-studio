@@ -4,6 +4,7 @@ var inPath = String(WScript.Arguments(0));
 var outStepPath = String(WScript.Arguments(1));
 var resultPath = String(WScript.Arguments(2));
 var shouldClose = WScript.Arguments.length > 3 ? String(WScript.Arguments(3)).toLowerCase() !== "keepopen" : true;
+var attachOnly = WScript.Arguments.length > 3 && String(WScript.Arguments(WScript.Arguments.length - 1)).toLowerCase() === "attachonly";
 
 function esc(s) {
   return String(s).replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n");
@@ -49,9 +50,13 @@ function ensureFolder(path) {
 function createSolidWorks() {
   var progIds = ["SldWorks.Application.28", "SldWorks.Application"];
   for (var i = 0; i < progIds.length; i++) {
-    try { return { app: new ActiveXObject(progIds[i]), progId: progIds[i] }; } catch (e) {}
+    try { return { app: GetObject("", progIds[i]), progId: progIds[i], connection: "GetObject" }; } catch (e) {}
   }
-  return { app: null, progId: "" };
+  if (attachOnly) return { app: null, progId: "", connection: "attachonly" };
+  for (var i = 0; i < progIds.length; i++) {
+    try { return { app: new ActiveXObject(progIds[i]), progId: progIds[i], connection: "ActiveXObject" }; } catch (e) {}
+  }
+  return { app: null, progId: "", connection: "" };
 }
 
 function docTypeFor(path) {
@@ -86,6 +91,7 @@ var result = {
   out_step_path: outStepPath,
   input_exists: fso.FileExists(inPath),
   prog_id_used: "",
+  connection: "",
   opened: false,
   open_errors: 0,
   open_warnings: 0,
@@ -98,6 +104,7 @@ var result = {
 
 var created = createSolidWorks();
 result.prog_id_used = created.progId;
+result.connection = created.connection || "";
 var sw = created.app;
 
 if (!sw) {

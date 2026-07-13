@@ -51,6 +51,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 }
 
                 sw.Visible = true;
+                result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
                 int errors = 0;
                 int warnings = 0;
                 ModelDoc2 model = sw.OpenDoc6(
@@ -327,6 +328,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "assembly_path", result.AssemblyPath).Append(",");
             Field(sb, "pattern", result.Pattern).Append(",");
             Field(sb, "exists", result.Exists).Append(",");
+            Field(sb, "solidworks_process_id", result.SolidWorksProcessId).Append(",");
             Field(sb, "opened", result.Opened).Append(",");
             Field(sb, "open_errors", result.OpenErrors).Append(",");
             Field(sb, "open_warnings", result.OpenWarnings).Append(",");
@@ -387,6 +389,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string AssemblyPath = "";
             public string Pattern = "";
             public bool Exists;
+            public int SolidWorksProcessId;
             public bool Opened;
             public int OpenErrors;
             public int OpenWarnings;
