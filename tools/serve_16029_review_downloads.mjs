@@ -847,9 +847,15 @@ function renderShell(content, username = '') {
   .review-overview { order:0; }
   #feedback { order:1; }
   #feedback-history { order:2; }
-  #downloads { order:3; }
-  #generate { order:4; border-bottom:0; border-radius:0 0 10px 10px; }
+  #advanced { order:3; }
+  #downloads { order:4; }
+  #generate { order:5; border-bottom:0; border-radius:0 0 10px 10px; }
   .review-overview { border-radius:10px 10px 0 0; }
+  .advanced-overview { padding-bottom:16px; }
+  .advanced-overview p { margin:7px 0 0; }
+  .advanced-panel-body { padding:0 18px 18px; }
+  .advanced-panel:not([open]) > .advanced-panel-body,
+  #generate:not([open]) > .auxiliary-body { display:none; }
   .auxiliary-panel { padding:0; }
   .auxiliary-panel > summary { list-style:none; cursor:pointer; padding:18px; }
   .auxiliary-panel > summary::-webkit-details-marker { display:none; }
@@ -1027,10 +1033,10 @@ function renderAssetCards() {
       ${asset.available ? `<a class="button${current ? '' : ' secondary'} asset-download" href="/download/${asset.id}">下载文件</a>` : '<button class="asset-download" disabled>文件缺失</button>'}
     </article>
   `
-  const currentAssets = assets.slice(0, 3)
+  const reviewAssets = assets.slice(1, 3)
   const historicalAssets = assets.slice(3)
   return `
-    <div class="asset-list current-assets">${currentAssets.map((asset) => renderRow(asset, true)).join('')}</div>
+    <div class="asset-list current-assets">${reviewAssets.map((asset) => renderRow(asset, false)).join('')}</div>
     <details class="history-assets">
       <summary>历史参考文件（${historicalAssets.length}）</summary>
       <div class="asset-list">${historicalAssets.map((asset) => renderRow(asset, false)).join('')}</div>
@@ -1133,11 +1139,16 @@ function renderPage(request) {
           <p class="current-review-note">当前文件：16029 740W v43 v23 · 等待结构签核 · 尚未生产释放</p>
         </section>
 
+        <section id="advanced" class="panel advanced-overview">
+          <h2>高级功能</h2>
+          <p class="muted">以下内容不是日常审核必做。需要签核资料、历史文件或生成新模型时再展开。</p>
+        </section>
+
         <details id="generate" class="panel auxiliary-panel">
           <summary class="auxiliary-summary">
             <div class="auxiliary-summary-copy">
-              <h2>辅助生成工具</h2>
-              <p class="muted">需要补充完整装配体或单模型任务时再展开，不影响当前审核与反馈。</p>
+              <h2>模型生成工具（高级）</h2>
+              <p class="muted">只有需要新建完整装配体或单模型任务时才使用。</p>
             </div>
             <span class="auxiliary-summary-action">展开工具</span>
           </summary>
@@ -1243,16 +1254,18 @@ function renderPage(request) {
           </div>
         </details>
 
-        <section id="downloads" class="panel">
-          <div class="top">
-            <div>
-              <h2>模型与审核资料</h2>
-              <p class="muted">当前主入口为 v23 受控候选、预签核证据和签核模板；模型文件从指定共享目录提供，v18 与 800W 仅作历史参考。</p>
+        <details id="downloads" class="panel auxiliary-panel advanced-panel" aria-label="模型与审核资料">
+          <summary class="auxiliary-summary">
+            <div class="auxiliary-summary-copy">
+              <h2>审核资料与历史文件</h2>
+              <p class="muted">签核模板、证据包和旧版本；普通问题反馈不需要下载。</p>
             </div>
-            <span class="chip good">受保护下载</span>
+            <span class="auxiliary-summary-action">展开资料</span>
+          </summary>
+          <div class="advanced-panel-body">
+            <div class="asset-library">${assetCards}</div>
           </div>
-          <div class="asset-library">${assetCards}</div>
-        </section>
+        </details>
 
         <section id="feedback" class="panel" aria-label="上传结构问题反馈">
           <h2>上传问题和截图</h2>
