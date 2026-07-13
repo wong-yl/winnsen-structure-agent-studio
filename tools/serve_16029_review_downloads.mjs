@@ -797,7 +797,7 @@ function renderShell(content, username = '') {
   .side-card span { color:#c6d2e4; font-size:13px; }
   main { padding: 28px; display:flex; flex-direction:column; }
   .auth-wrap { min-height: 100vh; display:grid; place-items:center; padding:24px; }
-  .auth-card, .panel, .asset-card, .feedback-row { border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: 0 12px 32px rgba(20,35,70,.08); }
+  .auth-card, .feedback-row { border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 12px 32px rgba(20,35,70,.08); }
   .auth-card { width: min(460px, 100%); padding: 24px; }
   .auth-logo { width: 172px; height: 62px; margin-bottom: 16px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:8px; background:#fff; overflow:hidden; }
   .auth-logo img { max-width: 148px; max-height: 46px; object-fit:contain; }
@@ -827,12 +827,13 @@ function renderShell(content, username = '') {
   .chip.good { color:var(--good); border-color:#bfe5cf; background:#edf9f1; }
   .chip.warn { color:var(--warn); border-color:#f5d08d; background:#fff8e8; }
   .gate-warning { margin-top:14px; padding:12px 14px; border:1px solid #f5d08d; border-radius:8px; background:#fff8e8; color:#8a4f00; line-height:1.55; }
-  .panel { padding:18px; margin-bottom:16px; }
+  .panel { padding:24px 20px; margin:0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:#fff; box-shadow:none; }
   .review-overview { order:0; }
   #feedback { order:1; }
   #feedback-history { order:2; }
   #downloads { order:3; }
-  #generate { order:4; }
+  #generate { order:4; border-bottom:0; border-radius:0 0 10px 10px; }
+  .review-overview { border-radius:10px 10px 0 0; }
   .auxiliary-panel { padding:0; }
   .auxiliary-panel > summary { list-style:none; cursor:pointer; padding:18px; }
   .auxiliary-panel > summary::-webkit-details-marker { display:none; }
@@ -848,8 +849,9 @@ function renderShell(content, username = '') {
   .mode-card span { color:var(--muted); font-size:14px; line-height:1.5; }
   .mode-card.active { border-color:var(--hot); background:#fff7f3; box-shadow:0 0 0 2px rgba(240,74,18,.12); }
   .mode-card:focus-visible { outline:3px solid rgba(31,53,133,.2); outline-offset:2px; }
-  .quick-status { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin-top:14px; }
-  .quick-status div { padding:12px; border:1px solid var(--line); border-radius:8px; background:#f8fbff; }
+  .quick-status { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+  .quick-status div { padding:0 16px; border-left:1px solid var(--line); }
+  .quick-status div:first-child { padding-left:0; border-left:0; }
   .quick-status span, .quick-status strong { display:block; }
   .quick-status span { color:var(--muted); font-size:13px; }
   .quick-status strong { font-size:16px; }
@@ -930,7 +932,7 @@ function renderShell(content, username = '') {
   .feedback-row-head { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
   .feedback-row-head strong { margin-right:auto; }
   .feedback-detail { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-top:10px; }
-  .feedback-detail div { padding:9px; border:1px solid var(--line); border-radius:7px; background:#f8fbff; }
+  .feedback-detail div { padding:9px 0; border-top:1px solid var(--line); background:transparent; }
   .feedback-detail span, .feedback-detail b { display:block; }
   .feedback-detail span { color:var(--muted); font-size:13px; }
   .feedback-detail b { margin-top:3px; font-size:15px; line-height:1.5; white-space:pre-wrap; }
@@ -956,6 +958,9 @@ function renderShell(content, username = '') {
     main { padding:16px; }
     section, details { scroll-margin-top:112px; }
     .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; }
+    .quick-status { gap:12px; }
+    .quick-status div, .quick-status div:first-child { padding:12px 0 0; border-left:0; border-top:1px solid var(--line); }
+    .quick-status div:first-child { padding-top:0; border-top:0; }
     .top { flex-direction:column; }
     #cabinetPreview { height:360px; }
     .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; }
@@ -1220,7 +1225,7 @@ function renderPage(request) {
           <div class="asset-library">${assetCards}</div>
         </section>
 
-        <section id="feedback" class="panel" style="margin-top:16px">
+        <section id="feedback" class="panel">
           <h2>上传结构问题反馈</h2>
           <p class="muted">一个问题提交一条记录。请填写模型位置、当前问题、期望结果和验收标准，并上传带红框或箭头的截图。</p>
           <form id="feedbackForm" class="feedback-form">
