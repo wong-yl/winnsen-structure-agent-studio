@@ -787,7 +787,7 @@ function renderShell(content, username = '') {
   a { color: inherit; }
   a:not(.button):visited { color:#5c3d87; }
   .shell { min-height: 100vh; display: grid; grid-template-columns: 280px minmax(0, 1fr); }
-  aside { position:sticky; top:0; height:100vh; padding: 24px 18px; background: linear-gradient(180deg, #1f3585, #102055); color: #fff; }
+  aside { position:sticky; top:0; height:100vh; padding: 24px 18px; background: linear-gradient(180deg, #1f3585, #102055); color: #fff; display:flex; flex-direction:column; }
   .portal-logo { width: 156px; height: 56px; margin-bottom: 18px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:#fff; overflow:hidden; }
   .portal-logo img { max-width: 138px; max-height: 42px; object-fit:contain; }
   aside h2 { margin: 0 0 8px; font-size: 18px; }
@@ -795,6 +795,7 @@ function renderShell(content, username = '') {
   .side-card { margin-top: 18px; padding: 14px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: rgba(255,255,255,.07); }
   .side-card strong, .side-card span { display:block; }
   .side-card span { color:#c6d2e4; font-size:13px; }
+  .account-card { margin-top:auto; }
   main { padding: 28px; display:flex; flex-direction:column; }
   .auth-wrap { min-height: 100vh; display:grid; place-items:center; padding:24px; }
   .auth-card, .feedback-row { border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 12px 32px rgba(20,35,70,.08); }
@@ -823,6 +824,20 @@ function renderShell(content, username = '') {
   .top p { margin:8px 0 0; }
   .top-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
   .nav-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .simple-intro { max-width:720px; }
+  .simple-intro .muted { max-width:58ch; margin:10px 0 0; }
+  .simple-actions { display:grid; max-width:860px; margin-top:24px; border-top:1px solid var(--line); }
+  .simple-action { min-height:78px; padding:14px 4px; display:grid; grid-template-columns:36px minmax(0,1fr) auto; align-items:center; gap:14px; border-bottom:1px solid var(--line); color:var(--ink); text-decoration:none; transition:background-color .16s ease-out; }
+  .simple-action:hover { background:#f7f9fd; }
+  .simple-action:active { background:#eef3f9; }
+  .simple-action-number { width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background:#eef3ff; color:var(--brand); font-size:14px; font-weight:800; }
+  .simple-action.primary .simple-action-number { background:var(--hot); color:#fff; }
+  .simple-action-copy { min-width:0; display:grid; gap:2px; }
+  .simple-action-copy strong { font-size:18px; line-height:1.35; }
+  .simple-action-copy span { color:var(--muted); font-size:14px; }
+  .simple-action-next { color:var(--brand); font-weight:700; white-space:nowrap; }
+  .simple-action.primary .simple-action-next { color:var(--hot); }
+  .current-review-note { margin:18px 0 0; color:var(--muted); font-size:14px; }
   .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
   .chip { padding:6px 10px; border-radius:999px; background:#eef3ff; border:1px solid #c8d5ee; color:#28476d; font-size:13px; font-weight:700; }
   .chip.good { color:var(--good); border-color:#bfe5cf; background:#edf9f1; }
@@ -947,23 +962,23 @@ function renderShell(content, username = '') {
   @media (max-width: 1100px) { .studio-grid { grid-template-columns:1fr; } }
   @media (max-width: 900px) {
     .shell { grid-template-columns:1fr; }
-    aside { position:sticky; top:0; z-index:20; height:auto; padding:10px 14px 12px; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:8px 10px; box-shadow:0 8px 24px rgba(16,32,85,.18); }
+    aside { position:sticky; top:0; z-index:20; height:auto; padding:10px 14px; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:8px 10px; box-shadow:0 8px 24px rgba(16,32,85,.18); }
     .portal-logo { grid-column:1; grid-row:1; width:92px; height:40px; margin:0; }
     .portal-logo img { max-width:82px; max-height:30px; }
     aside h2 { grid-column:2; grid-row:1; margin:0; font-size:16px; }
     .side-intro, .round-card { display:none; }
-    .nav-links { grid-column:1 / -1; grid-row:2; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0; }
-    .nav-links .button { min-width:0; padding:0 8px; font-size:14px; }
     .account-card { grid-column:3; grid-row:1; margin:0; padding:0; border:0; background:transparent; }
     .account-card span, .account-card strong { display:none; }
     .account-card .button { min-height:44px; margin:0 !important; padding:0 10px; font-size:14px; }
     main { padding:16px; }
-    section, details { scroll-margin-top:112px; }
+    section, details { scroll-margin-top:72px; }
     .feedback-meta-grid, .feedback-detail-grid, .feedback-evidence-grid, .feedback-detail, .field-grid, .field-grid.two, .mode-grid, .quick-status { grid-template-columns:1fr; }
     .quick-status { gap:12px; }
     .quick-status div, .quick-status div:first-child { padding:12px 0 0; border-left:0; border-top:1px solid var(--line); }
     .quick-status div:first-child { padding-top:0; border-top:0; }
     .top { flex-direction:column; }
+    .simple-action { grid-template-columns:34px minmax(0,1fr); }
+    .simple-action-next { grid-column:2; }
     #cabinetPreview { height:360px; }
     .preview-controls { grid-template-columns:44px minmax(0,1fr) 58px; }
     .viewport-hud { position:static; margin:8px; max-width:none; }
@@ -1056,17 +1071,8 @@ function renderPage(request) {
         <div class="portal-logo">
           <img src="/brand/winnsen-logo.jpg" alt="Winnsen" />
         </div>
-        <h2>16029 审核系统</h2>
-        <p class="side-intro">登录后可下载 v23 受控候选、提交结构问题和标注截图，也保留完整装配体与单模型任务入口。</p>
-        <div class="nav-links">
-          <a class="button" href="#feedback">提交问题</a>
-          <a class="button secondary" href="#downloads">下载模型</a>
-          <a class="button secondary" href="#generate">辅助生成</a>
-        </div>
-        <div class="side-card round-card">
-          <span>当前轮次</span>
-          <strong>16029 740W v43 内部钣金</strong>
-        </div>
+        <h2>16029 模型审核</h2>
+        <p class="side-intro">当前审核：v23 模型</p>
         <div class="side-card account-card">
           <span>登录账号</span>
           <strong>${htmlEscape(username)}</strong>
@@ -1075,36 +1081,38 @@ function renderPage(request) {
       </aside>
       <main>
         <section class="panel review-overview">
-          <div class="top">
-            <div>
-              <p class="eyebrow">ENGINEER REVIEW</p>
-              <h1>16029 740W / L642-R246 / v43 v23 审核入口</h1>
-              <p class="muted">当前审核对象为 v43-int-v23-all-sources-isolated 受控候选。工程师可下载模型、逐项提交结构问题和标注截图；旧包只作历史参考。</p>
-              <div class="chips">
-                <span class="chip good">${htmlEscape(reviewRound.cadMainline)}</span>
-                <span class="chip warn">等待结构签核</span>
-                <span class="chip">v23 受控候选</span>
-              </div>
-            </div>
-            <div class="top-actions">
-              <a class="button" href="#feedback">提交问题</a>
-              <a class="button secondary" href="#downloads">下载模型</a>
-            </div>
+          <div class="simple-intro">
+            <p class="eyebrow">16029 结构审核</p>
+            <h1>今天要做什么？</h1>
+            <p class="muted">按下面顺序操作即可；签核资料、历史文件和生成工具都不是必做项。</p>
           </div>
-          <div class="quick-status">
-            <div>
-              <span>审核对象</span>
-              <strong>v23 受控候选</strong>
-            </div>
-            <div>
-              <span>自动证据</span>
-              <strong>自动结构检查通过</strong>
-            </div>
-            <div>
-              <span>问题反馈</span>
-              <strong>生成 V23-Q 编号</strong>
-            </div>
-          </div>
+          <nav class="simple-actions" aria-label="审核操作">
+            <a class="simple-action primary" href="/download/${CURRENT_V23_ASSET_ID}">
+              <span class="simple-action-number">1</span>
+              <span class="simple-action-copy">
+                <strong>下载本轮模型</strong>
+                <span>用 SolidWorks 2020 打开并检查</span>
+              </span>
+              <span class="simple-action-next">下载</span>
+            </a>
+            <a class="simple-action" href="#feedback">
+              <span class="simple-action-number">2</span>
+              <span class="simple-action-copy">
+                <strong>上传问题和截图</strong>
+                <span>发现一处问题，就提交一条记录</span>
+              </span>
+              <span class="simple-action-next">填写问题</span>
+            </a>
+            <a class="simple-action" href="#feedback-history">
+              <span class="simple-action-number">3</span>
+              <span class="simple-action-copy">
+                <strong>查看处理反馈</strong>
+                <span>查看团队已经提交的问题，避免重复</span>
+              </span>
+              <span class="simple-action-next">查看反馈</span>
+            </a>
+          </nav>
+          <p class="current-review-note">当前文件：16029 740W v43 v23 · 等待结构签核 · 尚未生产释放</p>
         </section>
 
         <details id="generate" class="panel auxiliary-panel">
