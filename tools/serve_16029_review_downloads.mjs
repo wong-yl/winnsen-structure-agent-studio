@@ -759,7 +759,7 @@ function renderAuthPage(error = '', mode = 'login') {
         </div>
         <p class="eyebrow">WINNSEN REVIEW PORTAL</p>
         <h1>${isRegister ? '注册审核账号' : '结构审核登录'}</h1>
-        <p class="muted">${htmlEscape(reviewRound.title)}，登录后可下载 v23 模型、上传标注截图并查看团队反馈；内部 gate、日志和多余数据默认收起。</p>
+        <p class="muted auth-description">登录后下载当前 v23 模型、提交结构问题并查看团队反馈。内部证据与历史资料默认收起。</p>
         ${error ? `<div class="alert">${htmlEscape(error)}</div>` : ''}
         <form method="post" action="${isRegister ? '/register' : '/login'}" class="auth-form">
           <label>账号<input name="username" autocomplete="username" required /></label>
@@ -798,13 +798,14 @@ function renderShell(content, username = '') {
   main { padding: 28px; display:flex; flex-direction:column; }
   .auth-wrap { min-height: 100vh; display:grid; place-items:center; padding:24px; }
   .auth-card, .feedback-row { border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 12px 32px rgba(20,35,70,.08); }
-  .auth-card { width: min(460px, 100%); padding: 24px; }
-  .auth-logo { width: 172px; height: 62px; margin-bottom: 16px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:8px; background:#fff; overflow:hidden; }
-  .auth-logo img { max-width: 148px; max-height: 46px; object-fit:contain; }
+  .auth-card { width:min(480px,100%); padding:32px; border-top:3px solid var(--brand); }
+  .auth-logo { width:118px; height:48px; margin-bottom:20px; display:flex; align-items:center; justify-content:flex-start; background:#fff; overflow:hidden; }
+  .auth-logo img { max-width:108px; max-height:42px; object-fit:contain; }
   .eyebrow { margin:0 0 6px; color:var(--hot); font-size:12px; font-weight:700; letter-spacing:0; }
   h1 { margin: 0; font-size: 30px; line-height: 1.15; }
   h2 { margin: 0; font-size: 20px; }
   .muted { color: var(--muted); line-height: 1.55; }
+  .auth-description { max-width:38ch; margin:12px 0 0; }
   .auth-form { display:grid; gap:12px; margin-top:18px; }
   .auth-card > .muted:last-child a { display:inline-flex; align-items:center; min-height:44px; }
   label { display:grid; gap:6px; color:var(--muted); font-size:14px; }
@@ -967,6 +968,7 @@ function renderShell(content, username = '') {
     .viewport-hud { position:static; margin:8px; max-width:none; }
   }
   @media (max-width: 640px) { .asset-row { grid-template-columns:1fr; gap:12px; } .asset-download { width:100%; } }
+  @media (max-width: 520px) { .auth-wrap { padding:16px; } .auth-card { padding:24px; } .auth-logo { margin-bottom:16px; } }
 </style>
 </head>
 <body>${content}</body>
