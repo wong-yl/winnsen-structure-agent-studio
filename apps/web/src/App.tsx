@@ -1035,19 +1035,20 @@ const pages: Array<{
 ]
 
 const PRIMARY_NAV_PAGE_IDS = new Set<PageId>(['overview', 'handoff', 'review'])
+const ADVANCED_NAV_PAGE_IDS = new Set<PageId>(['models', 'drawings', 'intake', 'rules', 'console'])
 
 function isPageId(value: string): value is PageId {
   return pages.some((page) => page.id === value)
 }
 
-function normalizePrimaryPageId(value: string): PageId {
-  return isPageId(value) && PRIMARY_NAV_PAGE_IDS.has(value) ? value : 'overview'
+function normalizePageId(value: string): PageId {
+  return isPageId(value) ? value : 'overview'
 }
 
 function initialPageFromHash(): PageId {
   if (typeof window === 'undefined') return 'overview'
   const value = window.location.hash.replace(/^#/, '')
-  return normalizePrimaryPageId(value)
+  return normalizePageId(value)
 }
 
 const maturityLabels: Record<Maturity, string> = {
@@ -1078,6 +1079,7 @@ const evidenceTone: Record<string, string> = {
 function App() {
   const [activePage, setActivePage] = useState<PageId>(() => initialPageFromHash())
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [advancedNavOpen, setAdvancedNavOpen] = useState(() => ADVANCED_NAV_PAGE_IDS.has(initialPageFromHash()))
   const [query, setQuery] = useState('')
 
   const visibleProjects = projects.filter((project) => project.id.includes('16029'))
@@ -1086,8 +1088,9 @@ function App() {
   const currentPage = pages.find((page) => page.id === activePage) ?? pages[0]
 
   const navigateToPage = useCallback((pageId: PageId) => {
-    const nextPageId = normalizePrimaryPageId(pageId)
+    const nextPageId = normalizePageId(pageId)
     setActivePage(nextPageId)
+    if (ADVANCED_NAV_PAGE_IDS.has(nextPageId)) setAdvancedNavOpen(true)
     if (typeof window !== 'undefined') {
       const nextHash = `#${nextPageId}`
       if (window.location.hash !== nextHash) {
@@ -1100,6 +1103,7 @@ function App() {
     const handleHashChange = () => {
       const pageId = initialPageFromHash()
       setActivePage(pageId)
+      if (ADVANCED_NAV_PAGE_IDS.has(pageId)) setAdvancedNavOpen(true)
       const nextHash = `#${pageId}`
       if (window.location.hash !== nextHash) {
         window.history.replaceState(null, '', nextHash)
@@ -1180,6 +1184,44 @@ function App() {
               </div>
             )
           })}
+          <details
+            className="advanced-nav"
+            open={advancedNavOpen}
+            onToggle={(event) => setAdvancedNavOpen(event.currentTarget.open)}
+          >
+            <summary>
+              <span>
+                <Settings2 size={18} />
+                <span>
+                  <strong>平台能力</strong>
+                  <small>模型、图纸、规则与 Agent 工具</small>
+                </span>
+              </span>
+              <ChevronRight size={16} />
+            </summary>
+            <div className="advanced-nav-items">
+              {pages
+                .filter((page) => ADVANCED_NAV_PAGE_IDS.has(page.id))
+                .map((page) => {
+                  const Icon = page.icon
+                  return (
+                    <button
+                      key={page.id}
+                      type="button"
+                      data-page-id={page.id}
+                      className={`nav-item ${activePage === page.id ? 'active' : ''}`}
+                      onClick={() => {
+                        navigateToPage(page.id)
+                        setMobileNavOpen(false)
+                      }}
+                    >
+                      <Icon size={18} />
+                      <span>{page.navLabel}</span>
+                    </button>
+                  )
+                })}
+            </div>
+          </details>
         </nav>
 
         <div className="sidebar-panel">
@@ -4956,7 +4998,7 @@ function ReviewPage({
       (['P0', 'P1', 'P2', 'P3'] as const).map((priority) => ({
         priority,
         items: filteredReviewItems.filter((item) => item.priority === priority),
-      })),
+      })).filter((group) => group.items.length > 0),
     [filteredReviewItems],
   )
 
@@ -4966,36 +5008,55 @@ function ReviewPage({
         <div className="section-heading">
           <div>
             <h2>待确认项队列</h2>
-            <p>P0/P1 影响规则升级；P2/P3 记录为工程参考限制或后续输入条件。</p>
+            <p>只显示当前有内容的优先级；正式问题、截图和结论仍在工程审核平台提交。</p>
           </div>
-          <label className="search-box">
-            <Search size={17} />
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索项目、模块、问题" />
-          </label>
+          <div className="review-toolbar">
+            <a className="secondary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+              <MessageSquareMore size={16} />
+              提交工程反馈
+            </a>
+            <label className="search-box">
+              <Search size={17} />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索问题" />
+            </label>
+          </div>
         </div>
       </section>
 
-      <EngineerReviewWorkspace />
+      <details className="advanced-review-disclosure">
+        <summary>
+          <span>
+            <strong>高级工具：生成审核提示词</strong>
+            <small>一般审核不需要打开；仅在整理结构化审核问题时使用。</small>
+          </span>
+          <ChevronRight size={18} />
+        </summary>
+        <div className="advanced-review-content">
+          <EngineerReviewWorkspace />
+        </div>
+      </details>
 
-      {grouped.map((group) => (
-        <section key={group.priority} className="section-block">
-          <div className="section-heading">
-            <div>
-              <h2>{group.priority} 队列</h2>
-              <p>{group.items.length} 项</p>
+      {grouped.length ? (
+        grouped.map((group) => (
+          <section key={group.priority} className="section-block">
+            <div className="section-heading">
+              <div>
+                <h2>{group.priority} 队列</h2>
+                <p>{group.items.length} 项</p>
+              </div>
             </div>
-          </div>
-          {group.items.length === 0 ? (
-            <div className="empty-state">当前筛选条件下没有记录。</div>
-          ) : (
             <div className="review-list">
               {group.items.map((item) => (
                 <ReviewCard key={item.id} item={item} />
               ))}
             </div>
-          )}
+          </section>
+        ))
+      ) : (
+        <section className="section-block">
+          <div className="empty-state">当前筛选条件下没有待确认记录。</div>
         </section>
-      ))}
+      )}
     </div>
   )
 }
@@ -6193,6 +6254,13 @@ function RuleLearningAxisCard({ axis }: { axis: RuleLearningAxis }) {
 }
 
 function ReviewCard({ item }: { item: ReviewItem }) {
+  const statusLabels: Record<ReviewItem['status'], string> = {
+    open: '待处理',
+    watching: '持续关注',
+    waiting_source: '等待资料',
+  }
+  const statusTone: StatusTone = item.status === 'open' ? 'warn' : item.status === 'waiting_source' ? 'risk' : 'idle'
+
   return (
     <article className={`review-card priority-${item.priority.toLowerCase()}`}>
       <div className="review-main">
@@ -6201,13 +6269,19 @@ function ReviewCard({ item }: { item: ReviewItem }) {
           <strong>{item.issue}</strong>
           <p>{item.project} / {item.module}</p>
         </div>
-        <StatusPill tone={item.priority === 'P0' ? 'risk' : item.priority === 'P1' ? 'warn' : 'idle'}>
-          {item.severity}
-        </StatusPill>
+        <div className="review-badges">
+          <StatusPill tone={item.priority === 'P0' ? 'risk' : item.priority === 'P1' ? 'warn' : 'idle'}>
+            {item.priority} · {item.severity}
+          </StatusPill>
+          <StatusPill tone={statusTone}>{statusLabels[item.status]}</StatusPill>
+        </div>
       </div>
       <div className="review-action">
         <Archive size={17} />
-        <span>{item.nextAction}</span>
+        <div>
+          <small>下一步</small>
+          <span>{item.nextAction}</span>
+        </div>
       </div>
       <EvidenceRow evidence={item.evidence} />
     </article>
