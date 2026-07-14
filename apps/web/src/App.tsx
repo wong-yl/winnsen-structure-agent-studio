@@ -797,7 +797,8 @@ const API_BASE_URL = (
 ).replace(/\/$/, '')
 const configuredEngineerReviewPortalUrl = import.meta.env.VITE_ENGINEER_REVIEW_PORTAL_URL?.trim()
 const ENGINEER_REVIEW_PORTAL_URL = (
-  configuredEngineerReviewPortalUrl || 'http://192.168.100.117:5180/login'
+  configuredEngineerReviewPortalUrl ||
+  (typeof window === 'undefined' ? 'http://127.0.0.1:5180/login' : `${window.location.protocol}//${window.location.hostname}:5180/login`)
 ).replace(/\/$/, '')
 const BRAND_MARK_SRC = '/brand/winnsen-mark.png'
 const FREECAD_CMD = 'D:\\软件安装录\\freecad\\FreeCAD_1.1.1\\FreeCAD_1.1.1-Windows-x86_64-py311\\FreeCADCmd.exe'

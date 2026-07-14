@@ -208,7 +208,7 @@ export const projects: Project[] = [
     productType: '标准寄存柜 / v23 受控审核候选',
     status: 'v43-int-v23-all-sources-isolated 为当前审核对象；CAD 主线为 SolidWorks 2020',
     statusTone: 'warn',
-    sourceRoot: 'D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v23-all-sources-isolated',
+    sourceRoot: 'workers\\generated_models\\review_generation_requests\\v43-int-v23-all-sources-isolated',
     modelStatus: '740W×1917H×550D / L642-R246 / 6 门；沿用 v43 柜门路线，内部钣金按 1000W gold/source 结构规则 gate 复核',
     progress: 92,
     capability: 'SolidWorks 2020 Pack-and-Go、gold source structure gate、structure feedback、锁舌恢复证据、交付 handoff 记录',

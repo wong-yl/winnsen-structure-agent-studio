@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process'
 import { createServer as createNetServer } from 'node:net'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { randomBytes } from 'node:crypto'
 
 const ROOT = resolve(process.cwd())
 const PORTAL_PATH = resolve(ROOT, 'tools/serve_16029_review_downloads.mjs')
@@ -56,6 +57,7 @@ writeFileSync(resolve(DATA_DIR, 'review_download_invite_code.txt'), 'test-invite
 
 const port = await freePort()
 const baseUrl = `http://127.0.0.1:${port}`
+const testPassword = randomBytes(24).toString('base64url')
 let stderrText = ''
 const child = spawn(process.execPath, [PORTAL_PATH], {
   cwd: ROOT,
@@ -90,7 +92,7 @@ try {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       username: 'portal-feedback-test',
-      password: 'portal-test-password',
+      password: testPassword,
       inviteCode: 'test-invite-code',
     }),
     redirect: 'manual',

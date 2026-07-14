@@ -4,6 +4,7 @@ import { networkInterfaces } from 'node:os'
 import { basename, dirname, extname, isAbsolute, relative, resolve } from 'node:path'
 import { spawn } from 'node:child_process'
 import { pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto'
+import { fileURLToPath } from 'node:url'
 import {
   controlled16029DownloadBlockers,
   controlled16029ReleaseState,
@@ -11,12 +12,21 @@ import {
   validateControlled16029GenerationRequest,
 } from './locker_16029_controlled_generation_policy.mjs'
 
-const ROOT = resolve(process.env.STUDIO_REVIEW_ROOT || 'D:/Winnsen_Structure_Agent_Studio')
-const PORT = Number(process.env.STUDIO_REVIEW_PORT || 5180)
-const HOST = process.env.STUDIO_REVIEW_HOST || '0.0.0.0'
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url))
+const ROOT = resolve(process.env.STUDIO_REVIEW_ROOT || resolve(SCRIPT_DIR, '..'))
+const LOCAL_CONFIG_PATH = resolve(
+  process.env.STUDIO_REVIEW_CONFIG || resolve(ROOT, 'data/review_portal.local.json'),
+)
+const localConfig = existsSync(LOCAL_CONFIG_PATH)
+  ? JSON.parse(readFileSync(LOCAL_CONFIG_PATH, 'utf8'))
+  : {}
+const PORT = Number(process.env.STUDIO_REVIEW_PORT || localConfig.port || 5180)
+const HOST = process.env.STUDIO_REVIEW_HOST || localConfig.host || '0.0.0.0'
 const DATA_DIR = resolve(process.env.STUDIO_REVIEW_DATA_DIR || resolve(ROOT, 'data'))
 const REVIEW_STORAGE_ROOT = resolve(
-  process.env.STUDIO_REVIEW_STORAGE_ROOT || '\\\\192.168.100.243\\ys8870\\参数化模型下载及反馈',
+  process.env.STUDIO_REVIEW_STORAGE_ROOT ||
+    localConfig.storageRoot ||
+    resolve(ROOT, 'data/review_portal_storage'),
 )
 const MODEL_DOWNLOAD_DIR = resolve(REVIEW_STORAGE_ROOT, '模型下载')
 const FEEDBACK_DIR = resolve(REVIEW_STORAGE_ROOT, '工程反馈')

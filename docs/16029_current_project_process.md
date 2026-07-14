@@ -31,28 +31,28 @@
 
 - 最终请求：`v43-int-v18-lockfix`
 - 主装配：
-  - `D:\Winnsen_Structure_Agent_Studio\workers\generated_models\review_generation_requests\v43-int-v18-lockfix\sw2020_full_740W_parametric_template\pack_and_go\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM`
+  - `<repo>\workers\generated_models\review_generation_requests\v43-int-v18-lockfix\sw2020_full_740W_parametric_template\pack_and_go\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM`
 - ZIP：
-  - `D:\Winnsen_Structure_Agent_Studio\workers\generation_logs\review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip`
+  - `<repo>\workers\generation_logs\review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip`
 - 交付 manifest：
   - `data/locker_16029_v43_internal_sheetmetal_delivery.json`
 - 交付记录：
   - `workers/maintenance/16029_v43_internal_sheetmetal_delivery_handoff_20260603.md`
 - 截图目录：
-  - `C:\Users\Administrator\Desktop\16029_v43_internal_steps_20260603\step_v18_lock_tongue_restored`
+  - `<local-evidence-root>\16029_v43_internal_steps_20260603\step_v18_lock_tongue_restored`
 
 ## 最新受控候选资产
 
 - 请求：`v43-int-v23-all-sources-isolated`
 - 状态：`controlled_candidate_pass`；`releaseEligible=false`
 - 主装配：
-  - `D:\Winnsen_Structure_Agent_Studio\workers\generated_models\review_generation_requests\v43-int-v23-all-sources-isolated\sw2020_full_740W_parametric_template\pack_and_go\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM`
+  - `<repo>\workers\generated_models\review_generation_requests\v43-int-v23-all-sources-isolated\sw2020_full_740W_parametric_template\pack_and_go\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM`
 - ZIP：
-  - `D:\Winnsen_Structure_Agent_Studio\workers\generation_logs\review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip`
+  - `<repo>\workers\generation_logs\review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip`
 - 工程预签核证据 ZIP：
-  - `D:\Winnsen_Structure_Agent_Studio\workers\generation_logs\review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip`
+  - `<repo>\workers\generation_logs\review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip`
 - 内部六视图与签核清单：
-  - `D:\Winnsen_Structure_Agent_Studio\workers\generated_models\review_generation_requests\v43-int-v23-all-sources-isolated\sw2020_full_740W_parametric_template\evidence\pre_signoff_review`
+  - `<repo>\workers\generated_models\review_generation_requests\v43-int-v23-all-sources-isolated\sw2020_full_740W_parametric_template\evidence\pre_signoff_review`
 - v18 仍保留为已有人目视确认的历史复核入口；v23 作为最新受控候选单独展示，未替代生产释放或用户签核。
 
 ## v23 结构工程签核
@@ -91,8 +91,8 @@ node tools\verify_16029_v23_engineering_signoff.mjs
 - 同一目录展示 `16029-v43-internal-sheetmetal-v23-controlled-candidate-zip`，明确标记“最新受控候选（未释放）”。
 - 同一目录展示 `16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip`，只包含内部视图、来源对比和签核清单，不作为生产 CAD 包。
 - 同一目录展示绑定当前 v23 证据的工程签核模板；API 和前端只读显示签核 gate 状态、自动证据状态、签字文件状态、样机资格和固定的非生产释放边界。
-- 独立审核页 `tools/serve_16029_review_downloads.mjs` 运行在 `http://192.168.100.117:5180/`，当前轮次为 `16029-v43-v23-engineering-feedback-20260713`。登录后默认审核 v23 受控候选，每个结构问题单独生成 `V23-Q-*` 编号。
-- 该审核页的模型下载文件统一同步到 `\\192.168.100.243\ys8870\参数化模型下载及反馈\模型下载`；工程师上传的 PNG/JPG/WEBP/PDF、结构字段和反馈 JSON 统一保存到同一共享根目录下的 `工程反馈`。登录用户可查看本轮团队问题和附件。
+- 独立审核页 `tools/serve_16029_review_downloads.mjs` 运行在 `http://<审核平台主机>:5180/`，当前轮次为 `16029-v43-v23-engineering-feedback-20260713`。登录后默认审核 v23 受控候选，每个结构问题单独生成 `V23-Q-*` 编号。
+- 该审核页的模型下载文件统一同步到 `STUDIO_REVIEW_STORAGE_ROOT` 指向的共享根目录；工程师上传的 PNG/JPG/WEBP/PDF、结构字段和反馈 JSON 统一保存到同一根目录下的 `工程反馈`。工作站配置使用忽略提交的 `data/review_portal.local.json`，模板见 `configs/review_portal.local.example.json`。
 - 平台反馈固定记录 `feedbackIsEngineeringSignoff=false` 与 `productionReleaseEligible=false`；它用于整改沟通，不能代替结构工程师最终签核。
 - 默认生成提示词和参数已切到 `740W / L642-R246 / v43`，并明确排除电器板、电控锁、电控锁钩。
 - 同路线旧请求如 `v43-int-v16-*`、`v43-int-v17-*`、`v43-int-v15-*` 不作为默认当前任务展示；保留直链和历史证据，不删除。

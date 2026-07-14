@@ -98,6 +98,7 @@ data/*_blocker*.*
 data/*_review*.*
 data/review_download_users.json
 data/review_download_invite_code.txt
+data/review_portal.local.json
 data/review_feedback/
 data/review_generation_requests/
 
