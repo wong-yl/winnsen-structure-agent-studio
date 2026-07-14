@@ -35,7 +35,6 @@ import {
   drawingSheetMetalRoadmap,
   drawingSheetMetalSources,
   maturityDistribution,
-  metricCards,
   pipelineRows,
   projects,
   reviewItems,
@@ -1223,7 +1222,6 @@ function App() {
         {activePage === 'overview' && (
           <OverviewPage
             selectedProject={selectedProject}
-            projectCards={visibleProjects}
             reviewCounts={reviewCounts}
             onNavigate={navigateToPage}
           />
@@ -1246,25 +1244,52 @@ function App() {
 
 function OverviewPage({
   selectedProject,
-  projectCards,
   reviewCounts,
   onNavigate,
 }: {
   selectedProject: Project
-  projectCards: Project[]
   reviewCounts: Record<string, number>
   onNavigate: (page: PageId) => void
 }) {
+  const activeReviewCount = Object.values(reviewCounts).reduce((total, count) => total + count, 0)
+
   return (
-    <div className="page-grid">
-      <section className="metric-strip" aria-label="项目摘要">
-        {metricCards.map((metric) => (
-          <article key={metric.label} className={`metric-card tone-${metric.tone}`}>
-            <span>{metric.label}</span>
-            <strong>{metric.value}</strong>
-            <small>{metric.detail}</small>
-          </article>
-        ))}
+    <div className="page-grid overview-page">
+      <section className="overview-hero" aria-labelledby="overview-current-title">
+        <div className="overview-hero-copy">
+          <span className="overview-kicker">当前工程阶段</span>
+          <div className="overview-title-row">
+            <h2 id="overview-current-title">16029 740W / L642-R246 / v43</h2>
+            <StatusPill tone="warn">待工程签核</StatusPill>
+          </div>
+          <p>{selectedProject.risk}</p>
+        </div>
+
+        <div className="overview-state-grid" aria-label="当前状态">
+          <div>
+            <span>当前模型</span>
+            <strong>v23 受控候选</strong>
+          </div>
+          <div>
+            <span>自动结构检查</span>
+            <strong className="state-good">已通过</strong>
+          </div>
+          <div>
+            <span>生产释放</span>
+            <strong className="state-blocked">不可用</strong>
+          </div>
+        </div>
+
+        <div className="overview-hero-actions">
+          <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+            <MessageSquareMore size={17} />
+            进入工程审核平台
+          </a>
+          <button className="secondary-action" type="button" onClick={() => onNavigate('handoff')}>
+            <Archive size={17} />
+            查看审核材料
+          </button>
+        </div>
       </section>
 
       <PageMapSection onNavigate={onNavigate} />
@@ -1272,70 +1297,53 @@ function OverviewPage({
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>当前工程主线</h2>
-              <p>当前审核对象是 v23；自动结构检查已通过，仍需结构工程签核，不能用于生产释放。</p>
+            <h2>当前待办</h2>
+            <p>按顺序完成这三件事，本轮结构审核即可形成闭环。</p>
           </div>
           <button className="ghost-button" type="button" onClick={() => onNavigate('review')}>
-            查看待确认项
+            查看 {activeReviewCount} 个待确认项
             <ChevronRight size={16} />
           </button>
         </div>
 
-        <div className={projectCards.length === 1 ? 'project-grid project-grid-single' : 'project-grid'}>
-          {projectCards.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+        <div className="overview-task-list">
+          <article>
+            <span>01</span>
+            <div>
+              <strong>工程师登录或注册</strong>
+              <p>打开工程审核平台；忘记原账户时直接重新注册，不修改现有账户。</p>
+            </div>
+          </article>
+          <article>
+            <span>02</span>
+            <div>
+              <strong>只审核 v23 模型</strong>
+              <p>下载 v23 SolidWorks 2020 Pack-and-Go 主装配；v18 和旧 800W 包不作为当前审核对象。</p>
+            </div>
+          </article>
+          <article>
+            <span>03</span>
+            <div>
+              <strong>在平台提交问题和结论</strong>
+              <p>反馈结构问题、截图和修改建议；完成正式签核后再进入样机验证。</p>
+            </div>
+          </article>
         </div>
-      </section>
 
-      <section className="split-grid">
-        <article className="section-block compact-block">
-          <div className="section-heading">
-            <div>
-              <h2>当前项目焦点</h2>
-              <p>工程师只看当前 3 个候选 ZIP；1000W/10-12-14 gold/source 参考和历史证据留在后台追溯。</p>
-            </div>
-            <StatusPill tone={selectedProject.statusTone}>当前主线</StatusPill>
+        <div className="overview-context-strip">
+          <div>
+            <span>待确认项</span>
+            <strong>{activeReviewCount}</strong>
           </div>
-          <div className="focus-layout">
-            <ProgressDial value={selectedProject.progress} />
-            <div className="focus-copy">
-              <strong>{selectedProject.name}</strong>
-              <span>{selectedProject.modelStatus}</span>
-              <p>{selectedProject.risk}</p>
-            </div>
+          <div>
+            <span>当前 CAD</span>
+            <strong>SolidWorks 2020</strong>
           </div>
-          <ul className="note-list">
-            {selectedProject.notes.map((note) => (
-              <li key={note}>{note}</li>
-            ))}
-          </ul>
-        </article>
-
-        <article className="section-block compact-block">
-          <div className="section-heading">
-            <div>
-              <h2>阻塞与确认分布</h2>
-              <p>优先处理 P0/P1，P2 保持为工程参考限制。</p>
-            </div>
+          <div>
+            <span>历史版本</span>
+            <strong>v18 / 800W 仅对照</strong>
           </div>
-          <div className="priority-grid">
-            {(['P0', 'P1', 'P2', 'P3'] as const).map((priority) => (
-              <div key={priority} className={`priority-cell priority-${priority.toLowerCase()}`}>
-                <span>{priority}</span>
-                <strong>{reviewCounts[priority] ?? 0}</strong>
-              </div>
-            ))}
-          </div>
-          <div className="source-paths">
-            <span>当前审核包</span>
-            <code>review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip</code>
-            <code>v43-int-v23-all-sources-isolated / 740W / L642-R246 / SW2020</code>
-            <code>自动结构检查通过 / 待工程签核 / 不可生产释放</code>
-            <code>v18 已确认包仅保留为历史对照</code>
-            <code>800W LMS/SML/DUAL 仅保留为历史参考</code>
-          </div>
-        </article>
+        </div>
       </section>
     </div>
   )
@@ -1346,30 +1354,38 @@ function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) 
     <section className="section-block">
       <div className="section-heading">
         <div>
-          <h2>工程师入口</h2>
-          <p>只放当前主线相关入口，后台页不再在这一层展开。</p>
+          <h2>审核工作顺序</h2>
+          <p>从平台开始，在平台结束；本站负责说明当前版本、状态和审核边界。</p>
         </div>
       </div>
-      <div className="page-map-grid">
-        {pages
-          .filter((page) => PRIMARY_NAV_PAGE_IDS.has(page.id))
-          .map((page) => {
-            const Icon = page.icon
-            const section = pageSections.find((item) => item.id === page.section)
-            return (
-              <button key={page.id} type="button" className="page-map-card" onClick={() => onNavigate(page.id)}>
-                <div className="page-map-card-header">
-                  <span className="page-map-icon" aria-hidden="true">
-                    <Icon size={18} />
-                  </span>
-                  <span>{section?.label}</span>
-                </div>
-                <strong>{page.label}</strong>
-                <p>{page.purpose}</p>
-                <small>{page.nextAction}</small>
-              </button>
-            )
-          })}
+      <div className="workflow-list">
+        <a className="workflow-row" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+          <span className="workflow-step">1</span>
+          <span className="workflow-icon" aria-hidden="true"><MessageSquareMore size={19} /></span>
+          <span className="workflow-copy">
+            <strong>进入工程审核平台</strong>
+            <small>工程师登录或注册，下载模型并在同一平台提交反馈。</small>
+          </span>
+          <ChevronRight size={18} />
+        </a>
+        <button className="workflow-row" type="button" onClick={() => onNavigate('handoff')}>
+          <span className="workflow-step">2</span>
+          <span className="workflow-icon" aria-hidden="true"><Archive size={19} /></span>
+          <span className="workflow-copy">
+            <strong>确认当前审核材料</strong>
+            <small>核对 v23 主模型、自动检查证据和工程签核状态。</small>
+          </span>
+          <ChevronRight size={18} />
+        </button>
+        <button className="workflow-row" type="button" onClick={() => onNavigate('review')}>
+          <span className="workflow-step">3</span>
+          <span className="workflow-icon" aria-hidden="true"><FileWarning size={19} /></span>
+          <span className="workflow-copy">
+            <strong>处理待确认项</strong>
+            <small>只查看当前需要结构工程判断的问题和下一步。</small>
+          </span>
+          <ChevronRight size={18} />
+        </button>
       </div>
     </section>
   )
@@ -5092,25 +5108,6 @@ function AgentConsolePage({
         </div>
       </section>
     </div>
-  )
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  return (
-    <article className={`project-card tone-${project.statusTone}`}>
-      <div className="project-card-header">
-        <div>
-          <span>{project.productType}</span>
-          <strong>{project.name}</strong>
-        </div>
-        <StatusPill tone={project.statusTone}>{project.statusTone}</StatusPill>
-      </div>
-      <div className="progress-line">
-        <span style={{ width: `${project.progress}%` }} />
-      </div>
-      <p>{project.capability}</p>
-      <small>{project.risk}</small>
-    </article>
   )
 }
 
