@@ -4742,20 +4742,29 @@ function ReviewDownloadPage() {
     signoff?.prototype_validation_status === 'NOT_RUN_REQUIRED_BEFORE_RELEASE'
       ? '尚未开始，生产释放前必须完成'
       : signoff?.prototype_validation_status ?? '尚未开始'
+  const currentAsset = assets.find((asset) => asset.status === 'controlled_candidate_pass')
+  const historicalAssets = assets.filter(
+    (asset) => asset.status === 'sw2020_review_ready' || asset.status === 'historical_reference',
+  )
+  const supportingAssets = assets.filter(
+    (asset) => asset !== currentAsset && !historicalAssets.includes(asset),
+  )
 
   return (
     <div className="page-grid handoff-page">
       <section className="section-block handoff-hero">
         <div className="section-heading">
           <div>
-            <h2>当前候选审核包下载</h2>
+            <h2>工程审核入口</h2>
             <p>当前审核对象是 v23 受控候选；v18 和旧 800W 包仅保留为历史对照。</p>
           </div>
           <div className="status-stack">
             <StatusPill tone={downloadStatus === 'ready' ? 'good' : downloadStatus === 'error' ? 'risk' : 'warn'}>
-              {downloadStatus === 'ready' ? `${availableAssets.length} files` : downloadStatus}
+              {downloadStatus === 'ready' ? `${availableAssets.length} 个可用文件` : downloadStatus === 'error' ? '读取失败' : '读取中'}
             </StatusPill>
-            <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+            <StatusPill tone={gateTone}>
+              {gateStatus === 'PASS' ? '自动检查通过' : gateStatus === 'FAIL' ? '自动检查未通过' : '自动检查读取中'}
+            </StatusPill>
           </div>
         </div>
         <div className="handoff-share-box">
@@ -4828,64 +4837,108 @@ function ReviewDownloadPage() {
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>16029 740W / L642-R246 / v43 审核文件</h2>
-            <p>v18 保留为已目视确认的历史复核包；v23 已通过精确结构和全受控源完整性 gate，并附独立预签核证据包，作为未释放受控候选供工程签核。旧 800W 包只作历史参考。</p>
+            <h2>当前审核模型</h2>
+            <p>工程师只需下载下面这个 v23 SolidWorks 2020 主模型；辅助材料用于核对证据和完成签核。</p>
           </div>
-          <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+          <StatusPill tone="warn">v23 当前版本</StatusPill>
         </div>
 
-        <div className="download-grid">
-          {assets.map((asset) => (
-            <article key={asset.id} className={`download-card ${asset.available ? '' : 'download-card-missing'}`}>
-              <div className="download-card-top">
-                <div>
-                  <span>{asset.category}</span>
-                  <strong>{asset.title}</strong>
-                </div>
-                <StatusPill
-                  tone={
-                    !asset.available
-                      ? 'risk'
-                      : asset.status === 'sw2020_review_ready' && asset.id.includes('v43-internal-sheetmetal')
-                        ? 'good'
-                        : 'warn'
-                  }
-                >
-                  {!asset.available
-                    ? '缺失'
-                    : asset.status === 'controlled_candidate_pass'
-                      ? '受控候选'
-                      : asset.status === 'pre_signoff_review_evidence'
-                        ? '预签核证据'
-                        : asset.status === 'engineering_signoff_template'
-                          ? '待填写模板'
-                          : asset.status === 'sw2020_review_ready'
-                            ? '历史确认包'
-                            : '历史可下载'}
-                </StatusPill>
-              </div>
-              <p>{asset.description}</p>
-              <div className="download-meta">
-                <DetailLine label="文件名" value={asset.file_name} />
-                <DetailLine label="大小" value={asset.size_bytes === null ? 'missing' : formatBytes(asset.size_bytes)} />
-                <DetailLine label="更新时间" value={asset.modified_at ? formatTaskTime(asset.modified_at) : 'missing'} />
-              </div>
-              {asset.available ? (
-                <a className="primary-action download-link" href={`${API_BASE_URL}${asset.download_url}`}>
-                  <Download size={16} />
-                  下载
-                </a>
-              ) : (
-                <button className="secondary-action download-link" type="button" disabled>
-                  <Download size={16} />
-                  文件缺失
-                </button>
-              )}
-            </article>
-          ))}
+        <div className="current-download-area">
+          {currentAsset ? (
+            <ReviewDownloadAssetCard asset={currentAsset} variant="current" />
+          ) : (
+            <div className="empty-state">{downloadStatus === 'loading' ? '正在读取 v23 审核模型。' : '未找到 v23 审核模型。'}</div>
+          )}
         </div>
+
+        {supportingAssets.length ? (
+          <div className="supporting-downloads">
+            <div className="subsection-heading">
+              <div>
+                <h3>辅助审核材料</h3>
+                <p>证据包用于复核自动检查，签核模板用于记录正式结论。</p>
+              </div>
+              <span>{supportingAssets.length} 项</span>
+            </div>
+            <div className="download-grid supporting-download-grid">
+              {supportingAssets.map((asset) => (
+                <ReviewDownloadAssetCard key={asset.id} asset={asset} variant="supporting" />
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {historicalAssets.length ? (
+          <details className="history-disclosure">
+            <summary>
+              <span>
+                <strong>历史版本与参考包</strong>
+                <small>v18 和旧 800W 只用于追溯，不作为本轮审核对象。</small>
+              </span>
+              <StatusPill tone="idle">{historicalAssets.length} 项</StatusPill>
+            </summary>
+            <div className="download-grid history-download-grid">
+              {historicalAssets.map((asset) => (
+                <ReviewDownloadAssetCard key={asset.id} asset={asset} variant="history" />
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
     </div>
+  )
+}
+
+function ReviewDownloadAssetCard({
+  asset,
+  variant,
+}: {
+  asset: ReviewDownloadAsset
+  variant: 'current' | 'supporting' | 'history'
+}) {
+  const statusLabel = !asset.available
+    ? '缺失'
+    : asset.status === 'controlled_candidate_pass'
+      ? '当前受控候选'
+      : asset.status === 'pre_signoff_review_evidence'
+        ? '自动检查证据'
+        : asset.status === 'engineering_signoff_template'
+          ? '工程签核模板'
+          : asset.status === 'sw2020_review_ready'
+            ? '历史确认包'
+            : '历史参考'
+  const statusTone: StatusTone = !asset.available ? 'risk' : variant === 'current' ? 'warn' : variant === 'supporting' ? 'good' : 'idle'
+
+  return (
+    <article className={`download-card download-card-${variant} ${asset.available ? '' : 'download-card-missing'}`}>
+      <div className="download-card-top">
+        <div>
+          <span>{asset.category}</span>
+          <strong>{asset.title}</strong>
+        </div>
+        <StatusPill tone={statusTone}>{statusLabel}</StatusPill>
+      </div>
+      <p>{asset.description}</p>
+      <div className="download-meta">
+        <DetailLine label="文件名" value={asset.file_name} />
+        <DetailLine label="大小" value={asset.size_bytes === null ? 'missing' : formatBytes(asset.size_bytes)} />
+        <DetailLine label="更新时间" value={asset.modified_at ? formatTaskTime(asset.modified_at) : 'missing'} />
+      </div>
+      {asset.available ? (
+        <a
+          className={`${variant === 'current' ? 'primary-action' : 'secondary-action'} download-link`}
+          href={`${API_BASE_URL}${asset.download_url}`}
+        >
+          <Download size={16} />
+          {variant === 'current' ? '下载 v23 当前模型' : '下载材料'}
+        </a>
+      ) : (
+        <button className="secondary-action download-link" type="button" disabled>
+          <Download size={16} />
+          文件缺失
+        </button>
+      )}
+    </article>
   )
 }
 

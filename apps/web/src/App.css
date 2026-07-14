@@ -3113,6 +3113,133 @@ td strong {
   gap: 12px;
 }
 
+.current-download-area {
+  padding: 18px;
+}
+
+.current-download-area .empty-state {
+  padding: 24px 0;
+}
+
+.download-card-current {
+  padding: 20px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  align-items: start;
+  gap: 14px 24px;
+  border-color: #e6b55f;
+  background: linear-gradient(145deg, #fffdf8 0%, #fff8e8 100%);
+  box-shadow: 0 12px 28px rgba(112, 74, 11, 0.08);
+}
+
+.download-card-current .download-card-top,
+.download-card-current > p {
+  grid-column: 1;
+}
+
+.download-card-current .download-meta {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.download-card-current .download-link {
+  grid-column: 1;
+}
+
+.download-card-current .download-card-top strong {
+  font-size: 18px;
+}
+
+.download-card-current > p {
+  min-height: 0;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.supporting-downloads {
+  border-top: 1px solid var(--line);
+}
+
+.subsection-heading {
+  padding: 16px 18px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.subsection-heading h3 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.subsection-heading p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.subsection-heading > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.supporting-download-grid {
+  padding-top: 12px;
+}
+
+.download-card-supporting {
+  background: #fbfcfe;
+  box-shadow: none;
+}
+
+.history-disclosure {
+  border-top: 1px solid var(--line);
+}
+
+.history-disclosure > summary {
+  min-height: 72px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #f8fafc;
+  cursor: pointer;
+  list-style: none;
+}
+
+.history-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.history-disclosure > summary > span:first-child {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.history-disclosure > summary strong {
+  color: var(--heading);
+  font-size: 14px;
+}
+
+.history-disclosure > summary small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.history-download-grid {
+  background: #f8fafc;
+}
+
+.download-card-history {
+  box-shadow: none;
+}
+
 .download-card {
   min-width: 0;
   padding: 16px;
@@ -5013,6 +5140,18 @@ td strong {
 
   .workflow-row > svg {
     display: none;
+  }
+
+  .download-card-current {
+    grid-template-columns: 1fr;
+  }
+
+  .download-card-current .download-card-top,
+  .download-card-current > p,
+  .download-card-current .download-meta,
+  .download-card-current .download-link {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .metric-strip,
