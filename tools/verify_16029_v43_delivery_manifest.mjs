@@ -115,7 +115,13 @@ check('portal_not_800w_current_round', !portalText.includes('<strong>16029 800W 
 
 const appText = readText(resolve(ROOT, 'apps/web/src/App.tsx'))
 check('app_handoff_v43_copy', appText.includes('16029 740W / L642-R246 / v43'), 'App.tsx handoff copy', 'v43 current copy')
-check('app_current_asset_good_status', appText.includes("asset.id.includes('v43-internal-sheetmetal')"), 'App.tsx asset status tone', 'current v43 asset highlighted')
+check(
+  'app_current_controlled_candidate_highlight',
+  appText.includes("asset.status === 'controlled_candidate_pass'")
+    && appText.includes('<ReviewDownloadAssetCard asset={currentAsset} variant="current" />'),
+  'App.tsx current asset selection and card',
+  'v23 controlled candidate highlighted',
+)
 
 const studioDataText = readText(resolve(ROOT, 'apps/web/src/data/studioData.ts'))
 check('studio_data_current_v43_capability', studioDataText.includes("id: 'locker_16029_v43_internal_sheetmetal_current'"), 'studioData.ts capability', 'v43 current capability exists')

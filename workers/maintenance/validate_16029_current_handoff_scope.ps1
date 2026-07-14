@@ -142,7 +142,7 @@ $reviewPortalText = Read-TextFile $reviewPortalPath
 Add-Check -Name "api_catalog_v43_current_zip" -Ok ($apiText.Contains("16029-v43-internal-sheetmetal-lockfix-zip") -and $apiText.Contains("review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip")) -Actual "services/api/app/main.py" -Expected "v43 current zip in API catalog"
 Add-Check -Name "api_scope_v43" -Ok $apiText.Contains("16029 740W / L642-R246 / v43") -Actual "services/api/app/main.py" -Expected "v43 current route copy"
 Add-Check -Name "frontend_handoff_v43" -Ok $appText.Contains("16029 740W / L642-R246 / v43") -Actual "apps/web/src/App.tsx" -Expected "v43 handoff copy"
-Add-Check -Name "frontend_current_v43_asset_highlight" -Ok $appText.Contains("asset.id.includes('v43-internal-sheetmetal')") -Actual "apps/web/src/App.tsx" -Expected "v43 asset highlighted"
+Add-Check -Name "frontend_current_controlled_candidate_highlight" -Ok ($appText.Contains("asset.status === 'controlled_candidate_pass'") -and $appText.Contains('<ReviewDownloadAssetCard asset={currentAsset} variant="current" />')) -Actual "apps/web/src/App.tsx" -Expected "v23 controlled candidate highlighted"
 Add-Check -Name "frontend_review_filter_v43" -Ok $appText.Contains("item.project === '16029 740W / L642-R246 / v43'") -Actual "apps/web/src/App.tsx" -Expected "review page filters v43 current route"
 Add-Check -Name "studio_data_v43_capability" -Ok $studioDataText.Contains("locker_16029_v43_internal_sheetmetal_current") -Actual "apps/web/src/data/studioData.ts" -Expected "v43 current capability"
 Add-Check -Name "studio_data_current_metric_v43" -Ok $studioDataText.Contains("value: '740W v43'") -Actual "apps/web/src/data/studioData.ts" -Expected "current metric is v43"
