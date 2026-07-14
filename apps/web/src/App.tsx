@@ -796,6 +796,10 @@ const API_BASE_URL = (
   configuredApiBaseUrl ||
   (typeof window === 'undefined' ? 'http://127.0.0.1:8000' : `${window.location.protocol}//${window.location.hostname}:8000`)
 ).replace(/\/$/, '')
+const configuredEngineerReviewPortalUrl = import.meta.env.VITE_ENGINEER_REVIEW_PORTAL_URL?.trim()
+const ENGINEER_REVIEW_PORTAL_URL = (
+  configuredEngineerReviewPortalUrl || 'http://192.168.100.117:5180/login'
+).replace(/\/$/, '')
 const BRAND_MARK_SRC = '/brand/winnsen-mark.png'
 const FREECAD_CMD = 'D:\\软件安装录\\freecad\\FreeCAD_1.1.1\\FreeCAD_1.1.1-Windows-x86_64-py311\\FreeCADCmd.exe'
 const FREECAD_SHORTCUT = 'C:\\Users\\Administrator\\Desktop\\FreeCAD 1.1.1.lnk'
@@ -953,7 +957,7 @@ const pages: Array<{
     id: 'overview',
     label: '项目总览',
     navLabel: '总览',
-    description: '16029 740W / L642-R246 / v43：v18 历史确认包 + v23 最新受控候选',
+    description: '16029 740W / L642-R246 / v43：v23 当前受控候选，等待结构工程签核',
     section: 'delivery',
     purpose: '给工程师和项目负责人快速看当前主线、门数规则和交付包。',
     nextAction: '先看当前审核包，再看待确认项；模型生成入口不作为收尾主入口。',
@@ -966,16 +970,16 @@ const pages: Array<{
     description: '只保留 16029 740W / L642-R246 / v43 当前交付边界',
     section: 'delivery',
     purpose: '结构工程师需要模型时从这里查看当前门数边界与验证门槛。',
-    nextAction: 'v18 保留为已目视确认的历史复核入口；v23 是全受控源隔离、精确结构门禁通过且尚待工程签核的最新受控候选。',
+    nextAction: 'v23 是当前受控候选；v18 仅保留为已目视确认的历史复核入口。',
     icon: Boxes,
   },
   {
     id: 'handoff',
     label: '审核包下载',
     navLabel: '审核包',
-    description: 'v18 历史工程复核包与 v23 最新受控候选、预签核证据下载入口',
+    description: 'v23 当前受控候选、预签核证据和历史版本下载入口',
     section: 'delivery',
-    purpose: '给结构工程师直接下载当前 v43 内部钣金 SW2020 复核包。',
+    purpose: '给结构工程师直接进入审核平台，下载当前 v23 SW2020 复核包并提交反馈。',
     nextAction: '发给工程师局域网地址；当前 scope gate 已通过，后续重点是结构签核而不是重新找文件。',
     icon: Archive,
   },
@@ -1182,7 +1186,7 @@ function App() {
         <div className="sidebar-panel">
           <span className="panel-label">当前交付口径</span>
           <strong>只看 16029 740W v43</strong>
-          <small>v18 为已确认历史复核包；v23 为未释放受控候选并附预签核证据；旧 800W 仅历史参考。</small>
+          <small>v23 是当前未释放受控候选；v18 和旧 800W 包仅作历史参考。</small>
         </div>
       </aside>
 
@@ -1194,15 +1198,24 @@ function App() {
             <Menu size={20} />
           </button>
           <div>
-            <div className="eyeline">本地优先 / 证据驱动 / 非生产图纸承诺</div>
+            <div className="eyeline">内部项目工作台</div>
             <h1>{currentPage.label}</h1>
             <p>{currentPage.description}</p>
           </div>
           <div className="topbar-actions">
+            <a
+              className="topbar-review-link"
+              href={ENGINEER_REVIEW_PORTAL_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <MessageSquareMore size={17} />
+              工程审核平台
+            </a>
             <div className="project-switcher">
               <span>当前主线</span>
               <strong>16029 740W / L642-R246 / v43</strong>
-              <small>v18 内部钣金最终包，SolidWorks 2020 复核</small>
+              <small>v23 当前受控候选，等待结构工程签核</small>
             </div>
           </div>
         </header>
@@ -1260,7 +1273,7 @@ function OverviewPage({
         <div className="section-heading">
           <div>
             <h2>当前工程主线</h2>
-              <p>只显示 16029 740W / L642-R246 / v43 当前线；当前可进入 SW2020 工程复核，但不是生产图纸释放。</p>
+              <p>当前审核对象是 v23；自动结构检查已通过，仍需结构工程签核，不能用于生产释放。</p>
           </div>
           <button className="ghost-button" type="button" onClick={() => onNavigate('review')}>
             查看待确认项
@@ -1316,9 +1329,10 @@ function OverviewPage({
           </div>
           <div className="source-paths">
             <span>当前审核包</span>
-            <code>review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip</code>
-            <code>v43-int-v18-lockfix / 740W / L642-R246 / SW2020</code>
-            <code>v43-int-v23-all-sources-isolated / controlled_candidate_pass / releaseEligible=false</code>
+            <code>review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip</code>
+            <code>v43-int-v23-all-sources-isolated / 740W / L642-R246 / SW2020</code>
+            <code>自动结构检查通过 / 待工程签核 / 不可生产释放</code>
+            <code>v18 已确认包仅保留为历史对照</code>
             <code>800W LMS/SML/DUAL 仅保留为历史参考</code>
           </div>
         </article>
@@ -4635,9 +4649,6 @@ function ReviewDownloadPage() {
   const [scopeGate, setScopeGate] = useState<CurrentHandoffScopeGate | null>(null)
   const [downloadStatus, setDownloadStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [downloadMessage, setDownloadMessage] = useState('')
-  const publicUrl =
-    typeof window === 'undefined' ? 'http://127.0.0.1:5173/#handoff' : `${window.location.origin}${window.location.pathname}#handoff`
-
   useEffect(() => {
     let cancelled = false
     async function loadDownloads() {
@@ -4652,7 +4663,7 @@ function ReviewDownloadPage() {
           setDownloadIndex(data)
           setScopeGate(gateData)
           setDownloadStatus('ready')
-          setDownloadMessage(`下载接口已连接：${API_BASE_URL}`)
+          setDownloadMessage('模型下载与反馈统一在工程审核平台完成。')
         }
       } catch (error) {
         if (!cancelled) {
@@ -4667,7 +4678,16 @@ function ReviewDownloadPage() {
     }
   }, [])
 
-  const assets = downloadIndex?.assets ?? []
+  const assetPriority: Record<string, number> = {
+    controlled_candidate_pass: 0,
+    pre_signoff_review_evidence: 1,
+    engineering_signoff_template: 2,
+    sw2020_review_ready: 3,
+    historical_reference: 4,
+  }
+  const assets = [...(downloadIndex?.assets ?? [])].sort(
+    (left, right) => (assetPriority[left.status] ?? 99) - (assetPriority[right.status] ?? 99),
+  )
   const availableAssets = assets.filter((asset) => asset.available)
   const gateStatus = scopeGate?.status ?? 'UNKNOWN'
   const gateTone: StatusTone = gateStatus === 'PASS' ? 'good' : gateStatus === 'FAIL' ? 'risk' : 'warn'
@@ -4692,6 +4712,20 @@ function ReviewDownloadPage() {
           : signoffStatus === 'LOADING'
             ? '正在读取 v23 签核状态'
             : '签核数据需要重新校验'
+  const signoffStatusLabel =
+    signoffStatus === 'READY_FOR_PROTOTYPE'
+      ? '工程签核通过'
+      : signoffStatus === 'STRUCTURE_REVISION_REQUIRED'
+        ? '需要结构修订'
+        : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
+          ? '待工程签核'
+          : signoffStatus === 'LOADING'
+            ? '读取中'
+            : '签核状态异常'
+  const prototypeStatusLabel =
+    signoff?.prototype_validation_status === 'NOT_RUN_REQUIRED_BEFORE_RELEASE'
+      ? '尚未开始，生产释放前必须完成'
+      : signoff?.prototype_validation_status ?? '尚未开始'
 
   return (
     <div className="page-grid handoff-page">
@@ -4699,7 +4733,7 @@ function ReviewDownloadPage() {
         <div className="section-heading">
           <div>
             <h2>当前候选审核包下载</h2>
-            <p>这里把 16029 740W / L642-R246 / v43 的 v18 内部钣金包放在首位；CAD 复核主线为 SolidWorks 2020。</p>
+            <p>当前审核对象是 v23 受控候选；v18 和旧 800W 包仅保留为历史对照。</p>
           </div>
           <div className="status-stack">
             <StatusPill tone={downloadStatus === 'ready' ? 'good' : downloadStatus === 'error' ? 'risk' : 'warn'}>
@@ -4710,29 +4744,29 @@ function ReviewDownloadPage() {
         </div>
         <div className="handoff-share-box">
           <div>
-            <span>给结构工程师的访问地址</span>
-            <strong>{publicUrl}</strong>
+            <span>发给结构工程师的统一入口</span>
+            <strong>{ENGINEER_REVIEW_PORTAL_URL}</strong>
             <p>{downloadMessage}</p>
           </div>
-          <a className="secondary-action" href={publicUrl}>
-            <Archive size={16} />
-            打开下载页
+          <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+            <MessageSquareMore size={16} />
+            打开工程审核平台
           </a>
         </div>
       </section>
 
       <section className={`handoff-gate-panel gate-${gateStatus.toLowerCase()}`}>
         <div>
-          <span>当前放行状态</span>
-          <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 证据已通过' : '候选包未正式放行'}</strong>
+          <span>自动结构检查</span>
+          <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 自动证据通过' : '自动证据尚未通过'}</strong>
           <p>
             {gateStatus === 'PASS'
-              ? 'v18 包可以进入 SolidWorks 2020 工程复核和交付整理；仍不是生产图纸释放。'
+              ? 'v23 可以进入 SolidWorks 2020 工程复核；自动检查通过不代表工程签核或生产释放。'
               : '当前可以下载给工程师继续审核结构问题，但不能标记为已验证交付。'}
           </p>
         </div>
         <div className="handoff-gate-checks">
-          <span>{scopeGate ? `${scopeGate.checks_failed ?? 0}/${scopeGate.checks_total ?? 0} checks failed` : 'gate loading'}</span>
+          <span>{scopeGate ? `${scopeGate.checks_total ?? 0} 项自动检查，${scopeGate.checks_failed ?? 0} 项未通过` : '正在读取自动检查'}</span>
           {failedGateChecks.length ? (
             failedGateChecks.map((check) => (
               <small key={check.name}>{check.name.replace(/^solidworks_2020_/, 'SW2020 ')}</small>
@@ -4764,11 +4798,11 @@ function ReviewDownloadPage() {
           ) : null}
         </div>
         <div className="handoff-gate-checks">
-          <StatusPill tone={signoffTone}>{signoffStatus}</StatusPill>
-          <small>自动证据：{signoff?.automatic_evidence_pass ? 'PASS' : '未通过或未读取'}</small>
+          <StatusPill tone={signoffTone}>{signoffStatusLabel}</StatusPill>
+          <small>自动证据：{signoff?.automatic_evidence_pass ? '通过' : '未通过或未读取'}</small>
           <small>正式签字文件：{signoff?.signed_file_exists ? (signoff.signed_file_valid ? '有效' : '存在但无效') : '尚未提交'}</small>
-          <small>样机验证：{signoff?.prototype_validation_status ?? '尚未开始'}</small>
-          <small>production_release_eligible=false</small>
+          <small>样机验证：{prototypeStatusLabel}</small>
+          <small>生产释放：不可用</small>
           {(signoff?.validation_errors ?? []).slice(0, 3).map((error) => (
             <small key={error}>{error}</small>
           ))}
