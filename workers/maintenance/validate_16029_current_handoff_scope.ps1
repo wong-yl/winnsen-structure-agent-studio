@@ -3,7 +3,6 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-
 $checks = New-Object System.Collections.Generic.List[object]
 
 function Add-Check {
@@ -23,140 +22,107 @@ function Add-Check {
     })
 }
 
-function Read-JsonFile {
-    param([string]$Path)
-    return Get-Content -LiteralPath $Path -Encoding UTF8 | ConvertFrom-Json
-}
-
 function Read-TextFile {
     param([string]$Path)
     return [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
 }
 
-$manifestPath = Join-Path $Root "data\locker_16029_v43_internal_sheetmetal_delivery.json"
-$manifestExists = Test-Path -LiteralPath $manifestPath -PathType Leaf
-Add-Check -Name "v43_delivery_manifest_exists" -Ok $manifestExists -Actual $manifestPath -Expected "manifest exists"
-
-if ($manifestExists) {
-    $manifest = Read-JsonFile $manifestPath
-    $requestId = [string]$manifest.current_request_id
-    $primaryAssembly = [string]$manifest.delivery.primary_assembly
-    $zipPath = [string]$manifest.delivery.zip_path
-    $screenshotFolder = [string]$manifest.delivery.screenshot_folder
-    $handoffNote = [string]$manifest.delivery.handoff_note
-    $summaryPath = [string]$manifest.evidence.summary
-    $goldGatePath = [string]$manifest.evidence.gold_structure_gate
-    $feedbackPath = [string]$manifest.evidence.structure_feedback
-    $restorePath = [string]$manifest.evidence.door_lock_tongue_restore
-
-    Add-Check -Name "current_request_id_is_v18" -Ok ($requestId -eq "v43-int-v18-lockfix") -Actual $requestId -Expected "v43-int-v18-lockfix"
-    Add-Check -Name "route_width_740" -Ok ([int]$manifest.route.cabinet_width_mm -eq 740) -Actual $manifest.route.cabinet_width_mm -Expected 740
-    Add-Check -Name "route_sequence_l642_r246" -Ok ($manifest.route.row_sequence -eq "L642-R246") -Actual $manifest.route.row_sequence -Expected "L642-R246"
-    Add-Check -Name "cad_mainline_sw2020" -Ok ($manifest.route.cad_mainline -eq "SolidWorks 2020") -Actual $manifest.route.cad_mainline -Expected "SolidWorks 2020"
-    Add-Check -Name "user_visual_confirmed" -Ok ($manifest.verified.user_visual_confirmed -eq $true) -Actual $manifest.verified.user_visual_confirmed -Expected $true
-
-    foreach ($item in @(
-        @{ name = "primary_assembly_exists"; path = $primaryAssembly },
-        @{ name = "download_zip_exists"; path = $zipPath },
-        @{ name = "handoff_note_exists"; path = $handoffNote },
-        @{ name = "summary_exists"; path = $summaryPath },
-        @{ name = "gold_gate_exists"; path = $goldGatePath },
-        @{ name = "structure_feedback_exists"; path = $feedbackPath },
-        @{ name = "lock_tongue_restore_exists"; path = $restorePath }
-    )) {
-        Add-Check -Name $item.name -Ok (Test-Path -LiteralPath $item.path) -Actual $item.path -Expected "path exists"
-    }
-    Add-Check -Name "screenshot_folder_recorded" -Ok (-not [string]::IsNullOrWhiteSpace($screenshotFolder)) -Actual $screenshotFolder -Expected "screenshot folder path recorded"
-
-    if (Test-Path -LiteralPath $zipPath -PathType Leaf) {
-        $zipSize = (Get-Item -LiteralPath $zipPath).Length
-        Add-Check -Name "download_zip_size_nontrivial" -Ok ($zipSize -gt 95MB) -Actual $zipSize -Expected "> 95 MB"
-    }
-
-    if (Test-Path -LiteralPath $summaryPath -PathType Leaf) {
-        $summary = Read-JsonFile $summaryPath
-        Add-Check -Name "summary_ready_status" -Ok ($summary.status -eq "solidworks_2020_full_assembly_ready") -Actual $summary.status -Expected "solidworks_2020_full_assembly_ready"
-        Add-Check -Name "summary_gold_gate_pass" -Ok ($summary.goldStructureGateStatus -eq "PASS") -Actual $summary.goldStructureGateStatus -Expected "PASS"
-        Add-Check -Name "summary_feedback_clean" -Ok ($summary.structureFeedbackStatus -eq "clean") -Actual $summary.structureFeedbackStatus -Expected "clean"
-        Add-Check -Name "summary_lock_tongue_count_6" -Ok ([int]$summary.doorLockTongueCount -eq 6) -Actual $summary.doorLockTongueCount -Expected 6
-        Add-Check -Name "summary_lock_tongue_restore_added_6" -Ok ([int]$summary.doorLockTongueRestoreAddedCount -eq 6) -Actual $summary.doorLockTongueRestoreAddedCount -Expected 6
-        Add-Check -Name "summary_electric_components_zero" -Ok ([int]$summary.electricalOrElectricLockComponentCount -eq 0) -Actual $summary.electricalOrElectricLockComponentCount -Expected 0
-        Add-Check -Name "summary_back_seam_centered" -Ok ($summary.backSheetMetalRepairStatus -eq "side_panel_sheetmetal_back_flange_centered") -Actual $summary.backSheetMetalRepairStatus -Expected "side_panel_sheetmetal_back_flange_centered"
-    }
-
-    if (Test-Path -LiteralPath $goldGatePath -PathType Leaf) {
-        $goldGate = Read-JsonFile $goldGatePath
-        $issueCount = if ($null -eq $goldGate.issues) { 0 } else { @($goldGate.issues).Count }
-        Add-Check -Name "gold_structure_gate_pass" -Ok ($goldGate.status -eq "PASS") -Actual $goldGate.status -Expected "PASS"
-        Add-Check -Name "gold_structure_gate_no_issues" -Ok ($issueCount -eq 0) -Actual $issueCount -Expected 0
-    }
-
-    if (Test-Path -LiteralPath $feedbackPath -PathType Leaf) {
-        $feedback = Read-JsonFile $feedbackPath
-        $issueCount = if ($null -eq $feedback.issues) { 0 } else { @($feedback.issues).Count }
-        Add-Check -Name "structure_feedback_clean" -Ok ($feedback.status -eq "clean") -Actual $feedback.status -Expected "clean"
-        Add-Check -Name "structure_feedback_no_issues" -Ok ($issueCount -eq 0) -Actual $issueCount -Expected 0
-        Add-Check -Name "structure_feedback_lock_tongue_count_6" -Ok ([int]$feedback.derived.doorLockTongueCount -eq 6) -Actual $feedback.derived.doorLockTongueCount -Expected 6
-    }
-
-    if (Test-Path -LiteralPath $restorePath -PathType Leaf) {
-        $restore = Read-JsonFile $restorePath
-        $restoreItems = @($restore.items)
-        $savedCount = @($restoreItems | Where-Object { $_.added -eq $true -and $_.saved -eq $true -and [string]::IsNullOrEmpty([string]$_.error) }).Count
-        $addedCount = if ($null -ne $restore.addedCount) { [int]$restore.addedCount } else { [int]$restore.added_count }
-        Add-Check -Name "lock_tongue_restore_status" -Ok ($restore.status -eq "restored") -Actual $restore.status -Expected "restored"
-        Add-Check -Name "lock_tongue_restore_added_6" -Ok ($addedCount -eq 6) -Actual $addedCount -Expected 6
-        Add-Check -Name "lock_tongue_restore_saved_6" -Ok ($savedCount -eq 6) -Actual $savedCount -Expected 6
-    }
-
-    $requestPath = Join-Path $Root "data\review_generation_requests\$requestId.json"
-    $indexPath = Join-Path $Root "data\review_generation_requests\generation_request_index.json"
-    Add-Check -Name "request_record_exists" -Ok (Test-Path -LiteralPath $requestPath -PathType Leaf) -Actual $requestPath -Expected "request JSON exists"
-    Add-Check -Name "generation_index_exists" -Ok (Test-Path -LiteralPath $indexPath -PathType Leaf) -Actual $indexPath -Expected "generation index exists"
-    if (Test-Path -LiteralPath $requestPath -PathType Leaf) {
-        $requestRecord = Read-JsonFile $requestPath
-        Add-Check -Name "request_download_url_current" -Ok ($requestRecord.downloadUrl -eq $manifest.delivery.download_url) -Actual $requestRecord.downloadUrl -Expected $manifest.delivery.download_url
-        Add-Check -Name "request_zip_path_current" -Ok ($requestRecord.zipPath -eq $zipPath) -Actual $requestRecord.zipPath -Expected $zipPath
-    }
-    if (Test-Path -LiteralPath $indexPath -PathType Leaf) {
-        $index = Read-JsonFile $indexPath
-        $currentIndexRecord = @($index.requests | Where-Object { $_.id -eq $requestId } | Select-Object -First 1)
-        Add-Check -Name "generation_index_current_record_present" -Ok ($null -ne $currentIndexRecord) -Actual $(if ($null -ne $currentIndexRecord) { $currentIndexRecord.id } else { "" }) -Expected $requestId
-        if ($null -ne $currentIndexRecord) {
-            Add-Check -Name "generation_index_current_record_download_url" -Ok ($currentIndexRecord.downloadUrl -eq $manifest.delivery.download_url) -Actual $currentIndexRecord.downloadUrl -Expected $manifest.delivery.download_url
-            Add-Check -Name "generation_index_current_record_zip_path" -Ok ($currentIndexRecord.zipPath -eq $zipPath) -Actual $currentIndexRecord.zipPath -Expected $zipPath
-        }
-    }
+function Add-PinnedAssetCheck {
+    param(
+        [string]$Name,
+        [string]$Path,
+        [long]$ExpectedSize,
+        [string]$ExpectedSha256
+    )
+    $exists = (-not [string]::IsNullOrWhiteSpace($Path)) -and (Test-Path -LiteralPath $Path -PathType Leaf)
+    Add-Check -Name "${Name}_exists" -Ok $exists -Actual $Path -Expected "file exists"
+    if (-not $exists) { return }
+    $item = Get-Item -LiteralPath $Path
+    $sha = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToUpperInvariant()
+    Add-Check -Name "${Name}_size" -Ok ($item.Length -eq $ExpectedSize) -Actual $item.Length -Expected $ExpectedSize
+    Add-Check -Name "${Name}_sha256" -Ok ($sha -eq $ExpectedSha256) -Actual $sha -Expected $ExpectedSha256
 }
 
+function Find-PinnedAssetPath {
+    param(
+        [string]$Directory,
+        [string]$Prefix,
+        [string]$DateToken
+    )
+    if (-not (Test-Path -LiteralPath $Directory -PathType Container)) { return $null }
+    $matches = @(Get-ChildItem -LiteralPath $Directory -File -Filter "${Prefix}*${DateToken}.zip")
+    if ($matches.Count -ne 1) { return $null }
+    return $matches[0].FullName
+}
+
+$nativeModulePath = Join-Path $Root "tools\locker_16029_native_generator.mjs"
+$nativeCliPath = Join-Path $Root "tools\process_16029_native_generation_request.mjs"
+$nativeVerifierPath = Join-Path $Root "tools\verify_16029_native_generator.mjs"
+$portalPath = Join-Path $Root "tools\serve_16029_review_downloads.mjs"
 $apiPath = Join-Path $Root "services\api\app\main.py"
 $appPath = Join-Path $Root "apps\web\src\App.tsx"
 $studioDataPath = Join-Path $Root "apps\web\src\data\studioData.ts"
-$reviewPortalPath = Join-Path $Root "tools\serve_16029_review_downloads.mjs"
+
+foreach ($item in @(
+    @{ name = "native_generator_module"; path = $nativeModulePath },
+    @{ name = "native_generator_cli"; path = $nativeCliPath },
+    @{ name = "native_generator_verifier"; path = $nativeVerifierPath },
+    @{ name = "review_portal"; path = $portalPath }
+)) {
+    Add-Check -Name "$($item.name)_exists" -Ok (Test-Path -LiteralPath $item.path -PathType Leaf) -Actual $item.path -Expected "file exists"
+}
+
+$legacyPaths = @(
+    "tools\generate_review_solidworks_full_assembly.ps1",
+    "tools\generate_review_solidworks_single_door.ps1",
+    "tools\generate_16029_parametric_scaffold_freecad.py",
+    "tools\generate_review_task_simple_freecad_model.py",
+    "tools\scale_16029_source_step_freecad.py",
+    "tools\locker_16029_template_rules.mjs",
+    "tools\locker_16029_controlled_generation_policy.mjs",
+    "tools\process_16029_review_generation_queue.mjs",
+    "tools\locker_16029_generation_cache.mjs",
+    "tools\verify_16029_generation_cache.mjs",
+    "tools\verify_16029_template_rule_matrix.mjs"
+)
+$remainingLegacy = @($legacyPaths | Where-Object { Test-Path -LiteralPath (Join-Path $Root $_) })
+Add-Check -Name "legacy_generator_chain_removed" -Ok ($remainingLegacy.Count -eq 0) -Actual ($remainingLegacy -join ", ") -Expected "no legacy generator files"
+
+if (Test-Path -LiteralPath $nativeModulePath -PathType Leaf) {
+    $nativeText = Read-TextFile $nativeModulePath
+    Add-Check -Name "native_generator_identity" -Ok ($nativeText.Contains("16029-solidworks-native-generator-v1") -and $nativeText.Contains("verified_native_seeds_only")) -Actual $nativeModulePath -Expected "SolidWorks native verified-seed authority"
+    Add-Check -Name "native_generator_seed_family" -Ok ($nativeText.Contains("v35-740w-six-door-l642-r246") -and $nativeText.Contains("v36-740w-four-door-l66-r66") -and $nativeText.Contains("v37-760w-six-door-l642-r246")) -Actual $nativeModulePath -Expected "V35, V36, V37 seeds"
+    Add-Check -Name "native_generator_pending_v38" -Ok $nativeText.Contains("v38-760w-four-door-l66-r66") -Actual $nativeModulePath -Expected "V38 remains a named pending recipe"
+}
+
+if (Test-Path -LiteralPath $portalPath -PathType Leaf) {
+    $portalText = Read-TextFile $portalPath
+    Add-Check -Name "portal_native_request_store" -Ok ($portalText.Contains("createNativeTaskStore") -and $portalText.Contains("generationTaskSnapshot") -and $portalText.Contains("listSnapshot") -and $portalText.Contains("normalize16029NativeModelRequest")) -Actual $portalPath -Expected "native request resolver and unified task-file source store"
+    Add-Check -Name "portal_current_seed_assets" -Ok ($portalText.Contains("16029-v43-v37-760w-six-door-engineering-assistance-zip") -and $portalText.Contains("16029-v43-v36-four-door-engineering-assistance-zip") -and $portalText.Contains("16029-v43-v35-one-door-one-lock-hole-rereview-zip")) -Actual $portalPath -Expected "V35, V36, V37 assets"
+    Add-Check -Name "portal_no_legacy_runtime_binding" -Ok (-not $portalText.Contains("process_16029_review_generation_queue") -and -not $portalText.Contains("generate_review_solidworks_full_assembly") -and -not $portalText.Contains("readCurrentDeliveryManifest")) -Actual $portalPath -Expected "no old queue, generator, or delivery-manifest request filter"
+}
 
 $apiText = Read-TextFile $apiPath
 $appText = Read-TextFile $appPath
 $studioDataText = Read-TextFile $studioDataPath
-$reviewPortalText = Read-TextFile $reviewPortalPath
+Add-Check -Name "api_legacy_16029_task_route_retired" -Ok ($apiText.Contains('def ensure_generation_route_enabled') -and $apiText.Contains('capability_id.startswith("locker_16029_")') -and $apiText.Contains("status_code=410") -and $apiText.Contains('ensure_generation_route_enabled(payload.capability_id)') -and $apiText.Contains('ensure_generation_route_enabled(task.capability_id)')) -Actual $apiPath -Expected "all legacy 16029 SQLite task creation and execution routes are blocked"
+Add-Check -Name "frontend_native_assistance_entry" -Ok ($appText.Contains("DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_native_assistance'") -and $appText.Contains("activeCapability.id.startsWith('locker_16029_')") -and $appText.Contains("ENGINEER_REVIEW_PORTAL_URL")) -Actual $appPath -Expected "all 16029 generation entries route to the native portal"
+Add-Check -Name "studio_data_native_assistance_entry" -Ok ($studioDataText.Contains("locker_16029_native_assistance") -and $studioDataText.Contains("process_16029_native_generation_request.mjs")) -Actual $studioDataPath -Expected "new native model capability"
 
-Add-Check -Name "api_catalog_v43_current_zip" -Ok ($apiText.Contains("16029-v43-internal-sheetmetal-lockfix-zip") -and $apiText.Contains("review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip")) -Actual "services/api/app/main.py" -Expected "v43 current zip in API catalog"
-Add-Check -Name "api_scope_v43" -Ok $apiText.Contains("16029 740W / L642-R246 / v43") -Actual "services/api/app/main.py" -Expected "v43 current route copy"
-Add-Check -Name "frontend_handoff_v43" -Ok $appText.Contains("16029 740W / L642-R246 / v43") -Actual "apps/web/src/App.tsx" -Expected "v43 handoff copy"
-Add-Check -Name "frontend_current_controlled_candidate_highlight" -Ok ($appText.Contains("asset.status === 'controlled_candidate_pass'") -and $appText.Contains('<ReviewDownloadAssetCard asset={currentAsset} variant="current" />')) -Actual "apps/web/src/App.tsx" -Expected "v23 controlled candidate highlighted"
-Add-Check -Name "frontend_review_filter_v43" -Ok $appText.Contains("item.project === '16029 740W / L642-R246 / v43'") -Actual "apps/web/src/App.tsx" -Expected "review page filters v43 current route"
-Add-Check -Name "studio_data_v43_capability" -Ok $studioDataText.Contains("locker_16029_v43_internal_sheetmetal_current") -Actual "apps/web/src/data/studioData.ts" -Expected "v43 current capability"
-Add-Check -Name "studio_data_current_metric_v43" -Ok $studioDataText.Contains("value: '740W v43'") -Actual "apps/web/src/data/studioData.ts" -Expected "current metric is v43"
-Add-Check -Name "review_portal_current_round_v43" -Ok ($reviewPortalText.Contains("16029-v43-v23-engineering-feedback-20260713") -and $reviewPortalText.Contains("v43-int-v23-all-sources-isolated")) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "v23 engineering feedback round and controlled candidate"
-Add-Check -Name "review_portal_hides_old_same_route_requests" -Ok ($reviewPortalText.Contains("readCurrentDeliveryManifest") -and $reviewPortalText.Contains("isVisibleCurrentGenerationRequest")) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "manifest-based request filtering"
-Add-Check -Name "review_portal_default_prompt_excludes_electric_hardware" -Ok ($reviewPortalText.Contains("no electrical board") -and $reviewPortalText.Contains("no cabinet-side electric lock body") -and $reviewPortalText.Contains("no cabinet-side electric lock hook")) -Actual "tools/serve_16029_review_downloads.mjs" -Expected "default prompt excludes electric hardware"
-Add-Check -Name "solidworks_2020_only" -Ok (($apiText + $appText + $studioDataText + $reviewPortalText).Contains("SolidWorks 2020") -and -not (($apiText + $appText + $studioDataText + $reviewPortalText).Contains("SolidWorks 2025"))) -Actual "UI/API/portal CAD copy" -Expected "SolidWorks 2020 only"
+$requestRoot = Join-Path $Root "workers\generated_models\review_generation_requests"
+$v35Asset = Find-PinnedAssetPath -Directory (Join-Path $requestRoot "v43-int-v35-one-door-one-lock-hole-fix-r1") -Prefix "16029_v35_" -DateToken "20260809"
+$v36Asset = Find-PinnedAssetPath -Directory (Join-Path $requestRoot "v43-int-v36-four-door-l66-r66-r2") -Prefix "16029_v36_740" -DateToken "20260810"
+$v37Asset = Find-PinnedAssetPath -Directory (Join-Path $requestRoot "v43-int-v37-760w-six-door-l642-r246-r1") -Prefix "16029_v37_760" -DateToken "20260811"
+Add-PinnedAssetCheck -Name "v35_native_seed_zip" -Path $v35Asset -ExpectedSize 24741785 -ExpectedSha256 "440596F0C9E321D0FF04EC978EEBAB31DDFA6D542E337BDA00C5A3B9701963FA"
+Add-PinnedAssetCheck -Name "v36_native_seed_zip" -Path $v36Asset -ExpectedSize 25096688 -ExpectedSha256 "DEF241BB9B0D530EB73130C5A3FCBDC22F206B6A59C65EBC5F6CE16B985C3AA4"
+Add-PinnedAssetCheck -Name "v37_native_seed_zip" -Path $v37Asset -ExpectedSize 24535798 -ExpectedSha256 "6B9F62E4F697B96909131D81EAD0FA341E059530204DB76480148460883CD1C0"
 
 $failed = @($checks | Where-Object { -not $_.ok -and $_.severity -eq "error" })
 $gate = [ordered]@{
     generated_at = (Get-Date).ToString("o")
     status = if ($failed.Count -eq 0) { "PASS" } else { "FAIL" }
-    scope = "16029 740W / L642-R246 / v43 internal sheet-metal handoff scope"
-    current_request_id = if ($manifestExists) { [string]$manifest.current_request_id } else { "" }
+    scope = "16029 SolidWorks native structure-engineering assistance model scope"
+    current_generator_id = "16029-solidworks-native-generator-v1"
     checks_total = $checks.Count
     checks_failed = $failed.Count
     checks = $checks
@@ -166,16 +132,15 @@ $dataDir = Join-Path $Root "data"
 $jsonPath = Join-Path $dataDir "locker_16029_current_handoff_scope_gate.json"
 $csvPath = Join-Path $dataDir "locker_16029_current_handoff_scope_gate.csv"
 $mdPath = Join-Path $dataDir "locker_16029_current_handoff_scope_gate.md"
-
 $gate | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $jsonPath -Encoding UTF8
 $checks | Export-Csv -LiteralPath $csvPath -NoTypeInformation -Encoding UTF8
 
 $lines = New-Object System.Collections.Generic.List[string]
-$lines.Add("# 16029 Current Handoff Scope Gate")
+$lines.Add("# 16029 Native Structure-Assistance Scope Gate")
 $lines.Add("")
 $lines.Add("- Status: $($gate.status)")
 $lines.Add("- Scope: $($gate.scope)")
-$lines.Add("- Current request: $($gate.current_request_id)")
+$lines.Add("- Generator: $($gate.current_generator_id)")
 $lines.Add("- Checks: $($gate.checks_total)")
 $lines.Add("- Failed: $($gate.checks_failed)")
 $lines.Add("")
@@ -188,6 +153,4 @@ foreach ($check in $checks) {
 $lines | Set-Content -LiteralPath $mdPath -Encoding UTF8
 
 Write-Output ($gate | ConvertTo-Json -Depth 5)
-if ($failed.Count -gt 0) {
-    exit 1
-}
+if ($failed.Count -gt 0) { exit 1 }

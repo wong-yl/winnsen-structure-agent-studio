@@ -325,6 +325,23 @@
   gap: 12px;
 }
 
+.topbar-review-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.topbar-review-link:hover {
+  text-decoration: underline;
+}
+
 .project-switcher {
   display: grid;
   gap: 6px;

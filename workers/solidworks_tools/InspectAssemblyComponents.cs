@@ -16,7 +16,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: InspectAssemblyComponents.exe <assembly.SLDASM> <out-json> [--keep-open] [--exit-session] [--require-rebuild]");
+                Console.Error.WriteLine("Usage: InspectAssemblyComponents.exe <assembly.SLDASM> <out-json> [--keep-open] [--exit-session] [--require-rebuild] [--read-only] [--save-after-rebuild]");
                 return 2;
             }
 
@@ -25,6 +25,13 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             bool keepOpen = Array.Exists(args, arg => string.Equals(arg, "--keep-open", StringComparison.OrdinalIgnoreCase));
             bool exitSession = Array.Exists(args, arg => string.Equals(arg, "--exit-session", StringComparison.OrdinalIgnoreCase));
             bool requireRebuild = Array.Exists(args, arg => string.Equals(arg, "--require-rebuild", StringComparison.OrdinalIgnoreCase));
+            bool readOnly = Array.Exists(args, arg => string.Equals(arg, "--read-only", StringComparison.OrdinalIgnoreCase));
+            bool saveAfterRebuild = Array.Exists(args, arg => string.Equals(arg, "--save-after-rebuild", StringComparison.OrdinalIgnoreCase));
+            if (readOnly && saveAfterRebuild)
+            {
+                Console.Error.WriteLine("--read-only and --save-after-rebuild cannot be combined");
+                return 2;
+            }
             var result = new InspectResult { AssemblyPath = asmPath, Exists = File.Exists(asmPath), KeepOpen = keepOpen, RequireRebuild = requireRebuild };
             ISldWorks sw = null;
 
@@ -48,17 +55,20 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 sw.Visible = true;
                 result.SolidWorksProcessId = TryValue(() => sw.GetProcessID(), 0);
+                Try(() => sw.SetCurrentWorkingDirectory(Path.GetDirectoryName(asmPath)));
                 WriteJson(outJson, result);
                 int errors = 0;
                 int warnings = 0;
+                int openOptions = (int)swOpenDocOptions_e.swOpenDocOptions_Silent |
+                    (readOnly ? (int)swOpenDocOptions_e.swOpenDocOptions_ReadOnly : 0);
                 ModelDoc2 model = sw.OpenDoc6(
                     asmPath,
                     (int)swDocumentTypes_e.swDocASSEMBLY,
-                    (int)swOpenDocOptions_e.swOpenDocOptions_Silent,
+                    openOptions,
                     "",
                     ref errors,
                     ref warnings) as ModelDoc2;
-                if (model == null)
+                if (model == null && !readOnly)
                 {
                     model = sw.OpenDoc(asmPath, (int)swDocumentTypes_e.swDocASSEMBLY) as ModelDoc2;
                 }
@@ -83,6 +93,18 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     Try(() => asm.ResolveAllLightWeightComponents(false));
                     result.RebuildAttempted = true;
                     result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
+                    if (saveAfterRebuild)
+                    {
+                        int saveErrors = 0;
+                        int saveWarnings = 0;
+                        result.SaveAttempted = true;
+                        result.Saved = TryValue(() => model.Save3(
+                            (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+                            ref saveErrors, ref saveWarnings), false);
+                        result.SaveErrors = saveErrors;
+                        result.SaveWarnings = saveWarnings;
+                        result.SaveFlagAfterSave = TryValue(() => model.GetSaveFlag(), true);
+                    }
 
                     Configuration cfg = TryValue(() => model.GetActiveConfiguration() as Configuration, null);
                     Component2 root = cfg == null ? null : TryValue(() => cfg.GetRootComponent3(true), null);
@@ -312,6 +334,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Field(sb, "model_path", r.ModelPath).Append(",");
             Field(sb, "rebuild_attempted", r.RebuildAttempted).Append(",");
             Field(sb, "rebuilt", r.Rebuilt).Append(",");
+            Field(sb, "save_attempted", r.SaveAttempted).Append(",");
+            Field(sb, "saved", r.Saved).Append(",");
+            Field(sb, "save_errors", r.SaveErrors).Append(",");
+            Field(sb, "save_warnings", r.SaveWarnings).Append(",");
+            Field(sb, "save_flag_after_save", r.SaveFlagAfterSave).Append(",");
             Field(sb, "enumeration_mode", r.EnumerationMode).Append(",");
             Field(sb, "component_count", r.ComponentCount).Append(",");
             Field(sb, "error", r.Error).Append(",");
@@ -426,6 +453,11 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public string ModelPath = "";
             public bool RebuildAttempted;
             public bool Rebuilt;
+            public bool SaveAttempted;
+            public bool Saved;
+            public int SaveErrors;
+            public int SaveWarnings;
+            public bool SaveFlagAfterSave;
             public string EnumerationMode = "";
             public int ComponentCount;
             public string Error = "";

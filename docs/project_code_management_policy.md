@@ -1,14 +1,19 @@
 # Project Code Management Policy
 
-Updated: `2026-06-03`
+Updated: `2026-10-02`
 
 This repository is managed as an engineering workflow, not as a dump folder. The current active product line is:
 
-- Project: `16029 / 740W / L642-R246 / v43`
+- Project: `16029 / SolidWorks native structure-assistance family`
 - CAD mainline: `SolidWorks 2020`
-- Current package: `v43-int-v18-lockfix`
-- Current status: SW2020 engineering review / handoff organization ready, not production drawing release
-- Current gate: v43 delivery manifest + current handoff scope gate must pass
+- Verified native seeds: `V35 740W/6-door`, `V36 740W/4-door`, `V37 760W/6-door`
+- Current purpose: provide a rebuildable foundation model for structural engineers to continue project-specific work
+- Current gate: native-generator contract + package integrity + SolidWorks evidence must pass
+
+The active portal also queues continuous parametric requests in the documented
+700–1200 W / 1700–2200 H / 250–650 D mm range. Independent columns total
+2–34 doors; each output needs its own native acceptance. V35/V36/V37 remain
+verified seeds, and accepted inputs do not imply production release.
 
 Gold/source reference baseline:
 
@@ -23,8 +28,13 @@ These are current project code and documentation:
 
 - Engineer-facing web UI and API changes for the current v43 route.
 - Review login/download portal code.
-- Review login generation queue and task-download code.
-- SolidWorks 2020 generator and evidence automation.
+- Native-model parameter resolution and task-download code.
+- Independent door allocation, portal authentication, parametric contracts,
+  workers, native C# sources, source adapters, and isolated regression tests.
+- Reviewed fixed-input C# source snapshots needed to rebuild the parametric
+  executor. Preserve their pinned hashes; changing them requires separate
+  native validation.
+- SolidWorks 2020 native seed, evidence, and family-expansion automation.
 - 1000W gold/source sheet-metal evidence and rule builders.
 - v43 delivery manifest and delivery verifier:
   - `data/locker_16029_v43_internal_sheetmetal_delivery.json`
@@ -33,10 +43,10 @@ These are current project code and documentation:
   - `docs/16029_current_project_process.md`
   - `docs/16029_memory_v43_internal_sheetmetal_repair_plan_20260602.md`
   - `workers/maintenance/16029_v43_internal_sheetmetal_delivery_handoff_20260603.md`
-- Fixed generator / validation entries:
-  - `tools/process_16029_review_generation_queue.mjs`
-  - `tools/generate_review_solidworks_full_assembly.ps1`
-  - `tools/generate_review_solidworks_single_door.ps1`
+- Current generator / validation entries:
+  - `tools/locker_16029_native_generator.mjs`
+  - `tools/process_16029_native_generation_request.mjs`
+  - `tools/verify_16029_native_generator.mjs`
   - `workers/maintenance/validate_16029_current_handoff_scope.ps1`
   - `tools/verify_16029_current_mainline.ps1`
   - `tools/check_16029_first_commit_scope.ps1`
@@ -54,6 +64,8 @@ These files may stay on disk but should not go into the Git cleanup commit:
 - Review login users, invite codes, and feedback uploads
 - Compiled EXE/DLL files under `workers/solidworks_tools/bin`
 - Temporary probe output and `workers/tmp_*`
+- Local `data/parametric_*.mjs` orchestration, attempt/runtime databases,
+  real account/order records, and compiled SDK/native DLLs or EXEs.
 
 ## Treat As Historical Evidence
 
@@ -76,16 +88,21 @@ These are not deleted automatically, but they are not current delivery sources:
 - Lightweight rule-review packages as formal engineer handoff
 - SolidWorks 2025 as current CAD mainline
 - Screenshot-only proof without SolidWorks 2020 model/evidence checks
+- Removed generic generator, FreeCAD scaffold, legacy queue, or legacy generation-cache files reintroduced as an active 16029 route
 
 ## Git Discipline
 
-The cleanup commit should be small and focused:
+Commits should contain the reviewed source and documentation required for a
+fresh checkout to reproduce the tested application:
 
 - UI/API/review portal wording and current v43 route.
 - v43 delivery manifest and verifier.
 - Current process and cleanup docs.
-- SolidWorks 2020 generator, gate, and portal source code.
+- SolidWorks 2020 native generator authority, gate, and portal source code.
 - Current 16029 scope gate script.
+- Current native/parametric sources and tests, including their exact source
+  dependencies under `workers/native_model_requests/`. Generated evidence,
+  model files and runtime state under that tree remain local.
 
 Do not include model packages, screenshots, generated gates, generated ZIPs, or binary outputs unless there is a separate explicit decision.
 
@@ -98,7 +115,16 @@ tools/verify_16029_current_mainline.ps1 -SkipWebBuild
 tools/guard_16029_staged_scope.ps1
 ```
 
-The scope script must report `0 uncategorized`. Files in `include` may enter the commit candidate. Files in `exclude` and `needs_decision` must not be staged automatically.
+The scope script must report `0 uncategorized` and inspect individual untracked
+files. Files in `include` may enter the commit candidate. Files in `exclude`
+and `needs_decision` must not be staged automatically. GitHub CI runs the
+portable fixture tests, Studio build/lint and API state tests; workstation
+CAD/evidence gates still run locally and must not be reported as cloud CAD
+validation.
+
+For the 2026-10-02 project update, the user authorized a complete bug check
+followed by a GitHub update. Use a separate branch and pull request after local
+acceptance. Do not force-push, rewrite history, or merge/release automatically.
 
 ## Verification Required Before Handoff
 

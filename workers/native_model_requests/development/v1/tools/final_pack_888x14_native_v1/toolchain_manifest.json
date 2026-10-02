@@ -1,0 +1,13 @@
+{
+    "schema":  "winnsen.16029.native_toolchain_manifest.v1",
+    "generatedBy":  "Build-FinalPack888x14Native.ps1",
+    "tool":  {
+                 "id":  "native_final_pack_888x14_v1",
+                 "sourcePath":  "workers/native_model_requests/development/v1/tools/final_pack_888x14_native_v1/FinalPack888x14Native.cs",
+                 "sourceNormalizedSha256":  "0915F7D4880D2B8CE1471D3F3B02CF9FED135BD7ACD8F63E39CB69ADF6D44895",
+                 "executablePath":  "workers/native_model_requests/development/v1/tools/final_pack_888x14_native_v1/FinalPack888x14Native.exe",
+                 "executableSha256":  "4456C50F970D93983B323D81EC4454DF6FA77AA5B396A250F5E0254BAAEC0EA9",
+                 "verifierPath":  "workers/native_model_requests/development/v1/tools/final_pack_888x14_native_v1/verify_static.mjs",
+                 "verifierSha256":  "D3E1BD489BC21FC7B44439DB3DA3314133878EB0914769174864BD9C1013A8D0"
+             }
+}

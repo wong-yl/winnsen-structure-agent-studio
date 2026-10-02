@@ -108,8 +108,38 @@ check('api_current_scope_v43', apiText.includes('16029 740W / L642-R246 / v43'),
 
 const portalText = readText(resolve(ROOT, 'tools/serve_16029_review_downloads.mjs'))
 check('portal_current_request_id', portalText.includes(requestId), requestId, 'listed in review portal')
-check('portal_v23_feedback_round', portalText.includes('16029-v43-v23-engineering-feedback-20260713') && portalText.includes('v43-int-v23-all-sources-isolated'), 'v23 engineering feedback round', 'controlled candidate listed in review portal')
-check('portal_manifest_filter', portalText.includes('readCurrentDeliveryManifest') && portalText.includes('isVisibleCurrentGenerationRequest'), 'portal current request filtering', 'manifest-based current list')
+check(
+  'portal_review_round_history',
+  portalText.includes('16029-v43-v37-760w-six-door-engineering-assistance-20260811')
+    && portalText.includes("CURRENT_REVIEW_ASSET_ID = '16029-v43-v37-760w-six-door-engineering-assistance-zip'")
+    && portalText.includes('16029-v43-v36-four-door-engineering-assistance-zip')
+    && portalText.includes('16029-v43-v35-one-door-one-lock-hole-rereview-zip')
+    && portalText.includes('16029-v43-v34-lock-hole-center-rereview-zip')
+    && portalText.includes('16029-v43-v33-engineering-feedback-rereview-zip')
+    && portalText.includes('16029-v43-v32-lockdatum-crossbar-rereview-zip')
+    && portalText.includes('16029-v43-v31-engineering-feedback-rereview-zip')
+    && portalText.includes('16029-v43-v30-confirmed-linkage-rereview-zip')
+    && portalText.includes('16029-v43-v29-three-feedback-native-rereview-zip')
+    && portalText.includes('16029-v43-v28-five-feedback-native-rereview-zip')
+    && portalText.includes('16029-v43-v27-late-feedback-geometry-rereview-zip')
+    && portalText.includes('16029-v43-v26-native-hierarchy-feedback-rereview-zip')
+    && portalText.includes('16029-v43-v25-engineering-feedback-rereview-zip')
+    && portalText.includes('16029-v43-v24-native-sheetmetal-engineering-review-zip')
+    && portalText.includes('16029-v43-internal-sheetmetal-v23-controlled-candidate-zip'),
+  'v36 current engineering-assistance round with v35 through v23 history',
+  'current and historical review assets listed in review portal',
+)
+check(
+  'portal_native_request_store_replaces_legacy_manifest_filter',
+  portalText.includes('createNativeTaskStore')
+    && portalText.includes('generationTaskSnapshot')
+    && portalText.includes('listSnapshot')
+    && portalText.includes('normalize16029NativeModelRequest')
+    && !portalText.includes('readCurrentDeliveryManifest')
+    && !portalText.includes('isVisibleCurrentGenerationRequest'),
+  'native request storage with no legacy manifest filter',
+  'current portal is isolated from the historical V43 request queue',
+)
 check('portal_default_prompt_no_electric_lock_body', portalText.includes('no electrical board') && portalText.includes('no cabinet-side electric lock body'), 'portal default prompt', 'electrical hardware exclusion text')
 check('portal_not_800w_current_round', !portalText.includes('<strong>16029 800W gold-variable</strong>'), 'old 800W current round label absent', 'not current')
 

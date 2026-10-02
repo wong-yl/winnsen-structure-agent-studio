@@ -11,6 +11,8 @@ import sqlite3
 import subprocess
 import sys
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
@@ -210,7 +212,7 @@ class GenerationTaskCreate(BaseModel):
     parameters: dict[str, str] = Field(default_factory=dict)
     evidence: list[str] = Field(default_factory=list)
     limitation: str = ""
-    status: TaskStatus = "draft_pending_worker"
+    status: Literal["draft_pending_worker", "blocked_pending_evidence"] = "draft_pending_worker"
 
 
 class GenerationTask(BaseModel):
@@ -377,11 +379,16 @@ app.add_middleware(
 )
 
 
-def connect() -> sqlite3.Connection:
+@contextmanager
+def connect() -> Iterator[sqlite3.Connection]:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
-    return connection
+    try:
+        with connection:
+            yield connection
+    finally:
+        connection.close()
 
 
 def init_db() -> None:
@@ -424,6 +431,10 @@ def on_startup() -> None:
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def subprocess_output_text(value: str | bytes | None) -> str:
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
 
 
 def parse_float(value: str | None) -> float | None:
@@ -2919,6 +2930,8 @@ def checked_template_assembly_path(raw_path: str) -> Path:
         raise HTTPException(status_code=400, detail="Rule extraction currently accepts SolidWorks .SLDASM assemblies only.")
     if not path.exists():
         raise HTTPException(status_code=404, detail=f"Assembly file does not exist: {path}")
+    if not path.is_file():
+        raise HTTPException(status_code=400, detail="Assembly path must be a file.")
 
     resolved = path.resolve()
     root = TEMPLATE_ASSET_ROOT.resolve()
@@ -2985,7 +2998,11 @@ def list_rule_extraction_results(limit: int = 20) -> list[RuleExtractionResult]:
 
 
 def fetch_rule_extraction_or_404(run_id: str) -> RuleExtractionResult:
-    output_dir = RULE_EXTRACTION_DIR / run_id
+    if run_id in {"", ".", ".."} or re.search(r"[/\\:]", run_id):
+        raise HTTPException(status_code=400, detail="Rule extraction run ID must be a directory name.")
+    output_dir = (RULE_EXTRACTION_DIR / run_id).resolve()
+    if not is_under_root(output_dir, RULE_EXTRACTION_DIR.resolve()):
+        raise HTTPException(status_code=403, detail="Rule extraction run is outside the extraction root.")
     result = read_rule_extraction_result(output_dir)
     if result is None:
         raise HTTPException(status_code=404, detail=f"Rule extraction run {run_id} was not found.")
@@ -3093,25 +3110,25 @@ def review_download_catalog() -> dict[str, dict[str, str | Path]]:
             "file_name": "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
         },
         "16029-v43-internal-sheetmetal-v23-controlled-candidate-zip": {
-            "title": "16029 740W v43 v23 受控候选复核包",
-            "category": "最新受控候选（未释放）",
-            "description": "v43-int-v23-all-sources-isolated：精确结构 gate 11/11 PASS，302 个受控源文件 changed=0，39 个模块放置与 7 个 restored-v43 放置全部使用候选本地副本，最终装配外部引用 0；releaseEligible=false，仍需结构工程师和样机签核。",
+            "title": "16029 740W v43 v23 历史工程辅助模型",
+            "category": "历史结构验证资料",
+            "description": "v43-int-v23-all-sources-isolated：精确结构 gate 11/11 PASS，302 个受控源文件 changed=0，39 个模块放置与 7 个 restored-v43 放置全部使用候选本地副本，最终装配外部引用 0；保留给结构工程师作历史对照。",
             "status": "controlled_candidate_pass",
             "path": WORKER_LOG_DIR / "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
             "file_name": "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
         },
         "16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip": {
-            "title": "16029 740W v43 v23 工程预签核证据包",
-            "category": "最新签核证据（非生产包）",
-            "description": "包含 6 张隐藏柜门后的内部结构视图、历史源文件几何指标对比、零写入 manifest 和工程签核清单。几何指标相似不代表历史字节版本一致，不允许据此自动覆盖源文件。",
+            "title": "16029 740W v43 v23 历史结构验证资料",
+            "category": "历史工程记录",
+            "description": "包含 6 张隐藏柜门后的内部结构视图、历史源文件几何指标对比、零写入 manifest 和工程确认清单，供结构工程师追溯和对照。",
             "status": "pre_signoff_review_evidence",
             "path": WORKER_LOG_DIR / "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
             "file_name": "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
         },
         "16029-v43-internal-sheetmetal-v23-engineering-signoff-template": {
-            "title": "16029 740W v43 v23 结构工程签核模板",
-            "category": "待结构工程师填写（不是签核结果）",
-            "description": "模板绑定当前 v23 摘要、结构 gate、源完整性、来源报告和两个 ZIP 的 SHA256。请下载副本后完整填写；模板本身不构成签核，也不授予生产释放资格。",
+            "title": "16029 740W v43 v23 结构工程确认记录模板",
+            "category": "历史工程记录模板",
+            "description": "模板绑定当前 v23 摘要、结构 gate、源完整性、来源报告和两个 ZIP 的 SHA256，供结构工程师记录核对结论。",
             "status": "engineering_signoff_template",
             "path": ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.template.json",
             "file_name": "locker_16029_v23_engineering_signoff.template.json",
@@ -3211,7 +3228,7 @@ def read_v23_engineering_signoff_status() -> V23EngineeringSignoffStatus:
         validation_errors.extend(str(item) for item in payload_errors)
     next_action = str(payload.get("next_action") or "Run node tools/verify_16029_v23_engineering_signoff.mjs.")
     if status == "STALE_REVERIFY_REQUIRED":
-        next_action = "签核输入或候选证据已更新，请重跑 v23 工程签核门禁后再判断状态。"
+        next_action = "历史工程记录或候选证据已更新，请重新核对 v23 历史验证资料。"
 
     return V23EngineeringSignoffStatus(
         generated_at=payload.get("generated_at"),
@@ -3390,6 +3407,9 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
     result = fetch_rule_extraction_or_404(run_id)
     output_dir = checked_local_action_path(result.output_dir)
     run_script = checked_local_action_path(result.run_script_path)
+    expected_output_dir = (RULE_EXTRACTION_DIR / run_id).resolve()
+    if output_dir != expected_output_dir or run_script.parent != output_dir:
+        raise HTTPException(status_code=403, detail="Rule extraction paths do not match the requested run.")
     if not run_script.is_file():
         raise HTTPException(status_code=404, detail=f"Rule extraction script does not exist: {run_script}")
 
@@ -3405,12 +3425,15 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
         str(run_script),
     ]
 
-    result.status = "running"
-    result.updated_at = now_iso()
-    result.message = "SolidWorks rule extraction is running."
-    write_rule_extraction_result(result)
+    lock_ok, lock_detail = acquire_solidworks_run_lock(result.id)
+    if not lock_ok:
+        raise HTTPException(status_code=409, detail=lock_detail)
 
     try:
+        result.status = "running"
+        result.updated_at = now_iso()
+        result.message = "SolidWorks rule extraction is running."
+        write_rule_extraction_result(result)
         completed = subprocess.run(
             command,
             cwd=output_dir,
@@ -3438,12 +3461,21 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
             message = "SolidWorks rule extraction failed. Review stdout/stderr in the extraction folder."
         exit_code = completed.returncode
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
-        stderr_path.write_text(error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
+        stderr_path.write_text(subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
         outputs = rule_extraction_outputs(output_dir)
         status = "failed"
         message = f"SolidWorks rule extraction timed out after {timeout_seconds} seconds."
         exit_code = None
+    except OSError as error:
+        stdout_path.write_text("", encoding="utf-8")
+        stderr_path.write_text(str(error), encoding="utf-8", errors="replace")
+        outputs = rule_extraction_outputs(output_dir)
+        status = "failed"
+        message = f"SolidWorks rule extraction could not be started: {error}"
+        exit_code = None
+    finally:
+        release_solidworks_run_lock(result.id)
 
     updated = RuleExtractionResult(
         id=result.id,
@@ -3526,9 +3558,9 @@ def run_freecad_step_geometry_check(model_path: Path, out_dir: Path, timeout_sec
             check=False,
         )
     except subprocess.TimeoutExpired as error:
-        (out_dir / "freecad_stdout.txt").write_text(error.stdout or "", encoding="utf-8", errors="replace")
+        (out_dir / "freecad_stdout.txt").write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
         (out_dir / "freecad_stderr.txt").write_text(
-            error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
+            subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
         )
         return {"status": "step_geometry_check_timeout", "message": f"Timed out after {timeout_seconds} seconds."}
     except OSError as error:
@@ -3581,9 +3613,9 @@ def run_freecad_fcstd_integrity_check(model_path: Path, out_prefix: Path, expect
             check=False,
         )
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
         stderr_path.write_text(
-            error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
+            subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
         )
         return {
             "status": "fcstd_integrity_check_timeout",
@@ -3640,9 +3672,9 @@ def run_16029_quality_refresh_scripts(output_dir: Path) -> list[dict[str, Any]]:
                 check=False,
             )
         except subprocess.TimeoutExpired as error:
-            stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
+            stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
             stderr_path.write_text(
-                error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
+                subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
             )
             results.append(
                 {
@@ -3971,8 +4003,8 @@ def run_solidworks_manual_package(task: GenerationTask) -> WorkerExecutionResult
         else:
             message = gate_message
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
-        stderr_path.write_text(error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
+        stderr_path.write_text(subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
         exit_code = None
         outputs = output_files(output_dir)
         quality_status = None
@@ -4078,8 +4110,8 @@ def run_freecad_worker(task: GenerationTask) -> WorkerExecutionResult:
             freecad_postprocess = run_16029_freecad_postprocess(task, output_dir)
         exit_code = completed.returncode
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
-        stderr_path.write_text(error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
+        stderr_path.write_text(subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
         status = "failed_worker"
         message = f"FreeCAD worker timed out after {timeout_seconds} seconds."
         exit_code = None
@@ -4134,7 +4166,7 @@ def list_review_downloads() -> ReviewDownloadIndex:
     catalog = review_download_catalog()
     return ReviewDownloadIndex(
         generated_at=datetime.now(timezone.utc).isoformat(),
-        scope="16029 740W / L642-R246 / v43 internal sheet-metal SW2020 review package; production release still requires drawings, DXF/flat patterns, BOM, supplier process review, and structural signoff",
+        scope="16029 740W / L642-R246 / v43 historical SW2020 structure-validation package for engineering reference",
         assets=[review_download_asset(asset_id, meta) for asset_id, meta in catalog.items()],
         engineering_signoff=read_v23_engineering_signoff_status(),
     )
@@ -4361,9 +4393,39 @@ def open_freecad_model(payload: FreeCadOpenRequest) -> LocalActionResult:
     return LocalActionResult(status="opened", path=str(fcstd), message=f"已用 FreeCAD 打开模型，并尝试执行显示全部/适配视图。{macro_note}")
 
 
+def ensure_generation_route_enabled(capability_id: str) -> None:
+    if capability_id.startswith("locker_16029_"):
+        raise HTTPException(
+            status_code=410,
+            detail=(
+                "The legacy 16029 generation-task route has been retired. "
+                "Use the native structure-assistance portal on port 5180."
+            ),
+        )
+
+
+def claim_generation_task(task: GenerationTask) -> None:
+    with connect() as connection:
+        claimed = connection.execute(
+            "UPDATE generation_tasks SET status = 'running', updated_at = ? WHERE id = ? AND status = ? AND updated_at = ?",
+            (now_iso(), task.id, task.status, task.updated_at),
+        ).rowcount
+    if not claimed:
+        raise HTTPException(status_code=409, detail="Task state changed. Refresh the task before executing it.")
+
+
+def mark_generation_task_failed(task_id: str) -> None:
+    with connect() as connection:
+        connection.execute(
+            "UPDATE generation_tasks SET status = 'failed_worker', updated_at = ? WHERE id = ? AND status = 'running'",
+            (now_iso(), task_id),
+        )
+
+
 @app.post("/api/generation-tasks", response_model=GenerationTask, status_code=201)
 def create_generation_task(payload: GenerationTaskCreate) -> GenerationTask:
-    if payload.status == "draft_pending_worker" and payload.command == "not_enabled":
+    ensure_generation_route_enabled(payload.capability_id)
+    if payload.command == "not_enabled":
         raise HTTPException(status_code=400, detail="Cannot create a worker draft for a disabled generator.")
 
     task_id = make_task_id()
@@ -4441,15 +4503,18 @@ def create_generation_task(payload: GenerationTaskCreate) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/dry-run", response_model=GenerationTask)
 def dry_run_generation_task(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
+    ensure_generation_route_enabled(task.capability_id)
+    if task.status == "running":
+        raise HTTPException(status_code=409, detail="Cannot run dry-run while this task is running.")
     result = build_dry_run(task)
     updated_at = now_iso()
 
     with connect() as connection:
-        connection.execute(
+        updated = connection.execute(
             """
             UPDATE generation_tasks
             SET status = ?, dry_run_json = ?, worker_log_path = ?, updated_at = ?
-            WHERE id = ?
+            WHERE id = ? AND status = ? AND updated_at = ?
             """,
             (
                 result.status,
@@ -4457,8 +4522,12 @@ def dry_run_generation_task(task_id: str) -> GenerationTask:
                 result.log_path,
                 updated_at,
                 task_id,
+                task.status,
+                task.updated_at,
             ),
-        )
+        ).rowcount
+        if not updated:
+            raise HTTPException(status_code=409, detail="Task state changed during dry-run. Refresh the task.")
         row = connection.execute("SELECT * FROM generation_tasks WHERE id = ?", (task_id,)).fetchone()
 
     if row is None:
@@ -4469,23 +4538,22 @@ def dry_run_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/execute", response_model=GenerationTask)
 def execute_generation_task(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
+    ensure_generation_route_enabled(task.capability_id)
     if task.status != "ready_to_run":
         raise HTTPException(status_code=409, detail="Run dry-run successfully before executing this worker task.")
     parameter_errors = validate_task_parameters(task)
     if parameter_errors:
         raise HTTPException(status_code=409, detail="; ".join(parameter_errors))
 
-    started_update_at = now_iso()
-    with connect() as connection:
-        connection.execute(
-            "UPDATE generation_tasks SET status = ?, updated_at = ? WHERE id = ?",
-            ("running", started_update_at, task_id),
-        )
-
-    if task.cad_runner == "solidworks":
-        result = build_solidworks_manual_result(task)
-    else:
-        result = run_freecad_worker(task)
+    claim_generation_task(task)
+    try:
+        if task.cad_runner == "solidworks":
+            result = build_solidworks_manual_result(task)
+        else:
+            result = run_freecad_worker(task)
+    except Exception:
+        mark_generation_task_failed(task_id)
+        raise
 
     updated_at = now_iso()
     with connect() as connection:
@@ -4513,6 +4581,7 @@ def execute_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/run-solidworks-package", response_model=GenerationTask)
 def run_solidworks_package(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
+    ensure_generation_route_enabled(task.capability_id)
     if task.cad_runner != "solidworks":
         raise HTTPException(status_code=409, detail="This task is not a SolidWorks task.")
     if task.status not in {"ready_to_run", "requires_manual_run", "completed_reference", "failed_worker"}:
@@ -4521,14 +4590,12 @@ def run_solidworks_package(task_id: str) -> GenerationTask:
     if parameter_errors:
         raise HTTPException(status_code=409, detail="; ".join(parameter_errors))
 
-    started_update_at = now_iso()
-    with connect() as connection:
-        connection.execute(
-            "UPDATE generation_tasks SET status = ?, updated_at = ? WHERE id = ?",
-            ("running", started_update_at, task_id),
-        )
-
-    result = run_solidworks_manual_package(task)
+    claim_generation_task(task)
+    try:
+        result = run_solidworks_manual_package(task)
+    except Exception:
+        mark_generation_task_failed(task_id)
+        raise
     updated_at = now_iso()
     with connect() as connection:
         connection.execute(

@@ -1,0 +1,13 @@
+{
+    "schema":  "winnsen.16029.native_toolchain_manifest.v1",
+    "generatedBy":  "Build-NativeRootAssembly888x14.ps1",
+    "tool":  {
+                 "id":  "native_root_assembly_888x14_v1",
+                 "sourcePath":  "workers/native_model_requests/development/v1/tools/root_assembly_888x14_native_v1/NativeRootAssembly888x14.cs",
+                 "sourceNormalizedSha256":  "E9C9970173579AFB313137A75EF98CDCD0828367625A6598C0B21BE483C19BF6",
+                 "executablePath":  "workers/native_model_requests/development/v1/tools/root_assembly_888x14_native_v1/NativeRootAssembly888x14.exe",
+                 "executableSha256":  "ED4C48976520A08E3CFF60D38A72C5BCB13CEC990FD06DEF4D864A8DD1A3DEC4",
+                 "verifierPath":  "workers/native_model_requests/development/v1/tools/root_assembly_888x14_native_v1/verify_static.mjs",
+                 "verifierSha256":  "1EBF2D4194C0FE3241D83BC41BFF6D5425B5B62C174FCC7B5F08FFD235444F7F"
+             }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "winnsen.16029.native_toolchain_manifest.v1",
+  "tool": {
+    "id": "topcover_reference_brep_v1",
+    "mode": "left-side-760-and-1000-sharp-flat-detailed-v7",
+    "sourceNormalizedSha256": "96471E368A33E72E0C5AB9B484CEE93D3FE4154998A9EA5F4EE32EFF0DF156BD",
+    "executableSha256": "05012DDD531C2DFE6B53BA31F5AC64F785BF8C05429DF57207C668F339299FA3",
+    "cadMode": "read_only_reference_capture",
+    "purpose": "structure_engineering_assistance",
+    "runtimeDependencies": [
+      {
+        "path": "SolidWorks.Interop.sldworks.dll",
+        "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+      },
+      {
+        "path": "SolidWorks.Interop.swconst.dll",
+        "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+      }
+    ]
+  }
+}

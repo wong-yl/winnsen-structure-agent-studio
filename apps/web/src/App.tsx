@@ -804,7 +804,7 @@ const BRAND_MARK_SRC = '/brand/winnsen-mark.png'
 const FREECAD_CMD = 'D:\\软件安装录\\freecad\\FreeCAD_1.1.1\\FreeCAD_1.1.1-Windows-x86_64-py311\\FreeCADCmd.exe'
 const FREECAD_SHORTCUT = 'C:\\Users\\Administrator\\Desktop\\FreeCAD 1.1.1.lnk'
 const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2020.lnk'
-const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_regression'
+const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_native_assistance'
 const LOCKER_16038_RULE_BINDING_CAPABILITY_ID = 'locker_16038_variant_template'
 const LOCKER_16038_RULE_BINDING_ID = 'STEP-VARIANT-16038-4-7-8-12'
 const LOCKER_16029_OUTER_SIZE = '规则受控：v43 700-780W / 金标准 740-1100W'
@@ -957,30 +957,30 @@ const pages: Array<{
     id: 'overview',
     label: '项目总览',
     navLabel: '总览',
-    description: '16029 740W / L642-R246 / v43：v23 当前受控候选，等待结构工程签核',
+    description: '16029参数化工程辅助建模：客户参数先生成基础模型，结构工程师再继续深化',
     section: 'delivery',
     purpose: '给工程师和项目负责人快速看当前主线、门数规则和交付包。',
-    nextAction: '先看当前审核包，再看待确认项；模型生成入口不作为收尾主入口。',
+    nextAction: '进入平台填写脱敏客户需求、宽度和门数；只下载通过生成门禁的本次任务模型。',
     icon: Gauge,
   },
   {
     id: 'models',
     label: '模型生成与交接',
     navLabel: '模型生成',
-    description: '只保留 16029 740W / L642-R246 / v43 当前交付边界',
+    description: '客户参数、布局预览、SolidWorks生成任务和工程深化结果的统一入口',
     section: 'delivery',
     purpose: '结构工程师需要模型时从这里查看当前门数边界与验证门槛。',
-    nextAction: 'v23 是当前受控候选；v18 仅保留为已目视确认的历史复核入口。',
+    nextAction: 'V35作为740W/6门已验证模板；其他参数族完成原生生成与关闭重开门禁后再开放。',
     icon: Boxes,
   },
   {
     id: 'handoff',
     label: '审核包下载',
     navLabel: '审核包',
-    description: 'v23 当前受控候选、预签核证据和历史版本下载入口',
+    description: '参数生成平台、V35/V36/V37结构工程辅助模型，以及历史结构验证资料',
     section: 'delivery',
-    purpose: '给结构工程师直接进入审核平台，下载当前 v23 SW2020 复核包并提交反馈。',
-    nextAction: '发给工程师局域网地址；当前 scope gate 已通过，后续重点是结构签核而不是重新找文件。',
+    purpose: '让工程师提交客户参数、下载本次生成的SolidWorks 2020模型，并反馈生成结果问题。',
+    nextAction: '发给工程师局域网地址；V35只作为已验证模板，不要求工程师拿固定模型手工改宽或改门数。',
     icon: Archive,
   },
   {
@@ -995,12 +995,12 @@ const pages: Array<{
   },
   {
     id: 'review',
-    label: '待确认项',
-    navLabel: '待确认',
-    description: '仅保留当前需要工程确认的少量事项',
+    label: '工程关注项',
+    navLabel: '关注项',
+    description: '集中展示当前仍需持续关注或补齐流程的工程边界',
     section: 'delivery',
-    purpose: '集中看当前主线里仍要补证据或修门槛的问题。',
-    nextAction: '当前锁舌、后背居中接缝、层板/前框配合已目视确认；生产释放仍需工程签核、图纸、BOM 和展开件。',
+    purpose: '集中看当前主线里仍需持续关注、补证据或完成企业流程的事项。',
+    nextAction: '当前锁舌、后背居中接缝、层板/前框配合已目视确认；基础模型交给结构工程师继续完成图纸、BOM、展开件和项目细节。',
     icon: FileWarning,
   },
   {
@@ -1029,7 +1029,7 @@ const pages: Array<{
     navLabel: 'Agent',
     description: '生成边界、规则闭环、风险判断和下一步推进',
     section: 'control',
-    purpose: '给非工程用户看当前能力边界，避免把参考模型误认为生产图纸。',
+    purpose: '给非工程用户看当前能力边界，明确哪些是结构工程辅助基础模型、哪些规格尚未建立原生配方。',
     nextAction: '按验证门槛推进下一轮生成器质量修复。',
     icon: Bot,
   },
@@ -1228,7 +1228,7 @@ function App() {
         <div className="sidebar-panel">
           <span className="panel-label">当前交付口径</span>
           <strong>只看 16029 740W v43</strong>
-          <small>v23 是当前未释放受控候选；v18 和旧 800W 包仅作历史参考。</small>
+          <small>V35是740W/6门已验证生成模板；实际工程工作从客户参数生成任务开始。</small>
         </div>
       </aside>
 
@@ -1257,7 +1257,7 @@ function App() {
             <div className="project-switcher">
               <span>当前主线</span>
               <strong>16029 740W / L642-R246 / v43</strong>
-              <small>v23 当前受控候选，等待结构工程签核</small>
+              <small>参数生成主流程已启用；V35作为一门一锁孔质量基准</small>
             </div>
           </div>
         </header>
@@ -1303,30 +1303,30 @@ function OverviewPage({
           <span className="overview-kicker">当前工程阶段</span>
           <div className="overview-title-row">
             <h2 id="overview-current-title">16029 740W / L642-R246 / v43</h2>
-            <StatusPill tone="warn">待工程签核</StatusPill>
+            <StatusPill tone="warn">参数生成试运行</StatusPill>
           </div>
           <p>{selectedProject.risk}</p>
         </div>
 
         <div className="overview-state-grid" aria-label="当前状态">
           <div>
-            <span>当前模型</span>
-            <strong>v23 受控候选</strong>
+            <span>已验证原生基础模型</span>
+            <strong>V35 / V36 / V37</strong>
           </div>
           <div>
             <span>自动结构检查</span>
             <strong className="state-good">已通过</strong>
           </div>
           <div>
-            <span>生产释放</span>
-            <strong className="state-blocked">不可用</strong>
+            <span>结构工程师后续</span>
+            <strong className="state-blocked">继续完成项目深化</strong>
           </div>
         </div>
 
         <div className="overview-hero-actions">
           <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
             <MessageSquareMore size={17} />
-            进入工程审核平台
+            进入参数生成平台
           </a>
           <button className="secondary-action" type="button" onClick={() => onNavigate('handoff')}>
             <Archive size={17} />
@@ -1341,10 +1341,10 @@ function OverviewPage({
         <div className="section-heading">
           <div>
             <h2>当前待办</h2>
-            <p>按顺序完成这三件事，本轮结构审核即可形成闭环。</p>
+            <p>按顺序完成这三项，本轮工程应用验证即可形成闭环。</p>
           </div>
           <button className="ghost-button" type="button" onClick={() => onNavigate('review')}>
-            查看 {activeReviewCount} 个待确认项
+            查看 {activeReviewCount} 个工程关注项
             <ChevronRight size={16} />
           </button>
         </div>
@@ -1353,29 +1353,29 @@ function OverviewPage({
           <article>
             <span>01</span>
             <div>
-              <strong>工程师登录或注册</strong>
-              <p>打开工程审核平台；忘记原账户时直接重新注册，不修改现有账户。</p>
+              <strong>填写客户参数</strong>
+              <p>登录平台后填写脱敏任务代号、宽度口径、目标宽度、柜深和门数。</p>
             </div>
           </article>
           <article>
             <span>02</span>
             <div>
-              <strong>只审核 v23 模型</strong>
-              <p>下载 v23 SolidWorks 2020 Pack-and-Go 主装配；v18 和旧 800W 包不作为当前审核对象。</p>
+              <strong>生成并下载本次任务模型</strong>
+              <p>系统先核对能力边界；只有通过原生SolidWorks和结构门禁的结果才能标记为工程深化起点。</p>
             </div>
           </article>
           <article>
             <span>03</span>
             <div>
-              <strong>在平台提交问题和结论</strong>
-              <p>反馈结构问题、截图和修改建议；完成正式签核后再进入样机验证。</p>
+              <strong>工程师继续深化</strong>
+              <p>在生成模型上完成材料、工艺、图纸和BOM；问题与效果记录绑定到本次生成任务。</p>
             </div>
           </article>
         </div>
 
         <div className="overview-context-strip">
           <div>
-            <span>待确认项</span>
+            <span>工程关注项</span>
             <strong>{activeReviewCount}</strong>
           </div>
           <div>
@@ -1398,7 +1398,7 @@ function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) 
       <div className="section-heading">
         <div>
           <h2>审核工作顺序</h2>
-          <p>从平台开始，在平台结束；本站负责说明当前版本、状态和审核边界。</p>
+          <p>从客户参数开始，以本次生成模型作为工程深化起点；V35只负责模板和质量回归。</p>
         </div>
       </div>
       <div className="workflow-list">
@@ -1406,8 +1406,8 @@ function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) 
           <span className="workflow-step">1</span>
           <span className="workflow-icon" aria-hidden="true"><MessageSquareMore size={19} /></span>
           <span className="workflow-copy">
-            <strong>进入工程审核平台</strong>
-            <small>工程师登录或注册，下载模型并在同一平台提交反馈。</small>
+            <strong>填写客户需求参数</strong>
+            <small>登录平台，选择柜体外宽或门板成品外宽，填写目标宽度、柜深和门数。</small>
           </span>
           <ChevronRight size={18} />
         </a>
@@ -1415,17 +1415,26 @@ function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) 
           <span className="workflow-step">2</span>
           <span className="workflow-icon" aria-hidden="true"><Archive size={19} /></span>
           <span className="workflow-copy">
-            <strong>确认当前审核材料</strong>
-            <small>核对 v23 主模型、自动检查证据和工程签核状态。</small>
+            <strong>核对布局和生成资格</strong>
+            <small>浏览器预览只表示布局；通过原生SolidWorks生成与结构门禁后才提供工程模型。</small>
           </span>
           <ChevronRight size={18} />
         </button>
-        <button className="workflow-row" type="button" onClick={() => onNavigate('review')}>
+        <a className="workflow-row" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
           <span className="workflow-step">3</span>
           <span className="workflow-icon" aria-hidden="true"><FileWarning size={19} /></span>
           <span className="workflow-copy">
-            <strong>处理待确认项</strong>
-            <small>只查看当前需要结构工程判断的问题和下一步。</small>
+            <strong>下载生成模型并深化</strong>
+            <small>工程师从本次任务模型继续完成订单细节，不需要把固定V35手工改成另一种柜型。</small>
+          </span>
+          <ChevronRight size={18} />
+        </a>
+        <button className="workflow-row" type="button" onClick={() => onNavigate('review')}>
+          <span className="workflow-step">4</span>
+          <span className="workflow-icon" aria-hidden="true"><FileWarning size={19} /></span>
+          <span className="workflow-copy">
+            <strong>按生成任务反馈</strong>
+            <small>结构问题和应用效果都关联到本次参数任务，便于修正生成规则并保留追溯。</small>
           </span>
           <ChevronRight size={18} />
         </button>
@@ -2574,6 +2583,61 @@ function ModelsPage() {
     }
   }
 
+  if (activeCapability.id.startsWith('locker_16029_')) {
+    return (
+      <div className="page-grid">
+        <section className="section-block handoff-hero">
+          <div className="section-heading">
+            <div>
+              <h2>16029 原生结构工程辅助模型</h2>
+              <p>填写客户要求的柜体宽度、深度和门数；系统只使用 V35、V36、V37 已确认的 SolidWorks 原生模型族。</p>
+            </div>
+            <StatusPill tone="good">SolidWorks 2020 原生模型</StatusPill>
+          </div>
+          <div className="overview-state-grid" aria-label="16029原生模型配方">
+            <div><span>V35</span><strong>740W / 6门 / L642-R246</strong></div>
+            <div><span>V36</span><strong>740W / 4门 / L66-R66</strong></div>
+            <div><span>V37</span><strong>760W / 6门 / L642-R246</strong></div>
+          </div>
+          <p>精确规格会取得对应原生基础模型；没有对应配方时会明确提示，等待该组合完成原生构建和结构接口验证，不会调用旧生成器。</p>
+          <div className="overview-hero-actions">
+            <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+              <MessageSquareMore size={17} />
+              输入客户参数并获取基础模型
+            </a>
+          </div>
+        </section>
+
+        <section className="section-block">
+          <div className="section-heading">
+            <div>
+              <h2>其它产品能力</h2>
+              <p>16029 已从旧任务队列中独立出来；其它柜型仍按各自证据和工具维护。</p>
+            </div>
+          </div>
+          <div className="capability-grid">
+            {capabilities.map((capability) => (
+              <button
+                key={capability.id}
+                type="button"
+                data-capability-id={capability.id}
+                className={`capability-card status-${capability.status} ${activeCapability.id === capability.id ? 'selected' : ''}`}
+                onClick={() => setActiveCapabilityId(capability.id)}
+              >
+                <span>{capability.productType}</span>
+                <strong>{capability.title}</strong>
+                <small>{capability.variants}</small>
+                <StatusPill tone={capability.status === 'blocked' ? 'risk' : capability.status === 'generatable' ? 'good' : 'warn'}>
+                  {capability.status}
+                </StatusPill>
+              </button>
+            ))}
+          </div>
+        </section>
+      </div>
+    )
+  }
+
   return (
     <div className="page-grid">
       <section className="section-block">
@@ -2582,7 +2646,7 @@ function ModelsPage() {
               <h2>可生成模型与规则学习队列</h2>
               <p>先区分已验证工程参考模型和规则学习中的模板；SolidWorks 是当前工程主线，FreeCAD 是未来开源替代路线。</p>
             </div>
-          <StatusPill tone="warn">production_candidate = 0</StatusPill>
+          <StatusPill tone="warn">模型用途：结构工程辅助</StatusPill>
         </div>
         <CurrentSolidWorksGenerationPanel
           activeCapabilityId={activeCapability.id}
@@ -3400,7 +3464,7 @@ function TaskDrawer({
                         <AlertTriangle size={16} />
                         <span>
                           {solidworksQualitySummary ??
-                            '诊断显示该装配能打开查看，但 SolidWorks API 只能看到 Reference 特征，不能当作生产级可编辑组件树。'}
+                            '诊断显示该装配能打开查看，但 SolidWorks API 只能看到 Reference 特征，尚不能作为结构工程师继续深化的可编辑组件树。'}
                         </span>
                       </div>
                     )}
@@ -3877,7 +3941,7 @@ function DrawingSheetMetalPage() {
             </div>
             <span>展开与出图</span>
             <strong>输出参考 DXF / PDF</strong>
-            <p>展开、尺寸标注和折弯/孔位校验先作为工程参考件，正式释放仍需要结构工程标准确认。</p>
+            <p>展开、尺寸标注和折弯/孔位校验先作为工程参考件，再由结构工程师按项目要求继续完善。</p>
           </article>
         </div>
       </section>
@@ -4079,7 +4143,7 @@ function DrawingSheetMetalPage() {
             <DetailLine label="主线关系" value="继续推进 16029 同外形 10/12/14 门规则；图纸支线只补单件证据和校验表。" />
             <DetailLine label="首个样板" value="16029 门板，其次是层板、门框横隔板和简单隔板。" />
             <DetailLine label="首个输出" value={sourcePaths.drawingSheetMetalFirstRun} />
-            <DetailLine label="暂不承诺" value="不把图片直接转成生产级整柜模型，不自动释放正式展开图和正式工程图。" />
+            <DetailLine label="当前边界" value="图片先用于识别结构意图；原生基础模型、展开图和工程图仍按可验证的工程流程逐步生成。" />
             <DetailLine label="工作目录" value={sourcePaths.drawingSheetMetalWorkspace} />
           </div>
           <EvidenceRow evidence={['DXF', '工程图', 'SolidWorks', 'FreeCAD', '证据闭环记录']} />
@@ -4333,8 +4397,8 @@ function DrawingSheetMetalPage() {
         <section className="section-block compact-block">
           <div className="section-heading">
             <div>
-              <h2>生产级出图边界</h2>
-              <p>这些条件没补齐前，系统不把展开或图纸标成正式释放。</p>
+              <h2>工程出图所需信息</h2>
+              <p>这些信息补齐后，系统才能给结构工程师提供更完整的展开和图纸基础。</p>
             </div>
             <FileWarning size={20} />
           </div>
@@ -4621,7 +4685,7 @@ function EngineerReviewWorkspace() {
   const reviewPrompt = useMemo(
     () =>
       [
-        '请按结构工程审核口径复核以下柜门/钣金模型，不要把工程参考模型当生产释放：',
+        '请按结构工程审核口径复核以下柜门/钣金基础模型，并记录需要继续深化的内容：',
         reviewInput,
         `证据截图：${screenshotPath || '待补'}`,
         `模型路径：${modelPath || '待补'}`,
@@ -4642,7 +4706,7 @@ function EngineerReviewWorkspace() {
       <div className="section-heading">
         <div>
           <h2>结构工程师交互区</h2>
-          <p>把审核输入、审核点、问题清单和证据路径放在同一处，便于沟通后再进入正式签核。</p>
+          <p>把审核输入、审核点、问题清单和证据路径放在同一处，便于结构工程师继续修改与确认。</p>
         </div>
         <StatusPill tone="warn">本页草稿</StatusPill>
       </div>
@@ -4751,40 +4815,6 @@ function ReviewDownloadPage() {
   const gateStatus = scopeGate?.status ?? 'UNKNOWN'
   const gateTone: StatusTone = gateStatus === 'PASS' ? 'good' : gateStatus === 'FAIL' ? 'risk' : 'warn'
   const failedGateChecks = (scopeGate?.checks ?? []).filter((check) => !check.ok).slice(0, 4)
-  const signoff = downloadIndex?.engineering_signoff
-  const signoffStatus = signoff?.status ?? 'LOADING'
-  const signoffTone: StatusTone =
-    signoffStatus === 'READY_FOR_PROTOTYPE'
-      ? 'good'
-      : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
-        ? 'warn'
-        : signoffStatus === 'LOADING'
-          ? 'idle'
-          : 'risk'
-  const signoffTitle =
-    signoffStatus === 'READY_FOR_PROTOTYPE'
-      ? '结构工程预签核通过，可进入样机阶段'
-      : signoffStatus === 'STRUCTURE_REVISION_REQUIRED'
-        ? '结构工程师已退回修订'
-        : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
-          ? '等待结构工程师填写并签署'
-          : signoffStatus === 'LOADING'
-            ? '正在读取 v23 签核状态'
-            : '签核数据需要重新校验'
-  const signoffStatusLabel =
-    signoffStatus === 'READY_FOR_PROTOTYPE'
-      ? '工程签核通过'
-      : signoffStatus === 'STRUCTURE_REVISION_REQUIRED'
-        ? '需要结构修订'
-        : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
-          ? '待工程签核'
-          : signoffStatus === 'LOADING'
-            ? '读取中'
-            : '签核状态异常'
-  const prototypeStatusLabel =
-    signoff?.prototype_validation_status === 'NOT_RUN_REQUIRED_BEFORE_RELEASE'
-      ? '尚未开始，生产释放前必须完成'
-      : signoff?.prototype_validation_status ?? '尚未开始'
   const currentAsset = assets.find((asset) => asset.status === 'controlled_candidate_pass')
   const historicalAssets = assets.filter(
     (asset) => asset.status === 'sw2020_review_ready' || asset.status === 'historical_reference',
@@ -4799,7 +4829,7 @@ function ReviewDownloadPage() {
         <div className="section-heading">
           <div>
             <h2>工程审核入口</h2>
-            <p>当前审核对象是 v23 受控候选；v18 和旧 800W 包仅保留为历史对照。</p>
+            <p>统一入口已经改为“填写客户参数→生成本次模型→工程师深化”；V35是740W/6门已验证模板，v34、v23、v18和旧800W包仅作历史对照。</p>
           </div>
           <div className="status-stack">
             <StatusPill tone={downloadStatus === 'ready' ? 'good' : downloadStatus === 'error' ? 'risk' : 'warn'}>
@@ -4818,7 +4848,7 @@ function ReviewDownloadPage() {
           </div>
           <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
             <MessageSquareMore size={16} />
-            打开工程审核平台
+            打开参数生成与反馈平台
           </a>
         </div>
       </section>
@@ -4829,7 +4859,7 @@ function ReviewDownloadPage() {
           <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 自动证据通过' : '自动证据尚未通过'}</strong>
           <p>
             {gateStatus === 'PASS'
-              ? 'v23 可以进入 SolidWorks 2020 工程复核；自动检查通过不代表工程签核或生产释放。'
+              ? 'V35、V36、V37原生基础模型已形成参数配方和回归基准；匹配客户参数后可作为结构工程师的深化起点。'
               : '当前可以下载给工程师继续审核结构问题，但不能标记为已验证交付。'}
           </p>
         </div>
@@ -4845,45 +4875,13 @@ function ReviewDownloadPage() {
         </div>
       </section>
 
-      <section
-        className={`handoff-gate-panel signoff-panel ${
-          signoffStatus === 'READY_FOR_PROTOTYPE'
-            ? 'gate-pass'
-            : signoffStatus === 'AWAITING_ENGINEERING_SIGNOFF'
-              ? 'gate-awaiting'
-              : ''
-        }`}
-      >
-        <div>
-          <span>v23 结构工程签核</span>
-          <strong>{signoffTitle}</strong>
-          <p>{signoff?.next_action ?? '正在读取签核模板与门禁结果。'}</p>
-          {signoff?.template_available ? (
-            <a className="secondary-action signoff-template-link" href={`${API_BASE_URL}${signoff.template_download_url}`}>
-              <ClipboardList size={16} />
-              下载签核模板
-            </a>
-          ) : null}
-        </div>
-        <div className="handoff-gate-checks">
-          <StatusPill tone={signoffTone}>{signoffStatusLabel}</StatusPill>
-          <small>自动证据：{signoff?.automatic_evidence_pass ? '通过' : '未通过或未读取'}</small>
-          <small>正式签字文件：{signoff?.signed_file_exists ? (signoff.signed_file_valid ? '有效' : '存在但无效') : '尚未提交'}</small>
-          <small>样机验证：{prototypeStatusLabel}</small>
-          <small>生产释放：不可用</small>
-          {(signoff?.validation_errors ?? []).slice(0, 3).map((error) => (
-            <small key={error}>{error}</small>
-          ))}
-        </div>
-      </section>
-
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>当前审核模型</h2>
-            <p>工程师只需下载下面这个 v23 SolidWorks 2020 主模型；辅助材料用于核对证据和完成签核。</p>
+            <h2>历史结构验证资料</h2>
+            <p>下面保留 v23、v34 等历史模型和验证资料作追溯；当前结构工程辅助模型请从页面上方平台获取。</p>
           </div>
-          <StatusPill tone="warn">v23 当前版本</StatusPill>
+          <StatusPill tone="warn">v23 受控基线</StatusPill>
         </div>
 
         <div className="current-download-area">
@@ -4899,7 +4897,7 @@ function ReviewDownloadPage() {
             <div className="subsection-heading">
               <div>
                 <h3>辅助审核材料</h3>
-                <p>证据包用于复核自动检查，签核模板用于记录正式结论。</p>
+                <p>证据包用于复核自动检查，历史记录模板用于追溯当时的工程确认内容。</p>
               </div>
               <span>{supportingAssets.length} 项</span>
             </div>
@@ -4946,7 +4944,7 @@ function ReviewDownloadAssetCard({
       : asset.status === 'pre_signoff_review_evidence'
         ? '自动检查证据'
         : asset.status === 'engineering_signoff_template'
-          ? '工程签核模板'
+          ? '历史工程记录模板'
           : asset.status === 'sw2020_review_ready'
             ? '历史确认包'
             : '历史参考'
@@ -4973,7 +4971,7 @@ function ReviewDownloadAssetCard({
           href={`${API_BASE_URL}${asset.download_url}`}
         >
           <Download size={16} />
-          {variant === 'current' ? '下载 v23 当前模型' : '下载材料'}
+          {variant === 'current' ? '下载 v23 受控基线' : '下载材料'}
         </a>
       ) : (
         <button className="secondary-action download-link" type="button" disabled>
@@ -5008,8 +5006,8 @@ function ReviewPage({
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>待确认项队列</h2>
-            <p>只显示当前有内容的优先级；正式问题、截图和结论仍在工程审核平台提交。</p>
+            <h2>工程关注项队列</h2>
+            <p>这里展示持续关注和流程边界；真正需要工程师回答的问题、截图和结论仍在工程审核平台提交。</p>
           </div>
           <div className="review-toolbar">
             <a className="secondary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
@@ -6351,7 +6349,7 @@ function generationRouteTitle(capabilityId: string) {
 
 function generationRouteDetail(capabilityId: string) {
   if (capabilityId === 'locker_16029_regression') {
-    return 'SolidWorks 大按钮开放 10/12/14 门原生整柜参考，并优先使用增强矩阵样机 v2。FreeCAD 保留同门数规则验证件。当前仍是工程参考模型，不是生产图纸/BOM。'
+    return '这是早期 10/12/14 门规则证据，仅作历史研究；16029 当前入口已切换到 V35/V36/V37 原生基础模型族。'
   }
   if (capabilityId === 'locker_16038_variant_template') {
     return '点击 SolidWorks 后会打开并保存已验证的 4/7/8 门整柜或 12/12 模块母版；这是同尺寸模板参考，不是任意门数自动重排。'
@@ -6459,7 +6457,7 @@ function handoffGateState(handoff: Locker16029EngineeringHandoffBundle['variants
       ready: true,
       tone: 'good',
       badge: 'PASS',
-      detail: '可交给结构工程师用 SolidWorks 打开 STP 复核；仍不是正式生产图纸。',
+      detail: '可交给结构工程师用 SolidWorks 打开 STP，作为后续结构深化参考。',
     }
   }
 
@@ -6689,7 +6687,7 @@ function taskRunSnapshotFor(task: GenerationTask): {
           { label: '门数', value: summary?.door_count ?? task.parameters.door_count ?? '-' },
           { label: '质量', value: 'Reference' },
         ],
-        note: execution.solidworks_quality_summary ?? summary?.quality_summary ?? '工程参考模型，不作为生产级可编辑组件树。',
+        note: execution.solidworks_quality_summary ?? summary?.quality_summary ?? '工程参考模型，尚不能作为结构工程师继续深化的可编辑组件树。',
       }
     }
 
@@ -7336,7 +7334,7 @@ function buildDoorPromptDraft(promptText: string): DoorPromptDraft {
   ]
   const warnings = [
     '正式 CAD 生成前必须确认材料、板厚、孔到折弯线距离、锁/铰链 datum 和工程图版本。',
-    '该工作台不会直接释放生产图纸，只把参数草案写入受控生成入口。',
+    '该工作台只整理参数草案，并把它写入结构工程辅助模型入口。',
   ]
 
   return {

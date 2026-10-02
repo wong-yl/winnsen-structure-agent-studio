@@ -1,0 +1,36 @@
+{
+  "schema": "winnsen.16029.native_panel_proof.v1",
+  "handedness": "left",
+  "construction": "independent_native_left_hand_seed",
+  "task_id": "replace-with-task-id",
+  "attempt": 1,
+  "authorization_id": "native-auth-replace-with-32-lower-hex",
+  "authorization_sha256": "replace-with-64-hex-sha256",
+  "tool_source_normalized_sha256": "replace-with-64-hex-sha256",
+  "tool_executable_sha256": "replace-with-64-hex-sha256",
+  "source_path": "D:\\replace-with-isolated-root\\sources\\door-panel-left-1of12.SLDPRT",
+  "source_sha256": "replace-with-left-seed-64-hex-sha256",
+  "reopen_sha256": "replace-with-the-same-left-seed-64-hex-sha256",
+  "solidworks_major": 28,
+  "body_count": 1,
+  "has_sheet_metal": true,
+  "has_flat_pattern": true,
+  "error_feature_count": 0,
+  "warning_feature_count": 0,
+  "foreign_feature_count": 0,
+  "traversal_complete": true,
+  "external_reference_count": 0,
+  "read_only_reopen_verified": true,
+  "height_dimension": "D1@草图1",
+  "width_dimension": "D2@草图1",
+  "height_dimension_state": 2,
+  "width_dimension_state": 2,
+  "generated_at_utc": "replace-with-utc-timestamp",
+  "evidence_files": [
+    {
+      "path": "D:\\replace-with-isolated-root\\evidence\\left-panel-readonly-audit.v1.json",
+      "sha256": "replace-with-64-hex-sha256"
+    }
+  ],
+  "evidence_commitment_sha256": "replace-with-64-hex-sha256"
+}

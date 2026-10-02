@@ -82,6 +82,13 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     return 4;
                 }
 
+                AssemblyDoc assembly = model as AssemblyDoc;
+                if (assembly != null)
+                {
+                    Try(() => assembly.ResolveAllLightWeightComponents(false));
+                    Try(() => model.ForceRebuild3(false));
+                }
+
                 ModelDocExtension ext = model.Extension as ModelDocExtension;
                 PackAndGo packAndGo = ext == null ? null : ext.GetPackAndGo() as PackAndGo;
                 result.PackAndGoCreated = packAndGo != null;

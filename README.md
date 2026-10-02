@@ -2,6 +2,19 @@
 
 Winnsen 硬件结构知识与智能钣金模型生成平台。
 
+## 16029 当前工程入口（2026-10-02）
+
+工程师通过 `http://127.0.0.1:5180/` 的账号门户定义规格、查看任务、下载模型和提交反馈。`apps/web` 的 5173 控制台保留项目、规则与历史资料查询；16029 生成请求统一进入 5180 门户，不通过旧 SQLite 任务入口建模。
+
+- 自动受理范围：柜宽 700–1200 mm、柜高 1700–2200 mm、柜深 250–650 mm；两列分别 1–24 门，总计 2–34 门，每门至少 100 mm。受理范围表示允许提交，具体订单仍须通过原生模型验收。
+- 左右列独立设置门数和非等高门序，编号自下向上。按高度固定已知门高，自动门补齐余量；按比例填写配比，系统按门格节距（门高 + 7 mm）分配。精度为 0.001 mm，预览、确认与提交使用相同尺寸。
+- 修改柜高保留固定门高并重算自动门；修改门数只均分本列。空间不足、门高过小或未闭合时阻止提交。
+- 参数化 worker 串行执行 SOLIDWORKS 2020 建模，只有通过尺寸、装配、钣金展开、干涉及迁移重开等检查的任务才提供交付包。网页预览和登录页 1000 × 1917 × 550 mm 三维展示不替代 CAD 验收。
+
+在配置好的 Windows 建模主机上，通过现有 `tools/install_16029_review_portal_autostart.ps1` 注册登录后自启；不要在缺少源模型或 SOLIDWORKS 授权的机器上启动生成队列。源码仓库不包含原始 CAD、SDK DLL、已生成模型、真实账号、邀请码和本机配置。Native 工具需在建模主机按对应构建脚本编译。
+
+操作和能力边界见 [参数化交付记录](docs/16029_parametric_delivery_20260915.md)，本次检查见 [项目检查报告](docs/project_audit_20261002.md)。
+
 ## Current MVP
 
 已在 `apps/web` 搭建本地 React/Vite 控制台 MVP，当前按三组整理为七个页面：
@@ -89,39 +102,27 @@ Current implemented pages:
 
 The Structure Agent console is now implemented as a boundary page: it tells the user what can be generated today, what is only a reference, and which evidence gates block arbitrary door-size changes.
 
-## Generation Queue Boundary
+## 16029 Native Foundation-Model Boundary
 
-The current model-generation entry creates SQLite-backed worker tasks.
-It is a controlled engineering-reference queue, not a production CAD release system.
+The current 16029 entry resolves customer parameters against a controlled SolidWorks-native model family. Its purpose is to reduce repetitive modeling work before a structural engineer continues the order-specific design.
 
 Current behavior:
 
-- `generatable` and `reference_only` capabilities can create task drafts.
-- `blocked` and `queued` capabilities stay disabled until evidence gates close.
-- New template assets first enter the rule-learning queue. Copying a top-level `.SLDASM` is not treated as parametric generation.
-- The model-generation panel has two CAD entry buttons:
-  - SOLIDWORKS 2020: `C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk`
-  - FreeCAD 1.1.1: `C:\Users\Administrator\Desktop\FreeCAD 1.1.1.lnk`
-- Task drafts store CAD runner, capability, editable parameters, evidence, maturity, output level, and the expected worker command.
-- The current 16029 engineer-facing route is `740W / 1917H / 550D / L642-R246 / v43`, with SolidWorks 2020 as the CAD mainline. `v43-int-v18-lockfix` remains a legacy-gate engineering-review package, not a production release.
-- New v43 candidates run through `tools\generate_review_solidworks_full_assembly.ps1` and must pass the 1000W gold/source gate, structure feedback, and the exact v43 visible-structure contract before they can be labeled `controlled_candidate_pass`; `release_eligible` remains false.
-- The latest controlled candidate is `v43-int-v23-all-sources-isolated`: all 39 module placements and 7 restored-v43 placements use candidate-local source copies, 302 controlled source files pass the pre/post integrity gate with zero changes, the final assembly reports zero external references, and a separate pre-signoff evidence ZIP contains six door-hidden internal views plus the engineering checklist. It remains `release_eligible=false`.
-- The v23 engineering-signoff gate binds its template to the current evidence hashes and accepts only `ACCEPT_FOR_PROTOTYPE` or `RETURN_FOR_STRUCTURE_REVISION`. The current unsigned state is `AWAITING_ENGINEERING_SIGNOFF`; even an accepted signoff remains prototype-only and never changes `production_release_eligible=false`.
-- The invite-protected review portal on port 5180 defaults to the v23 controlled candidate and stores synchronized downloads plus structured, screenshot-backed `V23-Q-*` feedback under the locally configured `STUDIO_REVIEW_STORAGE_ROOT`. Copy `configs/review_portal.local.example.json` to the ignored `data/review_portal.local.json` for workstation-specific settings. Feedback remains explicitly separate from engineering signoff and production release.
-- The current variants change only `variant_token` and `row_units`: LMS = large 6/12, medium 4/12, small 2/12; SML = small 2/12, medium 4/12, large 6/12.
-- The old 800W LMS/SML/DUAL packages under `workers\handoffs` are historical references only. They are not the current engineer-facing route or structural standard.
-- Historical 16029 routes such as same-size reference assemblies, width candidates, and height candidates remain in the repository for traceability, but they are not the current handoff source and must not be offered through current engineer-facing download or review screens.
-- Task details can run a dry-run preflight that checks the selected CAD shortcut, executable, generator script path, parameters, evidence, and output boundary.
-- SolidWorks is the current engineering-mainline runner; its manual package produces native assembly output when the local SolidWorks session and license are available.
-- SolidWorks tasks can run the generated package directly through the API via PowerShell; the `.ps1` file is kept for inspection and fallback, not as the primary user action. A lock file under `workers\generation_logs\solidworks-run.lock` prevents repeated clicks or parallel jobs from starting multiple SolidWorks automation sessions.
-- SolidWorks direct-component diagnostics remain available for transform experiments, but the 16029 current route is governed by the gold-variable model gate, STEP bbox gate, and current handoff scope gate.
-- FreeCAD tasks can execute through the local `FreeCADCmd.exe` worker after dry-run passes as the open-source migration route.
-- FreeCAD engineering-reference outputs are written under `workers\generated_models\<task_id>`.
-- SolidWorks tasks prepare a manual run package under `workers\manual_runs\<task_id>`. For the current 16029 review, the engineer-facing package is the complete audit zip: STEP, FCStd, self-review preview, verify CSV, model gate, STEP bbox gate, and handoff manifest.
-- Dry-run and execution metadata write logs under `workers\generation_logs`.
-- The API does not create production drawings or mark any output as production-released.
+- The active 16029 path uses only the verified V35, V36, and V37 native SolidWorks seeds.
+- An exact verified specification returns the matching structure-engineering foundation model after a fresh file-integrity check.
+- A valid new specification automatically creates a persisted native SolidWorks task. It stays in `native_task_created` until a native builder and the structural-interface checks complete; there is no fallback to the removed generic/FreeCAD generator chain.
+- The 16029 native-model path uses SolidWorks 2020: `C:\Users\Public\Desktop\SOLIDWORKS 2020.lnk`.
+- The current engineer-facing foundation model is V37: `760W / 1917H / 550D / 2 columns / 6 doors / L642-R246`, with a 317 mm door-leaf width and SolidWorks 2020 as the CAD mainline. Open it, rebuild, then continue the project-specific structural work.
+- `tools/locker_16029_native_generator.mjs` pins the V35/V36/V37 verified seed dimensions, asset IDs, ZIP sizes, and SHA-256 values. New combinations are calculated by `tools/lib/locker_16029_parametric_contract.mjs` and validated individually by the native parametric pipeline; there is no FreeCAD scaling fallback.
+- `tools\process_16029_native_generation_request.mjs` is the only command-line request resolver. It returns an existing verified native foundation model or a normalized native-build task; invalid geometry and unsupported electrical-hardware requests fail closed.
+- The next combination recipe is `760W / 4 doors / L66-R66` (V38): it combines the validated V37 width family with the validated V36 four-door topology. Requests can now be recorded as native tasks, but no model is offered until the native model and all structural-interface checks are completed.
+- The account-protected portal on port 5180 accepts a sanitized task reference, cabinet or installed-door-panel width, height, depth, and independent left/right door counts and heights, totaling 2–34 doors. V35/V36/V37 exact specifications return the matching structure-engineering foundation model; valid unmatched specifications create a `native_solidworks_build_task` in `data/native_model_requests` for the parametric worker. Queued tasks are not downloadable until native validation completes. Feedback and application-effect records bind to the selected foundation-model request while earlier rounds remain readable as history. Copy `configs/review_portal.local.example.json` to the ignored `data/review_portal.local.json` for workstation-specific settings.
+- On the review host, run `tools\install_16029_review_portal_autostart.ps1` once to register the current-user, windowless logon watchdog; no PowerShell window needs to remain open. Then use `tools\verify_16029_review_portal_host.ps1` to check autostart, firewall coverage, port 5180, the LAN status endpoint, current review round, and current asset availability. This user-level startup requires the host workstation to be powered on with that Windows user signed in.
+- Historical routes and experiment packages remain only for traceability. They are not offered as current parameter results.
+- Expanding the family means adding a named native recipe, generating it from a verified V35/V36/V37 seed, and completing its SolidWorks structural-interface checks before it appears in the parameter table.
+- FreeCAD migration and geometry experiments remain separate platform capabilities and are not part of the active 16029 native generator.
 
-This keeps the MVP honest: users get real generation entries, persistent execution records, and local engineering-reference files while production CAD release remains gated by engineering validation.
+This keeps the entry simple: exact known parameters return a native foundation model; valid new parameters create a native task instead of invoking an older substitute generator.
 
 ## Rule Learning Evidence
 

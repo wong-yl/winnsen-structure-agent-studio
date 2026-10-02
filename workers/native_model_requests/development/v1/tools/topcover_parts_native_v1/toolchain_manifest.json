@@ -1,0 +1,25 @@
+{
+  "schema": "winnsen.16029.native_toolchain_manifest.v1",
+  "generatedBy": "Build-TopCoverPartsNative.ps1",
+  "tool": {
+    "id": "topcover_parts_native_v1",
+    "sourcePath": "workers/native_model_requests/development/v1/tools/topcover_parts_native_v1/TopCoverPartsNative.cs",
+    "sourceNormalizedSha256": "3E9677498266700A7CFCC80E9847E92B9BC912475F9BA6BC1BB8DAD6A4D7D15F",
+    "executablePath": "workers/native_model_requests/development/v1/tools/topcover_parts_native_v1/TopCoverPartsNative.exe",
+    "executableSha256": "32272DA4FED60A75356BC9EDEB984C37B465A9B788F55737BBA84F351110E968",
+    "verifierPath": "workers/native_model_requests/development/v1/tools/topcover_parts_native_v1/verify_static.mjs",
+    "verifierSha256": "D94FB17BB26F565CCB1117156BA73292C72AD88A587634CF7B79CDF7770A3DA3",
+    "phase": "front_760_native_pilot_phase2",
+    "cadImplemented": true,
+    "runtimeDependencies": [
+      {
+        "path": "workers/native_model_requests/development/v1/tools/topcover_parts_native_v1/SolidWorks.Interop.sldworks.dll",
+        "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+      },
+      {
+        "path": "workers/native_model_requests/development/v1/tools/topcover_parts_native_v1/SolidWorks.Interop.swconst.dll",
+        "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "schema": "winnsen.16029.native_isolated_root.v1",
+  "task_id": "replace-with-task-id",
+  "allow_native_solidworks_write": true
+}
