@@ -35,7 +35,6 @@ import {
   drawingSheetMetalRoadmap,
   drawingSheetMetalSources,
   maturityDistribution,
-  metricCards,
   pipelineRows,
   projects,
   reviewItems,
@@ -67,6 +66,7 @@ type GenerationFeedback = {
   cadRunner?: CadRunner
   outputDir?: string
   recommendedFile?: string
+  downloadUrl?: string
   validationReport?: string
   validationData?: string
 }
@@ -97,10 +97,34 @@ type ReviewDownloadAsset = {
   download_url: string
 }
 
+type V23EngineeringSignoffStatus = {
+  generated_at: string | null
+  candidate_request_id: string
+  status: string
+  automatic_evidence_pass: boolean
+  template_valid: boolean
+  template_available: boolean
+  signed_file_exists: boolean
+  signed_file_valid: boolean
+  engineering_review_accepted: boolean
+  ready_for_prototype: boolean
+  prototype_validation_status: string
+  production_release_eligible: boolean
+  review_decision: string
+  failed_review_item_ids: string[]
+  checks_total: number
+  checks_failed: number
+  validation_errors: string[]
+  template_download_url: string
+  signed_file_path: string
+  next_action: string
+}
+
 type ReviewDownloadIndex = {
   generated_at: string
   scope: string
   assets: ReviewDownloadAsset[]
+  engineering_signoff: V23EngineeringSignoffStatus
 }
 
 type CurrentHandoffScopeGate = {
@@ -730,28 +754,143 @@ type GenerationTask = {
   updated_at: string
 }
 
+type DoorPromptDraft = {
+  cabinetWidth: number
+  cabinetHeight: number
+  cabinetDepth: number
+  columns: number
+  doorCount: number
+  doorWidth: number
+  doorHeight: number
+  doorHeightSequence: string
+  columnHeightSequences: string[]
+  doorType: string
+  lockType: string
+  hingeType: string
+  latchType: string
+  reinforcement: string
+  openings: string
+  material: string
+  thickness: string
+  assumptions: string[]
+  warnings: string[]
+}
+
+type DoorPromptPreviewRow = {
+  label: string
+  units: number
+  height: number
+}
+
+type EngineerReviewFocus = {
+  id: string
+  label: string
+  question: string
+  evidence: string
+  risk: string
+}
+
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
 const API_BASE_URL = (
   configuredApiBaseUrl ||
   (typeof window === 'undefined' ? 'http://127.0.0.1:8000' : `${window.location.protocol}//${window.location.hostname}:8000`)
 ).replace(/\/$/, '')
+const configuredEngineerReviewPortalUrl = import.meta.env.VITE_ENGINEER_REVIEW_PORTAL_URL?.trim()
+const ENGINEER_REVIEW_PORTAL_URL = (
+  configuredEngineerReviewPortalUrl ||
+  (typeof window === 'undefined' ? 'http://127.0.0.1:5180/login' : `${window.location.protocol}//${window.location.hostname}:5180/login`)
+).replace(/\/$/, '')
 const BRAND_MARK_SRC = '/brand/winnsen-mark.png'
 const FREECAD_CMD = 'D:\\软件安装录\\freecad\\FreeCAD_1.1.1\\FreeCAD_1.1.1-Windows-x86_64-py311\\FreeCADCmd.exe'
 const FREECAD_SHORTCUT = 'C:\\Users\\Administrator\\Desktop\\FreeCAD 1.1.1.lnk'
 const SOLIDWORKS_SHORTCUT = 'C:\\Users\\Public\\Desktop\\SOLIDWORKS 2020.lnk'
-const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_regression'
+const DEFAULT_MODEL_CAPABILITY_ID = 'locker_16029_native_assistance'
 const LOCKER_16038_RULE_BINDING_CAPABILITY_ID = 'locker_16038_variant_template'
 const LOCKER_16038_RULE_BINDING_ID = 'STEP-VARIANT-16038-4-7-8-12'
-const LOCKER_16029_OUTER_SIZE = '1000 W × 1917 H × 550 D'
+const LOCKER_16029_OUTER_SIZE = '规则受控：v43 700-780W / 金标准 740-1100W'
 const LOCKER_16029_UNIT_HEIGHT_MM = 152.5
 const LOCKER_16029_DOOR_GAP_MM = 7
 const LOCKER_16029_DOOR_AREA_HEIGHT_MM = 1827
 const LOCKER_16029_GRID_EDGE_GAP_MM = 2
-const LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS = [10, 12, 14]
-const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [10, 12, 14]
+const LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS = [6, 10, 12, 14]
+const LOCKER_16029_SUPPORTED_FREECAD_COUNTS = [6, 10, 12, 14]
 const LOCKER_16029_SUPPORTED_RULE_COUNTS = Array.from(
   new Set([...LOCKER_16029_SUPPORTED_SOLIDWORKS_COUNTS, ...LOCKER_16029_SUPPORTED_FREECAD_COUNTS]),
 )
+const LOCKER_16029_CONTROLLED_COMBOS = [
+  { width: 740, depth: 550, doorCount: 6, label: '740W / L642-R246 / v43 template seed' },
+  { width: 950, depth: 400, doorCount: 14, label: '950W / 400D / 14-door controlled derived review' },
+  { width: 1000, depth: 550, doorCount: 10, label: '1000W / 10-door gold/source reference' },
+  { width: 1000, depth: 550, doorCount: 12, label: '1000W / 12-door gold/source reference' },
+  { width: 1000, depth: 550, doorCount: 14, label: '1000W / 14-door gold/source reference' },
+]
+const LOCKER_16029_V43_WIDTH_DERIVED_RULE = {
+  minWidth: 700,
+  maxWidth: 780,
+  depth: 550,
+  doorCount: 6,
+  label: 'v43 L642-R246 width-derived sheet-metal review',
+}
+const LOCKER_16029_GOLD_DERIVED_RULE = {
+  minWidth: 740,
+  maxWidth: 1100,
+  minDepth: 350,
+  maxDepth: 600,
+  doorCounts: [10, 12, 14],
+  label: '1000W gold-rule equal-row derived sheet-metal review',
+}
+const DEFAULT_DOOR_PROMPT =
+  '740W x 1917H x 550D, two columns, L642-R246, W307, ordinary sheet-metal locker doors, freeze verified v43 door route, restore six mechanical lock tongues, retain lock-side holes and locating datums, repair internal shelf/front-frame fit and centered rear seam, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.'
+const DOOR_PROMPT_EXAMPLES = [
+  '740W x 1917H x 550D, two columns, left column [6,4,2], right column [2,4,6], L642-R246, W307, ordinary locker doors, mechanical lock tongues restored, no electrical board, no cabinet-side electric lock body, no cabinet-side electric lock hook.',
+  '740W x 1917H x 550D, two columns, L642-R246, freeze verified v43 door sheet metal, repair internal shelf/front-frame interface and centered rear seam.',
+  '1000W x 1917H x 550D, source reference only, compare side-panel welding, shelves/front frame, inner vertical reinforcement, top/bottom frame, leveling-foot datums, and lock-side locating datums.',
+  'Single ordinary door panel, door width 307, 0.8mm galvanized sheet, mechanical lock tongue interface, hinge holes, vertical reinforcement rib, no electric lock body.',
+]
+const ENGINEER_REVIEW_FOCUS_OPTIONS: EngineerReviewFocus[] = [
+  {
+    id: 'door-gap',
+    label: '门板/门缝',
+    question: '门板刚度、下垂风险、门缝一致性和开门碰撞是否满足当前柜型？',
+    evidence: '门板预览截图、STEP bbox、门高序列、门宽记录',
+    risk: '外观间隙和门板变形风险',
+  },
+  {
+    id: 'hinge',
+    label: '铰链',
+    question: '铰链类型、安装孔阵列、开门角度、维修替换路径是否清楚？',
+    evidence: '铰链孔位截图、SolidWorks/STEP 局部视图',
+    risk: '开门干涉、装配调整和售后更换风险',
+  },
+  {
+    id: 'lock',
+    label: '锁具/插销',
+    question: '锁舌啮合、门下垂余量、断电应急开启和锁具更换路径是否明确？',
+    evidence: '锁位尺寸、锁中心 datum、插销/锁扣局部截图',
+    risk: '锁不上、打不开和批量调门风险',
+  },
+  {
+    id: 'sheetmetal',
+    label: '钣金/外观',
+    question: '折弯边、孔到折弯线距离、外观面紧固件、喷涂厚度影响是否需要复核？',
+    evidence: 'DXF 展开、折弯/开孔标注、材料厚度记录',
+    risk: '加工变形、外观面缺陷和喷涂后间隙变化',
+  },
+  {
+    id: 'assembly',
+    label: '装配/维护',
+    question: '是否能预装成门模块，锁/铰链/线束是否能不拆整柜就更换？',
+    evidence: '装配顺序说明、模块路径、维护入口截图',
+    risk: '工时过长、盲装、返工和售后维修困难',
+  },
+  {
+    id: 'mechatronics',
+    label: '机电接口',
+    question: '线束出口、强弱电间距、接插件插拔空间和接地/散热路径是否保留？',
+    evidence: '线束路径、电子件安装板、操作区接口记录',
+    risk: '线束夹伤、维护空间不足和电气接口返工',
+  },
+]
 const LOCKER_16029_ENRICHED_REFERENCES = [10, 12, 14].map((doorCount) => ({
   doorCount,
   title: `${doorCount} 门增强矩阵样机 v2`,
@@ -818,30 +957,30 @@ const pages: Array<{
     id: 'overview',
     label: '项目总览',
     navLabel: '总览',
-    description: '16029 800W gold-variable / LMS-SML 双方案 / 当前只看审核包',
+    description: '16029参数化工程辅助建模：客户参数先生成基础模型，结构工程师再继续深化',
     section: 'delivery',
     purpose: '给工程师和项目负责人快速看当前主线、门数规则和交付包。',
-    nextAction: '先看当前审核包，再进入模型或待确认项。',
+    nextAction: '进入平台填写脱敏客户需求、宽度和门数；只下载通过生成门禁的本次任务模型。',
     icon: Gauge,
   },
   {
     id: 'models',
     label: '模型生成与交接',
     navLabel: '模型生成',
-    description: '只保留 16029 800W gold-variable 生成边界',
+    description: '客户参数、布局预览、SolidWorks生成任务和工程深化结果的统一入口',
     section: 'delivery',
     purpose: '结构工程师需要模型时从这里查看当前门数边界与验证门槛。',
-    nextAction: '只看当前 800W gold-variable 线，不再把旧候选当成主入口。',
+    nextAction: 'V35作为740W/6门已验证模板；其他参数族完成原生生成与关闭重开门禁后再开放。',
     icon: Boxes,
   },
   {
     id: 'handoff',
     label: '审核包下载',
     navLabel: '审核包',
-    description: 'LMS / SML / DUAL 候选审核包下载入口',
+    description: '参数生成平台、V35/V36/V37结构工程辅助模型，以及历史结构验证资料',
     section: 'delivery',
-    purpose: '给结构工程师直接下载当前 gold-variable 候选审核包。',
-    nextAction: '发给工程师局域网地址；当前 scope gate 已通过，后续重点是结构签核而不是重新找文件。',
+    purpose: '让工程师提交客户参数、下载本次生成的SolidWorks 2020模型，并反馈生成结果问题。',
+    nextAction: '发给工程师局域网地址；V35只作为已验证模板，不要求工程师拿固定模型手工改宽或改门数。',
     icon: Archive,
   },
   {
@@ -856,12 +995,12 @@ const pages: Array<{
   },
   {
     id: 'review',
-    label: '待确认项',
-    navLabel: '待确认',
-    description: '仅保留当前需要工程确认的少量事项',
+    label: '工程关注项',
+    navLabel: '关注项',
+    description: '集中展示当前仍需持续关注或补齐流程的工程边界',
     section: 'delivery',
-    purpose: '集中看当前主线里仍要补证据或修门槛的问题。',
-    nextAction: '优先关闭 16029 相关的门数、门宽和 bbox 门槛。',
+    purpose: '集中看当前主线里仍需持续关注、补证据或完成企业流程的事项。',
+    nextAction: '当前锁舌、后背居中接缝、层板/前框配合已目视确认；基础模型交给结构工程师继续完成图纸、BOM、展开件和项目细节。',
     icon: FileWarning,
   },
   {
@@ -890,26 +1029,27 @@ const pages: Array<{
     navLabel: 'Agent',
     description: '生成边界、规则闭环、风险判断和下一步推进',
     section: 'control',
-    purpose: '给非工程用户看当前能力边界，避免把参考模型误认为生产图纸。',
+    purpose: '给非工程用户看当前能力边界，明确哪些是结构工程辅助基础模型、哪些规格尚未建立原生配方。',
     nextAction: '按验证门槛推进下一轮生成器质量修复。',
     icon: Bot,
   },
 ]
 
 const PRIMARY_NAV_PAGE_IDS = new Set<PageId>(['overview', 'handoff', 'review'])
+const ADVANCED_NAV_PAGE_IDS = new Set<PageId>(['models', 'drawings', 'intake', 'rules', 'console'])
 
 function isPageId(value: string): value is PageId {
   return pages.some((page) => page.id === value)
 }
 
-function normalizePrimaryPageId(value: string): PageId {
-  return isPageId(value) && PRIMARY_NAV_PAGE_IDS.has(value) ? value : 'overview'
+function normalizePageId(value: string): PageId {
+  return isPageId(value) ? value : 'overview'
 }
 
 function initialPageFromHash(): PageId {
   if (typeof window === 'undefined') return 'overview'
   const value = window.location.hash.replace(/^#/, '')
-  return normalizePrimaryPageId(value)
+  return normalizePageId(value)
 }
 
 const maturityLabels: Record<Maturity, string> = {
@@ -940,16 +1080,18 @@ const evidenceTone: Record<string, string> = {
 function App() {
   const [activePage, setActivePage] = useState<PageId>(() => initialPageFromHash())
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [advancedNavOpen, setAdvancedNavOpen] = useState(() => ADVANCED_NAV_PAGE_IDS.has(initialPageFromHash()))
   const [query, setQuery] = useState('')
 
   const visibleProjects = projects.filter((project) => project.id.includes('16029'))
-  const visibleReviewItems = reviewItems.filter((item) => item.project === '16029 800W gold-variable')
+  const visibleReviewItems = reviewItems.filter((item) => item.project === '16029 740W / L642-R246 / v43')
   const selectedProject = visibleProjects[0] ?? projects[0]
   const currentPage = pages.find((page) => page.id === activePage) ?? pages[0]
 
   const navigateToPage = useCallback((pageId: PageId) => {
-    const nextPageId = normalizePrimaryPageId(pageId)
+    const nextPageId = normalizePageId(pageId)
     setActivePage(nextPageId)
+    if (ADVANCED_NAV_PAGE_IDS.has(nextPageId)) setAdvancedNavOpen(true)
     if (typeof window !== 'undefined') {
       const nextHash = `#${nextPageId}`
       if (window.location.hash !== nextHash) {
@@ -962,6 +1104,7 @@ function App() {
     const handleHashChange = () => {
       const pageId = initialPageFromHash()
       setActivePage(pageId)
+      if (ADVANCED_NAV_PAGE_IDS.has(pageId)) setAdvancedNavOpen(true)
       const nextHash = `#${pageId}`
       if (window.location.hash !== nextHash) {
         window.history.replaceState(null, '', nextHash)
@@ -1042,12 +1185,50 @@ function App() {
               </div>
             )
           })}
+          <details
+            className="advanced-nav"
+            open={advancedNavOpen}
+            onToggle={(event) => setAdvancedNavOpen(event.currentTarget.open)}
+          >
+            <summary>
+              <span>
+                <Settings2 size={18} />
+                <span>
+                  <strong>平台能力</strong>
+                  <small>模型、图纸、规则与 Agent 工具</small>
+                </span>
+              </span>
+              <ChevronRight size={16} />
+            </summary>
+            <div className="advanced-nav-items">
+              {pages
+                .filter((page) => ADVANCED_NAV_PAGE_IDS.has(page.id))
+                .map((page) => {
+                  const Icon = page.icon
+                  return (
+                    <button
+                      key={page.id}
+                      type="button"
+                      data-page-id={page.id}
+                      className={`nav-item ${activePage === page.id ? 'active' : ''}`}
+                      onClick={() => {
+                        navigateToPage(page.id)
+                        setMobileNavOpen(false)
+                      }}
+                    >
+                      <Icon size={18} />
+                      <span>{page.navLabel}</span>
+                    </button>
+                  )
+                })}
+            </div>
+          </details>
         </nav>
 
         <div className="sidebar-panel">
           <span className="panel-label">当前交付口径</span>
-          <strong>只看 16029 800W</strong>
-          <small>LMS / SML / DUAL 三个审核包；CAD 主线按 SolidWorks 2020。</small>
+          <strong>只看 16029 740W v43</strong>
+          <small>V35是740W/6门已验证生成模板；实际工程工作从客户参数生成任务开始。</small>
         </div>
       </aside>
 
@@ -1059,15 +1240,24 @@ function App() {
             <Menu size={20} />
           </button>
           <div>
-            <div className="eyeline">本地优先 / 证据驱动 / 非生产图纸承诺</div>
+            <div className="eyeline">内部项目工作台</div>
             <h1>{currentPage.label}</h1>
             <p>{currentPage.description}</p>
           </div>
           <div className="topbar-actions">
+            <a
+              className="topbar-review-link"
+              href={ENGINEER_REVIEW_PORTAL_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <MessageSquareMore size={17} />
+              工程审核平台
+            </a>
             <div className="project-switcher">
               <span>当前主线</span>
-              <strong>16029 800W gold-variable</strong>
-              <small>LMS / SML 双方案，SolidWorks 2020 复核</small>
+              <strong>16029 740W / L642-R246 / v43</strong>
+              <small>参数生成主流程已启用；V35作为一门一锁孔质量基准</small>
             </div>
           </div>
         </header>
@@ -1075,7 +1265,6 @@ function App() {
         {activePage === 'overview' && (
           <OverviewPage
             selectedProject={selectedProject}
-            projectCards={visibleProjects}
             reviewCounts={reviewCounts}
             onNavigate={navigateToPage}
           />
@@ -1098,25 +1287,52 @@ function App() {
 
 function OverviewPage({
   selectedProject,
-  projectCards,
   reviewCounts,
   onNavigate,
 }: {
   selectedProject: Project
-  projectCards: Project[]
   reviewCounts: Record<string, number>
   onNavigate: (page: PageId) => void
 }) {
+  const activeReviewCount = Object.values(reviewCounts).reduce((total, count) => total + count, 0)
+
   return (
-    <div className="page-grid">
-      <section className="metric-strip" aria-label="项目摘要">
-        {metricCards.map((metric) => (
-          <article key={metric.label} className={`metric-card tone-${metric.tone}`}>
-            <span>{metric.label}</span>
-            <strong>{metric.value}</strong>
-            <small>{metric.detail}</small>
-          </article>
-        ))}
+    <div className="page-grid overview-page">
+      <section className="overview-hero" aria-labelledby="overview-current-title">
+        <div className="overview-hero-copy">
+          <span className="overview-kicker">当前工程阶段</span>
+          <div className="overview-title-row">
+            <h2 id="overview-current-title">16029 740W / L642-R246 / v43</h2>
+            <StatusPill tone="warn">参数生成试运行</StatusPill>
+          </div>
+          <p>{selectedProject.risk}</p>
+        </div>
+
+        <div className="overview-state-grid" aria-label="当前状态">
+          <div>
+            <span>已验证原生基础模型</span>
+            <strong>V35 / V36 / V37</strong>
+          </div>
+          <div>
+            <span>自动结构检查</span>
+            <strong className="state-good">已通过</strong>
+          </div>
+          <div>
+            <span>结构工程师后续</span>
+            <strong className="state-blocked">继续完成项目深化</strong>
+          </div>
+        </div>
+
+        <div className="overview-hero-actions">
+          <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+            <MessageSquareMore size={17} />
+            进入参数生成平台
+          </a>
+          <button className="secondary-action" type="button" onClick={() => onNavigate('handoff')}>
+            <Archive size={17} />
+            查看审核材料
+          </button>
+        </div>
       </section>
 
       <PageMapSection onNavigate={onNavigate} />
@@ -1124,68 +1340,53 @@ function OverviewPage({
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>当前工程主线</h2>
-              <p>只显示 16029 800W gold-variable 当前线；当前是候选审核阶段，不是正式通过交付。</p>
+            <h2>当前待办</h2>
+            <p>按顺序完成这三项，本轮工程应用验证即可形成闭环。</p>
           </div>
           <button className="ghost-button" type="button" onClick={() => onNavigate('review')}>
-            查看待确认项
+            查看 {activeReviewCount} 个工程关注项
             <ChevronRight size={16} />
           </button>
         </div>
 
-        <div className={projectCards.length === 1 ? 'project-grid project-grid-single' : 'project-grid'}>
-          {projectCards.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+        <div className="overview-task-list">
+          <article>
+            <span>01</span>
+            <div>
+              <strong>填写客户参数</strong>
+              <p>登录平台后填写脱敏任务代号、宽度口径、目标宽度、柜深和门数。</p>
+            </div>
+          </article>
+          <article>
+            <span>02</span>
+            <div>
+              <strong>生成并下载本次任务模型</strong>
+              <p>系统先核对能力边界；只有通过原生SolidWorks和结构门禁的结果才能标记为工程深化起点。</p>
+            </div>
+          </article>
+          <article>
+            <span>03</span>
+            <div>
+              <strong>工程师继续深化</strong>
+              <p>在生成模型上完成材料、工艺、图纸和BOM；问题与效果记录绑定到本次生成任务。</p>
+            </div>
+          </article>
         </div>
-      </section>
 
-      <section className="split-grid">
-        <article className="section-block compact-block">
-          <div className="section-heading">
-            <div>
-              <h2>当前项目焦点</h2>
-              <p>工程师只看当前 3 个候选 ZIP；1000W/10-12-14 gold/source 参考和历史证据留在后台追溯。</p>
-            </div>
-            <StatusPill tone={selectedProject.statusTone}>当前主线</StatusPill>
+        <div className="overview-context-strip">
+          <div>
+            <span>工程关注项</span>
+            <strong>{activeReviewCount}</strong>
           </div>
-          <div className="focus-layout">
-            <ProgressDial value={selectedProject.progress} />
-            <div className="focus-copy">
-              <strong>{selectedProject.name}</strong>
-              <span>{selectedProject.modelStatus}</span>
-              <p>{selectedProject.risk}</p>
-            </div>
+          <div>
+            <span>当前 CAD</span>
+            <strong>SolidWorks 2020</strong>
           </div>
-          <ul className="note-list">
-            {selectedProject.notes.map((note) => (
-              <li key={note}>{note}</li>
-            ))}
-          </ul>
-        </article>
-
-        <article className="section-block compact-block">
-          <div className="section-heading">
-            <div>
-              <h2>阻塞与确认分布</h2>
-              <p>优先处理 P0/P1，P2 保持为工程参考限制。</p>
-            </div>
+          <div>
+            <span>历史版本</span>
+            <strong>v18 / 800W 仅对照</strong>
           </div>
-          <div className="priority-grid">
-            {(['P0', 'P1', 'P2', 'P3'] as const).map((priority) => (
-              <div key={priority} className={`priority-cell priority-${priority.toLowerCase()}`}>
-                <span>{priority}</span>
-                <strong>{reviewCounts[priority] ?? 0}</strong>
-              </div>
-            ))}
-          </div>
-          <div className="source-paths">
-            <span>当前审核包</span>
-            <code>16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip</code>
-            <code>16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip</code>
-            <code>16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip</code>
-          </div>
-        </article>
+        </div>
       </section>
     </div>
   )
@@ -1196,30 +1397,47 @@ function PageMapSection({ onNavigate }: { onNavigate: (page: PageId) => void }) 
     <section className="section-block">
       <div className="section-heading">
         <div>
-          <h2>工程师入口</h2>
-          <p>只放当前主线相关入口，后台页不再在这一层展开。</p>
+          <h2>审核工作顺序</h2>
+          <p>从客户参数开始，以本次生成模型作为工程深化起点；V35只负责模板和质量回归。</p>
         </div>
       </div>
-      <div className="page-map-grid">
-        {pages
-          .filter((page) => PRIMARY_NAV_PAGE_IDS.has(page.id))
-          .map((page) => {
-            const Icon = page.icon
-            const section = pageSections.find((item) => item.id === page.section)
-            return (
-              <button key={page.id} type="button" className="page-map-card" onClick={() => onNavigate(page.id)}>
-                <div className="page-map-card-header">
-                  <span className="page-map-icon" aria-hidden="true">
-                    <Icon size={18} />
-                  </span>
-                  <span>{section?.label}</span>
-                </div>
-                <strong>{page.label}</strong>
-                <p>{page.purpose}</p>
-                <small>{page.nextAction}</small>
-              </button>
-            )
-          })}
+      <div className="workflow-list">
+        <a className="workflow-row" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+          <span className="workflow-step">1</span>
+          <span className="workflow-icon" aria-hidden="true"><MessageSquareMore size={19} /></span>
+          <span className="workflow-copy">
+            <strong>填写客户需求参数</strong>
+            <small>登录平台，选择柜体外宽或门板成品外宽，填写目标宽度、柜深和门数。</small>
+          </span>
+          <ChevronRight size={18} />
+        </a>
+        <button className="workflow-row" type="button" onClick={() => onNavigate('handoff')}>
+          <span className="workflow-step">2</span>
+          <span className="workflow-icon" aria-hidden="true"><Archive size={19} /></span>
+          <span className="workflow-copy">
+            <strong>核对布局和生成资格</strong>
+            <small>浏览器预览只表示布局；通过原生SolidWorks生成与结构门禁后才提供工程模型。</small>
+          </span>
+          <ChevronRight size={18} />
+        </button>
+        <a className="workflow-row" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+          <span className="workflow-step">3</span>
+          <span className="workflow-icon" aria-hidden="true"><FileWarning size={19} /></span>
+          <span className="workflow-copy">
+            <strong>下载生成模型并深化</strong>
+            <small>工程师从本次任务模型继续完成订单细节，不需要把固定V35手工改成另一种柜型。</small>
+          </span>
+          <ChevronRight size={18} />
+        </a>
+        <button className="workflow-row" type="button" onClick={() => onNavigate('review')}>
+          <span className="workflow-step">4</span>
+          <span className="workflow-icon" aria-hidden="true"><FileWarning size={19} /></span>
+          <span className="workflow-copy">
+            <strong>按生成任务反馈</strong>
+            <small>结构问题和应用效果都关联到本次参数任务，便于修正生成规则并保留追溯。</small>
+          </span>
+          <ChevronRight size={18} />
+        </button>
       </div>
     </section>
   )
@@ -1898,7 +2116,9 @@ function ModelsPage() {
   const [engineeringHandoffBundle, setEngineeringHandoffBundle] =
     useState<Locker16029EngineeringHandoffBundle | null>(null)
   const [engineeringHandoffMessage, setEngineeringHandoffMessage] = useState('正在读取 16029 工程交接包...')
+  const [doorPromptText, setDoorPromptText] = useState(DEFAULT_DOOR_PROMPT)
   const activeCapability = capabilities.find((capability) => capability.id === activeCapabilityId) ?? capabilities[0]
+  const doorPromptDraft = useMemo(() => buildDoorPromptDraft(doorPromptText), [doorPromptText])
   const parameterValues = useMemo(
     () => ({
       ...defaultParameterValues(activeCapability.id, activeCapability.parameters),
@@ -2112,6 +2332,21 @@ function ModelsPage() {
         [parameter]: value,
       },
     }))
+  }
+
+  function applyDoorPromptToGenerator() {
+    setActiveCapabilityId('locker_16029_door_panel')
+    setParameterValuesByCapability((current) => ({
+      ...current,
+      locker_16029_door_panel: {
+        ...(current.locker_16029_door_panel ?? {}),
+        category: 'ordinary_door_panel',
+        door_width: String(Math.round(doorPromptDraft.doorWidth)),
+        door_height: String(Math.round(doorPromptDraft.doorHeight)),
+        geometry_source: 'auto',
+      },
+    }))
+    setQueueMessage('已把提示词草案写入 16029 单门板入口；生成前仍需确认孔位、折弯和锁/铰链证据。')
   }
 
   function commandPreview(cadRunner: CadRunner) {
@@ -2348,6 +2583,61 @@ function ModelsPage() {
     }
   }
 
+  if (activeCapability.id.startsWith('locker_16029_')) {
+    return (
+      <div className="page-grid">
+        <section className="section-block handoff-hero">
+          <div className="section-heading">
+            <div>
+              <h2>16029 原生结构工程辅助模型</h2>
+              <p>填写客户要求的柜体宽度、深度和门数；系统只使用 V35、V36、V37 已确认的 SolidWorks 原生模型族。</p>
+            </div>
+            <StatusPill tone="good">SolidWorks 2020 原生模型</StatusPill>
+          </div>
+          <div className="overview-state-grid" aria-label="16029原生模型配方">
+            <div><span>V35</span><strong>740W / 6门 / L642-R246</strong></div>
+            <div><span>V36</span><strong>740W / 4门 / L66-R66</strong></div>
+            <div><span>V37</span><strong>760W / 6门 / L642-R246</strong></div>
+          </div>
+          <p>精确规格会取得对应原生基础模型；没有对应配方时会明确提示，等待该组合完成原生构建和结构接口验证，不会调用旧生成器。</p>
+          <div className="overview-hero-actions">
+            <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+              <MessageSquareMore size={17} />
+              输入客户参数并获取基础模型
+            </a>
+          </div>
+        </section>
+
+        <section className="section-block">
+          <div className="section-heading">
+            <div>
+              <h2>其它产品能力</h2>
+              <p>16029 已从旧任务队列中独立出来；其它柜型仍按各自证据和工具维护。</p>
+            </div>
+          </div>
+          <div className="capability-grid">
+            {capabilities.map((capability) => (
+              <button
+                key={capability.id}
+                type="button"
+                data-capability-id={capability.id}
+                className={`capability-card status-${capability.status} ${activeCapability.id === capability.id ? 'selected' : ''}`}
+                onClick={() => setActiveCapabilityId(capability.id)}
+              >
+                <span>{capability.productType}</span>
+                <strong>{capability.title}</strong>
+                <small>{capability.variants}</small>
+                <StatusPill tone={capability.status === 'blocked' ? 'risk' : capability.status === 'generatable' ? 'good' : 'warn'}>
+                  {capability.status}
+                </StatusPill>
+              </button>
+            ))}
+          </div>
+        </section>
+      </div>
+    )
+  }
+
   return (
     <div className="page-grid">
       <section className="section-block">
@@ -2356,13 +2646,19 @@ function ModelsPage() {
               <h2>可生成模型与规则学习队列</h2>
               <p>先区分已验证工程参考模型和规则学习中的模板；SolidWorks 是当前工程主线，FreeCAD 是未来开源替代路线。</p>
             </div>
-          <StatusPill tone="warn">production_candidate = 0</StatusPill>
+          <StatusPill tone="warn">模型用途：结构工程辅助</StatusPill>
         </div>
         <CurrentSolidWorksGenerationPanel
           activeCapabilityId={activeCapability.id}
           currentDoorCount={normalizedParameterValues.door_count ?? '-'}
           solidWorksIssue={runnerIssueById.solidworks}
           freeCadIssue={runnerIssueById.freecad}
+        />
+        <DoorPromptWorkbench
+          promptText={doorPromptText}
+          draft={doorPromptDraft}
+          onPromptChange={setDoorPromptText}
+          onApplyToGenerator={applyDoorPromptToGenerator}
         />
         <div className="capability-grid">
           {capabilities.map((capability) => (
@@ -2549,6 +2845,12 @@ function ModelsPage() {
                   </div>
                 )}
                 <div className="feedback-actions">
+                  {generationFeedback.downloadUrl && (
+                    <a className="secondary-action primary-open-action" href={generationFeedback.downloadUrl}>
+                      <Download size={16} />
+                      下载结果包
+                    </a>
+                  )}
                   {generationFeedback.cadRunner === 'solidworks' &&
                     generationFeedback.recommendedFile &&
                     isPowerShellScript(generationFeedback.recommendedFile) && (
@@ -2862,6 +3164,7 @@ function TaskDrawer({
 }) {
   const dryRunChecks = task.dry_run_result?.checks ?? []
   const execution = task.execution_result
+  const downloadUrl = execution?.outputs.length ? taskDownloadUrl(task.id) : null
   const recommendedFile = recommendedOutputFile(task)
   const lowerOutput = (path: string) => path.toLowerCase()
   const freecadMacroFile = execution?.outputs.find((path) => lowerOutput(path).endsWith('show_all_objects_and_fit_view.fcmacro'))
@@ -3161,7 +3464,7 @@ function TaskDrawer({
                         <AlertTriangle size={16} />
                         <span>
                           {solidworksQualitySummary ??
-                            '诊断显示该装配能打开查看，但 SolidWorks API 只能看到 Reference 特征，不能当作生产级可编辑组件树。'}
+                            '诊断显示该装配能打开查看，但 SolidWorks API 只能看到 Reference 特征，尚不能作为结构工程师继续深化的可编辑组件树。'}
                         </span>
                       </div>
                     )}
@@ -3283,6 +3586,12 @@ function TaskDrawer({
                   </div>
                 )}
                 <div className="local-action-row">
+                  {downloadUrl && (
+                    <a className="secondary-action primary-open-action" href={downloadUrl}>
+                      <Download size={16} />
+                      下载结果包
+                    </a>
+                  )}
                   <button
                     className="secondary-action"
                     type="button"
@@ -3632,7 +3941,7 @@ function DrawingSheetMetalPage() {
             </div>
             <span>展开与出图</span>
             <strong>输出参考 DXF / PDF</strong>
-            <p>展开、尺寸标注和折弯/孔位校验先作为工程参考件，正式释放仍需要结构工程标准确认。</p>
+            <p>展开、尺寸标注和折弯/孔位校验先作为工程参考件，再由结构工程师按项目要求继续完善。</p>
           </article>
         </div>
       </section>
@@ -3834,7 +4143,7 @@ function DrawingSheetMetalPage() {
             <DetailLine label="主线关系" value="继续推进 16029 同外形 10/12/14 门规则；图纸支线只补单件证据和校验表。" />
             <DetailLine label="首个样板" value="16029 门板，其次是层板、门框横隔板和简单隔板。" />
             <DetailLine label="首个输出" value={sourcePaths.drawingSheetMetalFirstRun} />
-            <DetailLine label="暂不承诺" value="不把图片直接转成生产级整柜模型，不自动释放正式展开图和正式工程图。" />
+            <DetailLine label="当前边界" value="图片先用于识别结构意图；原生基础模型、展开图和工程图仍按可验证的工程流程逐步生成。" />
             <DetailLine label="工作目录" value={sourcePaths.drawingSheetMetalWorkspace} />
           </div>
           <EvidenceRow evidence={['DXF', '工程图', 'SolidWorks', 'FreeCAD', '证据闭环记录']} />
@@ -4088,8 +4397,8 @@ function DrawingSheetMetalPage() {
         <section className="section-block compact-block">
           <div className="section-heading">
             <div>
-              <h2>生产级出图边界</h2>
-              <p>这些条件没补齐前，系统不把展开或图纸标成正式释放。</p>
+              <h2>工程出图所需信息</h2>
+              <p>这些信息补齐后，系统才能给结构工程师提供更完整的展开和图纸基础。</p>
             </div>
             <FileWarning size={20} />
           </div>
@@ -4213,14 +4522,256 @@ function formatBytes(value: number) {
   return `${gb.toFixed(gb >= 100 ? 0 : 1)} GB`
 }
 
+function DoorPromptWorkbench({
+  promptText,
+  draft,
+  onPromptChange,
+  onApplyToGenerator,
+}: {
+  promptText: string
+  draft: DoorPromptDraft
+  onPromptChange: (value: string) => void
+  onApplyToGenerator: () => void
+}) {
+  return (
+    <div className="door-prompt-workbench">
+      <div className="door-prompt-heading">
+        <div>
+          <span>钣金柜门提示词工作台</span>
+          <strong>先把自然语言收敛成可复核参数，再进入 CAD 生成队列。</strong>
+        </div>
+        <StatusPill tone="warn">2D 实时预览</StatusPill>
+      </div>
+      <div className="door-prompt-grid">
+        <div className="door-prompt-input">
+          <label>
+            <span>自然语言 / 参数化提示词</span>
+            <textarea
+              value={promptText}
+              rows={6}
+              onChange={(event) => onPromptChange(event.target.value)}
+              placeholder="例：740W x 1917H x 550D，两列，L642-R246，W307，冻结 v43 柜门，只修内部层板/前框、后背居中接缝和锁侧基准；不生成电器板、电控锁、电控锁钩。"
+            />
+          </label>
+          <div className="prompt-chip-row">
+            {DOOR_PROMPT_EXAMPLES.map((example) => (
+              <button key={example} className="mini-action quiet-mini-action" type="button" onClick={() => onPromptChange(example)}>
+                套用样例
+              </button>
+            ))}
+          </div>
+          <div className="door-generated-prompt">
+            <span>生成器草案提示词</span>
+            <code>{buildDoorGeneratorPrompt(draft)}</code>
+          </div>
+          <button className="primary-action" type="button" onClick={onApplyToGenerator}>
+            <Settings2 size={17} />
+            应用到单门板生成入口
+          </button>
+        </div>
+
+        <div className="door-parameter-panel">
+          <div className="door-parameter-grid">
+            <DetailLine label="外形" value={`${formatMm(draft.cabinetWidth)}W x ${formatMm(draft.cabinetHeight)}H x ${formatMm(draft.cabinetDepth)}D`} />
+            <DetailLine label="列/门数" value={`${draft.columns} 列 / ${draft.doorCount} 门`} />
+            <DetailLine label="门板" value={`${formatMm(draft.doorWidth)}W x ${formatMm(draft.doorHeight)}H`} />
+            <DetailLine label="门高序列" value={draft.doorHeightSequence} />
+            <DetailLine label="门型" value={draft.doorType} />
+            <DetailLine label="锁/铰链/插销" value={`${draft.lockType} / ${draft.hingeType} / ${draft.latchType}`} />
+            <DetailLine label="加强/开孔" value={`${draft.reinforcement} / ${draft.openings}`} />
+            <DetailLine label="材料" value={`${draft.material} / ${draft.thickness}`} />
+          </div>
+          <div className="door-assumption-list">
+            {draft.assumptions.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
+          {draft.warnings.length > 0 && (
+            <div className="door-warning-list">
+              {draft.warnings.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="door-preview-panel" aria-label="钣金柜门实时预览窗口">
+          <div className="door-preview-toolbar">
+            <div>
+              <span>实时浏览窗口</span>
+              <strong>门阵列 / 单门板 2D 占位预览</strong>
+            </div>
+            <Layers3 size={20} />
+          </div>
+          <DoorPromptPreview draft={draft} />
+          <p>
+            当前预览用于沟通门序、门板比例、锁/铰链/加强筋/开孔意图；正式 3D 预览需接入 STEP/STL/FCStd/SolidWorks 缩略图服务。
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DoorPromptPreview({ draft }: { draft: DoorPromptDraft }) {
+  const rowsByColumn = doorPreviewColumnRows(draft)
+  const gap = 5
+  const padding = 16
+  const viewWidth = 360
+  const viewHeight = 420
+  const usableWidth = viewWidth - padding * 2 - gap * (draft.columns - 1)
+  const columnWidth = usableWidth / draft.columns
+
+  return (
+    <svg className="door-preview-svg" viewBox={`0 0 ${viewWidth} ${viewHeight}`} role="img" aria-label="柜门布局预览">
+      <rect x="2" y="2" width={viewWidth - 4} height={viewHeight - 4} rx="8" fill="#f8fafc" stroke="#d7e0ec" />
+      {rowsByColumn.map((rows, columnIndex) => {
+        const columnUsableHeight = viewHeight - padding * 2 - gap * Math.max(rows.length - 1, 0)
+        const totalUnits = rows.reduce((total, row) => total + row.units, 0) || 1
+        const positionedRows = rows.reduce<Array<DoorPromptPreviewRow & { y: number; previewHeight: number }>>((items, row, index) => {
+          const previewHeight = Math.max(34, (columnUsableHeight * row.units) / totalUnits)
+          const previous = items[index - 1]
+          const y = previous ? previous.y + previous.previewHeight + gap : padding
+          return [...items, { ...row, y, previewHeight }]
+        }, [])
+
+        return positionedRows.map((row) => {
+          const rowHeight = row.previewHeight
+          const y = row.y
+          const x = padding + columnIndex * (columnWidth + gap)
+          const isRightColumn = columnIndex % 2 === 1
+          const lockX = isRightColumn ? x + 14 : x + columnWidth - 14
+          const hingeX = isRightColumn ? x + columnWidth - 13 : x + 8
+          const centerY = y + rowHeight / 2
+          return (
+            <g key={`${columnIndex}-${row.label}-${y}`}>
+              <rect x={x} y={y} width={columnWidth} height={rowHeight} rx="4" fill="#ffffff" stroke="#1f3585" strokeWidth="1.5" />
+              <rect x={x + 5} y={y + 5} width={columnWidth - 10} height={rowHeight - 10} rx="3" fill="#f4f7fb" stroke="#dbe4ef" />
+              <rect x={hingeX} y={y + 10} width="5" height="20" rx="2" fill="#67758a" />
+              <rect x={hingeX} y={Math.max(y + rowHeight - 30, y + 14)} width="5" height="20" rx="2" fill="#67758a" />
+              <circle cx={lockX} cy={centerY} r="4.5" fill="#f04a12" />
+              {draft.reinforcement !== '未指定' && (
+                <line x1={x + columnWidth / 2} y1={y + 10} x2={x + columnWidth / 2} y2={y + rowHeight - 10} stroke="#8aa0bd" strokeDasharray="4 4" />
+              )}
+              {draft.openings !== '未指定' && (
+                <>
+                  <circle cx={lockX - 16} cy={centerY - 12} r="3" fill="#172b64" opacity="0.65" />
+                  <circle cx={lockX - 16} cy={centerY + 12} r="3" fill="#172b64" opacity="0.65" />
+                </>
+              )}
+              <text x={x + columnWidth / 2} y={centerY + 4} textAnchor="middle" fill="#172b64" fontSize="12" fontWeight="700">
+                {row.label}
+              </text>
+            </g>
+          )
+        })
+      })}
+      <text x={padding} y={viewHeight - 8} fill="#687587" fontSize="11">
+        {formatMm(draft.cabinetWidth)}W x {formatMm(draft.cabinetHeight)}H x {formatMm(draft.cabinetDepth)}D / {draft.columns} columns
+      </text>
+    </svg>
+  )
+}
+
+function EngineerReviewWorkspace() {
+  const [reviewInput, setReviewInput] = useState(
+    '请结构工程师重点确认：门序、门宽/门高、锁/铰链位置、加强筋、开孔、名义外形与 raw bbox 口径。',
+  )
+  const [selectedFocusIds, setSelectedFocusIds] = useState<string[]>(['door-gap', 'hinge', 'lock', 'sheetmetal'])
+  const [screenshotPath, setScreenshotPath] = useState('workers\\handoffs\\...\\solidworks_open_screenshot.png')
+  const [modelPath, setModelPath] = useState('workers\\handoffs\\...\\candidate.step')
+  const [evidencePath, setEvidencePath] = useState('data\\...\\model_gate.md / bbox_gate.md / verify.csv')
+  const selectedFocus = ENGINEER_REVIEW_FOCUS_OPTIONS.filter((item) => selectedFocusIds.includes(item.id))
+  const reviewPrompt = useMemo(
+    () =>
+      [
+        '请按结构工程审核口径复核以下柜门/钣金基础模型，并记录需要继续深化的内容：',
+        reviewInput,
+        `证据截图：${screenshotPath || '待补'}`,
+        `模型路径：${modelPath || '待补'}`,
+        `验证记录：${evidencePath || '待补'}`,
+        `审核点：${selectedFocus.map((item) => item.label).join('、') || '待选择'}`,
+      ].join('\n'),
+    [evidencePath, modelPath, reviewInput, screenshotPath, selectedFocus],
+  )
+
+  function toggleFocus(id: string) {
+    setSelectedFocusIds((current) =>
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+    )
+  }
+
+  return (
+    <section className="section-block engineer-review-workspace">
+      <div className="section-heading">
+        <div>
+          <h2>结构工程师交互区</h2>
+          <p>把审核输入、审核点、问题清单和证据路径放在同一处，便于结构工程师继续修改与确认。</p>
+        </div>
+        <StatusPill tone="warn">本页草稿</StatusPill>
+      </div>
+      <div className="engineer-review-grid">
+        <div className="engineer-review-input">
+          <label>
+            <span>审核输入</span>
+            <textarea value={reviewInput} rows={5} onChange={(event) => setReviewInput(event.target.value)} />
+          </label>
+          <div className="engineer-path-grid">
+            <label>
+              <span>证据截图</span>
+              <input value={screenshotPath} onChange={(event) => setScreenshotPath(event.target.value)} />
+            </label>
+            <label>
+              <span>模型路径</span>
+              <input value={modelPath} onChange={(event) => setModelPath(event.target.value)} />
+            </label>
+            <label>
+              <span>验证记录</span>
+              <input value={evidencePath} onChange={(event) => setEvidencePath(event.target.value)} />
+            </label>
+          </div>
+        </div>
+
+        <div className="engineer-focus-panel">
+          <span>审核点选择</span>
+          <div className="engineer-focus-list">
+            {ENGINEER_REVIEW_FOCUS_OPTIONS.map((item) => (
+              <label key={item.id} className="engineer-focus-option">
+                <input type="checkbox" checked={selectedFocusIds.includes(item.id)} onChange={() => toggleFocus(item.id)} />
+                <span>{item.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="engineer-issue-panel">
+          <div className="engineer-issue-heading">
+            <span>自动生成问题清单</span>
+            <strong>{selectedFocus.length} 项</strong>
+          </div>
+          {selectedFocus.map((item) => (
+            <article key={item.id} className="engineer-issue-card">
+              <strong>{item.question}</strong>
+              <p>{item.risk}</p>
+              <small>{item.evidence}</small>
+            </article>
+          ))}
+        </div>
+
+        <div className="engineer-prompt-panel">
+          <span>可复制给结构工程师 / Agent 的审核提示词</span>
+          <code>{reviewPrompt}</code>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ReviewDownloadPage() {
   const [downloadIndex, setDownloadIndex] = useState<ReviewDownloadIndex | null>(null)
   const [scopeGate, setScopeGate] = useState<CurrentHandoffScopeGate | null>(null)
   const [downloadStatus, setDownloadStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [downloadMessage, setDownloadMessage] = useState('')
-  const publicUrl =
-    typeof window === 'undefined' ? 'http://127.0.0.1:5173/#handoff' : `${window.location.origin}${window.location.pathname}#handoff`
-
   useEffect(() => {
     let cancelled = false
     async function loadDownloads() {
@@ -4235,7 +4786,7 @@ function ReviewDownloadPage() {
           setDownloadIndex(data)
           setScopeGate(gateData)
           setDownloadStatus('ready')
-          setDownloadMessage(`下载接口已连接：${API_BASE_URL}`)
+          setDownloadMessage('模型下载与反馈统一在工程审核平台完成。')
         }
       } catch (error) {
         if (!cancelled) {
@@ -4250,52 +4801,70 @@ function ReviewDownloadPage() {
     }
   }, [])
 
-  const assets = downloadIndex?.assets ?? []
+  const assetPriority: Record<string, number> = {
+    controlled_candidate_pass: 0,
+    pre_signoff_review_evidence: 1,
+    engineering_signoff_template: 2,
+    sw2020_review_ready: 3,
+    historical_reference: 4,
+  }
+  const assets = [...(downloadIndex?.assets ?? [])].sort(
+    (left, right) => (assetPriority[left.status] ?? 99) - (assetPriority[right.status] ?? 99),
+  )
   const availableAssets = assets.filter((asset) => asset.available)
   const gateStatus = scopeGate?.status ?? 'UNKNOWN'
   const gateTone: StatusTone = gateStatus === 'PASS' ? 'good' : gateStatus === 'FAIL' ? 'risk' : 'warn'
   const failedGateChecks = (scopeGate?.checks ?? []).filter((check) => !check.ok).slice(0, 4)
+  const currentAsset = assets.find((asset) => asset.status === 'controlled_candidate_pass')
+  const historicalAssets = assets.filter(
+    (asset) => asset.status === 'sw2020_review_ready' || asset.status === 'historical_reference',
+  )
+  const supportingAssets = assets.filter(
+    (asset) => asset !== currentAsset && !historicalAssets.includes(asset),
+  )
 
   return (
     <div className="page-grid handoff-page">
       <section className="section-block handoff-hero">
         <div className="section-heading">
           <div>
-            <h2>当前候选审核包下载</h2>
-            <p>这里只列出 16029 800W gold-variable 的 LMS / SML / DUAL 三个候选包；CAD 复核主线为 SolidWorks 2020。</p>
+            <h2>工程审核入口</h2>
+            <p>统一入口已经改为“填写客户参数→生成本次模型→工程师深化”；V35是740W/6门已验证模板，v34、v23、v18和旧800W包仅作历史对照。</p>
           </div>
           <div className="status-stack">
             <StatusPill tone={downloadStatus === 'ready' ? 'good' : downloadStatus === 'error' ? 'risk' : 'warn'}>
-              {downloadStatus === 'ready' ? `${availableAssets.length} files` : downloadStatus}
+              {downloadStatus === 'ready' ? `${availableAssets.length} 个可用文件` : downloadStatus === 'error' ? '读取失败' : '读取中'}
             </StatusPill>
-            <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+            <StatusPill tone={gateTone}>
+              {gateStatus === 'PASS' ? '自动检查通过' : gateStatus === 'FAIL' ? '自动检查未通过' : '自动检查读取中'}
+            </StatusPill>
           </div>
         </div>
         <div className="handoff-share-box">
           <div>
-            <span>给结构工程师的访问地址</span>
-            <strong>{publicUrl}</strong>
+            <span>发给结构工程师的统一入口</span>
+            <strong>{ENGINEER_REVIEW_PORTAL_URL}</strong>
             <p>{downloadMessage}</p>
           </div>
-          <a className="secondary-action" href={publicUrl}>
-            <Archive size={16} />
-            打开下载页
+          <a className="primary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+            <MessageSquareMore size={16} />
+            打开参数生成与反馈平台
           </a>
         </div>
       </section>
 
       <section className={`handoff-gate-panel gate-${gateStatus.toLowerCase()}`}>
         <div>
-          <span>当前放行状态</span>
-          <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 证据已通过' : '候选包未正式放行'}</strong>
+          <span>自动结构检查</span>
+          <strong>{gateStatus === 'PASS' ? 'SolidWorks 2020 自动证据通过' : '自动证据尚未通过'}</strong>
           <p>
             {gateStatus === 'PASS'
-              ? 'LMS/SML/DUAL 可以进入正式工程交付口径。'
+              ? 'V35、V36、V37原生基础模型已形成参数配方和回归基准；匹配客户参数后可作为结构工程师的深化起点。'
               : '当前可以下载给工程师继续审核结构问题，但不能标记为已验证交付。'}
           </p>
         </div>
         <div className="handoff-gate-checks">
-          <span>{scopeGate ? `${scopeGate.checks_failed ?? 0}/${scopeGate.checks_total ?? 0} checks failed` : 'gate loading'}</span>
+          <span>{scopeGate ? `${scopeGate.checks_total ?? 0} 项自动检查，${scopeGate.checks_failed ?? 0} 项未通过` : '正在读取自动检查'}</span>
           {failedGateChecks.length ? (
             failedGateChecks.map((check) => (
               <small key={check.name}>{check.name.replace(/^solidworks_2020_/, 'SW2020 ')}</small>
@@ -4309,44 +4878,108 @@ function ReviewDownloadPage() {
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>16029 800W gold-variable 审核文件</h2>
-            <p>LMS: 大 6/12，中 4/12，小 2/12；SML: 小 2/12，中 4/12，大 6/12；统一规则 800W × 1917H × 550D；SolidWorks 2020 为当前复核环境。</p>
+            <h2>历史结构验证资料</h2>
+            <p>下面保留 v23、v34 等历史模型和验证资料作追溯；当前结构工程辅助模型请从页面上方平台获取。</p>
           </div>
-          <StatusPill tone={gateTone}>gate {gateStatus}</StatusPill>
+          <StatusPill tone="warn">v23 受控基线</StatusPill>
         </div>
 
-        <div className="download-grid">
-          {assets.map((asset) => (
-            <article key={asset.id} className={`download-card ${asset.available ? '' : 'download-card-missing'}`}>
-              <div className="download-card-top">
-                <div>
-                  <span>{asset.category}</span>
-                  <strong>{asset.title}</strong>
-                </div>
-                <StatusPill tone={asset.available ? 'warn' : 'risk'}>{asset.available ? '候选可下载' : '缺失'}</StatusPill>
-              </div>
-              <p>{asset.description}</p>
-              <div className="download-meta">
-                <DetailLine label="文件名" value={asset.file_name} />
-                <DetailLine label="大小" value={asset.size_bytes === null ? 'missing' : formatBytes(asset.size_bytes)} />
-                <DetailLine label="更新时间" value={asset.modified_at ? formatTaskTime(asset.modified_at) : 'missing'} />
-              </div>
-              {asset.available ? (
-                <a className="primary-action download-link" href={`${API_BASE_URL}${asset.download_url}`}>
-                  <Download size={16} />
-                  下载
-                </a>
-              ) : (
-                <button className="secondary-action download-link" type="button" disabled>
-                  <Download size={16} />
-                  文件缺失
-                </button>
-              )}
-            </article>
-          ))}
+        <div className="current-download-area">
+          {currentAsset ? (
+            <ReviewDownloadAssetCard asset={currentAsset} variant="current" />
+          ) : (
+            <div className="empty-state">{downloadStatus === 'loading' ? '正在读取 v23 审核模型。' : '未找到 v23 审核模型。'}</div>
+          )}
         </div>
+
+        {supportingAssets.length ? (
+          <div className="supporting-downloads">
+            <div className="subsection-heading">
+              <div>
+                <h3>辅助审核材料</h3>
+                <p>证据包用于复核自动检查，历史记录模板用于追溯当时的工程确认内容。</p>
+              </div>
+              <span>{supportingAssets.length} 项</span>
+            </div>
+            <div className="download-grid supporting-download-grid">
+              {supportingAssets.map((asset) => (
+                <ReviewDownloadAssetCard key={asset.id} asset={asset} variant="supporting" />
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {historicalAssets.length ? (
+          <details className="history-disclosure">
+            <summary>
+              <span>
+                <strong>历史版本与参考包</strong>
+                <small>v18 和旧 800W 只用于追溯，不作为本轮审核对象。</small>
+              </span>
+              <StatusPill tone="idle">{historicalAssets.length} 项</StatusPill>
+            </summary>
+            <div className="download-grid history-download-grid">
+              {historicalAssets.map((asset) => (
+                <ReviewDownloadAssetCard key={asset.id} asset={asset} variant="history" />
+              ))}
+            </div>
+          </details>
+        ) : null}
       </section>
     </div>
+  )
+}
+
+function ReviewDownloadAssetCard({
+  asset,
+  variant,
+}: {
+  asset: ReviewDownloadAsset
+  variant: 'current' | 'supporting' | 'history'
+}) {
+  const statusLabel = !asset.available
+    ? '缺失'
+    : asset.status === 'controlled_candidate_pass'
+      ? '当前受控候选'
+      : asset.status === 'pre_signoff_review_evidence'
+        ? '自动检查证据'
+        : asset.status === 'engineering_signoff_template'
+          ? '历史工程记录模板'
+          : asset.status === 'sw2020_review_ready'
+            ? '历史确认包'
+            : '历史参考'
+  const statusTone: StatusTone = !asset.available ? 'risk' : variant === 'current' ? 'warn' : variant === 'supporting' ? 'good' : 'idle'
+
+  return (
+    <article className={`download-card download-card-${variant} ${asset.available ? '' : 'download-card-missing'}`}>
+      <div className="download-card-top">
+        <div>
+          <span>{asset.category}</span>
+          <strong>{asset.title}</strong>
+        </div>
+        <StatusPill tone={statusTone}>{statusLabel}</StatusPill>
+      </div>
+      <p>{asset.description}</p>
+      <div className="download-meta">
+        <DetailLine label="文件名" value={asset.file_name} />
+        <DetailLine label="大小" value={asset.size_bytes === null ? 'missing' : formatBytes(asset.size_bytes)} />
+        <DetailLine label="更新时间" value={asset.modified_at ? formatTaskTime(asset.modified_at) : 'missing'} />
+      </div>
+      {asset.available ? (
+        <a
+          className={`${variant === 'current' ? 'primary-action' : 'secondary-action'} download-link`}
+          href={`${API_BASE_URL}${asset.download_url}`}
+        >
+          <Download size={16} />
+          {variant === 'current' ? '下载 v23 受控基线' : '下载材料'}
+        </a>
+      ) : (
+        <button className="secondary-action download-link" type="button" disabled>
+          <Download size={16} />
+          文件缺失
+        </button>
+      )}
+    </article>
   )
 }
 
@@ -4364,7 +4997,7 @@ function ReviewPage({
       (['P0', 'P1', 'P2', 'P3'] as const).map((priority) => ({
         priority,
         items: filteredReviewItems.filter((item) => item.priority === priority),
-      })),
+      })).filter((group) => group.items.length > 0),
     [filteredReviewItems],
   )
 
@@ -4373,35 +5006,56 @@ function ReviewPage({
       <section className="section-block">
         <div className="section-heading">
           <div>
-            <h2>待确认项队列</h2>
-            <p>P0/P1 影响规则升级；P2/P3 记录为工程参考限制或后续输入条件。</p>
+            <h2>工程关注项队列</h2>
+            <p>这里展示持续关注和流程边界；真正需要工程师回答的问题、截图和结论仍在工程审核平台提交。</p>
           </div>
-          <label className="search-box">
-            <Search size={17} />
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索项目、模块、问题" />
-          </label>
+          <div className="review-toolbar">
+            <a className="secondary-action" href={ENGINEER_REVIEW_PORTAL_URL} target="_blank" rel="noreferrer">
+              <MessageSquareMore size={16} />
+              提交工程反馈
+            </a>
+            <label className="search-box">
+              <Search size={17} />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索问题" />
+            </label>
+          </div>
         </div>
       </section>
 
-      {grouped.map((group) => (
-        <section key={group.priority} className="section-block">
-          <div className="section-heading">
-            <div>
-              <h2>{group.priority} 队列</h2>
-              <p>{group.items.length} 项</p>
+      <details className="advanced-review-disclosure">
+        <summary>
+          <span>
+            <strong>高级工具：生成审核提示词</strong>
+            <small>一般审核不需要打开；仅在整理结构化审核问题时使用。</small>
+          </span>
+          <ChevronRight size={18} />
+        </summary>
+        <div className="advanced-review-content">
+          <EngineerReviewWorkspace />
+        </div>
+      </details>
+
+      {grouped.length ? (
+        grouped.map((group) => (
+          <section key={group.priority} className="section-block">
+            <div className="section-heading">
+              <div>
+                <h2>{group.priority} 队列</h2>
+                <p>{group.items.length} 项</p>
+              </div>
             </div>
-          </div>
-          {group.items.length === 0 ? (
-            <div className="empty-state">当前筛选条件下没有记录。</div>
-          ) : (
             <div className="review-list">
               {group.items.map((item) => (
                 <ReviewCard key={item.id} item={item} />
               ))}
             </div>
-          )}
+          </section>
+        ))
+      ) : (
+        <section className="section-block">
+          <div className="empty-state">当前筛选条件下没有待确认记录。</div>
         </section>
-      ))}
+      )}
     </div>
   )
 }
@@ -4567,25 +5221,6 @@ function AgentConsolePage({
         </div>
       </section>
     </div>
-  )
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  return (
-    <article className={`project-card tone-${project.statusTone}`}>
-      <div className="project-card-header">
-        <div>
-          <span>{project.productType}</span>
-          <strong>{project.name}</strong>
-        </div>
-        <StatusPill tone={project.statusTone}>{project.statusTone}</StatusPill>
-      </div>
-      <div className="progress-line">
-        <span style={{ width: `${project.progress}%` }} />
-      </div>
-      <p>{project.capability}</p>
-      <small>{project.risk}</small>
-    </article>
   )
 }
 
@@ -5618,6 +6253,13 @@ function RuleLearningAxisCard({ axis }: { axis: RuleLearningAxis }) {
 }
 
 function ReviewCard({ item }: { item: ReviewItem }) {
+  const statusLabels: Record<ReviewItem['status'], string> = {
+    open: '待处理',
+    watching: '持续关注',
+    waiting_source: '等待资料',
+  }
+  const statusTone: StatusTone = item.status === 'open' ? 'warn' : item.status === 'waiting_source' ? 'risk' : 'idle'
+
   return (
     <article className={`review-card priority-${item.priority.toLowerCase()}`}>
       <div className="review-main">
@@ -5626,13 +6268,19 @@ function ReviewCard({ item }: { item: ReviewItem }) {
           <strong>{item.issue}</strong>
           <p>{item.project} / {item.module}</p>
         </div>
-        <StatusPill tone={item.priority === 'P0' ? 'risk' : item.priority === 'P1' ? 'warn' : 'idle'}>
-          {item.severity}
-        </StatusPill>
+        <div className="review-badges">
+          <StatusPill tone={item.priority === 'P0' ? 'risk' : item.priority === 'P1' ? 'warn' : 'idle'}>
+            {item.priority} · {item.severity}
+          </StatusPill>
+          <StatusPill tone={statusTone}>{statusLabels[item.status]}</StatusPill>
+        </div>
       </div>
       <div className="review-action">
         <Archive size={17} />
-        <span>{item.nextAction}</span>
+        <div>
+          <small>下一步</small>
+          <span>{item.nextAction}</span>
+        </div>
       </div>
       <EvidenceRow evidence={item.evidence} />
     </article>
@@ -5701,7 +6349,7 @@ function generationRouteTitle(capabilityId: string) {
 
 function generationRouteDetail(capabilityId: string) {
   if (capabilityId === 'locker_16029_regression') {
-    return 'SolidWorks 大按钮开放 10/12/14 门原生整柜参考，并优先使用增强矩阵样机 v2。FreeCAD 保留同门数规则验证件。当前仍是工程参考模型，不是生产图纸/BOM。'
+    return '这是早期 10/12/14 门规则证据，仅作历史研究；16029 当前入口已切换到 V35/V36/V37 原生基础模型族。'
   }
   if (capabilityId === 'locker_16038_variant_template') {
     return '点击 SolidWorks 后会打开并保存已验证的 4/7/8 门整柜或 12/12 模块母版；这是同尺寸模板参考，不是任意门数自动重排。'
@@ -5809,7 +6457,7 @@ function handoffGateState(handoff: Locker16029EngineeringHandoffBundle['variants
       ready: true,
       tone: 'good',
       badge: 'PASS',
-      detail: '可交给结构工程师用 SolidWorks 打开 STP 复核；仍不是正式生产图纸。',
+      detail: '可交给结构工程师用 SolidWorks 打开 STP，作为后续结构深化参考。',
     }
   }
 
@@ -5870,7 +6518,8 @@ function taskMatchesPrimaryParameters(task: GenerationTask, activeCapabilityId: 
   if (activeCapabilityId === 'locker_16029_regression') {
     return (
       String(task.parameters.door_count ?? '') === String(activeParameters.door_count ?? '') &&
-      String(task.parameters.cabinet_width ?? '') === String(activeParameters.cabinet_width ?? '')
+      String(task.parameters.cabinet_width ?? '') === String(activeParameters.cabinet_width ?? '') &&
+      String(task.parameters.cabinet_depth ?? '') === String(activeParameters.cabinet_depth ?? '')
     )
   }
   return taskMatchesActiveParameters(task, activeParameters)
@@ -6038,7 +6687,7 @@ function taskRunSnapshotFor(task: GenerationTask): {
           { label: '门数', value: summary?.door_count ?? task.parameters.door_count ?? '-' },
           { label: '质量', value: 'Reference' },
         ],
-        note: execution.solidworks_quality_summary ?? summary?.quality_summary ?? '工程参考模型，不作为生产级可编辑组件树。',
+        note: execution.solidworks_quality_summary ?? summary?.quality_summary ?? '工程参考模型，尚不能作为结构工程师继续深化的可编辑组件树。',
       }
     }
 
@@ -6196,6 +6845,7 @@ function maturityTone(maturity: Maturity): 'good' | 'warn' | 'risk' | 'idle' {
 function feedbackForExecution(task: GenerationTask): GenerationFeedback {
   const recommendedFile = recommendedOutputFile(task)
   const outputDir = task.execution_result?.output_dir
+  const downloadUrl = task.execution_result?.outputs.length ? taskDownloadUrl(task.id) : undefined
   const validationReport = solidworksValidationReportFile(task)
   const validationData = solidworksValidationDataFile(task)
   const freecadQualityStatus = task.execution_result?.freecad_quality_status ?? null
@@ -6239,6 +6889,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
       cadRunner: task.cad_runner,
       outputDir,
       recommendedFile,
+      downloadUrl,
       validationReport: validationReport ?? task.execution_result?.freecad_quality_report ?? undefined,
       validationData,
     }
@@ -6254,6 +6905,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
         : 'API 未自动启动 SolidWorks；请在输出目录中运行手动脚本。',
       outputDir,
       recommendedFile,
+      downloadUrl,
       cadRunner: task.cad_runner,
       validationReport,
       validationData,
@@ -6269,6 +6921,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
       cadRunner: task.cad_runner,
       outputDir,
       recommendedFile,
+      downloadUrl,
       validationReport,
       validationData,
     }
@@ -6282,6 +6935,7 @@ function feedbackForExecution(task: GenerationTask): GenerationFeedback {
     cadRunner: task.cad_runner,
     outputDir,
     recommendedFile,
+    downloadUrl,
     validationReport,
     validationData,
   }
@@ -6338,6 +6992,10 @@ function openButtonLabelFor(path: string) {
   return '打开推荐文件'
 }
 
+function taskDownloadUrl(taskId: string) {
+  return `${API_BASE_URL}/api/generation-tasks/${taskId}/download`
+}
+
 function solidworksScriptFor(capabilityId: string) {
   if (capabilityId === 'locker_16029_door_panel') return 'scripts\\sw_make_parametric_door_panel.js'
   if (capabilityId === 'locker_16038_variant_template') return 'scripts\\sw_clone_16038_variant_template.js'
@@ -6354,7 +7012,7 @@ function freecadScriptFor(capabilityId: string, fallback: string) {
   return fallback
 }
 
-const numericParameterNames = new Set(['door_count', 'cabinet_width', 'door_width', 'door_height', 'flat_holes'])
+const numericParameterNames = new Set(['door_count', 'cabinet_width', 'cabinet_depth', 'door_width', 'door_height', 'flat_holes'])
 const defaultDoorCountPresets = LOCKER_16029_SUPPORTED_RULE_COUNTS.map(String)
 const doorCountPresetsByCapability: Record<string, string[]> = {
   locker_16038_variant_template: ['4', '7', '8', '12'],
@@ -6429,6 +7087,51 @@ function parameterValue(parameters: ParameterValues, name: string, fallback: str
   return value && value.trim() ? value.trim() : fallback
 }
 
+function locker16029ControlledComboFor(parameters: ParameterValues) {
+  const doorCount = Number(parameterValue(parameters, 'door_count', '14'))
+  const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '950'))
+  const cabinetDepth = Number(parameterValue(parameters, 'cabinet_depth', '400'))
+  if (![doorCount, cabinetWidth, cabinetDepth].every(Number.isFinite)) return null
+  const exactCombo = LOCKER_16029_CONTROLLED_COMBOS.find(
+    (combo) =>
+      combo.doorCount === doorCount &&
+      Math.abs(combo.width - cabinetWidth) < 0.001 &&
+      Math.abs(combo.depth - cabinetDepth) < 0.001,
+  )
+  if (exactCombo) return exactCombo
+  if (
+    doorCount === LOCKER_16029_V43_WIDTH_DERIVED_RULE.doorCount &&
+    cabinetWidth >= LOCKER_16029_V43_WIDTH_DERIVED_RULE.minWidth &&
+    cabinetWidth <= LOCKER_16029_V43_WIDTH_DERIVED_RULE.maxWidth &&
+    Math.abs(cabinetDepth - LOCKER_16029_V43_WIDTH_DERIVED_RULE.depth) < 0.001
+  ) {
+    return LOCKER_16029_V43_WIDTH_DERIVED_RULE
+  }
+  if (
+    LOCKER_16029_GOLD_DERIVED_RULE.doorCounts.includes(doorCount) &&
+    cabinetWidth >= LOCKER_16029_GOLD_DERIVED_RULE.minWidth &&
+    cabinetWidth <= LOCKER_16029_GOLD_DERIVED_RULE.maxWidth &&
+    cabinetDepth >= LOCKER_16029_GOLD_DERIVED_RULE.minDepth &&
+    cabinetDepth <= LOCKER_16029_GOLD_DERIVED_RULE.maxDepth
+  ) {
+    return LOCKER_16029_GOLD_DERIVED_RULE
+  }
+  return null
+}
+
+function locker16029ControlledComboIssue(parameters: ParameterValues) {
+  const doorCount = Number(parameterValue(parameters, 'door_count', '14'))
+  const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '950'))
+  const cabinetDepth = Number(parameterValue(parameters, 'cabinet_depth', '400'))
+  if (!Number.isFinite(cabinetWidth)) return 'cabinet_width 必须是数字。'
+  if (!Number.isFinite(cabinetDepth)) return 'cabinet_depth 必须是数字。'
+  if (!Number.isFinite(doorCount)) return 'door_count 必须是数字。'
+  if (!locker16029ControlledComboFor(parameters)) {
+    return '16029 现在按规则受控生成：6门 L642-R246 允许 700-780W/550D；10/12/14门允许 740-1100W/350-600D。超出范围要先补规则证据。'
+  }
+  return null
+}
+
 function lockedParameterValue(capabilityId: string, parameter: string) {
   if (capabilityId === 'locker_16029_door_panel' && parameter === 'category') return 'ordinary_door_panel'
   return null
@@ -6460,6 +7163,10 @@ function parameterIssueFor(capabilityId: string, parameters: ParameterValues) {
       return '当前 16029 规则收敛样本先开放 10、12、14 门；其它门数先进入规则学习队列，暂不直接生成。'
     }
   }
+  if (capabilityId === 'locker_16029_regression') {
+    const comboIssue = locker16029ControlledComboIssue(parameters)
+    if (comboIssue) return comboIssue
+  }
   if (capabilityId === 'locker_16038_variant_template' && !supportedDoorCountsFor(capabilityId).has(doorCount)) {
     return '16038 模板证据生成当前支持 4、7、8 门整柜和 12/12 单门模块。'
   }
@@ -6473,7 +7180,7 @@ function runnerIssueFor(capabilityId: string, cadRunner: CadRunner, parameters: 
       return 'SolidWorks 16029 当前只开放 10/12/14 门原生参考模型；其它门数先走规则学习队列。'
     }
     const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '1000'))
-    if (!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) {
+    if ((!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) && !locker16029ControlledComboFor(parameters)) {
       return 'SolidWorks 主线当前只开放 1000mm 宽外型；宽度派生请先走 FreeCAD/STEP 规则实验。'
     }
     const geometrySource = parameterValue(parameters, 'geometry_source', 'auto')
@@ -6487,7 +7194,7 @@ function runnerIssueFor(capabilityId: string, cadRunner: CadRunner, parameters: 
       return 'FreeCAD 16029 规则验证当前先开放 10/12/14 门。'
     }
     const cabinetWidth = Number(parameterValue(parameters, 'cabinet_width', '1000'))
-    if (!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) {
+    if ((!Number.isFinite(cabinetWidth) || Math.abs(cabinetWidth - 1000) > 0.001) && !locker16029ControlledComboFor(parameters)) {
       return 'FreeCAD 16029 工程交接当前只开放 1000mm 宽外型；宽度派生先留在规则学习队列。'
     }
     const geometrySource = parameterValue(parameters, 'geometry_source', 'auto')
@@ -6558,7 +7265,7 @@ function commandArgumentsFor(capabilityId: string, cadRunner: CadRunner, paramet
       parameters,
       'cabinet_width',
       '1000',
-    )} --geometry-source ${parameterValue(parameters, 'geometry_source', 'auto')}`
+    )} --cabinet-depth ${parameterValue(parameters, 'cabinet_depth', '400')} --geometry-source ${parameterValue(parameters, 'geometry_source', 'auto')}`
   }
   if (capabilityId === 'locker_16029_door_panel') {
     return `--category ${parameterValue(parameters, 'category', 'ordinary_door_panel')} --door-width ${parameterValue(
@@ -6587,6 +7294,222 @@ function commandArgumentsFor(capabilityId: string, cadRunner: CadRunner, paramet
     )}`
   }
   return ''
+}
+
+function buildDoorPromptDraft(promptText: string): DoorPromptDraft {
+  const text = promptText.trim()
+  const lower = text.toLowerCase()
+  const dimensions = extractCabinetDimensions(text)
+  const cabinetWidth =
+    firstNumberMatch(text, [/外形宽\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /柜宽\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:w|W|宽)/]) ??
+    dimensions?.width ??
+    800
+  const cabinetHeight =
+    firstNumberMatch(text, [/外形高\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /柜高\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:h|H|高)/]) ??
+    dimensions?.height ??
+    1917
+  const cabinetDepth =
+    firstNumberMatch(text, [/外形深\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /柜深\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:d|D|深)/]) ??
+    dimensions?.depth ??
+    550
+  const columns = clampInteger(firstNumberMatch(text, [/(\d+)\s*(?:列|columns?|cols?)/i]) ?? (lower.includes('single') || text.includes('单列') ? 1 : 2), 1, 6)
+  const baseDoorHeightSequence = extractDoorHeightSequence(text)
+  const columnHeightSequences = extractDoorColumnHeightSequences(text, columns, baseDoorHeightSequence)
+  const doorHeightSequence = formatColumnDoorHeightSequences(columnHeightSequences, baseDoorHeightSequence)
+  const sequenceRowsByColumn = columnHeightSequences.map(doorPreviewRowsFromSequence)
+  const sequenceRows = sequenceRowsByColumn.find((rows) => rows.length > 0) ?? []
+  const sequenceDoorCount = sequenceRowsByColumn.reduce((total, rows) => total + rows.length, 0)
+  const explicitDoorCount = firstNumberMatch(text, [/门数\s*[:：=]?\s*(\d+)/i, /door\s*count\s*[:=]?\s*(\d+)/i, /(\d+)\s*门(?:柜|整柜|布局|方案)/])
+  const doorCount = clampInteger(explicitDoorCount ?? Math.max(columns, sequenceDoorCount || sequenceRows.length * columns || 12), columns, 72)
+  const explicitDoorWidth = firstNumberMatch(text, [/门宽\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /door\s*width\s*[:=]?\s*(\d+(?:\.\d+)?)/i, /W\s*(\d+(?:\.\d+)?)/])
+  const explicitDoorHeight = firstNumberMatch(text, [/门高\s*[:：=]?\s*(\d+(?:\.\d+)?)/i, /door\s*height\s*[:=]?\s*(\d+(?:\.\d+)?)/i, /H\s*(\d+(?:\.\d+)?)/])
+  const firstSequenceHeight = sequenceRows[0]?.height
+  const doorWidth = explicitDoorWidth ?? estimateDoorWidth(cabinetWidth, columns)
+  const doorHeight = explicitDoorHeight ?? firstSequenceHeight ?? estimateDoorHeight(cabinetHeight, doorCount, columns)
+  const thickness = firstNumberMatch(text, [/(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:厚|thickness|板厚)/i])
+  const assumptions = [
+    explicitDoorWidth ? '门宽来自提示词。' : '门宽为预览估算，生成前需用 DXF/BOM/SolidWorks 证据确认。',
+    explicitDoorHeight || firstSequenceHeight ? '门高来自提示词或门高序列。' : '门高为等分预览估算。',
+    '当前 2D 预览不计算折弯展开、K 因子、公差和喷涂厚度。',
+  ]
+  const warnings = [
+    '正式 CAD 生成前必须确认材料、板厚、孔到折弯线距离、锁/铰链 datum 和工程图版本。',
+    '该工作台只整理参数草案，并把它写入结构工程辅助模型入口。',
+  ]
+
+  return {
+    cabinetWidth,
+    cabinetHeight,
+    cabinetDepth,
+    columns,
+    doorCount,
+    doorWidth,
+    doorHeight,
+    doorHeightSequence,
+    columnHeightSequences,
+    doorType: lower.includes('control') || text.includes('中控') ? 'control_door' : 'ordinary_door_panel',
+    lockType: inferDoorPromptLockType(text, lower),
+    hingeType: lower.includes('concealed') || text.includes('暗铰') ? '暗铰链' : text.includes('长铰') || lower.includes('piano') ? '长铰链' : '未指定',
+    latchType: text.includes('插销') || lower.includes('latch') ? '插销/锁扣需确认' : '未指定',
+    reinforcement: text.includes('加强') || lower.includes('rib') ? '加强筋' : '未指定',
+    openings: text.includes('孔') || lower.includes('hole') || lower.includes('opening') ? '锁孔/铰链孔/功能孔需按证据确认' : '未指定',
+    material: text.includes('镀锌') || lower.includes('galvanized') ? '镀锌板' : text.includes('不锈钢') ? '不锈钢' : '未指定',
+    thickness: thickness ? `${formatMm(thickness)} mm` : '未指定',
+    assumptions,
+    warnings,
+  }
+}
+
+function inferDoorPromptLockType(text: string, lower = text.toLowerCase()) {
+  const electricLockExcluded =
+    /\bno\s+(?:cabinet-side\s+)?electric\s+lock(?:\s+(?:body|hook))?\b/.test(lower) ||
+    /\bno\s+electric\s+hardware\b/.test(lower) ||
+    /(?:不生成|不包含|不要|无|排除).*电控锁/.test(text) ||
+    /电控锁.*(?:排除|不生成|不包含|不要)/.test(text)
+  const hasElectricLock = !electricLockExcluded && (/\belectric\s+lock\b/.test(lower) || text.includes('电控锁') || text.includes('电控'))
+  const hasMechanicalLock = /\bmechanical\b/.test(lower) || text.includes('机械') || text.includes('锁舌')
+
+  if (hasElectricLock) return '电控锁'
+  if (hasMechanicalLock && electricLockExcluded) return '机械锁舌；电控锁实体排除'
+  if (hasMechanicalLock) return '机械锁'
+  if (electricLockExcluded) return '电控锁实体排除'
+  return '未指定'
+}
+
+function buildDoorGeneratorPrompt(draft: DoorPromptDraft) {
+  return [
+    `柜体外形 ${formatMm(draft.cabinetWidth)}W x ${formatMm(draft.cabinetHeight)}H x ${formatMm(draft.cabinetDepth)}D`,
+    `${draft.columns} 列 / ${draft.doorCount} 门`,
+    `单门板 ${formatMm(draft.doorWidth)}W x ${formatMm(draft.doorHeight)}H`,
+    `门高序列 ${draft.doorHeightSequence}`,
+    `${draft.doorType}, ${draft.lockType}, ${draft.hingeType}, ${draft.latchType}`,
+    `${draft.reinforcement}, ${draft.openings}, ${draft.material}, ${draft.thickness}`,
+  ].join('；')
+}
+
+function extractCabinetDimensions(text: string) {
+  const match = text.match(/(\d+(?:\.\d+)?)\s*(?:mm)?\s*[x×*]\s*(\d+(?:\.\d+)?)\s*(?:mm)?\s*[x×*]\s*(\d+(?:\.\d+)?)/i)
+  if (!match) return null
+  return {
+    width: Number(match[1]),
+    height: Number(match[2]),
+    depth: Number(match[3]),
+  }
+}
+
+function extractDoorHeightSequence(text: string) {
+  if (/LMS/i.test(text)) return '6/12, 4/12, 2/12'
+  if (/SML/i.test(text)) return '2/12, 4/12, 6/12'
+  const explicit = text.match(/(?:门高序列|高度序列|row\s*units?)\s*[:：=]\s*([^。；;]+)/i)
+  if (explicit?.[1]) return explicit[1].trim()
+  const fractions = Array.from(text.matchAll(/([1-6])\s*\/\s*12/g), (match) => `${match[1]}/12`)
+  if (fractions.length) return fractions.join(', ')
+  return 'equal rows'
+}
+
+function extractDoorColumnHeightSequences(text: string, columns: number, fallbackSequence: string) {
+  const sequences = Array.from({ length: columns }, () => '')
+  const setSequence = (index: number, raw: string) => {
+    if (index < 0 || index >= columns) return
+    const sequence = normalizeDoorHeightSequence(raw)
+    if (sequence) sequences[index] = sequence
+  }
+
+  const leftRaw = firstColumnSequenceMatch(text, ['左列', 'left column', 'left'])
+  const rightRaw = firstColumnSequenceMatch(text, ['右列', 'right column', 'right'])
+  if (leftRaw) setSequence(0, leftRaw)
+  if (rightRaw) setSequence(columns > 1 ? 1 : 0, rightRaw)
+
+  for (const match of text.matchAll(/(?:第\s*(\d+)\s*列|column\s*(\d+))\s*[:：=]?\s*(?:\[|【|\(|（)\s*([^\]】)）]+)\s*(?:\]|】|\)|）)/gi)) {
+    const indexText = match[1] || match[2]
+    const index = Number(indexText) - 1
+    setSequence(index, match[3])
+  }
+
+  const hasColumnSpecificSequence = sequences.some(Boolean)
+  if (hasColumnSpecificSequence) {
+    return sequences.map((sequence) => sequence || fallbackSequence)
+  }
+
+  return Array.from({ length: columns }, () => fallbackSequence)
+}
+
+function firstColumnSequenceMatch(text: string, labels: string[]) {
+  const escapedLabels = labels.map((label) => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+  const bracketPattern = new RegExp(`(?:${escapedLabels})\\s*[:：=]?\\s*[\\[【(（]\\s*([^\\]】)）]+)\\s*[\\]】)）]`, 'i')
+  const bracketMatch = text.match(bracketPattern)
+  if (bracketMatch?.[1]) return bracketMatch[1]
+
+  const inlinePattern = new RegExp(`(?:${escapedLabels})\\s*[:：=]?\\s*((?:[1-6]\\s*(?:\\/\\s*12)?\\s*[,，、 ]\\s*)+[1-6]\\s*(?:\\/\\s*12)?)`, 'i')
+  const inlineMatch = text.match(inlinePattern)
+  return inlineMatch?.[1] ?? null
+}
+
+function normalizeDoorHeightSequence(raw: string) {
+  const units = Array.from(raw.matchAll(/([1-6])\s*(?:\/\s*12)?/g), (match) => Number(match[1])).filter((unit) => unit >= 1 && unit <= 6)
+  return units.length ? units.map((unit) => `${unit}/12`).join(', ') : ''
+}
+
+function formatColumnDoorHeightSequences(columnHeightSequences: string[], fallbackSequence: string) {
+  const normalizedSequences = columnHeightSequences.filter(Boolean)
+  if (!normalizedSequences.length) return fallbackSequence
+  const uniqueSequences = Array.from(new Set(normalizedSequences))
+  if (uniqueSequences.length === 1) return uniqueSequences[0]
+  return columnHeightSequences.map((sequence, index) => `${index === 0 ? '左列' : index === 1 ? '右列' : `第${index + 1}列`} ${sequence}`).join('；')
+}
+
+function doorPreviewColumnRows(draft: DoorPromptDraft) {
+  const columns = Array.from({ length: draft.columns }, (_, index) => {
+    const sequence = draft.columnHeightSequences[index] || draft.doorHeightSequence
+    return doorPreviewRowsFromSequence(sequence)
+  })
+  if (columns.some((rows) => rows.length)) return columns
+  return Array.from({ length: draft.columns }, () => equalDoorPreviewRows(draft))
+}
+
+function equalDoorPreviewRows(draft: DoorPromptDraft) {
+  const rowCount = Math.max(1, Math.ceil(draft.doorCount / draft.columns))
+  return Array.from({ length: rowCount }, (_, index) => ({
+    label: `${index + 1}`,
+    units: 1,
+    height: estimateDoorHeight(draft.cabinetHeight, draft.doorCount, draft.columns),
+  }))
+}
+
+function doorPreviewRowsFromSequence(sequence: string) {
+  const fractionMatches = Array.from(sequence.matchAll(/([1-6])\s*\/\s*12/g), (match) => Number(match[1]))
+  if (!fractionMatches.length) return []
+  return fractionMatches.map((unit) => ({
+    label: `${unit}/12`,
+    units: unit,
+    height: unit * LOCKER_16029_UNIT_HEIGHT_MM - LOCKER_16029_DOOR_GAP_MM,
+  }))
+}
+
+function firstNumberMatch(text: string, patterns: RegExp[]) {
+  for (const pattern of patterns) {
+    const match = pattern.exec(text)
+    if (!match?.[1]) continue
+    const value = Number(match[1])
+    if (Number.isFinite(value)) return value
+  }
+  return null
+}
+
+function clampInteger(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, Math.round(value)))
+}
+
+function estimateDoorWidth(cabinetWidth: number, columns: number) {
+  if (Math.abs(cabinetWidth - 800) < 0.001 && columns === 2) return 337
+  if (Math.abs(cabinetWidth - 1000) < 0.001 && columns === 2) return 437
+  return Math.max(80, (cabinetWidth - 126) / columns)
+}
+
+function estimateDoorHeight(cabinetHeight: number, doorCount: number, columns: number) {
+  const rows = Math.max(1, Math.ceil(doorCount / columns))
+  const usableHeight = Math.min(cabinetHeight - 90, LOCKER_16029_DOOR_AREA_HEIGHT_MM)
+  return (usableHeight - (rows - 1) * LOCKER_16029_DOOR_GAP_MM) / rows
 }
 
 function StatusDot({ status }: { status: 'pass' | 'partial' | 'blocked' | 'waiting' }) {
@@ -6642,13 +7565,14 @@ function outputFileLabel(path: string) {
 function sampleParameterValue(parameter: string, capabilityId?: string) {
   if (parameter === 'category') return 'ordinary_door_panel'
   if (parameter === 'geometry_source') return 'auto'
-  if (parameter === 'cabinet_width') return '1000'
+  if (parameter === 'cabinet_width') return capabilityId === 'locker_16029_regression' ? '950' : '1000'
+  if (parameter === 'cabinet_depth') return capabilityId === 'locker_16029_regression' ? '400' : '550'
   if (parameter === 'door_width') return '437'
   if (parameter === 'door_height') return '298'
   if (parameter === 'formed_bbox_x' || parameter === 'formed_bbox_y' || parameter === 'formed_bbox_z') return 'from_STEP'
   if (parameter === 'flat_holes') return '11'
   if (parameter.includes('door_count') && capabilityId === 'locker_16038_variant_template') return '7'
-  if (parameter.includes('door_count')) return '12'
+  if (parameter.includes('door_count')) return capabilityId === 'locker_16029_regression' ? '14' : '12'
   if (parameter.includes('width')) return '1000'
   if (parameter.includes('height')) return '1939'
   if (parameter.includes('depth')) return '550'

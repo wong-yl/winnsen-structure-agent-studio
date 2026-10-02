@@ -1,0 +1,95 @@
+{
+  "schema": "winnsen.locker16029.v37_engineering_assistance_delivery.v1",
+  "generated_at_utc": "2026-08-11T07:00:53.585Z",
+  "status": "engineering_assistance_ready_with_known_open_rebuild_requirement",
+  "current_request_id": "v43-int-v37-760w-six-door-l642-r246-r1",
+  "review_round": "16029-v43-v37-760w-six-door-engineering-assistance-20260811",
+  "asset_id": "16029-v43-v37-760w-six-door-engineering-assistance-zip",
+  "feedback_id_prefix": "V37-Q-",
+  "route": {
+    "product": "16029",
+    "cabinet_width_mm": 760,
+    "cabinet_height_mm": 1917,
+    "cabinet_depth_mm": 550,
+    "columns": 2,
+    "door_count": 6,
+    "door_leaf_width_mm": 317,
+    "door_leaf_height_mm": 908,
+    "row_sequence": "L642-R246",
+    "cad_mainline": "SolidWorks 2020",
+    "recipe_binding": "immutable_exact_v37_engineering_assistance_asset"
+  },
+  "delivery": {
+    "primary_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\native_cad\\final_native_hierarchical_pack_and_go\\标准寄存柜1917×760×550(总装配).SLDASM",
+    "zip_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\16029_v37_760宽6门L642-R246_工程辅助模型_20260811.zip",
+    "receipt_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\16029_v37_760宽6门L642-R246_工程辅助模型_20260811.zip.receipt.json",
+    "zip_file_name": "16029_v37_760宽6门L642-R246_工程辅助模型_20260811.zip",
+    "zip_size_bytes": 24535798,
+    "zip_sha256": "6B9F62E4F697B96909131D81EAD0FA341E059530204DB76480148460883CD1C0",
+    "receipt_sha256": "E02CD265543B2C5A3DFFD6E02FD41B5D30F2B6B218B309A9A10B4E470D7424A4",
+    "download_url": "/download/16029-v43-v37-760w-six-door-engineering-assistance-zip",
+    "api_download_asset_id": "16029-v43-v37-760w-six-door-engineering-assistance-zip"
+  },
+  "evidence": {
+    "package_manifest": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\review_package_v37_20260811\\package_manifest_v37.json",
+    "final_validator": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_six_door_width_validation.json",
+    "final_pack_and_go": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_pack_and_go_rename.json",
+    "root_rebuild_save_reopen": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_root_rebuild_save_reopen.json",
+    "native_hierarchy_reopen": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_native_hierarchy_reopen.json",
+    "right_partition_freeze_reopen": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_partition_R_freeze_reopen.json",
+    "left_partition_edges": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_partition_L_edges_readonly.json",
+    "right_partition_edges": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v37-760w-six-door-l642-r246-r1\\evidence\\v37_final_partition_R_edges_readonly.json"
+  },
+  "verified": {
+    "final_validator_status": "PASS",
+    "final_validator_check_count": 132,
+    "final_validator_failed_check_count": 0,
+    "engineering_use_eligible": true,
+    "production_release_eligible": false,
+    "release_ready": false,
+    "open_rebuild_required": true,
+    "warning_free": false,
+    "full_assembly_validation_all_green": false,
+    "native_cad_file_count": 75,
+    "native_part_count": 53,
+    "native_assembly_count": 22,
+    "recursive_component_count": 158,
+    "active_recursive_component_count": 150,
+    "suppressed_recursive_component_count": 8,
+    "unique_component_reference_count": 74,
+    "missing_component_count": 0,
+    "package_external_component_reference_count": 0,
+    "root_assembly_sha256": "5AED314E89A65A3875C517B2F4DC179635E9C684E0CD1877AFEBD33CAA77CA5B"
+  },
+  "known_issue": {
+    "is_only_known_non_green_item": true,
+    "component": "箱体右侧板焊接-1",
+    "type": "Reference",
+    "code": 51,
+    "warning": true,
+    "statement": "保留唯一已知Reference code 51的真实状态；V37打开后必须重建，结构工程师应在此基础模型上继续完成项目细节。"
+  },
+  "right_partition_external_references": {
+    "count": 7,
+    "all_broken_status_zero": true,
+    "baseline_provenance_mode": "V35_DORMANT",
+    "final_reopen_provenance_mode": "FINAL_LOCAL_RESOLVED",
+    "final_paths_all_package_local": true,
+    "statement": "7条外部引用的Broken/status均为0；V35_DORMANT是只读初检中的休眠来源记录，最终独立重开已全部解析为V37包内左隔板，不得描述为7条已断开引用。"
+  },
+  "historical_exact_recipe_assets_retained": [
+    "16029-v43-v36-four-door-engineering-assistance-zip",
+    "16029-v43-v35-one-door-one-lock-hole-rereview-zip"
+  ],
+  "superseded_same_route_request_ids": [],
+  "engineering_assistance_scope": {
+    "purpose": "SolidWorks 2020 structure-engineering foundation model for the exact V37 recipe",
+    "engineer_continues_with": [
+      "project drawings and dimensions",
+      "DXF and flat-pattern details",
+      "BOM and material details",
+      "supplier bend, welding, coating, and tolerance details",
+      "project-specific physical verification"
+    ]
+  }
+}

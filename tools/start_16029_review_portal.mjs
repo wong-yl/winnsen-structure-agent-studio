@@ -10,6 +10,15 @@ const logDir = resolve(projectRoot, 'workers', 'generation_logs');
 const stdoutPath = resolve(logDir, 'review_portal_5180_stdout.log');
 const stderrPath = resolve(logDir, 'review_portal_5180_stderr.log');
 const pidPath = resolve(logDir, 'review_portal_5180.pid');
+const nodeDir = dirname(process.execPath);
+const pathValue = [
+  nodeDir,
+  'C:\\Program Files\\nodejs',
+  process.env.Path || process.env.PATH || '',
+  'C:\\Windows\\System32',
+  'C:\\Windows',
+  'C:\\Windows\\System32\\WindowsPowerShell\\v1.0',
+].filter(Boolean).join(';');
 
 if (!existsSync(serverScript)) {
   throw new Error(`Review server script not found: ${serverScript}`);
@@ -24,7 +33,8 @@ const env = {
   ComSpec: process.env.ComSpec || 'C:\\Windows\\System32\\cmd.exe',
   TEMP: process.env.TEMP || process.env.TMP || 'C:\\Windows\\Temp',
   TMP: process.env.TMP || process.env.TEMP || 'C:\\Windows\\Temp',
-  PATH: process.env.Path || process.env.PATH || 'C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\nodejs',
+  Path: pathValue,
+  PATH: pathValue,
   STUDIO_REVIEW_PORT: process.env.STUDIO_REVIEW_PORT || '5180',
 };
 

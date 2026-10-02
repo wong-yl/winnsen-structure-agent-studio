@@ -16,7 +16,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: StepOpenProbe.exe <step-path> <status-json-path> [preview-png-path] [--close-after] [--auto-repair-dialog] [--silent-only]");
+                Console.Error.WriteLine("Usage: StepOpenProbe.exe <model-path> <status-json-path> [preview-png-path] [--named-view <isometric|front|back|top|right|left>] [--close-after] [--auto-repair-dialog] [--silent-only]");
                 return 2;
             }
 
@@ -29,11 +29,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             bool autoRepairDialog = Array.Exists(args, arg => string.Equals(arg, "--auto-repair-dialog", StringComparison.OrdinalIgnoreCase));
             bool silentOnly = Array.Exists(args, arg => string.Equals(arg, "--silent-only", StringComparison.OrdinalIgnoreCase));
             int waitSeconds = ParseIntArg(args, "--wait-seconds", 0);
+            NamedViewSpec previewView = ResolveNamedView(ParseStringArg(args, "--named-view", "*Isometric"));
             var result = new ProbeResult
             {
                 StepPath = stepPath,
                 StatusPath = statusPath,
                 PreviewPath = previewPath,
+                PreviewNamedView = previewView.Name,
+                PreviewNamedViewId = previewView.Id,
                 CloseAfter = closeAfter,
                 AutoRepairDialog = autoRepairDialog,
                 SilentOnly = silentOnly,
@@ -46,7 +49,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 if (!File.Exists(stepPath))
                 {
                     result.Status = "missing_step";
-                    result.Message = "STEP file does not exist.";
+                    result.Message = "Model file does not exist.";
                     WriteResult(statusPath, result);
                     return 3;
                 }
@@ -80,14 +83,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 if (opened == null)
                 {
                     result.Status = "open_failed";
-                    result.Message = "SolidWorks did not return a model document for this STEP file.";
+                    result.Message = "SolidWorks did not return a model document for this model file.";
                     result.DocumentCount = SafeInt(() => sw.GetDocumentCount());
                     WriteResult(statusPath, result);
                     return 5;
                 }
 
                 result.Status = "opened";
-                result.Message = "SolidWorks returned and activated a model document for this STEP file.";
+                result.Message = "SolidWorks returned and activated a model document for this model file.";
                 result.DocumentCount = SafeInt(() => sw.GetDocumentCount());
                 ModelDoc2 activeDoc = sw.ActiveDoc as ModelDoc2;
                 result.ActiveTitle = SafeString(() => activeDoc == null ? null : activeDoc.GetTitle());
@@ -95,7 +98,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
                 if (!string.IsNullOrWhiteSpace(previewPath) && activeDoc != null)
                 {
-                    result.PreviewSaved = SavePreview(activeDoc, previewPath, result);
+                    result.PreviewSaved = SavePreview(activeDoc, previewPath, previewView, result);
                 }
 
                 if (closeAfter && !string.IsNullOrWhiteSpace(result.ActiveTitle))
@@ -172,13 +175,16 @@ namespace Winnsen.StructureAgent.SolidWorksTools
 
         private static ModelDoc2 TryOpen(ISldWorks sw, string stepPath, ProbeResult result, bool silentOnly)
         {
-            ModelDoc2 doc = TryOpenDoc7(sw, stepPath, true, result, "OpenDoc7_part_silent");
-            if (doc != null) return Activate(sw, doc, result, "OpenDoc7_part_silent");
+            int primaryDocType = DocumentTypeForPath(stepPath);
+            string primaryLabel = DocumentTypeLabel(primaryDocType);
+
+            ModelDoc2 doc = TryOpenDoc7(sw, stepPath, primaryDocType, true, result, "OpenDoc7_" + primaryLabel + "_silent");
+            if (doc != null) return Activate(sw, doc, result, "OpenDoc7_" + primaryLabel + "_silent");
 
             if (silentOnly)
             {
-                doc = TryOpenDoc6(sw, stepPath, 1, 1, result, "OpenDoc6_part_silent");
-                if (doc != null) return Activate(sw, doc, result, "OpenDoc6_part_silent");
+                doc = TryOpenDoc6(sw, stepPath, primaryDocType, 1, result, "OpenDoc6_" + primaryLabel + "_silent");
+                if (doc != null) return Activate(sw, doc, result, "OpenDoc6_" + primaryLabel + "_silent");
 
                 doc = TryOpenDoc6(sw, stepPath, 0, 1, result, "OpenDoc6_none_silent");
                 if (doc != null) return Activate(sw, doc, result, "OpenDoc6_none_silent");
@@ -189,14 +195,14 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return null;
             }
 
-            doc = TryOpenDoc7(sw, stepPath, false, result, "OpenDoc7_part_interactive");
-            if (doc != null) return Activate(sw, doc, result, "OpenDoc7_part_interactive");
+            doc = TryOpenDoc7(sw, stepPath, primaryDocType, false, result, "OpenDoc7_" + primaryLabel + "_interactive");
+            if (doc != null) return Activate(sw, doc, result, "OpenDoc7_" + primaryLabel + "_interactive");
 
-            doc = TryOpenDoc6(sw, stepPath, 1, 1, result, "OpenDoc6_part_silent");
-            if (doc != null) return Activate(sw, doc, result, "OpenDoc6_part_silent");
+            doc = TryOpenDoc6(sw, stepPath, primaryDocType, 1, result, "OpenDoc6_" + primaryLabel + "_silent");
+            if (doc != null) return Activate(sw, doc, result, "OpenDoc6_" + primaryLabel + "_silent");
 
-            doc = TryOpenDoc6(sw, stepPath, 1, 0, result, "OpenDoc6_part_interactive");
-            if (doc != null) return Activate(sw, doc, result, "OpenDoc6_part_interactive");
+            doc = TryOpenDoc6(sw, stepPath, primaryDocType, 0, result, "OpenDoc6_" + primaryLabel + "_interactive");
+            if (doc != null) return Activate(sw, doc, result, "OpenDoc6_" + primaryLabel + "_interactive");
 
             doc = TryOpenDoc6(sw, stepPath, 0, 1, result, "OpenDoc6_none_silent");
             if (doc != null) return Activate(sw, doc, result, "OpenDoc6_none_silent");
@@ -210,7 +216,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             return null;
         }
 
-        private static ModelDoc2 TryOpenDoc7(ISldWorks sw, string stepPath, bool silent, ProbeResult result, string name)
+        private static ModelDoc2 TryOpenDoc7(ISldWorks sw, string stepPath, int docType, bool silent, ProbeResult result, string name)
         {
             try
             {
@@ -222,7 +228,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     return null;
                 }
                 spec.FileName = stepPath;
-                spec.DocumentType = 1;
+                spec.DocumentType = docType;
                 spec.Silent = silent;
                 spec.ReadOnly = false;
                 spec.LoadModel = true;
@@ -241,7 +247,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
             catch (Exception ex)
             {
-                result.Methods.Add(new MethodResult("OpenDoc7_part_silent", false, ex.Message));
+                result.Methods.Add(new MethodResult(name, false, ex.Message));
                 return null;
             }
         }
@@ -360,6 +366,47 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             return defaultValue;
         }
 
+        private static string ParseStringArg(string[] args, string name, string defaultValue)
+        {
+            for (int i = 0; i < args.Length - 1; i++)
+            {
+                if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return args[i + 1];
+                }
+            }
+            return defaultValue;
+        }
+
+        private static int DocumentTypeForPath(string path)
+        {
+            string extension = Path.GetExtension(path) ?? "";
+            extension = extension.TrimStart('.').ToLowerInvariant();
+            if (extension == "sldasm") return 2;
+            if (extension == "slddrw") return 3;
+            return 1;
+        }
+
+        private static string DocumentTypeLabel(int docType)
+        {
+            if (docType == 2) return "assembly";
+            if (docType == 3) return "drawing";
+            return "part";
+        }
+
+        private static NamedViewSpec ResolveNamedView(string requested)
+        {
+            string value = string.IsNullOrWhiteSpace(requested) ? "*Isometric" : requested.Trim();
+            string key = value.TrimStart('*').ToLowerInvariant();
+            if (key == "front") return new NamedViewSpec("*Front", 1);
+            if (key == "back") return new NamedViewSpec("*Back", 2);
+            if (key == "left") return new NamedViewSpec("*Left", 3);
+            if (key == "right") return new NamedViewSpec("*Right", 4);
+            if (key == "top") return new NamedViewSpec("*Top", 5);
+            if (key == "bottom") return new NamedViewSpec("*Bottom", 6);
+            return new NamedViewSpec("*Isometric", 7);
+        }
+
         private static string SafeString(Func<string> read)
         {
             try { return read(); }
@@ -382,7 +429,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
         }
 
-        private static bool SavePreview(ModelDoc2 activeDoc, string previewPath, ProbeResult result)
+        private static bool SavePreview(ModelDoc2 activeDoc, string previewPath, NamedViewSpec view, ProbeResult result)
         {
             try
             {
@@ -398,7 +445,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return false;
             }
 
-            TryAction(() => activeDoc.ShowNamedView2("*Isometric", 7), result, "ShowNamedView2_isometric");
+            TryAction(() => activeDoc.ShowNamedView2(view.Name, view.Id), result, "ShowNamedView2_" + view.Name.TrimStart('*').ToLowerInvariant());
             TryAction(() => activeDoc.ViewZoomtofit2(), result, "ViewZoomtofit2");
             TryAction(() => activeDoc.GraphicsRedraw2(), result, "GraphicsRedraw2");
             Thread.Sleep(1500);
@@ -452,6 +499,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 string.Format("  \"step_path\": \"{0}\",", Escape(result.StepPath)),
                 string.Format("  \"status_path\": \"{0}\",", Escape(result.StatusPath)),
                 string.Format("  \"preview_path\": \"{0}\",", Escape(result.PreviewPath)),
+                string.Format("  \"preview_named_view\": \"{0}\",", Escape(result.PreviewNamedView)),
+                string.Format("  \"preview_named_view_id\": {0},", result.PreviewNamedViewId),
                 string.Format("  \"requested_mainline\": \"{0}\",", Escape(result.RequestedMainline)),
                 string.Format("  \"solidworks_revision\": \"{0}\",", Escape(result.SolidWorksRevision)),
                 string.Format("  \"solidworks_executable\": \"{0}\",", Escape(result.SolidWorksExecutable)),
@@ -547,6 +596,8 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         public string StepPath = "";
         public string StatusPath = "";
         public string PreviewPath = "";
+        public string PreviewNamedView = "";
+        public int PreviewNamedViewId;
         public string RequestedMainline = "SolidWorks 2020";
         public string SolidWorksRevision = "";
         public string SolidWorksExecutable = "";
@@ -566,6 +617,18 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         public readonly List<MethodResult> Methods = new List<MethodResult>();
         public readonly List<MethodResult> Diagnostics = new List<MethodResult>();
         public readonly List<string> DialogEvents = new List<string>();
+    }
+
+    internal sealed class NamedViewSpec
+    {
+        public NamedViewSpec(string name, int id)
+        {
+            Name = name;
+            Id = id;
+        }
+
+        public string Name;
+        public int Id;
     }
 
     internal sealed class DialogResponder

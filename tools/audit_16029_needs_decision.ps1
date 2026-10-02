@@ -58,6 +58,16 @@ function Resolve-Decision {
         }
     }
 
+    if ($PathText -eq "workers/solidworks_tools/sw_export_model_step.js") {
+        return [pscustomobject]@{
+            group = "legacy_step_export_helper"
+            decision = "defer"
+            owner_decision = "Do not include in the current v43 exact-structure change set."
+            reason = "This pre-existing local edit is outside the current v43 structure gate, normalization, capture, and download work."
+            next_action = "Review separately with a focused SolidWorks STEP export smoke test before accepting it."
+        }
+    }
+
     return [pscustomobject]@{
         group = "unclassified_needs_decision"
         decision = "block"

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import shutil
 import zipfile
 from collections import Counter
@@ -10,6 +11,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
+IN_PLACE_REFRESH = os.environ.get("LOCKER_FINALIZE_IN_PLACE", "").strip().lower() in {"1", "true", "yes"}
 
 
 VARIANTS = [
@@ -62,6 +64,37 @@ def collect_type_counts(verify_csv: Path) -> Counter:
     return counts
 
 
+def bbox_context(bbox: dict) -> dict:
+    dims = bbox["assemblyBBoxMm"]
+    objects = bbox.get("objects", [])
+    min_y = float(dims["minY"])
+    max_y = float(dims["maxY"])
+    max_z = float(dims["maxZ"])
+    nominal_body_span_present = any(
+        approx(obj.get("bbox_min_y_mm", 99999), 0.0)
+        and approx(obj.get("bbox_max_y_mm", -99999), 1917.0)
+        for obj in objects
+    )
+    bottom_extension_mm = round(abs(min_y), 3) if min_y < 0 else 0.0
+    top_extension_mm = round(max(0.0, max_y - 1917.0), 3)
+    front_extension_mm = round(max(0.0, max_z), 3)
+    context_note = (
+        "Nominal cabinet body is 800W x 1917H x 550D. Raw STEP bbox includes "
+        f"bottom feet/reference extension {bottom_extension_mm}mm below Y=0, "
+        f"top hardware/reference extension {top_extension_mm}mm above Y=1917, "
+        f"and front-side hardware/reference extension {front_extension_mm}mm beyond nominal depth."
+    )
+    return {
+        "nominal_body_size_mm": {"width": 800.0, "height": 1917.0, "depth": 550.0},
+        "nominal_body_y_span_present": nominal_body_span_present,
+        "raw_step_assembly_bbox_mm": dims,
+        "bottom_extension_below_body_mm": bottom_extension_mm,
+        "top_extension_above_body_mm": top_extension_mm,
+        "front_extension_beyond_depth_mm": front_extension_mm,
+        "engineer_review_note": context_note,
+    }
+
+
 def write_gate_files(prefix: Path, title: str, checks: list[dict], extra: dict) -> dict:
     failed = [check for check in checks if not check["ok"]]
     gate = {
@@ -92,6 +125,8 @@ def write_gate_files(prefix: Path, title: str, checks: list[dict], extra: dict) 
         lines.append(
             f"- Assembly bbox: {bbox['sizeX']} x {bbox['sizeY']} x {bbox['sizeZ']} mm"
         )
+    if "bbox_context" in extra:
+        lines.append(f"- BBox context: {extra['bbox_context']['engineer_review_note']}")
     lines.extend(["", "## Checks", ""])
     for check in checks:
         status = "PASS" if check["ok"] else "FAIL"
@@ -126,6 +161,7 @@ def validate_variant(variant: dict) -> dict:
     model_gate = read_json(paths["model_gate_json"])
     bbox = read_json(paths["bbox_json"])
     bbox_dims = bbox["assemblyBBoxMm"]
+    bbox_ctx = bbox_context(bbox)
     type_counts = collect_type_counts(paths["verify_csv"])
 
     model_checks = [
@@ -243,6 +279,34 @@ def validate_variant(variant: dict) -> dict:
             "expected": [-400.0, 400.0],
             "severity": "error",
         },
+        {
+            "name": "bbox_nominal_1917_body_span_present",
+            "ok": bbox_ctx["nominal_body_y_span_present"],
+            "actual": bbox_ctx["nominal_body_y_span_present"],
+            "expected": "a real object spans Y=0..1917mm",
+            "severity": "error",
+        },
+        {
+            "name": "bbox_bottom_feet_extension_expected",
+            "ok": approx(bbox_ctx["bottom_extension_below_body_mm"], 60.0, 0.5),
+            "actual": bbox_ctx["bottom_extension_below_body_mm"],
+            "expected": "60mm below nominal body",
+            "severity": "error",
+        },
+        {
+            "name": "bbox_top_reference_extension_bounded",
+            "ok": 0.0 <= float(bbox_ctx["top_extension_above_body_mm"]) <= 10.0,
+            "actual": bbox_ctx["top_extension_above_body_mm"],
+            "expected": "0..10mm above nominal body",
+            "severity": "error",
+        },
+        {
+            "name": "bbox_front_hardware_extension_bounded",
+            "ok": 0.0 <= float(bbox_ctx["front_extension_beyond_depth_mm"]) <= 5.0,
+            "actual": bbox_ctx["front_extension_beyond_depth_mm"],
+            "expected": "0..5mm beyond nominal depth",
+            "severity": "error",
+        },
     ]
 
     bbox_prefix = ROOT / "data" / f"locker_16029_800w_{token}_gold_variable_step_bbox_gate"
@@ -256,6 +320,7 @@ def validate_variant(variant: dict) -> dict:
             "object_count": bbox["objectCount"],
             "skipped_object_count": bbox["skippedObjectCount"],
             "assembly_bbox_mm": bbox_dims,
+            "bbox_context": bbox_ctx,
         },
     )
     paths.update(
@@ -290,11 +355,15 @@ def write_variant_brief(target: Path, result: dict) -> None:
     variant = result["variant"]
     stem = variant["stem"]
     bbox = result["bbox_gate"]["assembly_bbox_mm"]
+    bbox_ctx = result["bbox_gate"]["bbox_context"]
     text = f"""# 16029 800W {variant['label']} Gold Variable Review Brief
 
 Review target:
 
-- Product: 16029 indoor locker, 800W x 1917H x 550D
+- Product: 16029 indoor locker
+- Nominal cabinet body: 800W x 1917H x 550D
+- Raw STEP assembly bbox: {bbox['sizeX']} x {bbox['sizeY']} x {bbox['sizeZ']} mm
+- BBox context: {bbox_ctx['engineer_review_note']}
 - Door layout: 2 columns x 3 rows, 6 doors total
 - Door sequence bottom-to-top: {variant['row_sequence']}
 - Per-column door clear width: W337
@@ -327,17 +396,30 @@ Current automated results:
 - STEP bbox gate: PASS, {result['bbox_gate']['checks_total']} checks, 0 failed
 - STEP object count: {result['bbox_gate']['object_count']}
 - STEP assembly bbox: {bbox['sizeX']} x {bbox['sizeY']} x {bbox['sizeZ']} mm
+
+Engineer signoff focus:
+
+- Confirm whether production/customer size should use nominal body envelope 800W x 1917H x 550D or installed envelope including feet/top/front protrusions.
+- Confirm lock cut shape against DXF/drawing semantics; current CSV keeps the lock-hole center as a reference, not a production cut approval.
+- Confirm electric lock hook and U-lock hook pad placement against SolidWorks mate-level evidence before production release.
+- Confirm hinge-side holes/bushings retain sufficient edge distance and assembly clearance after coating.
 """
     target.write_text(text, encoding="utf-8")
 
 
-def make_zip(source_dir: Path, zip_path: Path) -> None:
-    if zip_path.exists():
+def make_zip(source_dir: Path, zip_path: Path, overwrite: bool = False) -> None:
+    target_path = zip_path
+    if zip_path.exists() and not overwrite:
         raise FileExistsError(f"Refusing to overwrite existing zip: {zip_path}")
-    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+    if overwrite:
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        target_path = zip_path.with_name(f"{zip_path.stem}.tmp-{timestamp}{zip_path.suffix}")
+    with zipfile.ZipFile(target_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
         for path in sorted(source_dir.rglob("*")):
             if path.is_file():
                 archive.write(path, path.relative_to(source_dir.parent))
+    if overwrite:
+        target_path.replace(zip_path)
 
 
 def package_variant(result: dict) -> Path:
@@ -345,8 +427,11 @@ def package_variant(result: dict) -> Path:
     stem = variant["stem"]
     handoff_dir = ROOT / "workers" / "handoffs" / variant["handoff"]
     zip_path = handoff_dir.with_suffix(".zip")
-    backup_existing(handoff_dir)
-    backup_existing(zip_path)
+    if IN_PLACE_REFRESH:
+        handoff_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        backup_existing(handoff_dir)
+        backup_existing(zip_path)
 
     paths = result["paths"]
     copy_file(paths["step"], handoff_dir / "step_review" / f"{stem}.step")
@@ -371,7 +456,7 @@ def package_variant(result: dict) -> Path:
         copy_file(paths[key], handoff_dir / "evidence" / "data" / paths[key].name)
 
     write_variant_brief(handoff_dir / "ENGINEER_REVIEW_BRIEF.md", result)
-    make_zip(handoff_dir, zip_path)
+    make_zip(handoff_dir, zip_path, overwrite=IN_PLACE_REFRESH)
     return zip_path
 
 
@@ -405,6 +490,7 @@ def write_dual_readme(target: Path, variant_results: list[dict], zip_paths: list
     for result, zip_path in zip(variant_results, zip_paths):
         variant = result["variant"]
         bbox = result["bbox_gate"]["assembly_bbox_mm"]
+        bbox_ctx = result["bbox_gate"]["bbox_context"]
         lines.extend(
             [
                 f"- `{variant['label']}/`",
@@ -414,6 +500,7 @@ def write_dual_readme(target: Path, variant_results: list[dict], zip_paths: list
                 f"  - STEP bbox gate: PASS, {result['bbox_gate']['checks_total']} checks, 0 failed",
                 f"  - STEP object count: {result['bbox_gate']['object_count']}",
                 f"  - STEP assembly bbox: {bbox['sizeX']} x {bbox['sizeY']} x {bbox['sizeZ']} mm",
+                f"  - BBox context: {bbox_ctx['engineer_review_note']}",
             ]
         )
     lines.extend(
@@ -427,6 +514,11 @@ def write_dual_readme(target: Path, variant_results: list[dict], zip_paths: list
             "Review note:",
             "",
             "These are review candidates for structural confirmation. They are not production release drawings.",
+            "",
+            "Engineer signoff focus:",
+            "",
+            "- Confirm nominal body envelope vs installed envelope including feet/top/front protrusions.",
+            "- Confirm lock cut shape, electric lock hook, U-lock hook pad and hinge-side hole clearances before production release.",
         ]
     )
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -449,19 +541,22 @@ def backup_existing(path: Path) -> Path | None:
 def package_dual(results: list[dict], zip_paths: list[Path]) -> Path:
     dual_dir = ROOT / "workers" / "handoffs" / "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528"
     dual_zip = dual_dir.with_suffix(".zip")
-    backup_existing(dual_dir)
-    backup_existing(dual_zip)
-    dual_dir.mkdir(parents=True)
+    if IN_PLACE_REFRESH:
+        dual_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        backup_existing(dual_dir)
+        backup_existing(dual_zip)
+        dual_dir.mkdir(parents=True)
     for result in results:
         variant = result["variant"]
         source_dir = ROOT / "workers" / "handoffs" / variant["handoff"]
         if not source_dir.exists():
             raise FileNotFoundError(f"Variant handoff dir not found: {source_dir}")
-        shutil.copytree(source_dir, dual_dir / variant["label"])
+        shutil.copytree(source_dir, dual_dir / variant["label"], dirs_exist_ok=IN_PLACE_REFRESH)
         preview = result["paths"]["preview"]
         copy_file(preview, dual_dir / f"{variant['label']}_front_self_review.png")
     write_dual_readme(dual_dir / "README.md", results, zip_paths)
-    make_zip(dual_dir, dual_zip)
+    make_zip(dual_dir, dual_zip, overwrite=IN_PLACE_REFRESH)
     return dual_zip
 
 

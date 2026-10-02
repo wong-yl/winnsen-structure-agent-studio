@@ -1,0 +1,28 @@
+{
+    "schema":  "winnsen.locker16029.native_888x14_lock_toolchain_manifest.v1",
+    "generatedBy":  "VerifyLockTopology888x14Static.mjs",
+    "tools":  {
+                  "native_lock_topology_888x14_v1":  {
+                                                         "sourcePath":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\BuildLockTopology888x14.cs",
+                                                         "sourceNormalizedSha256":  "D317BBAAEE1F38898680796F711768CC28105C3304AB3FB06DA99347E982C7D2",
+                                                         "executablePath":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\bin\\BuildLockTopology888x14.exe",
+                                                         "executableSha256":  "B97F8CED82605F45169C5BC8D7016A7DC784390C29E82BA22218916D57734DBE"
+                                                     },
+                  "native_lock_topology_inspector_v1":  {
+                                                            "sourcePath":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\InspectLockTopology888x14.cs",
+                                                            "sourceNormalizedSha256":  "A2A135353DDE4486E3AB1DCAF8B1E18501B5D2BE91C8965316678254111FF544",
+                                                            "executablePath":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\bin\\InspectLockTopology888x14.exe",
+                                                            "executableSha256":  "AAA28280B50ACAC18D2AF315736FD4205111931809B60B759A77A0D1AFDC9F96"
+                                                        },
+                  "native_assembly_tongue_inspector_888x14_v1":  {
+                                                                     "sourcePath":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\InspectAssemblyTongues888x14.cs",
+                                                                     "sourceNormalizedSha256":  "0CF1FC998D10F84AB7E79B25D33A147B41338E2EFE5B44D4FF17B7F780677D8D",
+                                                                     "executablePath":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\bin\\InspectAssemblyTongues888x14.exe",
+                                                                     "executableSha256":  "1BEEE181F58CDB618701582AFED9AFDFFAA329B9FE14B3CE64B5D40F7D950C35"
+                                                                 }
+              },
+    "validator":  {
+                      "path":  "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\development\\v1\\tools\\ValidateLockTopology888x14.mjs",
+                      "sha256":  "80206421146B0A24D82AC3B720F611F09AC6F03BF04513EA80B53F6079CEF278"
+                  }
+}

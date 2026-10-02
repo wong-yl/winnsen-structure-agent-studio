@@ -1,103 +1,133 @@
 # 16029 当前项目总进程
 
-更新时间：2026-05-28
-当前状态：当前主线已冻结为 800W gold-variable，SolidWorks 2020 打开证据和 scope gate 已通过；下一步是结构工程师继续审核三组柜子的结构问题。
+更新时间：`2026-07-13`
 
-## 一、当前唯一主线
+## 2026-07-13 当前判定
 
-- 项目：16029 800W gold-variable 双方案
-- 软件主线：SolidWorks 2020
-- 历史软件：SolidWorks 2025 只作为曾经验证环境记录，不再作为当前交付主线
-- 当前交付尺寸：800W x 1917H x 550D
-- gold/source 参考基准：1000W x 1917H x 550D，10/12/14 门；用于提取和追溯规则，不是废线
-- 门宽：W337
-- 内部间隙：2 + 3 + 2 = 7
-- 方案一：LMS = 大 6/12，中 4/12，小 2/12
-- 方案二：SML = 小 2/12，中 4/12，大 6/12
-- DUAL 包：只是 LMS + SML 的汇总包，不是第三个结构方案
+- 项目可行，但目标是“AI 结构协同 + 确定性 SolidWorks 2020 生成 + 工程门禁”，不是无人审核的生产 CAD 自动机。
+- `v43-int-v18-lockfix` 保留为当前可下载的历史工程复核包；它通过的是旧结构 gate，不再称为生产交付包或 `engineer-ready`。
+- `v43-int-v20-centerstrip` 是更新的受控技术候选，已补 6 个锁舌对齐 datum 和 1 个中间维护钣金，但新的精确结构 gate 判定为 `needs_structure_revision`：
+  - 可见顶层锁孔基准 `27`，精确契约要求 `6`；
+  - 左右柜体都残留不属于 `L642-R246` 当前门序的历史层板带；
+  - 因此 v20 不进入当前下载清单，不升级为受控候选 PASS。
+- `v43-int-v21-exact-normalized` 完成了历史层板带和重复锁孔 datum 清理，精确结构 gate 通过；但该次生成触碰了 gold/source 目录中的 5 个直接放置源/依赖文件，因此 v21 降级为技术证据，不作为最新下载候选。未找到可证明为 v21 运行前版本的字节级副本，未擅自覆盖恢复。
+- `v43-int-v22-source-isolated` 虽然对已登记的 139 个受控源文件检查为 `PASS / changed=0`，但后续审计发现 placement TSV 仍直接引用 mirror template 目录，运行触碰了其中 2 个竖隔板文件，因此 v22 也降级为技术证据，不再作为最新下载候选。
+- `v43-int-v23-all-sources-isolated` 将全部 placement 外部目录复制到短路径候选工作区后重写 TSV：302 个受控源文件前后 SHA256、长度、修改时间检查 `PASS / changed=0`；39 个模块放置和 7 个 restored-v43 放置均来自候选副本，最终装配外部引用 `0`。
+- v23 的预签核证据包从本次 Pack-and-Go 主装配只读打开后精确隐藏 6 个门组件，生成 6 张内部结构视图；同时对 v21/v22 触碰文件的隔离副本做实体数、包络、体积、表面积和有限装配指标对比。指标相似不等于历史字节版本一致，不自动覆盖源文件。
+- 新生成路线必须同时通过：1000W gold/source 最小结构 gate、结构反馈 gate、v43 精确结构契约。精确契约 PASS 只允许标记 `controlled_candidate_pass`，并固定 `release_eligible=false`。
+- SolidWorks 放置来源件必须使用候选区副本；工具打开被放置组件时请求只读，并在证据中记录 `read_only_requested=true`。
 
-## 二、当前进度判断
+当前执行结果：v23 已完成生成、精确门禁、全受控源完整性门禁、内部六视图、历史来源对比、工程预签核清单和两个 ZIP；结构签核 gate 当前为 `AWAITING_ENGINEERING_SIGNOFF`。下一步是结构工程师完成 7 项审查并作出“进入样机”或“退回结构修改”的明确决定。不扩展 800W/900W，不发布 DXF/BOM。
 
-现在不是继续跑新模型阶段，而是项目冻结整理阶段。
+## 当前主线
 
-当前已有三类输出：
+- 当前工程复核包：`16029 / 740W / L642-R246 / v43 / v43-int-v18-lockfix`
+- CAD 主线：`SolidWorks 2020`
+- 结构参考：`1000W x 1917H x 550D` 是 gold/source reference，用于约束内部钣金结构，不是当前下载交付包。
+- 柜门边界：沿用已确认的 `740W / L642-R246 / v43` 柜门路线，不再回到历史 direct assembly 逐零件乱装配路线。
+- 生成排除：电器板、电控锁、电控锁钩不进入生成包；锁侧孔位、定位孔、安装界面和 datum 必须保留。
 
-- 当前候选包：LMS、SML、DUAL 三个 800W gold-variable 包
-- 当前工程师审核登录系统：只应该展示这三组当前候选包和当前审核轮次
-- 当前防呆 gate：用于阻止旧路线、旧软件、旧尺寸、轻量包混进工程师审核
+## 当前交付资产
 
-最新 `current_handoff_scope_gate` 是 PASS。LMS/SML 都已有 SolidWorks 2020 打开截图和 JSON 证据；DUAL 是 LMS + SML 的汇总包。
+- 最终请求：`v43-int-v18-lockfix`
+- 主装配：
+  - `<repo>\workers\generated_models\review_generation_requests\v43-int-v18-lockfix\sw2020_full_740W_parametric_template\pack_and_go\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM`
+- ZIP：
+  - `<repo>\workers\generation_logs\review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip`
+- 交付 manifest：
+  - `data/locker_16029_v43_internal_sheetmetal_delivery.json`
+- 交付记录：
+  - `workers/maintenance/16029_v43_internal_sheetmetal_delivery_handoff_20260603.md`
+- 截图目录：
+  - `<local-evidence-root>\16029_v43_internal_steps_20260603\step_v18_lock_tongue_restored`
 
-结论：三组包可以作为当前工程审核包继续让结构工程师看结构问题，但还不能等同于生产图纸/BOM 释放。
+## 最新受控候选资产
 
-## 三、工程师审核界面应该保留的信息
+- 请求：`v43-int-v23-all-sources-isolated`
+- 状态：`controlled_candidate_pass`；`releaseEligible=false`
+- 主装配：
+  - `<repo>\workers\generated_models\review_generation_requests\v43-int-v23-all-sources-isolated\sw2020_full_740W_parametric_template\pack_and_go\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM`
+- ZIP：
+  - `<repo>\workers\generation_logs\review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip`
+- 工程预签核证据 ZIP：
+  - `<repo>\workers\generation_logs\review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip`
+- 内部六视图与签核清单：
+  - `<repo>\workers\generated_models\review_generation_requests\v43-int-v23-all-sources-isolated\sw2020_full_740W_parametric_template\evidence\pre_signoff_review`
+- v18 仍保留为已有人目视确认的历史复核入口；v23 作为最新受控候选单独展示，未替代生产释放或用户签核。
 
-工程师界面只保留当前审核需要的信息：
+## v23 结构工程签核
 
-- 项目名称：16029 800W gold-variable
-- 软件要求：SolidWorks 2020 打开 STEP
-- 方案：LMS、SML、DUAL
-- 尺寸：800W x 1917H x 550D，W337，间隙 2 + 3 + 2 = 7
-- 当前状态：工程审核包，SolidWorks 2020 打开截图 gate 已通过，等待结构工程师签核结构问题
-- 下载：只给当前 LMS、SML、DUAL 三个包
-- 反馈：只收当前审核轮次的问题
+- 当前状态：`AWAITING_ENGINEERING_SIGNOFF`；自动证据有效，尚无工程师签字副本。
+- 签核模板：`data/locker_16029_v23_engineering_signoff.template.json`
+- 完整签字副本保存位置：`data/locker_16029_v23_engineering_signoff.json`
+- 模板绑定当前 generation summary、精确结构 gate、受控源完整性报告、来源报告及两个 ZIP 的文件长度和 SHA256；候选证据变化后旧签核不能沿用。
+- 必须完成 7 项审查：锁/锁钩/定位孔共同基准、层板/前框定位界面、竖隔板加强与焊接可达性、非预期外穿孔、门缝/下垂/碰撞、钣金工艺与公差、历史受触碰源文件处置。
+- 只允许两个决定：`ACCEPT_FOR_PROTOTYPE` 或 `RETURN_FOR_STRUCTURE_REVISION`。前者只允许进入样机阶段，仍固定 `production_release_eligible=false`；后者必须带失败项和修改证据。
+- 工程师应在模板副本中完成全部字段后再保存为签字文件，避免半填写文件被门禁判为无效。项目程序不代签，也不提供匿名签核写入接口。
 
-工程师界面不要出现：
+运行签核门禁：
 
-- 1200W、2117H、W537
-- 把 1000W / 10/12/14 标成当前交付包；如必须出现，只能标注为 gold/source 参考基准
-- RULE_REVIEW、lightweight、layout-only 字样
-- SolidWorks 2025 当前主线说法
-- FreeCAD 作为工程师打开软件的提示
-- 旧包、备份包、临时包、历史截图包
+```powershell
+node tools\verify_16029_v23_engineering_signoff.mjs
+```
 
-## 四、FreeCAD 的位置
+## 当前判定
 
-FreeCAD 不再作为工程师审核软件。
+- Gold/source structure gate：`PASS`
+- Structure feedback：`clean`
+- 锁舌：`6` 个机械锁舌已恢复。
+- 电器/电控锁残留：`0`
+- 后背接缝：按侧板钣金 back flange 居中，不是贴 box。
+- 用户已目视确认：锁舌位置、后背居中接缝、内部层板/前框配合。
+- v23 精确结构 gate：`PASS`，11/11；门模块 `6`、锁舌 `6`、锁孔基准 `6`、中心维护钣金 `1`、电器/电控锁残留 `0`。
+- v23 受控源完整性 gate：`PASS`；检查 `302` 个文件，变化 `0`；本地化放置 `39 + 7`；最终装配外部引用 `0`。
+- 历史源对比：current 与 mirror 的 4 个目标零件几何指标一致；current 维护门与 v20 快照几何指标一致；backup 20190423 仅部分一致。以上结果不证明历史字节版本或特征树一致。
 
-当前保留它的原因只剩两类：
+当前包可以进入 `SolidWorks 2020` 工程复核和交付整理，但不是生产图纸释放包。
 
-- 内部参数化生成和历史证据
-- 脚本追溯，证明变体来自同一参数入口
+## 平台入口
 
-工程师侧只看 SolidWorks 2020 能打开的 STEP、截图证据、gate 文件和审核包。
+- FastAPI `/api/review-downloads` 首位展示 `16029-v43-internal-sheetmetal-lockfix-zip`。
+- 同一目录展示 `16029-v43-internal-sheetmetal-v23-controlled-candidate-zip`，明确标记“最新受控候选（未释放）”。
+- 同一目录展示 `16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip`，只包含内部视图、来源对比和签核清单，不作为生产 CAD 包。
+- 同一目录展示绑定当前 v23 证据的工程签核模板；API 和前端只读显示签核 gate 状态、自动证据状态、签字文件状态、样机资格和固定的非生产释放边界。
+- 独立审核页 `tools/serve_16029_review_downloads.mjs` 运行在 `http://<审核平台主机>:5180/`，当前轮次为 `16029-v43-v23-engineering-feedback-20260713`。登录后默认审核 v23 受控候选，每个结构问题单独生成 `V23-Q-*` 编号。
+- 该审核页的模型下载文件统一同步到 `STUDIO_REVIEW_STORAGE_ROOT` 指向的共享根目录；工程师上传的 PNG/JPG/WEBP/PDF、结构字段和反馈 JSON 统一保存到同一根目录下的 `工程反馈`。工作站配置使用忽略提交的 `data/review_portal.local.json`，模板见 `configs/review_portal.local.example.json`。
+- 平台反馈固定记录 `feedbackIsEngineeringSignoff=false` 与 `productionReleaseEligible=false`；它用于整改沟通，不能代替结构工程师最终签核。
+- 默认生成提示词和参数已切到 `740W / L642-R246 / v43`，并明确排除电器板、电控锁、电控锁钩。
+- 同路线旧请求如 `v43-int-v16-*`、`v43-int-v17-*`、`v43-int-v15-*` 不作为默认当前任务展示；保留直链和历史证据，不删除。
+- 800W LMS/SML/DUAL 包只保留为历史参考，不再是当前工程主线。
 
-## 五、走错的路线和坑
+## 验证入口
 
-以下内容只作为历史证据，不进入当前工程师交付：
+每次代码/平台规则修改后运行：
 
-- 1200W、W537 宽度试错线
-- 2117H 高度试错线
-- 轻量 rule-review/layout-only 包
-- 只靠预览图判断结构的流程
-- 没有门序、五金计数、bbox gate 的粗糙模型
-- 只用 FreeCAD 或截图说明可交付的流程
-- 没有 SolidWorks 2020 打开截图就打包给工程师的流程
+```powershell
+tools\verify_16029_current_mainline.ps1 -SkipWebBuild
+```
 
-以下内容不是废线，必须保留为内部 gold/source 参考，但不作为当前工程师下载包：
+该 gate 现在覆盖：
 
-- 1000W x 1917H x 550D 标准源样本
-- 10/12/14 门同尺寸规则样本
-- 对应的 SolidWorks 源文件、DXF、BOM、STEP 和证据记录
+- API 编译和审核页语法检查；
+- 1000W gold/source sheet-metal evidence 和 rules；
+- v43 delivery manifest gate；
+- 锁舌恢复规则和 gate；
+- 当前 handoff scope gate；
+- 当前候选只读六视图生成与独立 SolidWorks 会话退出；
+- v23 预签核证据脚本语法、只读零件探针、精确门组件隐藏和来源零写入边界；
+- v23 工程签核模板、证据 SHA 绑定、两种合法决定、7 项完整性校验、API/前端只读状态和 `production_release_eligible=false` 边界；
+- 5180 审核平台的登录保护、v23 结构化反馈字段、附件类型/数量/大小校验、共享目录落盘、团队回显和附件读取边界；
+- 首提交范围和 staged scope guard。
 
-## 六、后续正确顺序
+## 不允许混入
 
-1. 冻结项目主线：只认 800W x 1917H x 550D，LMS/SML。
-2. 冻结软件主线：只认 SolidWorks 2020。
-3. 清理工程师界面：只展示当前三包和当前审核轮次。
-4. 清理 git 边界：先分类，不整仓上传。
-5. 保留 SolidWorks 2020 打开验证证据：LMS/SML 都要有截图和 JSON。
-6. gate PASS 后，当前包进入工程审核包口径；生产释放仍等结构签核。
-7. 工程师继续审核时，只围绕当前候选包反馈结构问题。
+- 生成模型、日志、截图、zip；
+- v15/v16/v17 试错包；
+- 1200W、2117H、W537 历史试错线；
+- SolidWorks 2025 当前主线说法；
+- FreeCAD 作为工程师交付主线；
+- 仅凭截图或能打开就标成生产 release。
 
-## 七、当前不能做的事
+## 一句话结论
 
-- 不能把当前三包说成已经完整验证通过
-- 不能把历史试错文件混入提交或审核界面
-- 不能回到 1200W/2117H 继续试错
-- 不能把 FreeCAD 文件当作工程师主交付
-- 不能因为手动看过一次模型，就跳过 SolidWorks 2020 截图 gate
-
-## 八、当前一句话结论
-
-16029 项目已经从多路线试错收敛到 800W gold-variable LMS/SML；1000W 10/12/14 是 gold/source 参考基准，当前工程师审核界面只展示 800W LMS/SML/DUAL 三组包，生产释放仍等结构工程师签核。
+16029 当前已收敛到 `740W / L642-R246 / v43`：v18 保留为已目视确认的历史工程复核入口，v23 已形成精确结构、全受控源隔离、预签核证据和防代签门禁闭环的最新受控候选。项目技术路线可行；当前等待结构工程师签核，生产释放仍需单独完成图纸、DXF/展开图、BOM、材料厚度、公差、供应商工艺和样机验证。

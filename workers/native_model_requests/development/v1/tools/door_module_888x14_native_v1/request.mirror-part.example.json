@@ -1,0 +1,51 @@
+{
+  "schema": "winnsen.16029.native_door_module_request.v1",
+  "task_id": "replace-with-task-id",
+  "worker_id": "replace-with-worker-id",
+  "lease_id": "replace-with-lease-id",
+  "cabinet_width_mm": 888.0,
+  "door_width_mm": 381.0,
+  "door_height_mm": 254.42857142857142,
+  "columns": 2,
+  "rows_per_column": 7,
+  "total_doors": 14,
+  "isolated_root": "D:\\replace-with-isolated-root",
+  "output_dir": "D:\\replace-with-isolated-root\\output\\door-module-888x14",
+  "left_panel_proof": "D:\\replace-with-isolated-root\\evidence\\left-panel-proof.v1.json",
+  "right_panel_strategy": "solidworks_mirror_part",
+  "visible": false,
+  "sources": {
+    "left_panel_seed": {
+      "path": "D:\\replace-with-isolated-root\\sources\\door-panel-left-1of12.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "stiffener_seed": {
+      "path": "D:\\replace-with-isolated-root\\sources\\door-stiffener.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "latch_plate": {
+      "path": "D:\\replace-with-isolated-root\\sources\\hinge-latch-plate.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "hook_pad": {
+      "path": "D:\\replace-with-isolated-root\\sources\\u-hook-pad.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "bushing": {
+      "path": "D:\\replace-with-isolated-root\\sources\\plastic-bushing.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "hinge_pin": {
+      "path": "D:\\replace-with-isolated-root\\sources\\door-hinge-pin.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "circlip": {
+      "path": "D:\\replace-with-isolated-root\\sources\\circlip.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    },
+    "mechanical_lock_tongue": {
+      "path": "D:\\replace-with-isolated-root\\sources\\mechanical-lock-tongue.SLDPRT",
+      "sha256": "replace-with-64-hex-sha256"
+    }
+  }
+}

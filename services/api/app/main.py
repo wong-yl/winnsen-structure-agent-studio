@@ -11,9 +11,12 @@ import sqlite3
 import subprocess
 import sys
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -114,10 +117,34 @@ class ReviewDownloadAsset(BaseModel):
     download_url: str
 
 
+class V23EngineeringSignoffStatus(BaseModel):
+    generated_at: str | None = None
+    candidate_request_id: str
+    status: str
+    automatic_evidence_pass: bool
+    template_valid: bool
+    template_available: bool
+    signed_file_exists: bool
+    signed_file_valid: bool
+    engineering_review_accepted: bool
+    ready_for_prototype: bool
+    prototype_validation_status: str
+    production_release_eligible: bool
+    review_decision: str
+    failed_review_item_ids: list[str]
+    checks_total: int
+    checks_failed: int
+    validation_errors: list[str]
+    template_download_url: str
+    signed_file_path: str
+    next_action: str
+
+
 class ReviewDownloadIndex(BaseModel):
     generated_at: str
     scope: str
     assets: list[ReviewDownloadAsset]
+    engineering_signoff: V23EngineeringSignoffStatus
 
 
 class SolidWorksRunSummary(BaseModel):
@@ -185,7 +212,7 @@ class GenerationTaskCreate(BaseModel):
     parameters: dict[str, str] = Field(default_factory=dict)
     evidence: list[str] = Field(default_factory=list)
     limitation: str = ""
-    status: TaskStatus = "draft_pending_worker"
+    status: Literal["draft_pending_worker", "blocked_pending_evidence"] = "draft_pending_worker"
 
 
 class GenerationTask(BaseModel):
@@ -352,11 +379,16 @@ app.add_middleware(
 )
 
 
-def connect() -> sqlite3.Connection:
+@contextmanager
+def connect() -> Iterator[sqlite3.Connection]:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
-    return connection
+    try:
+        with connection:
+            yield connection
+    finally:
+        connection.close()
 
 
 def init_db() -> None:
@@ -399,6 +431,10 @@ def on_startup() -> None:
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def subprocess_output_text(value: str | bytes | None) -> str:
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
 
 
 def parse_float(value: str | None) -> float | None:
@@ -736,7 +772,19 @@ def locker_16029_verified_door_counts() -> set[int]:
     return set(VERIFIED_LOCKER_16029_SOLIDWORKS_DOOR_COUNTS)
 
 
+def locker_16029_controlled_combo_supported(cabinet_width: float, cabinet_depth: float, door_count: int | None) -> bool:
+    if door_count is None:
+        return False
+    if door_count == 6:
+        return 700.0 <= cabinet_width <= 780.0 and abs(cabinet_depth - 550.0) <= 0.001
+    if door_count in {10, 12, 14}:
+        return 740.0 <= cabinet_width <= 1100.0 and 350.0 <= cabinet_depth <= 600.0
+    return False
+
+
 def locker_16029_verified_rule_packet_check(door_count: int) -> tuple[bool, str]:
+    if door_count == 6:
+        return True, "740W/6-door v43 controlled seed uses the current delivery manifest; 1000W verified rule packet is reference-only for this combo."
     payload = read_locker_16029_verified_rule_packet()
     if payload.get("status") != "PASS":
         return False, f"16029 verified rule packet status is {payload.get('status')}; see {LOCKER_16029_VERIFIED_RULE_PACKET_PATH}"
@@ -1590,6 +1638,22 @@ def task_output_dir(task: GenerationTask) -> Path:
     return checked_local_action_path(task.execution_result.output_dir)
 
 
+def task_download_zip_path(task: GenerationTask) -> Path:
+    output_dir = task_output_dir(task)
+    files = [Path(path) for path in output_files(output_dir)]
+    if not files:
+        raise HTTPException(status_code=404, detail="Task output directory is empty.")
+
+    WORKER_LOG_DIR.mkdir(parents=True, exist_ok=True)
+    zip_path = WORKER_LOG_DIR / f"{task.id}-download.zip"
+    with ZipFile(zip_path, "w", compression=ZIP_DEFLATED) as archive:
+        for file_path in files:
+            if not file_path.exists() or not file_path.is_file():
+                continue
+            archive.write(file_path, arcname=str(file_path.relative_to(output_dir)))
+    return zip_path
+
+
 def first_output_with_suffix(output_dir: Path, suffix: str) -> Path | None:
     for path in sorted(output_dir.iterdir()):
         if path.is_file() and path.name.lower().endswith(suffix):
@@ -2149,7 +2213,7 @@ def validate_task_parameters(task: GenerationTask) -> list[str]:
             elif door_count % 2:
                 errors.append("door_count must be even for the current two-column 16029 layout.")
             else:
-                supported_counts = locker_16029_verified_door_counts()
+                supported_counts = locker_16029_verified_door_counts() | {6}
                 if door_count not in supported_counts:
                     supported = ", ".join(str(value) for value in sorted(supported_counts))
                     route = (
@@ -2161,16 +2225,23 @@ def validate_task_parameters(task: GenerationTask) -> list[str]:
                         f"{route} for 16029 currently supports only {supported}-door output. "
                         "Other door counts stay in rule-learning until their transform/mate and geometry gates pass."
                     )
-        raw_cabinet_width = str(task.parameters.get("cabinet_width", "1000")).strip() or "1000"
+        raw_cabinet_width = str(task.parameters.get("cabinet_width", "950")).strip() or "950"
+        raw_cabinet_depth = str(task.parameters.get("cabinet_depth", "400")).strip() or "400"
+        cabinet_width: float | None = None
+        cabinet_depth: float | None = None
         try:
             cabinet_width = float(raw_cabinet_width)
         except ValueError:
             errors.append("cabinet_width must be numeric for the 16029 mainline.")
-        else:
-            if abs(cabinet_width - 1000.0) > 0.001:
+        try:
+            cabinet_depth = float(raw_cabinet_depth)
+        except ValueError:
+            errors.append("cabinet_depth must be numeric for the 16029 mainline.")
+        if cabinet_width is not None and cabinet_depth is not None:
+            if not locker_16029_controlled_combo_supported(cabinet_width, cabinet_depth, door_count):
                 errors.append(
-                    "16029 generation handoff currently supports only the 1000mm-wide, 1917mm-high, 550mm-deep outer size; "
-                    "width-rule experiments must not enter this engineering-reference queue."
+                    "16029 generation is rule-controlled: use 6-door L642-R246 700-780W/550D, "
+                    "or 10/12/14-door gold-rule 740-1100W/350-600D requests."
                 )
         geometry_source = str(task.parameters.get("geometry_source", "auto")).strip() or "auto"
         if geometry_source != "auto":
@@ -2859,6 +2930,8 @@ def checked_template_assembly_path(raw_path: str) -> Path:
         raise HTTPException(status_code=400, detail="Rule extraction currently accepts SolidWorks .SLDASM assemblies only.")
     if not path.exists():
         raise HTTPException(status_code=404, detail=f"Assembly file does not exist: {path}")
+    if not path.is_file():
+        raise HTTPException(status_code=400, detail="Assembly path must be a file.")
 
     resolved = path.resolve()
     root = TEMPLATE_ASSET_ROOT.resolve()
@@ -2925,7 +2998,11 @@ def list_rule_extraction_results(limit: int = 20) -> list[RuleExtractionResult]:
 
 
 def fetch_rule_extraction_or_404(run_id: str) -> RuleExtractionResult:
-    output_dir = RULE_EXTRACTION_DIR / run_id
+    if run_id in {"", ".", ".."} or re.search(r"[/\\:]", run_id):
+        raise HTTPException(status_code=400, detail="Rule extraction run ID must be a directory name.")
+    output_dir = (RULE_EXTRACTION_DIR / run_id).resolve()
+    if not is_under_root(output_dir, RULE_EXTRACTION_DIR.resolve()):
+        raise HTTPException(status_code=403, detail="Rule extraction run is outside the extraction root.")
     result = read_rule_extraction_result(output_dir)
     if result is None:
         raise HTTPException(status_code=404, detail=f"Rule extraction run {run_id} was not found.")
@@ -3024,27 +3101,59 @@ def summarize_rule_extraction_output(output_dir: Path) -> None:
 
 def review_download_catalog() -> dict[str, dict[str, str | Path]]:
     return {
+        "16029-v43-internal-sheetmetal-lockfix-zip": {
+            "title": "16029 740W v43 历史工程复核包（已目视确认）",
+            "category": "当前工程复核包",
+            "description": "v43-int-v18-lockfix：SolidWorks 2020 Pack-and-Go，沿用 740W / L642-R246 / v43 柜门路线，恢复 6 个机械锁舌，后背接缝按侧板钣金居中，电器板、电控锁、电控锁钩排除。",
+            "status": "sw2020_review_ready",
+            "path": WORKER_LOG_DIR / "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
+            "file_name": "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
+        },
+        "16029-v43-internal-sheetmetal-v23-controlled-candidate-zip": {
+            "title": "16029 740W v43 v23 历史工程辅助模型",
+            "category": "历史结构验证资料",
+            "description": "v43-int-v23-all-sources-isolated：精确结构 gate 11/11 PASS，302 个受控源文件 changed=0，39 个模块放置与 7 个 restored-v43 放置全部使用候选本地副本，最终装配外部引用 0；保留给结构工程师作历史对照。",
+            "status": "controlled_candidate_pass",
+            "path": WORKER_LOG_DIR / "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+            "file_name": "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+        },
+        "16029-v43-internal-sheetmetal-v23-pre-signoff-review-zip": {
+            "title": "16029 740W v43 v23 历史结构验证资料",
+            "category": "历史工程记录",
+            "description": "包含 6 张隐藏柜门后的内部结构视图、历史源文件几何指标对比、零写入 manifest 和工程确认清单，供结构工程师追溯和对照。",
+            "status": "pre_signoff_review_evidence",
+            "path": WORKER_LOG_DIR / "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+            "file_name": "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+        },
+        "16029-v43-internal-sheetmetal-v23-engineering-signoff-template": {
+            "title": "16029 740W v43 v23 结构工程确认记录模板",
+            "category": "历史工程记录模板",
+            "description": "模板绑定当前 v23 摘要、结构 gate、源完整性、来源报告和两个 ZIP 的 SHA256，供结构工程师记录核对结论。",
+            "status": "engineering_signoff_template",
+            "path": ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.template.json",
+            "file_name": "locker_16029_v23_engineering_signoff.template.json",
+        },
         "16029-800w-lms-gold-variable-review-zip": {
-            "title": "16029 800W LMS 审核包",
-            "category": "当前审核包",
-            "description": "LMS 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。",
-            "status": "ready_for_engineering_review",
+            "title": "16029 800W LMS 历史参考包",
+            "category": "保留参考",
+            "description": "旧 800W gold-variable LMS 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。",
+            "status": "historical_reference",
             "path": HANDOFF_DIR / "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
         },
         "16029-800w-sml-gold-variable-review-zip": {
-            "title": "16029 800W SML 审核包",
-            "category": "当前审核包",
-            "description": "SML 排布审核包：STEP、自审图、verify CSV、model gate、bbox gate、交付清单与 SolidWorks 2020 打开截图证据；仍需结构工程师签核后才能进入生产图纸释放。",
-            "status": "ready_for_engineering_review",
+            "title": "16029 800W SML 历史参考包",
+            "category": "保留参考",
+            "description": "旧 800W gold-variable SML 审核包，保留作历史对照；不是当前 v43 内部钣金交付入口。",
+            "status": "historical_reference",
             "path": HANDOFF_DIR / "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
         },
         "16029-800w-dual-gold-variable-review-zip": {
-            "title": "16029 800W LMS/SML 总审核包",
-            "category": "当前汇总包",
-            "description": "双方案合包，用于 LMS/SML 对比审核和归档；不是第三个结构方案，也不是生产图纸释放包。",
-            "status": "ready_for_engineering_comparison",
+            "title": "16029 800W LMS/SML 历史合包",
+            "category": "保留参考",
+            "description": "旧 LMS/SML 双方案合包，保留作历史对照；不是当前 v43 内部钣金交付入口。",
+            "status": "historical_reference",
             "path": HANDOFF_DIR / "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
             "file_name": "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
         },
@@ -3069,7 +3178,84 @@ def review_download_asset(asset_id: str, meta: dict[str, str | Path]) -> ReviewD
     )
 
 
+V23_ENGINEERING_SIGNOFF_TEMPLATE_PATH = ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.template.json"
+V23_ENGINEERING_SIGNOFF_PATH = ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff.json"
+V23_ENGINEERING_SIGNOFF_GATE_PATH = ROOT_DIR / "data" / "locker_16029_v23_engineering_signoff_gate.json"
+V23_ENGINEERING_SIGNOFF_TEMPLATE_URL = (
+    "/api/review-downloads/16029-v43-internal-sheetmetal-v23-engineering-signoff-template"
+)
+V23_CANDIDATE_ROOT = (
+    ROOT_DIR
+    / "workers"
+    / "generated_models"
+    / "review_generation_requests"
+    / "v43-int-v23-all-sources-isolated"
+    / "sw2020_full_740W_parametric_template"
+)
+
+
+def read_v23_engineering_signoff_status() -> V23EngineeringSignoffStatus:
+    payload: dict[str, Any] = {}
+    validation_errors: list[str] = []
+    if V23_ENGINEERING_SIGNOFF_GATE_PATH.exists():
+        try:
+            payload = json.loads(V23_ENGINEERING_SIGNOFF_GATE_PATH.read_text(encoding="utf-8-sig"))
+        except (OSError, json.JSONDecodeError) as error:
+            validation_errors.append(f"signoff gate is unreadable: {error}")
+    else:
+        validation_errors.append("signoff gate has not been generated")
+
+    status = str(payload.get("status") or "GATE_NOT_GENERATED")
+    watched_paths = [
+        V23_ENGINEERING_SIGNOFF_TEMPLATE_PATH,
+        V23_ENGINEERING_SIGNOFF_PATH,
+        V23_CANDIDATE_ROOT / "solidworks_2020_full_assembly_generation_summary.json",
+        V23_CANDIDATE_ROOT / "evidence" / "v43_exact_structure_gate.json",
+        V23_CANDIDATE_ROOT / "evidence" / "controlled_source_integrity_result.json",
+        V23_CANDIDATE_ROOT / "evidence" / "pre_signoff_review" / "source_provenance_report.json",
+        ROOT_DIR / "workers" / "generation_logs" / "review_generation_v43-int-v23-all-sources-isolated_solidworks2020_full_assembly.zip",
+        ROOT_DIR / "workers" / "generation_logs" / "review_generation_v43-int-v23-all-sources-isolated_pre_signoff_review.zip",
+    ]
+    if V23_ENGINEERING_SIGNOFF_GATE_PATH.exists():
+        gate_mtime = V23_ENGINEERING_SIGNOFF_GATE_PATH.stat().st_mtime
+        newer_inputs = [str(path.relative_to(ROOT_DIR)) for path in watched_paths if path.exists() and path.stat().st_mtime > gate_mtime]
+        if newer_inputs:
+            status = "STALE_REVERIFY_REQUIRED"
+            validation_errors.append(f"newer signoff inputs: {', '.join(newer_inputs)}")
+
+    payload_errors = payload.get("validation_errors")
+    if isinstance(payload_errors, list):
+        validation_errors.extend(str(item) for item in payload_errors)
+    next_action = str(payload.get("next_action") or "Run node tools/verify_16029_v23_engineering_signoff.mjs.")
+    if status == "STALE_REVERIFY_REQUIRED":
+        next_action = "历史工程记录或候选证据已更新，请重新核对 v23 历史验证资料。"
+
+    return V23EngineeringSignoffStatus(
+        generated_at=payload.get("generated_at"),
+        candidate_request_id=str(payload.get("candidate_request_id") or "v43-int-v23-all-sources-isolated"),
+        status=status,
+        automatic_evidence_pass=bool(payload.get("automatic_evidence_pass", False)),
+        template_valid=bool(payload.get("template_valid", False)),
+        template_available=V23_ENGINEERING_SIGNOFF_TEMPLATE_PATH.is_file(),
+        signed_file_exists=V23_ENGINEERING_SIGNOFF_PATH.is_file(),
+        signed_file_valid=bool(payload.get("signed_file_valid", False)),
+        engineering_review_accepted=bool(payload.get("engineering_review_accepted", False)),
+        ready_for_prototype=bool(payload.get("ready_for_prototype", False)),
+        prototype_validation_status=str(payload.get("prototype_validation_status") or "NOT_RUN_REQUIRED_BEFORE_RELEASE"),
+        production_release_eligible=False,
+        review_decision=str(payload.get("review_decision") or "UNREVIEWED"),
+        failed_review_item_ids=[str(item) for item in payload.get("failed_review_item_ids", [])],
+        checks_total=int(payload.get("checks_total", 0)),
+        checks_failed=int(payload.get("checks_failed", 0)),
+        validation_errors=validation_errors,
+        template_download_url=V23_ENGINEERING_SIGNOFF_TEMPLATE_URL,
+        signed_file_path=str(V23_ENGINEERING_SIGNOFF_PATH),
+        next_action=next_action,
+    )
+
+
 CURRENT_16029_ENGINEER_HANDOFF_ZIPS = [
+    "review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
     "16029_800W_LMS_GOLD_VARIABLE_REVIEW_20260528.zip",
     "16029_800W_SML_GOLD_VARIABLE_REVIEW_20260528.zip",
     "16029_800W_DUAL_GOLD_VARIABLE_REVIEW_20260528.zip",
@@ -3085,7 +3271,7 @@ def mark_locker_16029_reference_response(payload: dict[str, Any], endpoint: str,
     marked["reference_reason"] = reference_reason
     marked["legacy_reason"] = reference_reason
     marked["current_review_route"] = {
-        "current_route": "16029 800W gold-variable LMS/SML",
+        "current_route": "16029 740W / L642-R246 / v43",
         "download_endpoint": "/api/review-downloads",
         "scope_gate": str(CURRENT_16029_HANDOFF_SCOPE_GATE_PATH),
         "approved_zips": CURRENT_16029_ENGINEER_HANDOFF_ZIPS,
@@ -3099,7 +3285,7 @@ def read_current_16029_handoff_scope_gate() -> dict[str, Any]:
         return {
             "generated_at": None,
             "status": "MISSING_OUTPUT",
-            "scope": "16029 800W gold-variable engineer-facing handoff scope",
+            "scope": "16029 740W / L642-R246 / v43 internal sheet-metal handoff scope",
             "approved_zips": CURRENT_16029_ENGINEER_HANDOFF_ZIPS,
             "notes": [
                 "Run workers\\maintenance\\validate_16029_current_handoff_scope.ps1 before handing files to engineering."
@@ -3221,6 +3407,9 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
     result = fetch_rule_extraction_or_404(run_id)
     output_dir = checked_local_action_path(result.output_dir)
     run_script = checked_local_action_path(result.run_script_path)
+    expected_output_dir = (RULE_EXTRACTION_DIR / run_id).resolve()
+    if output_dir != expected_output_dir or run_script.parent != output_dir:
+        raise HTTPException(status_code=403, detail="Rule extraction paths do not match the requested run.")
     if not run_script.is_file():
         raise HTTPException(status_code=404, detail=f"Rule extraction script does not exist: {run_script}")
 
@@ -3236,12 +3425,15 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
         str(run_script),
     ]
 
-    result.status = "running"
-    result.updated_at = now_iso()
-    result.message = "SolidWorks rule extraction is running."
-    write_rule_extraction_result(result)
+    lock_ok, lock_detail = acquire_solidworks_run_lock(result.id)
+    if not lock_ok:
+        raise HTTPException(status_code=409, detail=lock_detail)
 
     try:
+        result.status = "running"
+        result.updated_at = now_iso()
+        result.message = "SolidWorks rule extraction is running."
+        write_rule_extraction_result(result)
         completed = subprocess.run(
             command,
             cwd=output_dir,
@@ -3269,12 +3461,21 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
             message = "SolidWorks rule extraction failed. Review stdout/stderr in the extraction folder."
         exit_code = completed.returncode
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
-        stderr_path.write_text(error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
+        stderr_path.write_text(subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
         outputs = rule_extraction_outputs(output_dir)
         status = "failed"
         message = f"SolidWorks rule extraction timed out after {timeout_seconds} seconds."
         exit_code = None
+    except OSError as error:
+        stdout_path.write_text("", encoding="utf-8")
+        stderr_path.write_text(str(error), encoding="utf-8", errors="replace")
+        outputs = rule_extraction_outputs(output_dir)
+        status = "failed"
+        message = f"SolidWorks rule extraction could not be started: {error}"
+        exit_code = None
+    finally:
+        release_solidworks_run_lock(result.id)
 
     updated = RuleExtractionResult(
         id=result.id,
@@ -3357,9 +3558,9 @@ def run_freecad_step_geometry_check(model_path: Path, out_dir: Path, timeout_sec
             check=False,
         )
     except subprocess.TimeoutExpired as error:
-        (out_dir / "freecad_stdout.txt").write_text(error.stdout or "", encoding="utf-8", errors="replace")
+        (out_dir / "freecad_stdout.txt").write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
         (out_dir / "freecad_stderr.txt").write_text(
-            error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
+            subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
         )
         return {"status": "step_geometry_check_timeout", "message": f"Timed out after {timeout_seconds} seconds."}
     except OSError as error:
@@ -3412,9 +3613,9 @@ def run_freecad_fcstd_integrity_check(model_path: Path, out_prefix: Path, expect
             check=False,
         )
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
         stderr_path.write_text(
-            error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
+            subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
         )
         return {
             "status": "fcstd_integrity_check_timeout",
@@ -3471,9 +3672,9 @@ def run_16029_quality_refresh_scripts(output_dir: Path) -> list[dict[str, Any]]:
                 check=False,
             )
         except subprocess.TimeoutExpired as error:
-            stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
+            stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
             stderr_path.write_text(
-                error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
+                subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace"
             )
             results.append(
                 {
@@ -3802,8 +4003,8 @@ def run_solidworks_manual_package(task: GenerationTask) -> WorkerExecutionResult
         else:
             message = gate_message
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
-        stderr_path.write_text(error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
+        stderr_path.write_text(subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
         exit_code = None
         outputs = output_files(output_dir)
         quality_status = None
@@ -3909,8 +4110,8 @@ def run_freecad_worker(task: GenerationTask) -> WorkerExecutionResult:
             freecad_postprocess = run_16029_freecad_postprocess(task, output_dir)
         exit_code = completed.returncode
     except subprocess.TimeoutExpired as error:
-        stdout_path.write_text(error.stdout or "", encoding="utf-8", errors="replace")
-        stderr_path.write_text(error.stderr or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
+        stdout_path.write_text(subprocess_output_text(error.stdout), encoding="utf-8", errors="replace")
+        stderr_path.write_text(subprocess_output_text(error.stderr) or f"Timed out after {timeout_seconds} seconds.", encoding="utf-8", errors="replace")
         status = "failed_worker"
         message = f"FreeCAD worker timed out after {timeout_seconds} seconds."
         exit_code = None
@@ -3965,8 +4166,9 @@ def list_review_downloads() -> ReviewDownloadIndex:
     catalog = review_download_catalog()
     return ReviewDownloadIndex(
         generated_at=datetime.now(timezone.utc).isoformat(),
-        scope="16029 800W gold-variable engineer review bundles; scope gate is expected to pass before engineering review, while production release still requires structural signoff",
+        scope="16029 740W / L642-R246 / v43 historical SW2020 structure-validation package for engineering reference",
         assets=[review_download_asset(asset_id, meta) for asset_id, meta in catalog.items()],
+        engineering_signoff=read_v23_engineering_signoff_status(),
     )
 
 
@@ -4099,7 +4301,7 @@ def get_locker_16029_variant_rule_packet() -> dict[str, Any]:
     return mark_locker_16029_reference_response(
         read_locker_16029_variant_rule_packet(),
         "/api/locker-16029-variant-rule-packet",
-        "Door-count rule learning evidence is the 1000W 10/12/14 gold/source reference and must not be listed as the current 800W engineering handoff.",
+        "Door-count rule learning evidence is the 1000W 10/12/14 gold/source reference and must not be listed as the current v43 internal sheet-metal delivery.",
     )
 
 
@@ -4108,7 +4310,7 @@ def get_locker_16029_verified_rule_packet() -> dict[str, Any]:
     return mark_locker_16029_reference_response(
         read_locker_16029_verified_rule_packet(),
         "/api/locker-16029-verified-rule-packet",
-        "Verified same-size reference packet remains the gold/source baseline; current engineering handoff is the 800W gold-variable LMS/SML route.",
+        "Verified same-size reference packet remains the gold/source baseline; current engineering review package is the 740W / L642-R246 / v43 internal sheet-metal route.",
     )
 
 
@@ -4126,7 +4328,7 @@ def get_locker_16029_engineering_handoff_bundle() -> dict[str, Any]:
     return mark_locker_16029_reference_response(
         read_locker_16029_engineering_handoff_bundle(),
         "/api/locker-16029-engineering-handoff-bundle",
-        "The 1000W 10/12/14 handoff bundle is source-reference evidence only; current engineer review downloads are the 800W LMS/SML/DUAL gold-variable packages.",
+        "The 1000W 10/12/14 handoff bundle is source-reference evidence only; current engineer review download is the 740W / L642-R246 / v43 internal sheet-metal package.",
     )
 
 
@@ -4191,9 +4393,39 @@ def open_freecad_model(payload: FreeCadOpenRequest) -> LocalActionResult:
     return LocalActionResult(status="opened", path=str(fcstd), message=f"已用 FreeCAD 打开模型，并尝试执行显示全部/适配视图。{macro_note}")
 
 
+def ensure_generation_route_enabled(capability_id: str) -> None:
+    if capability_id.startswith("locker_16029_"):
+        raise HTTPException(
+            status_code=410,
+            detail=(
+                "The legacy 16029 generation-task route has been retired. "
+                "Use the native structure-assistance portal on port 5180."
+            ),
+        )
+
+
+def claim_generation_task(task: GenerationTask) -> None:
+    with connect() as connection:
+        claimed = connection.execute(
+            "UPDATE generation_tasks SET status = 'running', updated_at = ? WHERE id = ? AND status = ? AND updated_at = ?",
+            (now_iso(), task.id, task.status, task.updated_at),
+        ).rowcount
+    if not claimed:
+        raise HTTPException(status_code=409, detail="Task state changed. Refresh the task before executing it.")
+
+
+def mark_generation_task_failed(task_id: str) -> None:
+    with connect() as connection:
+        connection.execute(
+            "UPDATE generation_tasks SET status = 'failed_worker', updated_at = ? WHERE id = ? AND status = 'running'",
+            (now_iso(), task_id),
+        )
+
+
 @app.post("/api/generation-tasks", response_model=GenerationTask, status_code=201)
 def create_generation_task(payload: GenerationTaskCreate) -> GenerationTask:
-    if payload.status == "draft_pending_worker" and payload.command == "not_enabled":
+    ensure_generation_route_enabled(payload.capability_id)
+    if payload.command == "not_enabled":
         raise HTTPException(status_code=400, detail="Cannot create a worker draft for a disabled generator.")
 
     task_id = make_task_id()
@@ -4271,15 +4503,18 @@ def create_generation_task(payload: GenerationTaskCreate) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/dry-run", response_model=GenerationTask)
 def dry_run_generation_task(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
+    ensure_generation_route_enabled(task.capability_id)
+    if task.status == "running":
+        raise HTTPException(status_code=409, detail="Cannot run dry-run while this task is running.")
     result = build_dry_run(task)
     updated_at = now_iso()
 
     with connect() as connection:
-        connection.execute(
+        updated = connection.execute(
             """
             UPDATE generation_tasks
             SET status = ?, dry_run_json = ?, worker_log_path = ?, updated_at = ?
-            WHERE id = ?
+            WHERE id = ? AND status = ? AND updated_at = ?
             """,
             (
                 result.status,
@@ -4287,8 +4522,12 @@ def dry_run_generation_task(task_id: str) -> GenerationTask:
                 result.log_path,
                 updated_at,
                 task_id,
+                task.status,
+                task.updated_at,
             ),
-        )
+        ).rowcount
+        if not updated:
+            raise HTTPException(status_code=409, detail="Task state changed during dry-run. Refresh the task.")
         row = connection.execute("SELECT * FROM generation_tasks WHERE id = ?", (task_id,)).fetchone()
 
     if row is None:
@@ -4299,23 +4538,22 @@ def dry_run_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/execute", response_model=GenerationTask)
 def execute_generation_task(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
+    ensure_generation_route_enabled(task.capability_id)
     if task.status != "ready_to_run":
         raise HTTPException(status_code=409, detail="Run dry-run successfully before executing this worker task.")
     parameter_errors = validate_task_parameters(task)
     if parameter_errors:
         raise HTTPException(status_code=409, detail="; ".join(parameter_errors))
 
-    started_update_at = now_iso()
-    with connect() as connection:
-        connection.execute(
-            "UPDATE generation_tasks SET status = ?, updated_at = ? WHERE id = ?",
-            ("running", started_update_at, task_id),
-        )
-
-    if task.cad_runner == "solidworks":
-        result = build_solidworks_manual_result(task)
-    else:
-        result = run_freecad_worker(task)
+    claim_generation_task(task)
+    try:
+        if task.cad_runner == "solidworks":
+            result = build_solidworks_manual_result(task)
+        else:
+            result = run_freecad_worker(task)
+    except Exception:
+        mark_generation_task_failed(task_id)
+        raise
 
     updated_at = now_iso()
     with connect() as connection:
@@ -4343,6 +4581,7 @@ def execute_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/run-solidworks-package", response_model=GenerationTask)
 def run_solidworks_package(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
+    ensure_generation_route_enabled(task.capability_id)
     if task.cad_runner != "solidworks":
         raise HTTPException(status_code=409, detail="This task is not a SolidWorks task.")
     if task.status not in {"ready_to_run", "requires_manual_run", "completed_reference", "failed_worker"}:
@@ -4351,14 +4590,12 @@ def run_solidworks_package(task_id: str) -> GenerationTask:
     if parameter_errors:
         raise HTTPException(status_code=409, detail="; ".join(parameter_errors))
 
-    started_update_at = now_iso()
-    with connect() as connection:
-        connection.execute(
-            "UPDATE generation_tasks SET status = ?, updated_at = ? WHERE id = ?",
-            ("running", started_update_at, task_id),
-        )
-
-    result = run_solidworks_manual_package(task)
+    claim_generation_task(task)
+    try:
+        result = run_solidworks_manual_package(task)
+    except Exception:
+        mark_generation_task_failed(task_id)
+        raise
     updated_at = now_iso()
     with connect() as connection:
         connection.execute(
@@ -4380,3 +4617,13 @@ def run_solidworks_package(task_id: str) -> GenerationTask:
     if row is None:
         raise HTTPException(status_code=500, detail="Generation task disappeared after SolidWorks package execution.")
     return row_to_task(row)
+
+
+@app.get("/api/generation-tasks/{task_id}/download")
+def download_generation_task(task_id: str) -> FileResponse:
+    task = row_to_task(fetch_task_or_404(task_id))
+    if task.execution_result is None:
+        raise HTTPException(status_code=409, detail="Task has no generated output yet.")
+    zip_path = task_download_zip_path(task)
+    download_name = f"{task.id}-{task.capability_id}-outputs.zip"
+    return FileResponse(path=zip_path, filename=download_name, media_type="application/zip")

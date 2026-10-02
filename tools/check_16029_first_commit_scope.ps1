@@ -25,13 +25,37 @@ function Test-AnyPattern {
 
 $includeExact = @(
     ".gitignore",
+    ".gitattributes",
+    ".github/workflows/16029-pr-check.yml",
+    "DESIGN.md",
     "README.md",
+    "docs/project_audit_20261002.md",
+    "docs/16029_850_repair_20260927.md",
+    "docs/16029_module_parameter_links_20260905.md",
+    "docs/16029_parametric_delivery_20260915.md",
+    "docs/16029_parametric_progress_20260906.md",
     "docs/16029_current_project_process.md",
+    "docs/16029_memory_gold_sheetmetal_no_electric_lock_20260602.md",
+    "docs/16029_memory_v43_internal_sheetmetal_repair_plan_20260602.md",
     "docs/16029_git_cleanup_boundary.md",
     "docs/project_code_management_policy.md",
+    "docs/platform_ui_interaction_enhancement_20260530.md",
     "docs/first_commit_candidate_16029_20260528.md",
+    "docs/16029_vibe_coding_video_runbook.md",
+    "docs/superpowers/specs/2026-07-30-16029-v29-feedback-fix-design.md",
     "data/locker_16029_project_route_manifest.json",
     "data/locker_16029_project_route_manifest.md",
+    "data/locker_16029_gold_sheetmetal_evidence.json",
+    "data/locker_16029_gold_sheetmetal_evidence.md",
+    "data/locker_16029_gold_sheetmetal_evidence.csv",
+    "data/locker_16029_gold_sheetmetal_rules.json",
+    "data/locker_16029_gold_sheetmetal_rules.md",
+    "data/locker_16029_v43_internal_sheetmetal_delivery.json",
+    "data/locker_16029_v37_engineering_assistance_delivery.json",
+    "data/locker_16029_v23_engineering_signoff.template.json",
+    "configs/locker_16029_v43_exact_structure_contract.json",
+    "configs/locker_16029_layout_rule_evidence.status.txt",
+    "workers/native_model_requests/parametric_v1/verify_context_safety.ps1",
     "apps/web/index.html",
     "apps/web/src/App.tsx",
     "apps/web/src/App.css",
@@ -40,8 +64,69 @@ $includeExact = @(
     "services/api/app/config.py",
     "services/api/app/main.py",
     "tools/serve_16029_review_downloads.mjs",
+    "tools/lib/locker_16029_native_task_store.mjs",
+    "tools/lib/",
+    "tools/locker_16029_native_recipe_registry.mjs",
+    "tools/run_16029_native_worker.mjs",
+    "tools/verify_16029_native_recipe_registry.mjs",
+    "tools/verify_16029_native_task_store.mjs",
+    "tools/verify_16029_native_worker.mjs",
+    "tools/verify_16029_native_execution_authorization.mjs",
+    "tools/verify_16029_native_assembly_contract.mjs",
+    "tools/verify_16029_native_stage_contract.mjs",
+    "tools/verify_16029_native_toolchain_manifests.mjs",
+    "tools/verify_16029_native_stage_executor.mjs",
+    "tools/verify_16029_native_publication.mjs",
+    "tools/locker_16029_native_generator.mjs",
+    "tools/process_16029_native_generation_request.mjs",
+    "tools/verify_16029_native_generator.mjs",
+    "tools/generate_16029_parametric_scaffold_freecad.py",
+    "tools/generate_review_solidworks_full_assembly.ps1",
+    "tools/generate_review_solidworks_single_door.ps1",
+    "tools/generate_review_task_simple_freecad_model.py",
+    "tools/locker_16029_controlled_generation_policy.mjs",
+    "tools/locker_16029_template_rules.mjs",
+    "tools/process_16029_review_generation_queue.mjs",
+    "tools/scale_16029_source_step_freecad.py",
+    "tools/verify_16029_template_rule_matrix.mjs",
+    "tools/locker_16029_gold_source_manifest.mjs",
+    "tools/locker_16029_gold_module_targets.mjs",
+    "tools/locker_16029_structure_feedback.mjs",
+    "tools/verify_16029_structure_feedback_contract.mjs",
+    "tools/verify_16029_gold_structure_gate.mjs",
+    "tools/verify_16029_gold_structure_gate_contract.mjs",
+    "tools/collect_16029_gold_sheetmetal_evidence.py",
+    "tools/build_16029_gold_sheetmetal_rules.mjs",
+    "tools/verify_16029_gold_sheetmetal_evidence.mjs",
+    "tools/verify_16029_gold_sheetmetal_rules.mjs",
+    "tools/verify_16029_v43_delivery_manifest.mjs",
+    "tools/verify_16029_v37_delivery_manifest.mjs",
+    "tools/run_16029_parametric_model.mjs",
+    "tools/run_16029_parametric_portal_worker.mjs",
+    "tools/start_16029_parametric_portal_worker.mjs",
+    "tools/verify_16029_parametric_contract.mjs",
+    "tools/verify_16029_parametric_executor.mjs",
+    "tools/verify_16029_parametric_physical_quality.mjs",
+    "tools/verify_16029_parametric_physical_quality.test.mjs",
+    "tools/verify_16029_parametric_portal_worker.mjs",
+    "tools/verify_16029_parametric_publication.mjs",
+    "tools/verify_16029_workbench_browser.mjs",
+    "tools/verify_16029_parametric_input_boundaries.mjs",
+    "tools/verify_16029_native_portal_session.mjs",
+    "tools/collect_16029_topcover_rebuild_dxf.py",
+    "tools/verify_16029_v43_exact_structure_contract.mjs",
+    "tools/verify_16029_v43_exact_structure_contract.test.mjs",
+    "tools/verify_16029_v23_engineering_signoff.mjs",
+    "tools/verify_16029_v23_engineering_signoff.test.mjs",
+    "tools/verify_16029_review_portal_manual_generation_control.mjs",
+    "tools/verify_16029_review_portal_feedback_upload.mjs",
+    "tools/build_16029_v23_pre_signoff_review.ps1",
+    "tools/trim_16029_side_panel_step_freecad.py",
     "tools/start_16029_review_portal.mjs",
     "tools/run_16029_review_portal_watchdog.ps1",
+    "tools/install_16029_review_portal_autostart.ps1",
+    "tools/launch_16029_review_portal_watchdog_hidden.vbs",
+    "tools/verify_16029_review_portal_host.ps1",
     "tools/render_16029_project_flow_pdf.mjs",
     "tools/check_16029_first_commit_scope.ps1",
     "tools/audit_16029_needs_decision.ps1",
@@ -53,10 +138,54 @@ $includeExact = @(
     "workers/maintenance/validate_16029_current_handoff_scope.ps1",
     "workers/maintenance/build_16029_dimension_contract.py",
     "workers/maintenance/validate_16029_dimension_contract.py",
+    "workers/maintenance/16029_v43_internal_sheetmetal_delivery_handoff_20260603.md",
     "workers/maintenance/build_16029_variable_door_stack_contract.py",
     "workers/maintenance/build_16029_800w_lms_contract.py",
     "workers/solidworks_tools/StepOpenProbe.cs",
-    "workers/solidworks_tools/build_step_open_probe.ps1"
+    "workers/solidworks_tools/build_step_open_probe.ps1",
+    "workers/solidworks_tools/InspectAssemblyComponents.cs",
+    "workers/solidworks_tools/build_inspect_assembly_components.ps1",
+    "workers/solidworks_tools/PackAndGoAssembly.cs",
+    "workers/solidworks_tools/RenameAssemblyComponents.cs",
+    "workers/solidworks_tools/build_rename_assembly_components.ps1",
+    "workers/solidworks_tools/RemoveAssemblyComponentsByPattern.cs",
+    "workers/solidworks_tools/build_remove_assembly_components_by_pattern.ps1",
+    "workers/solidworks_tools/RestoreDoorLockTongues.cs",
+    "workers/solidworks_tools/build_restore_door_lock_tongues.ps1",
+    "workers/solidworks_tools/RepairVerifiedV43DoorPanelFeature.cs",
+    "workers/solidworks_tools/build_repair_verified_v43_door_panel_feature.ps1",
+    "workers/solidworks_tools/ImportStepSaveNative.cs",
+    "workers/solidworks_tools/build_import_step_save_native.ps1",
+    "workers/solidworks_tools/sw_clone_master_model_height_probe.js",
+    "workers/solidworks_tools/sw_capture_named_views.js",
+    "workers/solidworks_tools/BuildOrdinaryDoorModule.cs",
+    "workers/solidworks_tools/BuildPlacedComponentsModule.cs",
+    "workers/solidworks_tools/ProbePartBodies.cs",
+    "workers/solidworks_tools/build_probe_part_bodies.ps1",
+    "workers/solidworks_tools/Add16029CenterMaintenanceSheetMetal.cs",
+    "workers/solidworks_tools/Add16029V43LockHoleDatums.cs",
+    "workers/solidworks_tools/Normalize16029V43ShelfBands.cs",
+    "workers/solidworks_tools/build_add_16029_center_maintenance_sheetmetal.ps1",
+    "workers/solidworks_tools/build_add_16029_v43_lock_hole_datums.ps1",
+    "workers/solidworks_tools/build_normalize_16029_v43_shelf_bands.ps1",
+    "workers/solidworks_tools/BuildCenteredBackSeamAssembly.cs",
+    "workers/solidworks_tools/build_centered_back_seam_assembly.ps1",
+    "workers/solidworks_tools/repair_16029_back_sheetmetal_side_panels.ps1",
+    "workers/maintenance/validate_16029_dimension_contract.py"
+)
+
+$includePatterns = @(
+    "tools/lib/locker_16029_*.mjs",
+    "services/api/tests/*.py",
+    "workers/native_model_requests/parametric_v1/*.cs",
+    "workers/native_model_requests/parametric_v1/*.mjs",
+    "workers/native_model_requests/development/v1/tools/*.cs",
+    "workers/native_model_requests/development/v1/tools/*.ps1",
+    "workers/native_model_requests/development/v1/tools/*.mjs",
+    "workers/native_model_requests/development/v1/tools/*README.md",
+    "workers/native_model_requests/development/v1/tools/*STAGE.md",
+    "workers/native_model_requests/development/v1/tools/*toolchain_manifest.json",
+    "workers/native_model_requests/development/v1/tools/*.example.json"
 )
 
 $excludePatterns = @(
@@ -65,6 +194,7 @@ $excludePatterns = @(
     "workers/generation_logs/*",
     "workers/analysis/*",
     "workers/tmp_*",
+    "workers/native_model_requests/*",
     "data/*_gate*.*",
     "data/*_validation*.*",
     "data/*_summary*.*",
@@ -89,7 +219,6 @@ $excludePatterns = @(
 $needsDecisionPatterns = @(
     "workers/solidworks_tools/BuildDoorArrayModule.cs",
     "workers/solidworks_tools/BuildDoorWeldModule.cs",
-    "workers/solidworks_tools/BuildOrdinaryDoorModule.cs",
     "workers/solidworks_tools/PackAndGoAssembly.cs",
     "workers/solidworks_tools/sw_make_parametric_part_dimension.js",
     "workers/solidworks_tools/build_door_array_module.ps1",
@@ -97,12 +226,13 @@ $needsDecisionPatterns = @(
     "workers/solidworks_tools/build_ordinary_door_module.ps1",
     "workers/solidworks_tools/build_pack_and_go_assembly.ps1",
     "workers/solidworks_tools/build_placed_components_module.ps1",
+    "workers/solidworks_tools/sw_export_model_step.js",
     "workers/maintenance/build_16029_engineering_handoff.py",
     "workers/maintenance/build_16029_engineering_handoff_bundle.py",
     "workers/maintenance/build_native_16029_*"
 )
 
-$rawStatus = & git -C $Root status --short
+$rawStatus = & git -c core.quotepath=false -C $Root status --short --untracked-files=all
 $items = New-Object System.Collections.Generic.List[object]
 
 foreach ($line in $rawStatus) {
@@ -114,7 +244,7 @@ foreach ($line in $rawStatus) {
     $category = "uncategorized"
     $reason = "not matched by first-commit policy"
 
-    if ($includeExact -contains $path) {
+    if (($includeExact -contains $path) -or (Test-AnyPattern -PathText $path -Patterns $includePatterns)) {
         $category = "include"
         $reason = "first clean commit candidate"
     }
@@ -124,7 +254,7 @@ foreach ($line in $rawStatus) {
     }
     elseif (Test-AnyPattern -PathText $path -Patterns $needsDecisionPatterns) {
         $category = "needs_decision"
-        $reason = "source change outside the current 16029 gold-variable first commit"
+        $reason = "source change outside the current 16029 v43 internal sheet-metal cleanup"
     }
 
     $items.Add([pscustomobject]@{

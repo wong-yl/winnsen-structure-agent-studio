@@ -1,0 +1,13 @@
+{
+  "schema": "winnsen.16029.native_toolchain_manifest.v1",
+  "generatedBy": "workers/native_model_requests/development/v1/tools/width_888_native_v1/verify_static.mjs",
+  "tool": {
+    "id": "native_width_888_v1",
+    "sourcePath": "workers/native_model_requests/development/v1/tools/width_888_native_v1/ConfigureNativeWidth888.cs",
+    "sourceNormalizedSha256": "F75D752830BB5DBB9C4EE3C7963701A6AF4D73668042DDA96A3355A6235EE5D4",
+    "executablePath": "workers/native_model_requests/development/v1/tools/width_888_native_v1/ConfigureNativeWidth888.exe",
+    "executableSha256": "71396D3CB8CB25DE01B4AFD8AD2631DC8DC1963296454A3F8DE3FB7505812FF3",
+    "verifierPath": "workers/native_model_requests/development/v1/tools/width_888_native_v1/verify_static.mjs",
+    "verifierSha256": "652ACB2F57C422F70389D2CCE4681EECA3104744337DF8C2A2EC3A371D694868"
+  }
+}

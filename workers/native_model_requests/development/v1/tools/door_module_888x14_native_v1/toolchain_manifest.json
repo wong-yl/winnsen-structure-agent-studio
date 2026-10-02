@@ -1,0 +1,13 @@
+{
+    "schema":  "winnsen.16029.native_toolchain_manifest.v1",
+    "generatedBy":  "Build-NativeDoorModule888x14.ps1",
+    "tool":  {
+                 "id":  "native_door_module_888x14_v1",
+                 "sourcePath":  "workers/native_model_requests/development/v1/tools/door_module_888x14_native_v1/NativeDoorModule888x14.cs",
+                 "sourceNormalizedSha256":  "A07174DEDF4F9F0958A731E679655B742E53BEDA063709F5F2F10BF2376572B0",
+                 "executablePath":  "workers/native_model_requests/development/v1/tools/door_module_888x14_native_v1/NativeDoorModule888x14.exe",
+                 "executableSha256":  "9F266459BE9D65637AE85816D39008D0EA1310089FF99C007D47B56C9C3F47CC",
+                 "verifierPath":  "workers/native_model_requests/development/v1/tools/door_module_888x14_native_v1/Verify-NativeDoorModule888x14.ps1",
+                 "verifierSha256":  "934BA3335FBBB3BC154811527C44A3E7E21D415B7082E01D8A5A9D770045B5BC"
+             }
+}

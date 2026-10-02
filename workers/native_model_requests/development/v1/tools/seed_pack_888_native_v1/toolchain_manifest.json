@@ -1,0 +1,13 @@
+{
+  "schema": "winnsen.16029.native_toolchain_manifest.v1",
+  "generatedBy": "workers/native_model_requests/development/v1/tools/seed_pack_888_native_v1/Verify-SeedPack888Native.ps1",
+  "tool": {
+    "id": "native_seed_pack_888x14_v1",
+    "sourcePath": "workers/native_model_requests/development/v1/tools/seed_pack_888_native_v1/SeedPack888Native.cs",
+    "sourceNormalizedSha256": "D7E0C9D2BAEA091CE0071DF2F42E6DD4CE67A4C173D47E9AC13A8EB0A0371C71",
+    "executablePath": "workers/native_model_requests/development/v1/tools/seed_pack_888_native_v1/SeedPack888Native.exe",
+    "executableSha256": "1BAFC107959E0F444C89EF2FB147A51048756EBB4823371656463BDD551244B7",
+    "verifierPath": "workers/native_model_requests/development/v1/tools/seed_pack_888_native_v1/Verify-SeedPack888Native.ps1",
+    "verifierSha256": "254CF683E005189A985DFAFD87880D466ACF3EF0B2E76577BB0B2C35F4E1FB06"
+  }
+}

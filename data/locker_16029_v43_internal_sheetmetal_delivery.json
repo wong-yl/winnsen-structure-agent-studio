@@ -1,0 +1,78 @@
+{
+  "schema": "winnsen.locker16029.v43_internal_sheetmetal_delivery.v1",
+  "generated_at": "2026-06-03",
+  "status": "sw2020_review_ready",
+  "current_request_id": "v43-int-v18-lockfix",
+  "route": {
+    "product": "16029",
+    "cabinet_width_mm": 740,
+    "cabinet_height_mm": 1917,
+    "cabinet_depth_mm": 550,
+    "row_sequence": "L642-R246",
+    "door_count": 6,
+    "door_route": "verified v43 door route frozen",
+    "structural_reference": "1000W gold/source cabinet reference",
+    "cad_mainline": "SolidWorks 2020"
+  },
+  "delivery": {
+    "primary_assembly": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v18-lockfix\\sw2020_full_740W_parametric_template\\pack_and_go\\candidate_16029_740W_L642_R246_v43_internal_sheetmetal_flat_full.SLDASM",
+    "zip_path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generation_logs\\review_generation_v43-int-v18-lockfix_solidworks2020_full_assembly.zip",
+    "download_url": "/generation-download/v43-int-v18-lockfix",
+    "api_download_asset_id": "16029-v43-internal-sheetmetal-lockfix-zip",
+    "screenshot_folder": "C:\\Users\\Administrator\\Desktop\\16029_v43_internal_steps_20260603\\step_v18_lock_tongue_restored",
+    "handoff_note": "D:\\Winnsen_Structure_Agent_Studio\\workers\\maintenance\\16029_v43_internal_sheetmetal_delivery_handoff_20260603.md"
+  },
+  "evidence": {
+    "summary": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v18-lockfix\\sw2020_full_740W_parametric_template\\solidworks_2020_full_assembly_generation_summary.json",
+    "gold_structure_gate": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v18-lockfix\\sw2020_full_740W_parametric_template\\evidence\\gold_source_structure_gate.json",
+    "structure_feedback": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v18-lockfix\\sw2020_full_740W_parametric_template\\evidence\\structure_feedback.json",
+    "structure_record": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v18-lockfix\\sw2020_full_740W_parametric_template\\evidence\\solidworks_2020_structure_record.json",
+    "door_lock_tongue_restore": "D:\\Winnsen_Structure_Agent_Studio\\workers\\generated_models\\review_generation_requests\\v43-int-v18-lockfix\\sw2020_full_740W_parametric_template\\evidence\\solidworks_2020_door_lock_tongue_restore.json"
+  },
+  "verified": {
+    "generation_status": "solidworks_2020_full_assembly_ready",
+    "gold_structure_gate_status": "PASS",
+    "gold_structure_gate_issue_count": 0,
+    "structure_feedback_status": "clean",
+    "structure_feedback_issue_count": 0,
+    "door_lock_tongue_restore_status": "restored",
+    "door_lock_tongue_count": 6,
+    "door_lock_tongue_restore_added_count": 6,
+    "door_lock_tongue_restore_failed_count": 0,
+    "electrical_or_electric_lock_component_count": 0,
+    "back_seam_status": "side_panel_sheetmetal_back_flange_centered",
+    "user_visual_confirmed": true,
+    "mainline_verify_status": "PASS",
+    "mainline_verify_checks_total": 47,
+    "mainline_verify_checks_failed": 0
+  },
+  "excluded_from_generated_package": [
+    "electrical_boards",
+    "cabinet_side_electric_lock_bodies",
+    "cabinet_side_electric_lock_hooks"
+  ],
+  "preserved_interfaces": [
+    "mechanical_door_lock_tongue",
+    "lock_side_holes",
+    "locating_holes",
+    "mounting_datums",
+    "shelf_front_frame_locating_interface",
+    "leveling_foot_datums"
+  ],
+  "superseded_same_route_request_ids": [
+    "v43-int-v16-side-panel-sheetmetal-repair",
+    "v43-int-v17-side-panel-sheetmetal-lock-tongue-restored",
+    "v43-int-v17-locktongue",
+    "v43-int-v15-auto-centered-back-seam"
+  ],
+  "delivery_boundary": {
+    "ready_for": "SolidWorks 2020 engineering review and handoff organization",
+    "not_ready_for": [
+      "production drawing release",
+      "DXF or flat-pattern release",
+      "BOM release",
+      "supplier bend and coating approval",
+      "physical prototype signoff"
+    ]
+  }
+}

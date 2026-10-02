@@ -15,7 +15,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
         {
             if (args.Length < 7)
             {
-                Console.Error.WriteLine("Usage: BuildDoorWeldModule.exe <out-asm> <out-json> <door-height-mm> <panel> <stiffener> <latch-plate> <hook-pad> [left|right] [door-width-mm]");
+                Console.Error.WriteLine("Usage: BuildDoorWeldModule.exe <out-asm> <out-json> <door-height-mm> <panel> <stiffener> <latch-plate> <hook-pad> [left|right] [door-width-mm] [mirror-z|mirror-accessories-x] [top-latch=<path>]");
                 return 2;
             }
 
@@ -25,9 +25,12 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             string panel = Path.GetFullPath(args[3]);
             string stiffener = Path.GetFullPath(args[4]);
             string latch = Path.GetFullPath(args[5]);
+            string topLatch = latch;
             string hook = Path.GetFullPath(args[6]);
             string handedness = "left";
             double doorWidth = 437.0;
+            bool mirrorZ = false;
+            bool mirrorAccessoriesX = false;
             for (int i = 7; i < args.Length; i++)
             {
                 string value = args[i].Trim();
@@ -41,9 +44,21 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 {
                     doorWidth = parsed;
                 }
+                else if (lower == "mirror-z" || lower == "mirrorz")
+                {
+                    mirrorZ = true;
+                }
+                else if (lower == "mirror-accessories-x" || lower == "mirror-panel-x" || lower == "mirror-thickness-x" || lower == "panel-mirror-x")
+                {
+                    mirrorAccessoriesX = true;
+                }
+                else if (lower.StartsWith("top-latch=", StringComparison.Ordinal))
+                {
+                    topLatch = Path.GetFullPath(value.Substring("top-latch=".Length).Trim('"'));
+                }
                 else
                 {
-                    Console.Error.WriteLine("optional arguments must be handedness or door-width-mm: " + value);
+                    Console.Error.WriteLine("optional arguments must be handedness, door-width-mm, mirror-z, mirror-accessories-x, or top-latch=<path>: " + value);
                     return 2;
                 }
             }
@@ -65,6 +80,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 DoorHeightMm = doorHeight,
                 DoorWidthMm = doorWidth,
                 Handedness = handedness,
+                MirrorZ = mirrorZ,
+                MirrorAccessoriesX = mirrorAccessoriesX,
+                PanelThicknessMm = PanelThicknessMm,
             };
 
             try
@@ -80,7 +98,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 sw.Visible = true;
                 Try(() => sw.CloseAllDocuments(true));
 
-                ModelDoc2 model = sw.NewAssembly() as ModelDoc2;
+                ModelDoc2 model = NewAssemblyDocument(sw);
                 AssemblyDoc asm = model as AssemblyDoc;
                 if (model == null || asm == null)
                 {
@@ -98,25 +116,42 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                     return 5;
                 }
 
-                double latchTopTy = doorHeight / 2.0 - 0.8;
                 double latchBottomTy = -doorHeight / 2.0 + 28.8;
 
                 double doorHalfWidth = doorWidth / 2.0;
                 double latchPlateTx = -(doorHalfWidth - 10.0) * side;
-                double hookPadTx = handedness == "right" ? -(doorHalfWidth - 15.0) : doorHalfWidth - 12.2;
+                double hookPadTx = (doorHalfWidth - 15.0) * side;
+                double zSide = mirrorZ ? -1.0 : 1.0;
 
-                var placements = new[]
+                bool hasBakedTopLatch = !string.Equals(topLatch, latch, StringComparison.OrdinalIgnoreCase);
+                var placements = new List<Placement>
                 {
                     new Placement("door_panel_rule_part", panel, Identity(), 0, 0, 0),
-                    new Placement("door_stiffener_rule_part", stiffener, Identity(), 0, 0, -14.8),
-                    new Placement("latch_plate_top", latch, RotateX90(), latchPlateTx, latchTopTy, -14.0),
-                    new Placement("latch_plate_bottom", latch, RotateX90(), latchPlateTx, latchBottomTy, -14.0),
-                    new Placement("u_hook_pad", hook, Identity(), hookPadTx, 0, -1.6),
+                    Accessory("door_stiffener_rule_part", stiffener, FlipXZ(), 0, 0, -0.8 * zSide, mirrorAccessoriesX),
+                    Accessory("latch_plate_bottom", latch, Multiply(FlipXZ(), RotateXMinus90()), latchPlateTx, latchBottomTy, -0.8 * zSide, mirrorAccessoriesX),
                 };
+                if (hasBakedTopLatch)
+                {
+                    placements.Add(new Placement("latch_plate_top", topLatch, Identity(), 0, 0, 0));
+                }
+                placements.Add(Accessory("u_hook_pad", hook, FlipXZ(), hookPadTx, 0, -10.5 * zSide, mirrorAccessoriesX));
 
                 foreach (Placement p in placements)
                 {
-                    result.Placements.Add(Add(sw, model, asm, math, p));
+                    Component2 addedComponent;
+                    result.Placements.Add(Add(sw, model, asm, math, p, out addedComponent));
+                }
+                if (!hasBakedTopLatch)
+                {
+                    result.Placements.Add(MissingBakedTopLatch(topLatch));
+                }
+                if (HasPlacementErrors(result.Placements))
+                {
+                    result.Error = "placement validation failed; see placements[].error";
+                    WriteJson(outJson, result);
+                    Console.WriteLine(outJson);
+                    Try(() => sw.CloseDoc(model.GetTitle()));
+                    return 7;
                 }
 
                 result.Rebuilt = TryValue(() => model.ForceRebuild3(false), false);
@@ -137,8 +172,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             }
         }
 
-        private static PlacementResult Add(ISldWorks sw, ModelDoc2 asmModel, AssemblyDoc asm, MathUtility math, Placement p)
+        private static PlacementResult Add(ISldWorks sw, ModelDoc2 asmModel, AssemblyDoc asm, MathUtility math, Placement p, out Component2 addedComponent)
         {
+            addedComponent = null;
             var row = new PlacementResult
             {
                 Role = p.Role,
@@ -161,6 +197,10 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 ? (int)swDocumentTypes_e.swDocASSEMBLY
                 : (int)swDocumentTypes_e.swDocPART;
             ModelDoc2 partDoc = sw.OpenDoc6(p.Path, docType, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errors, ref warnings) as ModelDoc2;
+            if (partDoc == null)
+            {
+                partDoc = TryValue(() => sw.OpenDoc(p.Path, docType) as ModelDoc2, null);
+            }
             row.Opened = partDoc != null;
             row.OpenErrors = errors;
             row.OpenWarnings = warnings;
@@ -187,6 +227,7 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 return row;
             }
             Try(() => { comp.Name2 = p.Role; });
+            addedComponent = comp;
 
             MathTransform xf = math.CreateTransform(ToTransformData(p.Rotation, p.TxMm, p.TyMm, p.TzMm)) as MathTransform;
             row.TransformCreated = xf != null;
@@ -201,6 +242,50 @@ namespace Winnsen.StructureAgent.SolidWorksTools
                 row.Error = "transform apply failed";
             }
             return row;
+        }
+
+        private static ModelDoc2 NewAssemblyDocument(ISldWorks sw)
+        {
+            ModelDoc2 model = TryValue(() => sw.NewAssembly() as ModelDoc2, null);
+            if (model != null) return model;
+
+            string template = TryValue(
+                () => sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplateAssembly),
+                "");
+            if (!string.IsNullOrWhiteSpace(template) && File.Exists(template))
+            {
+                model = TryValue(() => sw.NewDocument(template, 0, 0, 0) as ModelDoc2, null);
+                if (model != null) return model;
+            }
+
+            foreach (string candidate in new[]
+            {
+                @"C:\ProgramData\SOLIDWORKS\SOLIDWORKS 2020\templates\gb_assembly.asmdot",
+                @"D:\soildworks2020\SOLIDWORKS\lang\chinese-simplified\Tutorial\assem.asmdot",
+                @"D:\soildworks2020\SOLIDWORKS\lang\english\Tutorial\assem.asmdot",
+            })
+            {
+                if (!File.Exists(candidate)) continue;
+                model = TryValue(() => sw.NewDocument(candidate, 0, 0, 0) as ModelDoc2, null);
+                if (model != null) return model;
+            }
+
+            return null;
+        }
+
+        private static PlacementResult MissingBakedTopLatch(string topLatch)
+        {
+            return new PlacementResult
+            {
+                Role = "latch_plate_top",
+                Path = topLatch,
+                Exists = File.Exists(topLatch),
+                TxMm = 0,
+                TyMm = 0,
+                TzMm = 0,
+                Rotation = new double[0],
+                Error = "top-latch=<mirrored-native-part> was not provided; upper latch must be the lower latch mirrored through the door center plane",
+            };
         }
 
         private static object ToTransformData(double[] r, double txMm, double tyMm, double tzMm)
@@ -240,16 +325,83 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             return new[] { 1.0, 0, 0, 0, 0, 1.0, 0, -1.0, 0 };
         }
 
+        private static double[] RotateXMinus90()
+        {
+            return new[] { 1.0, 0, 0, 0, 0, -1.0, 0, 1.0, 0 };
+        }
+
+        private static double[] FlipZ()
+        {
+            return new[] { 1.0, 0, 0, 0, 1.0, 0, 0, 0, -1.0 };
+        }
+
+        private const double PanelThicknessMm = 0.8;
+
+        private static bool HasPlacementErrors(List<PlacementResult> placements)
+        {
+            foreach (PlacementResult p in placements)
+            {
+                if (!string.IsNullOrWhiteSpace(p.Error)) return true;
+                if (!p.Exists || !p.Opened || !p.Added || !p.TransformCreated || !p.TransformApplied) return true;
+            }
+            return false;
+        }
+
+        private static Placement Accessory(string role, string path, double[] rotation, double txMm, double tyMm, double tzMm, bool mirrorAccessoriesX)
+        {
+            if (!mirrorAccessoriesX) return new Placement(role, path, rotation, txMm, tyMm, tzMm);
+            // Gold door evidence keeps the clean exterior at Z=0 and all weld hardware at Z<=0.
+            // This mirrors only already-separate accessory placement. The door panel itself must
+            // come from the correct left/right native panel; do not use this as whole-door mirroring.
+            return new Placement(
+                role,
+                path,
+                Multiply(FlipXZ(), rotation),
+                -txMm,
+                tyMm,
+                -Math.Abs(tzMm));
+        }
+
+        private static double[] FlipXZ()
+        {
+            return new[] { -1.0, 0, 0, 0, 1.0, 0, 0, 0, -1.0 };
+        }
+
+        private static double[] Multiply(double[] a, double[] b)
+        {
+            return new[]
+            {
+                a[0] * b[0] + a[1] * b[3] + a[2] * b[6],
+                a[0] * b[1] + a[1] * b[4] + a[2] * b[7],
+                a[0] * b[2] + a[1] * b[5] + a[2] * b[8],
+                a[3] * b[0] + a[4] * b[3] + a[5] * b[6],
+                a[3] * b[1] + a[4] * b[4] + a[5] * b[7],
+                a[3] * b[2] + a[4] * b[5] + a[5] * b[8],
+                a[6] * b[0] + a[7] * b[3] + a[8] * b[6],
+                a[6] * b[1] + a[7] * b[4] + a[8] * b[7],
+                a[6] * b[2] + a[7] * b[5] + a[8] * b[8],
+            };
+        }
+
         private static ISldWorks GetOrCreateSolidWorks()
         {
-            try { return Marshal.GetActiveObject("SldWorks.Application") as ISldWorks; }
-            catch { }
-            try
+            foreach (string progId in new[] { "SldWorks.Application.28", "SldWorks.Application" })
             {
-                Type t = Type.GetTypeFromProgID("SldWorks.Application");
-                return t == null ? null : Activator.CreateInstance(t) as ISldWorks;
+                try
+                {
+                    object active = Marshal.GetActiveObject(progId);
+                    if (active != null) return active as ISldWorks;
+                }
+                catch { }
+
+                try
+                {
+                    Type t = Type.GetTypeFromProgID(progId);
+                    if (t != null) return Activator.CreateInstance(t) as ISldWorks;
+                }
+                catch { }
             }
-            catch { return null; }
+            return null;
         }
 
         private static void Try(Action action)
@@ -287,6 +439,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             Prop(sb, "doorHeightMm", r.DoorHeightMm);
             Prop(sb, "doorWidthMm", r.DoorWidthMm);
             Prop(sb, "handedness", r.Handedness);
+            Prop(sb, "mirrorZ", r.MirrorZ);
+            Prop(sb, "mirrorAccessoriesX", r.MirrorAccessoriesX);
+            Prop(sb, "panelThicknessMm", r.PanelThicknessMm);
             Prop(sb, "newAssembly", r.NewAssembly);
             Prop(sb, "rebuilt", r.Rebuilt);
             Prop(sb, "saved", r.Saved);
@@ -382,6 +537,9 @@ namespace Winnsen.StructureAgent.SolidWorksTools
             public double DoorHeightMm;
             public double DoorWidthMm;
             public string Handedness = "left";
+            public bool MirrorZ;
+            public bool MirrorAccessoriesX;
+            public double PanelThicknessMm;
             public bool NewAssembly;
             public bool Rebuilt;
             public bool Saved;

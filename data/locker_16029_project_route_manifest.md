@@ -38,6 +38,13 @@ SolidWorks 2020 open evidence:
 - SML JSON: `workers/generation_logs/cad_open_screenshots/solidworks2020_sml_step_open.png.json`
 - Scope gate: `data/locker_16029_current_handoff_scope_gate.json`, PASS, 60 checks, 0 failed
 
+Envelope context for engineer signoff:
+
+- Nominal cabinet body: `800W x 1917H x 550D`
+- Raw LMS/SML STEP assembly bbox: `800.0 x 1983.0 x 553.5 mm`
+- Interpreted source of delta: bottom feet/reference extension to `Y=-60`, top object/reference extension to `Y=1923`, and front-side small hardware/reference extension to `Z=+3.5`
+- Decision required: structure engineer must confirm whether production/customer size uses the nominal body envelope or installed envelope including feet/top/front protrusions.
+
 Each current engineer-facing variant must include STEP, self-review preview, verify CSV, model gate, STEP bbox gate, SolidWorks 2020 open screenshot evidence, and a handoff zip. FCStd may remain internal generation evidence only; it is not the current engineer review format.
 
 ## Legacy Routes
