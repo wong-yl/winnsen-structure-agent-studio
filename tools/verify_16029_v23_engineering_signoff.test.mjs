@@ -70,4 +70,3 @@ try {
 } finally {
   rmSync(TMP, { recursive: true, force: true })
 }
-

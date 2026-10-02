@@ -118,7 +118,7 @@ foreach ($dependency in $runtimeDependencies) {
 
 
 
-$sourceStampPattern = '(ExpectedSourceSha256\s*=\s*")(?:__SOURCE_SHA256__|[A-F0-9]{64})(";)' 
+$sourceStampPattern = '(ExpectedSourceSha256\s*=\s*")(?:__SOURCE_SHA256__|[A-F0-9]{64})(";)'
 
 
 
@@ -321,4 +321,3 @@ $checksumLines = $checksumFiles | ForEach-Object {
     cadImplemented = $true
 
 } | ConvertTo-Json -Depth 6
-

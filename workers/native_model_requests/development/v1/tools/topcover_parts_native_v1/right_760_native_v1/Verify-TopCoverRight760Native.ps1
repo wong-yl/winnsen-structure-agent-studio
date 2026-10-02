@@ -35,4 +35,3 @@ if (@(Compare-Object -ReferenceObject $before -DifferenceObject $after).Count -n
     throw 'Static verification changed the CAD process set'
 
 }
-
