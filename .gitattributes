@@ -24,4 +24,4 @@
 workers/native_model_requests/parametric_v1/sources/*.cs -text
 workers/native_model_requests/development/v1/tools/door_module_888x14_native_v1/NativeDoorModule888x14.cs -text
 workers/native_model_requests/development/v1/tools/BuildLockTopology888x14.cs -text
-configs/locker_16029_layout_rule_evidence.status.txt -text
+configs/locker_16029_layout_rule_evidence.status.txt -text whitespace=cr-at-eol
