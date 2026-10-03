@@ -35,10 +35,15 @@ jobs:
           $head = '${{ github.event.pull_request.head.sha }}'
           $files = @(git diff --name-only $base $head)
           $blockedPatterns = @(
-            '\.(zip|png|jpg|jpeg|pdf|docx|exe|dll|FCStd|step|stp|SLDPRT|SLDASM)$',
+            '\.(zip|png|jpg|jpeg|pdf|docx|exe|dll|pdb|FCStd|step|stp|SLDPRT|SLDASM|SLDDRW)$',
             '^workers/handoffs/',
             '^workers/generated_models/',
             '^workers/analysis/',
+            '^output/',
+            '^data/(review_download_users\.json|review_download_invite_code\.txt|review_portal\.local\.json)$',
+            '^data/(review_feedback|native_model_requests|review_portal_runtime|parametric_attempts|parametric_portal_acceptance)/',
+            '^data/parametric_.*\.mjs$',
+            '^workers/native_model_requests/.*/(bin[^/]*|build[^/]*|runtime_data|evidence)/',
             '^docs/report_assets/',
             '^docs/qa_assets/'
           )
@@ -67,7 +72,11 @@ jobs:
         working-directory: apps/web
         run: |
           npm ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm run lint
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Compile API Python sources
         run: |
@@ -76,3 +85,40 @@ jobs:
       - name: Check review portal syntax
         run: |
           node --check tools/serve_16029_review_downloads.mjs
+
+      - name: Test native contracts with isolated fixtures
+        shell: pwsh
+        run: |
+          $checks = @(
+            'verify_16029_native_generator',
+            'verify_16029_native_task_store',
+            'verify_16029_native_recipe_registry',
+            'verify_16029_native_execution_authorization',
+            'verify_16029_native_assembly_contract',
+            'verify_16029_native_stage_contract',
+            'verify_16029_native_toolchain_manifests',
+            'verify_16029_native_worker',
+            'verify_16029_native_stage_executor',
+            'verify_16029_native_publication',
+            'verify_16029_parametric_input_boundaries',
+            'verify_16029_native_portal_session'
+          )
+          foreach ($check in $checks) {
+            if ($check -in @('verify_16029_native_recipe_registry', 'verify_16029_native_assembly_contract', 'verify_16029_native_stage_executor')) {
+              node "tools/$check.mjs" --fixture-only
+            } else {
+              node "tools/$check.mjs"
+            }
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Test API state transitions
+        working-directory: services/api
+        run: |
+          python -m pip install -r requirements.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Verify pinned native source adapters
+        run: node workers/native_model_requests/parametric_v1/verify_adapters.mjs
