@@ -1,3 +1,4 @@
+import { createOutdoor22057Routes } from 'file:///D:/%E6%9C%BA%E6%A2%B0%E7%BB%93%E6%9E%84%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%99%BA%E8%83%BD%E4%BD%93/outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_portal.mjs'
 import { closeSync, copyFileSync, createReadStream, existsSync, fstatSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { networkInterfaces } from 'node:os'
@@ -18,6 +19,7 @@ import {
   openVerifiedNativeStructureAssistanceArchive,
 } from './lib/locker_16029_native_publication.mjs'
 import { inspect16029ParametricTaskPublication, open16029ParametricTaskArchive } from './lib/locker_16029_parametric_publication.mjs'
+import { INDOOR_16029_PRODUCTION_PROFILE, INDOOR_16029_PRODUCTION_PROFILE_LABEL, read16029ProductionSelection } from './lib/locker_16029_production_profile.mjs'
 import { render16029AuthCabinet, render16029AuthCabinetScript, authCabinetShowcaseCss } from './lib/locker_16029_auth_showcase.mjs'
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url))
@@ -1038,6 +1040,8 @@ function publicGenerationRequest(item) {
     estimatedDoorHeightMm: item.estimatedDoorHeightMm ?? null,
     previewDimensionsValidated: item.previewDimensionsValidated !== false,
     rowSequence: String(item.rowSequence || ''),
+    productionProfile: String(item.productionProfile || item.parametricRequest?.productionProfile || ''),
+    generatedProductionProfile: verifiedNativeReady ? String(item.nativeBuild?.result?.productionProfile || '') : '',
     ...(item.parametricRequest ? { parametricRequest: structuredClone(item.parametricRequest) } : {}),
     doorType: String(item.doorType || ''),
     lockType: String(item.lockType || ''),
@@ -1094,7 +1098,9 @@ function generationTaskStatusInfo(item) {
     case 'native_task_cancel_requested':
       return { key: 'hold', label: '取消中', detail: '已提交取消请求，当前原生步骤结束后停止。' }
     case 'native_task_blocked':
-      return { key: 'failed', label: '待处理', detail: '本次任务被结构检查阻断，请核对参数或提交问题反馈。' }
+      return { key: 'failed', label: '待处理', detail: item.nativeBuild?.blocker?.code === 'OWNED_PROCESS_CLEANUP_UNVERIFIED'
+        ? '生成已暂停：SOLIDWORKS 或其监控程序的退出状态未确认，需后台处理后重试。'
+        : '本次生成已暂停，请提交问题反馈，由后台检查后重试。' }
     case 'native_task_failed':
       return { key: 'failed', label: '未通过', detail: '本次模型未通过交付检查，不能下载；可提交问题反馈。' }
     default:
@@ -1282,6 +1288,7 @@ async function submitGenerationRequest(username, payload) {
     estimatedDoorHeightMm: sourcePayload.estimatedDoorHeightMm ?? null,
     previewDimensionsValidated: sourcePayload.previewDimensionsValidated !== false,
     rowSequence: clampText(sourcePayload.rowSequence, 200),
+    ...(sourcePayload.productionProfile ? { productionProfile: sourcePayload.productionProfile } : {}),
     ...(sourcePayload.parametricRequest ? { parametricRequest: structuredClone(sourcePayload.parametricRequest) } : {}),
     doorType: clampText(payload.doorType, 100),
     lockType: clampText(payload.lockType, 100),
@@ -2245,6 +2252,13 @@ function clarificationCards() {
   }).join('')
 }
 
+function generationProductionProfileText(item) {
+  const label = profile => profile === INDOOR_16029_PRODUCTION_PROFILE ? INDOOR_16029_PRODUCTION_PROFILE_LABEL : profile
+  if (item.generatedProductionProfile) return `已生成工艺版本：${label(item.generatedProductionProfile)}`
+  if (item.productionProfile) return `任务工艺版本：${label(item.productionProfile)}；已生成工艺版本：等待生成与检查`
+  return isGenerationDownloadReady(item) ? '已生成工艺版本：历史版本（未记录版本身份）' : '任务工艺版本：历史版本（未记录版本身份）'
+}
+
 function generationRows(rows) {
   if (!rows.length) return '<div class="task-empty"><strong>开始你的第一组结构规格</strong><span>定义外形与门数，核对布局后建立模型任务。</span><a class="button secondary" href="#new-model">定义第一组规格 →</a></div>'
   return rows.map((item) => {
@@ -2264,6 +2278,7 @@ function generationRows(rows) {
           </div>
           <div class="task-dimensions"><span>${htmlEscape(dimensions)}</span><span>${htmlEscape(doorText)}</span></div>
           <p>${htmlEscape(generationStatusText(item))}</p>
+          <p>${htmlEscape(generationProductionProfileText(item))}</p>
           <div class="task-row-actions">
             ${generationActionHtml(item)}
             <button class="secondary task-feedback-button" type="button" data-task-feedback-id="${htmlEscape(item.id)}">反馈修订</button>
@@ -2278,6 +2293,7 @@ function generationRows(rows) {
 
 async function renderPage(request) {
   const username = currentUser(request)
+  const productionSelection = read16029ProductionSelection(ROOT)
   const assetCards = renderAssetCards()
   const myGenerationRequestItems = await currentGenerationRequests(username)
   const myGenerationRequests = generationRows(myGenerationRequestItems)
@@ -2308,6 +2324,7 @@ async function renderPage(request) {
       <aside class="portal-sidebar" aria-label="门户导航">
         <div class="workspace-brand"><div class="portal-logo"><img src="/brand/winnsen-logo.jpg" alt="Winnsen" /></div><div class="workspace-brand-copy"><strong>结构设计工作台</strong><span>16029 / Structure workspace</span></div></div>
         <nav class="portal-nav" aria-label="模型助手功能">
+          <a href="/outdoor-22057"><span class="portal-nav-copy"><strong>22057 户外柜内测</strong></span></a>
           <a href="#new-model" data-workspace-nav="new-model" class="active"><svg class="portal-nav-icon" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4h12v12H3zM7 4v12M3 9h12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="portal-nav-copy"><strong>定义规格</strong></span></a>
           <a href="#my-models" data-workspace-nav="my-models"><svg class="portal-nav-icon" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 5h12v10H3zM6 2h6M6 8h6M6 12h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="portal-nav-copy"><strong>任务工作台</strong></span></a>
           <a href="#model-feedback" data-workspace-nav="model-feedback"><svg class="portal-nav-icon" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 3h12v10H8l-4 3v-3H3zM6 6h6M6 9h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="portal-nav-copy"><strong>反馈修订</strong></span></a>
@@ -2352,8 +2369,9 @@ async function renderPage(request) {
           </div>
           <div class="auxiliary-body">
           <div class="studio-grid">
-            <form id="generationForm" class="generator-form">
+            <form id="generationForm" class="generator-form" data-production-profile="${htmlEscape(productionSelection.productionProfile)}">
               <h2 class="generator-title">规格与门板布局</h2>
+              ${productionSelection.enabled ? `<p class="muted">工艺版本：${htmlEscape(productionSelection.productionProfileLabel)}</p>` : ''}
               <input type="hidden" name="customerParameterFlow" value="v1" />
               <input type="hidden" name="taskMode" id="taskMode" value="full_assembly" />
               <input type="hidden" name="prompt" id="doorPrompt" value="" />
@@ -2843,6 +2861,8 @@ async function renderPage(request) {
       activateFeedbackPane(activeFeedbackPaneFromHash())
       const promptInput = document.getElementById('doorPrompt')
       const generationForm = document.getElementById('generationForm')
+      const productionProfile = generationForm.dataset.productionProfile || ''
+      const productionProfileLabel = ${JSON.stringify(INDOOR_16029_PRODUCTION_PROFILE_LABEL)}
       const generatedPromptBox = document.getElementById('generatedPrompt')
       const generationStatus = document.getElementById('generationStatus')
       const taskModeInput = document.getElementById('taskMode')
@@ -2903,6 +2923,10 @@ async function renderPage(request) {
       }
 
       function generationStatusTextForClient(item) {
+        if (item.status === 'native_task_blocked') return item.nativeBuild?.blocker?.code === 'OWNED_PROCESS_CLEANUP_UNVERIFIED'
+          ? '生成已暂停：SOLIDWORKS 或其监控程序的退出状态未确认，需后台处理后重试。'
+          : '本次生成已暂停，请提交问题反馈，由后台检查后重试。'
+        if (item.status === 'native_task_failed') return '本次模型未通过交付检查，不能下载；可提交问题反馈。'
         if (item.status === 'native_task_claimed') return '原生任务已由工作器接收'
         if (item.status === 'native_task_cancel_requested') return '已提交取消请求，等待当前原生步骤安全结束'
         if (item.engineeringAssistanceReady === true && item.downloadUrl) {
@@ -2944,7 +2968,8 @@ async function renderPage(request) {
           const button = document.createElement('button')
           button.type = 'button'
           button.disabled = true
-          button.textContent = '等待原生模型构建与检查'
+          button.textContent = ['native_task_blocked', 'native_task_failed'].includes(item.status)
+            ? '本次未生成可下载模型' : '等待原生模型构建与检查'
           wrapper.append(button)
         }
         if (isDeletableGenerationRequestForClient(item)) {
@@ -2997,6 +3022,13 @@ async function renderPage(request) {
         dims.append(size, doors)
         const detail = document.createElement('p')
         detail.textContent = generationStatusTextForClient(item)
+        const productionDetail = document.createElement('p')
+        const profileLabel = profile => profile === ${JSON.stringify(INDOOR_16029_PRODUCTION_PROFILE)} ? productionProfileLabel : profile
+        productionDetail.textContent = item.generatedProductionProfile
+          ? '已生成工艺版本：' + profileLabel(item.generatedProductionProfile)
+          : item.productionProfile
+          ? '任务工艺版本：' + profileLabel(item.productionProfile) + '；已生成工艺版本：等待生成与检查'
+          : (item.engineeringAssistanceReady && item.downloadUrl ? '已生成工艺版本：历史版本（未记录版本身份）' : '任务工艺版本：历史版本（未记录版本身份）')
         const actions = generationActionForClient(item)
         const feedbackButton = document.createElement('button')
         feedbackButton.className = 'secondary task-feedback-button'
@@ -3004,7 +3036,7 @@ async function renderPage(request) {
         feedbackButton.dataset.taskFeedbackId = item.id || ''
         feedbackButton.textContent = '反馈修订'
         actions.append(feedbackButton)
-        main.append(title, dims, detail, actions)
+        main.append(title, dims, detail, productionDetail, actions)
         row.append(rail, main)
         const timestamp = document.createElement('time')
         timestamp.dateTime = item.createdAt || ''
@@ -3572,14 +3604,14 @@ async function renderPage(request) {
           Math.abs(cabinetDepth - 550) < 0.001 && doorCount === 4 && Math.abs(doorWidth - 307) < 0.001
         const isV35Recipe = Math.abs(cabinetWidth - 740) < 0.001 &&
           Math.abs(cabinetDepth - 550) < 0.001 && doorCount === 6 && Math.abs(doorWidth - 307) < 0.001
-        const exactVerifiedRecipe = layout.valid && Boolean(legacySequence) && cabinetHeight === 1917 && (isV37Recipe || isV36Recipe || isV35Recipe)
+        const exactVerifiedRecipe = !productionProfile && layout.valid && Boolean(legacySequence) && cabinetHeight === 1917 && (isV37Recipe || isV36Recipe || isV35Recipe)
         const matchedRecipeLabel = isV37Recipe ? 'V37六门L642-R246' : (isV36Recipe ? 'V36四门L66-R66' : 'V35六门L642-R246')
         const widthValid = Number.isFinite(requestedWidth) && requestedWidth >= 120 && requestedWidth <= 2000 && Number.isFinite(doorWidth) && doorWidth > 0
         const depthValid = Number.isFinite(cabinetDepth) && cabinetDepth >= 250 && cabinetDepth <= 800
         const heightValid = Number.isFinite(cabinetHeight) && cabinetHeight >= 1700 && cabinetHeight <= 2200
         const parametricRange = cabinetWidth >= 700 && cabinetWidth <= 1200 && cabinetHeight >= 1700 && cabinetHeight <= 2200 && cabinetDepth >= 250 && cabinetDepth <= 650 && doorCount <= 34
         const legacyRegistration = Boolean(legacySequence) && cabinetHeight === 1917 && cabinetDepth >= 300 && cabinetDepth <= 800
-        const requestValid = widthValid && depthValid && heightValid && layout.valid && (parametricRange || legacyRegistration)
+        const requestValid = widthValid && depthValid && heightValid && layout.valid && (parametricRange || (!productionProfile && legacyRegistration))
         updateDoorLayoutStatus(layout, heightValid)
         generationSubmitButton.disabled = !requestValid || generationSubmissionInFlight
         generationSubmitButton.textContent = !requestValid
@@ -4097,14 +4129,16 @@ async function renderPage(request) {
       }, { passive:false })
       function buildGenerationPayload() {
         const payload = Object.fromEntries(new FormData(generationForm).entries())
-        const expectsVerifiedNativeModel = generationForm.dataset.deliveryMode === 'verified_native_model'
+        const expectsVerifiedNativeModel = !productionProfile && generationForm.dataset.deliveryMode === 'verified_native_model'
         const layout = currentDoorLayout()
         if (!expectsVerifiedNativeModel && generationForm.dataset.parametricEligible === 'true' && layout.valid) {
           payload.parametricRequest = {
             cabinet: { widthMm:Number(payload.cabinetWidth), heightMm:Number(payload.cabinetHeight), depthMm:Number(payload.cabinetDepth) },
             columns: layout.columns.map((column) => ({ side:column.side, doors:column.doors })),
+            ...(productionProfile ? { productionProfile } : {}),
           }
         }
+        if (productionProfile) payload.productionProfile = productionProfile
         return { payload, expectsVerifiedNativeModel }
       }
 
@@ -4127,6 +4161,7 @@ async function renderPage(request) {
         generationStatus.textContent = ''
         generationConfirmSummary.replaceChildren(...[
           ['需求代号', payload.customerRequirementReference || '未填写'],
+          ...(payload.productionProfile ? [['工艺版本', productionProfileLabel]] : []),
           ['柜体外形', payload.cabinetWidth + 'W × ' + payload.cabinetHeight + 'H × ' + payload.cabinetDepth + 'D'],
           ['门板布局', '左 ' + layout.columns[0].count + ' 门 / 右 ' + layout.columns[1].count + ' 门 / 共 ' + payload.doorCount + ' 门'],
           ...layout.columns.map((column) => [column.label + '门高', column.heights.map(formatDoorMm).join(' / ') + ' mm（自下向上）']),
@@ -4775,6 +4810,7 @@ function localAddresses() {
 }
 
 ensureDirs()
+const outdoor22057Routes = createOutdoor22057Routes({ dataDir: DATA_DIR, stage: resolve(DATA_DIR, 'outdoor_22057_release'), sendHtml, sendJson, parseForm, htmlEscape, readJson, writeJson })
 syncAssetsToSharedStorage(STARTUP_PRIORITY_ASSET_IDS)
 
 const server = createServer(async (request, response) => {
@@ -4885,7 +4921,12 @@ const server = createServer(async (request, response) => {
         sendHtml(response, 400, renderAuthPage('账号不能为空，密码至少 6 位。', 'register'))
         return
       }
-      if (readInviteCode() && inviteCode !== readInviteCode()) {
+      const configuredInviteCode = readInviteCode()
+      if (!configuredInviteCode) {
+        sendHtml(response, 503, renderAuthPage('注册暂不可用：邀请码配置缺失或无法读取，请联系维护人。', 'register'))
+        return
+      }
+      if (inviteCode !== configuredInviteCode) {
         sendHtml(response, 403, renderAuthPage('邀请码不正确。', 'register'))
         return
       }
@@ -4912,6 +4953,11 @@ const server = createServer(async (request, response) => {
     if (!username) {
       if (request.method === 'GET') redirect(response, '/login')
       else sendJson(response, 401, { error: 'login required' })
+      return
+    }
+
+    if (url.pathname === '/outdoor-22057' || url.pathname.startsWith('/outdoor-22057/')) {
+      await outdoor22057Routes(request, response, url, username)
       return
     }
 
@@ -4999,6 +5045,8 @@ const server = createServer(async (request, response) => {
         directUrl: requestRecord.downloadUrl || '',
         generationTemplateLabel: requestRecord.generationTemplateLabel || '',
         sourceBaselineAssetId: requestRecord.sourceBaselineAssetId || '',
+        productionProfile: requestRecord.productionProfile || '',
+        generatedProductionProfile: requestRecord.generatedProductionProfile || '',
         deliveryMode: requestRecord.deliveryMode,
         resolutionDurationMs: requestRecord.resolutionDurationMs,
         engineeringAssistanceReady: requestRecord.engineeringAssistanceReady === true,

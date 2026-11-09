@@ -14,6 +14,21 @@ namespace Winnsen.StructureAgent.Generation
 {
     internal static partial class NativeParametricWidth
     {
+        internal static object ProductionShelfMirrorLink(ModelDoc2 model,string sourcePath,string sourceConfiguration)
+        {
+            string directory=ParametricContext.CadDirectory;
+            DerivedPlan plan=DerivedPlans(directory).Single(p=>p.file_name.Equals("箱体横层板R.SLDPRT",StringComparison.OrdinalIgnoreCase));
+            ParametricContext.Require(SamePath(model.GetPathName(),ExactFile(directory,plan.file_name))&&SamePath(sourcePath,ExactFile(directory,plan.source_file_name)),"PRODUCTION_SHELF_MIRROR_IDENTITY_INVALID");
+            LinkSnapshot snapshot=CaptureLinkSnapshot(model,plan,directory);
+            ParametricContext.Require(LinkGate(snapshot,plan,true)&&snapshot.primary_feature_count==1,"PRODUCTION_SHELF_MIRROR_LINK_INVALID");
+            PrimaryLinkFeature primary=snapshot.primary_features.Single();
+            ParametricContext.Require(primary.capture_succeeded&&primary.config_name==sourceConfiguration&&primary.references.Count>0&&primary.references.All(r=>SamePath(r.model_path,sourcePath)&&SamePath(r.component_path,sourcePath)&&r.status==(int)swExternalReferenceStatus_e.swExternalReferenceInContext),"PRODUCTION_SHELF_MIRROR_SOURCE_INVALID");
+            int count=0;
+            for(Feature feature=model.FirstFeature() as Feature;feature!=null;feature=feature.GetNextFeature() as Feature)
+                if(feature.GetTypeName2()=="MirrorStock") { count++;ParametricContext.Require(feature.Name==primary.name&&!feature.IsSuppressed()&&feature.GetErrorCode()==0,"PRODUCTION_SHELF_MIRROR_FEATURE_INVALID"); }
+            ParametricContext.Require(count==1,"PRODUCTION_SHELF_MIRROR_FEATURE_COUNT");
+            return new{path=model.GetPathName(),sourcePath=sourcePath,configuration=model.ConfigurationManager.ActiveConfiguration.Name,sourceConfiguration=sourceConfiguration,feature=primary.name,type=primary.type,configurationOption=primary.config_option,references=primary.references.Select(r=>new{modelPath=r.model_path,status=r.status}).ToArray()};
+        }
         internal static void RepairMaintenanceStrip(ISldWorks sw, string path, List<object> records)
         {
             double length = ParametricContext.HeightMm - 92;
@@ -254,7 +269,7 @@ namespace Winnsen.StructureAgent.Generation
                         "repair-depth-placements", "probe-envelope", "envelope", "repair-interfaces", "repair-door-placements",
                         "repair-boundaries", "probe-base", "probe-partition-mates", "probe-base-mates", "probe-shallow-shelf-links",
                         "probe-shallow-assembly-links", "repair-base-mates", "repair-partition-mates", "repair-base-foot", "locks",
-                        "locks-verify", "root", "verify", "package", "verify-package", "verify-relocated", "physical-audit"
+                        "locks-verify", "root", "repair-engineer-feedback", "verify", "package", "verify-package", "verify-relocated", "physical-audit"
                     }.Contains(phase), "UNKNOWN_PARAMETRIC_PHASE");
                 ParametricContext.Initialize(args[0], phase);
                 string evidence = Path.Combine(ParametricContext.AttemptDirectory, "evidence", phase + ".json");
@@ -312,6 +327,7 @@ namespace Winnsen.StructureAgent.Generation
                     else if (phase == "repair-base-mates") RepairBaseMates(sw,rows);
                     else if (phase == "repair-partition-mates") RepairPartitionMates(sw,rows);
                     else if (phase == "repair-base-foot") RepairBaseFootHoles(sw, rows);
+                    else if (phase == "repair-engineer-feedback") RepairEngineerFeedback(sw, rows);
                     else if (phase == "locks") NativeParametricLocks.Run(sw, rows, false);
                     else if (phase == "locks-verify") NativeParametricLocks.Run(sw, rows, true);
                     else if (phase == "root") BuildRoot(sw, rows);
@@ -449,6 +465,26 @@ namespace Winnsen.StructureAgent.Generation
             }
         }
 
+        private static void VerifyRootComponentState(ModelDoc2 model, string stage, List<object> rows)
+        {
+            var components = ((Array)((AssemblyDoc)model).GetComponents(true)).Cast<Component2>().ToList();
+            var suppressed = components.Where(component => component.IsSuppressed()).Select(component => component.Name2).ToArray();
+            int missingModel = components.Count(component => !component.IsSuppressed() && component.GetModelDoc2() == null);
+            rows.Add(new
+            {
+                inspection = "root_component_state",
+                stage = stage,
+                configuration = model.ConfigurationManager.ActiveConfiguration.Name,
+                directCount = components.Count,
+                activeCount = components.Count - suppressed.Length,
+                suppressedCount = suppressed.Length,
+                missingModelCount = missingModel,
+                suppressedNames = suppressed
+            });
+            ParametricContext.Require(components.Count > 0 && suppressed.Length == 0 && missingModel == 0,
+                "ROOT_COMPONENT_STATE_INVALID " + stage);
+        }
+
         private static void BuildRoot(ISldWorks sw, List<object> rows)
         {
             var contract = ParametricContext.Object(ParametricContext.Plan, "contract");
@@ -470,7 +506,7 @@ namespace Winnsen.StructureAgent.Generation
             try
             {
                 int activateError = 0; sw.ActivateDoc3(model.GetTitle(), false, 0, ref activateError);
-                DeleteDirect(model, component => Path.GetFileName(component.GetPathName()).StartsWith("储物柜门装配_", StringComparison.Ordinal) || Path.GetFileName(component.GetPathName()).Equals("箱体横层板L焊接.SLDASM", StringComparison.OrdinalIgnoreCase) || Path.GetFileName(component.GetPathName()).Equals("箱体横层板R焊接.SLDASM", StringComparison.OrdinalIgnoreCase), rows);
+                DeleteDirect(model, component => Path.GetFileName(component.GetPathName()).StartsWith("储物柜门装配_", StringComparison.Ordinal) || Path.GetFileName(component.GetPathName()).StartsWith("ordinary_door_left_", StringComparison.Ordinal) || Path.GetFileName(component.GetPathName()).StartsWith("ordinary_door_right_", StringComparison.Ordinal) || Path.GetFileName(component.GetPathName()).Equals("箱体横层板L焊接.SLDASM", StringComparison.OrdinalIgnoreCase) || Path.GetFileName(component.GetPathName()).Equals("箱体横层板R焊接.SLDASM", StringComparison.OrdinalIgnoreCase), rows);
                 foreach (string side in new[] { "L", "R" })
                 {
                     foreach (Dictionary<string, object> row in (IEnumerable)rowMap[side])
@@ -484,9 +520,19 @@ namespace Winnsen.StructureAgent.Generation
                     foreach (Dictionary<string, object> boundary in (IEnumerable)boundaryMap[side])
                         AddAt(sw, model, Find("箱体横层板" + side + "焊接.SLDASM"), "shelf_" + side + "_" + boundary["index"], 0, ParametricContext.Number(boundary, "shelfCenterYmm") - 1705-NativeParametricWidth.FrameGridHeightTranslation(ParametricContext.HeightMm), 0, true);
                 }
+                ((AssemblyDoc)model).ResolveAllLightWeightComponents(false);
+                VerifyRootComponentState(model, "before-save", rows);
                 Save(model);
+                VerifyRootComponentState(model, "after-save", rows);
             }
             finally { sw.CloseDoc(model.GetTitle()); Marshal.ReleaseComObject(model); }
+            ModelDoc2 reopened = Open(sw, root, true);
+            try
+            {
+                ((AssemblyDoc)reopened).ResolveAllLightWeightComponents(false);
+                VerifyRootComponentState(reopened, "reopened-readonly", rows);
+            }
+            finally { sw.CloseDoc(reopened.GetTitle()); Marshal.ReleaseComObject(reopened); }
         }
 
         private static void RepairInterfaces(ISldWorks sw, List<object> rows)
@@ -700,7 +746,7 @@ namespace Winnsen.StructureAgent.NativeDoorModule888x14
             try { StopOwnedSession(session, result); }
             catch (Exception error) { if (actionError != null) throw new AggregateException(actionError, error); throw; }
             finally { Winnsen.StructureAgent.Generation.ParametricContext.Write(Path.Combine(Winnsen.StructureAgent.Generation.ParametricContext.AttemptDirectory, "evidence", name + ".sessions.json"), result); }
-            if (actionError != null) throw actionError;
+            if (actionError != null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(actionError).Throw();
         }
 
         private static void StopProvenOwnedMonitors(OwnedSession session)

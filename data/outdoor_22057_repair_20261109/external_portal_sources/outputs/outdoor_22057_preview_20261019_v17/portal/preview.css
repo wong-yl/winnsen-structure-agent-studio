@@ -1,0 +1,14 @@
+.preview-canvas-wrap{height:clamp(420px,43vw,660px);max-height:none;background:radial-gradient(ellipse at 52% 32%,#fff 0%,#f2f4f7 60%,#e9edf2 100%);isolation:isolate}
+#cabinetPreview{position:absolute;inset:0;width:100%;height:100%;max-height:none;aspect-ratio:auto;outline-offset:-4px}
+#cabinetPreview:focus-visible{outline:2px solid #315bea80}
+#previewDimensions{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+#previewDimensions line,#previewDimensions path{stroke:#91a0b2;stroke-width:.75;fill:none}
+#previewDimensions text{fill:#6f7f94;font:10px "Segoe UI","Microsoft YaHei",sans-serif;paint-order:stroke;stroke:#f3f5f8;stroke-width:5px;stroke-linejoin:round}
+#previewDimensions .door-number{fill:#6e7c8d;font-size:10px;stroke-width:3px}
+.drawing-corner,.drawing-scale{z-index:2}.drawing-corner{top:18px;left:20px;line-height:1.8;letter-spacing:.07em}.drawing-scale{top:20px;right:20px}
+.viewport-toolbar{background:#fff;padding:8px 18px 12px;flex-wrap:nowrap}.view-button-row{padding:3px;border-radius:9px;background:#edf0f5;gap:2px}.view-button-row .button{min-height:34px;padding:6px 12px;border-radius:7px;font-family:var(--sans)}.view-button-row .view-active{background:#fff;color:#304967;border-color:#fff;box-shadow:0 1px 4px #26344712}
+.preview-reset{padding:6px 10px;min-height:34px;font-size:11px;white-space:nowrap}.preview-legend{margin-left:auto;font:10px var(--sans)}
+#previewFallback{position:absolute;bottom:12px;right:14px;margin:0;color:#73839a;font-size:10px;pointer-events:none}
+@media(max-width:1200px){.preview-canvas-wrap{height:520px}.preview-legend{display:none}}
+@media(max-width:1024px){.preview-canvas-wrap{height:520px;max-height:none}.preview-canvas-wrap canvas{max-height:none;object-fit:initial}}
+@media(max-width:540px){.preview-canvas-wrap{height:430px}.drawing-corner{left:14px;font-size:8px}.drawing-scale{right:14px;font-size:8px}.viewport-toolbar{padding:6px 10px 12px;gap:8px}.view-button-row{width:auto;flex:1;min-width:0}.view-button-row .button{padding:6px 8px;min-width:0;flex:1}.preview-reset{padding:6px 8px;flex:0 0 auto}.preview-controls{grid-template-columns:30px minmax(0,1fr) 36px}.preview-controls input[type=range]{min-width:0;width:100%;padding:0}}

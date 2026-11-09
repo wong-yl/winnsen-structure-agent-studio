@@ -24,4 +24,14 @@
 workers/native_model_requests/parametric_v1/sources/*.cs -text
 workers/native_model_requests/development/v1/tools/door_module_888x14_native_v1/NativeDoorModule888x14.cs -text
 workers/native_model_requests/development/v1/tools/BuildLockTopology888x14.cs -text
-configs/locker_16029_layout_rule_evidence.status.txt -text
+configs/locker_16029_layout_rule_evidence.status.txt -text whitespace=cr-at-eol
+
+# Accepted and qualified archived inputs retain their exact identity bytes.
+workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/** -text whitespace=cr-at-eol
+workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/** -text whitespace=cr-at-eol
+workers/native_model_requests/parametric_v1/accepted_sources/** -text whitespace=cr-at-eol
+data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/** -text whitespace=cr-at-eol
+data/outdoor_22057_repair_20261109/external_portal_sources/** -text whitespace=cr-at-eol
+
+# Preserve this already-qualified stylesheet, including its historical final blank line.
+data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/indoor_workspace_snapshot.css whitespace=cr-at-eol,-blank-at-eof

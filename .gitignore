@@ -82,6 +82,12 @@ workers/solidworks_tools/sw_open_step_2020_screenshot.js
 *.fcstd
 *.FCBak
 *.fcbak
+*.igs
+*.IGS
+*.iges
+*.IGES
+*.dxf
+*.DXF
 
 # Logs and temporary files
 *.log
@@ -115,6 +121,8 @@ tmp_chm/
 output/
 experiments/crowncad_pilot_16029/
 tools/*16029*.mjs
+!tools/verify_16029_parametric_process.test.mjs
+!tools/verify_16029_parametric_build.test.mjs
 tools/inspect_step_cartesian_bbox.mjs
 workers/solidworks_tools/*16029*.cs
 workers/solidworks_tools/*16029*.ps1
@@ -198,3 +206,7 @@ workers/native_model_requests/**/assembly_contract.snapshot.json
 *.exe
 *.dll
 *.pdb
+
+# Runtime bridge checks are maintained source, not local validation output.
+!tools/verify_16029_parametric_runtime.test.mjs
+!tools/verify_16029_parametric_resume.test.mjs

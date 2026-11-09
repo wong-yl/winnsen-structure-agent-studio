@@ -1,0 +1,737 @@
+{
+  "schema": "winnsen.platform-source-snapshot.v1",
+  "date": "2026-11-10",
+  "base_commit": "57b25adaae0434f852a32f154b85b760856f289e",
+  "note": "Raw source and LF-normalized SHA256 are both recorded; Git text filters may normalize current entry text. Accepted source archives and external qualified sources retain exact bytes via .gitattributes. Local binaries, CAD, accounts and acceptance runtime files are excluded.",
+  "files": [
+    {
+      "source": ".github/dependabot.yml",
+      "path": ".github/dependabot.yml",
+      "sha256": "76d288ae6cacbb29df0ba872efa8fe40bd73044d01e53ce02fab13c07374057f",
+      "lf_sha256": "76d288ae6cacbb29df0ba872efa8fe40bd73044d01e53ce02fab13c07374057f"
+    },
+    {
+      "source": ".github/workflows/16029-pr-check.yml",
+      "path": ".github/workflows/16029-pr-check.yml",
+      "sha256": "9a0bdd405dab5389d592c581eed9dfffaa1e0151f9a43688529aff124c93f9bf",
+      "lf_sha256": "9a0bdd405dab5389d592c581eed9dfffaa1e0151f9a43688529aff124c93f9bf",
+      "archive_sha256": "f20dd7bf9f04ea4065c93ae3ed3021f67ff1c8e6962101c65bb3dcb3343b079d",
+      "archive_lf_sha256": "f20dd7bf9f04ea4065c93ae3ed3021f67ff1c8e6962101c65bb3dcb3343b079d",
+      "archive_adjustment": "Publish-only test whitelist or CI validation list; running source is unchanged."
+    },
+    {
+      "source": ".gitignore",
+      "path": ".gitignore",
+      "sha256": "63f467a8a7a6d9c6a3da14a88a87da2d7e3b28af9e6339fa899814f2b967613a",
+      "lf_sha256": "40b6f194eb58cce2d260a2d1dc18c9ba909b2bde761c73d68c208e9ba81f1e11",
+      "archive_sha256": "eb584ead573f8417c951d454cce7fe007360280160ee9c5edf06c308b59e7ed5",
+      "archive_lf_sha256": "1cbd96b03c0fe99a06a7b2ac2a11d6751201405cf1ce39c3245684a58dd6bec6",
+      "archive_adjustment": "Publish-only test whitelist or CI validation list; running source is unchanged."
+    },
+    {
+      "source": "apps/web/package-lock.json",
+      "path": "apps/web/package-lock.json",
+      "sha256": "8187daf321a24a1cec58701eb1dd1e91a942c80f035d9f23a5b9281e42350067",
+      "lf_sha256": "8187daf321a24a1cec58701eb1dd1e91a942c80f035d9f23a5b9281e42350067"
+    },
+    {
+      "source": "configs/locker_16029_layout_rule_evidence.status.txt",
+      "path": "configs/locker_16029_layout_rule_evidence.status.txt",
+      "sha256": "a1c15076110af9954039b66599c1558f0b6f4c2f0fa04f3048656b06f46e5d21",
+      "lf_sha256": "afa3922930dfa076cc713bfa61d3a6e96ce0b5acf937096f403c3f7d5c8bd103"
+    },
+    {
+      "source": "services/api/app/main.py",
+      "path": "services/api/app/main.py",
+      "sha256": "d4d80532ac3ec1b2af7e2410970829aeecec464aca3ffb05cd71ea7739b65e6b",
+      "lf_sha256": "d4d80532ac3ec1b2af7e2410970829aeecec464aca3ffb05cd71ea7739b65e6b"
+    },
+    {
+      "source": "services/api/tests/test_api.py",
+      "path": "services/api/tests/test_api.py",
+      "sha256": "f5766d66dc7f98e1cc2a626893c6192d2c5442885544eb031cc148758c440116",
+      "lf_sha256": "f5766d66dc7f98e1cc2a626893c6192d2c5442885544eb031cc148758c440116"
+    },
+    {
+      "source": "tools/check_16029_first_commit_scope.ps1",
+      "path": "tools/check_16029_first_commit_scope.ps1",
+      "sha256": "f8be45e55085b7d9b62d1dbad77c26938b47d4ec0df2ad2fa24080e8383d666a",
+      "lf_sha256": "ed6738dd55dd45850e86aef16b6b9903a004667eeb7ecda5c95e9a1c3018b65d"
+    },
+    {
+      "source": "tools/check_project_file_scope.ps1",
+      "path": "tools/check_project_file_scope.ps1",
+      "sha256": "cf451a0427524798d50d960014628a50fba0fc8590fdcc9372317b74ea6724c9",
+      "lf_sha256": "cf451a0427524798d50d960014628a50fba0fc8590fdcc9372317b74ea6724c9"
+    },
+    {
+      "source": "tools/fixtures/locker_16029_physical_audit.mjs",
+      "path": "tools/fixtures/locker_16029_physical_audit.mjs",
+      "sha256": "74028844348a8f15ac7e98900912aca7ddf9924221e6bc4d2fce10d9b297928d",
+      "lf_sha256": "74028844348a8f15ac7e98900912aca7ddf9924221e6bc4d2fce10d9b297928d"
+    },
+    {
+      "source": "tools/guard_16029_staged_scope.ps1",
+      "path": "tools/guard_16029_staged_scope.ps1",
+      "sha256": "16259a151e3fdd7a2215118352d31db850020ae2f1d86c426d878db1fbe99247",
+      "lf_sha256": "d7880b66d581e1188aa3b05f4fd9d8d3aa2ceb13ad7a8aee82ed895b0c7f0238"
+    },
+    {
+      "source": "tools/lib/locker_16029_native_task_store.mjs",
+      "path": "tools/lib/locker_16029_native_task_store.mjs",
+      "sha256": "8e65af4c16f8f139be35c94bd06f33851bf5717f766748b343c08e4f80b51a6d",
+      "lf_sha256": "8e65af4c16f8f139be35c94bd06f33851bf5717f766748b343c08e4f80b51a6d"
+    },
+    {
+      "source": "tools/lib/locker_16029_parametric_build.mjs",
+      "path": "tools/lib/locker_16029_parametric_build.mjs",
+      "sha256": "47e618bed6fc1b6ff5ed831d904a678ee95ff560050112c7d1674c1c486a64aa",
+      "lf_sha256": "62b8ae735b5fad9a54d5d72835c5bdaa36d361db74bb8bbd4234f9bde7f50a57"
+    },
+    {
+      "source": "tools/lib/locker_16029_parametric_process.mjs",
+      "path": "tools/lib/locker_16029_parametric_process.mjs",
+      "sha256": "5dd1fdc6fc3f7a4963510893b409b66133ee32e8966e645820e1897acbb7be1a",
+      "lf_sha256": "5dd1fdc6fc3f7a4963510893b409b66133ee32e8966e645820e1897acbb7be1a"
+    },
+    {
+      "source": "tools/lib/locker_16029_parametric_publication.mjs",
+      "path": "tools/lib/locker_16029_parametric_publication.mjs",
+      "sha256": "b72c904749425063964327848cf5acd2edd3e663c1f977221b4dad48f37e5a65",
+      "lf_sha256": "b72c904749425063964327848cf5acd2edd3e663c1f977221b4dad48f37e5a65"
+    },
+    {
+      "source": "tools/lib/locker_16029_production_evidence.mjs",
+      "path": "tools/lib/locker_16029_production_evidence.mjs",
+      "sha256": "5bef293d02b01561d805b8be87b5165b339b8502f75326ed6eef61b121e3dd92",
+      "lf_sha256": "5bef293d02b01561d805b8be87b5165b339b8502f75326ed6eef61b121e3dd92"
+    },
+    {
+      "source": "tools/lib/locker_16029_production_profile.mjs",
+      "path": "tools/lib/locker_16029_production_profile.mjs",
+      "sha256": "d90e7b7be6bc4f33c493525576969afb2f9f374a1f4e6b77d70cbda33783af50",
+      "lf_sha256": "d90e7b7be6bc4f33c493525576969afb2f9f374a1f4e6b77d70cbda33783af50"
+    },
+    {
+      "source": "tools/lib/outdoor_22057_layout.mjs",
+      "path": "tools/lib/outdoor_22057_layout.mjs",
+      "sha256": "92c987727794d4e3936a4523fda12a9df19cad1e790471dbf91ea0b100792a50",
+      "lf_sha256": "7ed386128af79437d86777a69b622799fb196d91e6e853e8233fa0f64035c817"
+    },
+    {
+      "source": "tools/lib/outdoor_22057_portal.mjs",
+      "path": "tools/lib/outdoor_22057_portal.mjs",
+      "sha256": "d9f3e62b6319e6aefe024b39d359137b39ee0b3f35a2fd5836a8c9c7772aa284",
+      "lf_sha256": "95fcd8242e112e83160cf7c7146077ea730748186e9bb2d947fae3a5c43b7f7e"
+    },
+    {
+      "source": "tools/lib/outdoor_22057_tasks.mjs",
+      "path": "tools/lib/outdoor_22057_tasks.mjs",
+      "sha256": "4b676cd2dddf884ba88916bc656ddc4061279ef216aaedfcf131d7eae4578ca8",
+      "lf_sha256": "4b676cd2dddf884ba88916bc656ddc4061279ef216aaedfcf131d7eae4578ca8"
+    },
+    {
+      "source": "tools/locker_16029_native_generator.mjs",
+      "path": "tools/locker_16029_native_generator.mjs",
+      "sha256": "e268f03989f3f1f51554190b52923861117823f034be10a1b4410d14b965186f",
+      "lf_sha256": "e268f03989f3f1f51554190b52923861117823f034be10a1b4410d14b965186f"
+    },
+    {
+      "source": "tools/run_16029_parametric_model.mjs",
+      "path": "tools/run_16029_parametric_model.mjs",
+      "sha256": "d3c3afcde08427097cc95c89583f4d90a9da10c90d2d66f176216781bbf1710a",
+      "lf_sha256": "d3c3afcde08427097cc95c89583f4d90a9da10c90d2d66f176216781bbf1710a"
+    },
+    {
+      "source": "tools/run_16029_parametric_portal_worker.mjs",
+      "path": "tools/run_16029_parametric_portal_worker.mjs",
+      "sha256": "e9de891fd22fb437bc76234e573ab2643dad08ab2e5fd5ff1cb5b75cf8072bd9",
+      "lf_sha256": "e9de891fd22fb437bc76234e573ab2643dad08ab2e5fd5ff1cb5b75cf8072bd9"
+    },
+    {
+      "source": "tools/run_16029_review_portal_watchdog.ps1",
+      "path": "tools/run_16029_review_portal_watchdog.ps1",
+      "sha256": "4bcc7480e300fdb6b1fad57a390ebd91593f410837e6dbc97088ad2064b684db",
+      "lf_sha256": "10b5fb9ae0a4d2e6e80e59e910d477794569c4bb201de953cc0dfd98bdfaa64a"
+    },
+    {
+      "source": "tools/run_outdoor_22057_portal_worker.mjs",
+      "path": "tools/run_outdoor_22057_portal_worker.mjs",
+      "sha256": "65b1d6b2fba1a9de788353052fbd12814653b24cda9287ddebdfb4a873f4ace3",
+      "lf_sha256": "65b1d6b2fba1a9de788353052fbd12814653b24cda9287ddebdfb4a873f4ace3"
+    },
+    {
+      "source": "tools/serve_16029_review_downloads.mjs",
+      "path": "tools/serve_16029_review_downloads.mjs",
+      "sha256": "61bce6094aff01d14e1c21ccbd966b65b9f6010a08ebdea67679de6e0e539c8e",
+      "lf_sha256": "c2f23062ae031fed8a123be4edd38ad95dc1bed19668646bfa39cfed302e99ab"
+    },
+    {
+      "source": "tools/start_outdoor_22057_portal_worker.mjs",
+      "path": "tools/start_outdoor_22057_portal_worker.mjs",
+      "sha256": "828ed2cb7ca70697304aed7bc49ec0fda10f5cae4ff180635e9303505a4d8bdd",
+      "lf_sha256": "828ed2cb7ca70697304aed7bc49ec0fda10f5cae4ff180635e9303505a4d8bdd"
+    },
+    {
+      "source": "tools/test_check_project_file_scope.ps1",
+      "path": "tools/test_check_project_file_scope.ps1",
+      "sha256": "7459f31f1966e7e7fbbc5f3422d793b16b2639edc002b8c41869072ad14d1cf2",
+      "lf_sha256": "7459f31f1966e7e7fbbc5f3422d793b16b2639edc002b8c41869072ad14d1cf2"
+    },
+    {
+      "source": "tools/verify_16029_native_portal_session.mjs",
+      "path": "tools/verify_16029_native_portal_session.mjs",
+      "sha256": "8a911f8c296992bc05ff68f67cfeb8a35831fc0dec0675908bf51e024cd0e34a",
+      "lf_sha256": "8a911f8c296992bc05ff68f67cfeb8a35831fc0dec0675908bf51e024cd0e34a"
+    },
+    {
+      "source": "tools/verify_16029_native_task_store.mjs",
+      "path": "tools/verify_16029_native_task_store.mjs",
+      "sha256": "bd4837e4c3a03701ad529e6ba2214e6c33804df5e5eadb7201ee44e9bb75d6bc",
+      "lf_sha256": "bd4837e4c3a03701ad529e6ba2214e6c33804df5e5eadb7201ee44e9bb75d6bc"
+    },
+    {
+      "source": "tools/verify_16029_parametric_build.test.mjs",
+      "path": "tools/verify_16029_parametric_build.test.mjs",
+      "sha256": "51b709f112dd549aef82f759ac97468bb5b2b91e51cfbc792bddf5ff6af90641",
+      "lf_sha256": "52aeae1610e1d578bf7a25086f17e80a00a69f2ee267bb2b8a4ecf7580c882b2"
+    },
+    {
+      "source": "tools/verify_16029_parametric_executor.mjs",
+      "path": "tools/verify_16029_parametric_executor.mjs",
+      "sha256": "3c9ad0f68571fdb64e6842ee1783bad2ba750e58e5b543966a34dff3627deefe",
+      "lf_sha256": "3c9ad0f68571fdb64e6842ee1783bad2ba750e58e5b543966a34dff3627deefe"
+    },
+    {
+      "source": "tools/verify_16029_parametric_physical_quality.mjs",
+      "path": "tools/verify_16029_parametric_physical_quality.mjs",
+      "sha256": "f31d06a105a3d99856de2132ee5dacbe2cf4eafcc9f0bc664770731713ee6b64",
+      "lf_sha256": "f31d06a105a3d99856de2132ee5dacbe2cf4eafcc9f0bc664770731713ee6b64"
+    },
+    {
+      "source": "tools/verify_16029_parametric_physical_quality.test.mjs",
+      "path": "tools/verify_16029_parametric_physical_quality.test.mjs",
+      "sha256": "8f5678469a22019c0d0c6ae4bb3a9dcb521e0b457e5469a69f7818519440809e",
+      "lf_sha256": "8f5678469a22019c0d0c6ae4bb3a9dcb521e0b457e5469a69f7818519440809e"
+    },
+    {
+      "source": "tools/verify_16029_parametric_portal_worker.mjs",
+      "path": "tools/verify_16029_parametric_portal_worker.mjs",
+      "sha256": "d8a72980a00f008f30e9743ad6fe9d8b91483909cc2300a3ef101e3ce9d2e6af",
+      "lf_sha256": "d8a72980a00f008f30e9743ad6fe9d8b91483909cc2300a3ef101e3ce9d2e6af"
+    },
+    {
+      "source": "tools/verify_16029_parametric_process.test.mjs",
+      "path": "tools/verify_16029_parametric_process.test.mjs",
+      "sha256": "1df9d2c9c916bcc90e366929a29efaa9f55a143cdffeab779718ed65d8bec945",
+      "lf_sha256": "1df9d2c9c916bcc90e366929a29efaa9f55a143cdffeab779718ed65d8bec945"
+    },
+    {
+      "source": "tools/verify_16029_parametric_publication.mjs",
+      "path": "tools/verify_16029_parametric_publication.mjs",
+      "sha256": "14acf4733f172fe4c9d0775975c81a9b7ee1cf8a0d7f0a9aed1d9c1e0efe5664",
+      "lf_sha256": "14acf4733f172fe4c9d0775975c81a9b7ee1cf8a0d7f0a9aed1d9c1e0efe5664"
+    },
+    {
+      "source": "tools/verify_16029_review_portal_feedback_upload.mjs",
+      "path": "tools/verify_16029_review_portal_feedback_upload.mjs",
+      "sha256": "21cc4fe127d2026e76c884044039a0193f6401e4d0523909f4065fcdc4cdc62b",
+      "lf_sha256": "21cc4fe127d2026e76c884044039a0193f6401e4d0523909f4065fcdc4cdc62b"
+    },
+    {
+      "source": "tools/verify_16029_review_portal_manual_generation_control.mjs",
+      "path": "tools/verify_16029_review_portal_manual_generation_control.mjs",
+      "sha256": "36c45d692d2fda1d24843009b21f973ed763c5fe6040916f80c17da8406851a4",
+      "lf_sha256": "36c45d692d2fda1d24843009b21f973ed763c5fe6040916f80c17da8406851a4"
+    },
+    {
+      "source": "tools/verify_16029_workbench_browser.mjs",
+      "path": "tools/verify_16029_workbench_browser.mjs",
+      "sha256": "d85a3fe3fbeb0dd3da655eaf069616e063690aad4ae3096a421c31822a7aca0c",
+      "lf_sha256": "d85a3fe3fbeb0dd3da655eaf069616e063690aad4ae3096a421c31822a7aca0c"
+    },
+    {
+      "source": "tools/verify_outdoor_22057_portal.mjs",
+      "path": "tools/verify_outdoor_22057_portal.mjs",
+      "sha256": "3bab82580e0d43622c71ab6055d9dde8624178b35db8570fb013b36db0efb30a",
+      "lf_sha256": "3bab82580e0d43622c71ab6055d9dde8624178b35db8570fb013b36db0efb30a"
+    },
+    {
+      "source": "tools/verify_outdoor_22057_portal_r13.mjs",
+      "path": "tools/verify_outdoor_22057_portal_r13.mjs",
+      "sha256": "8ab29dcf489ec3e595e80a8ba178eadaff007ab814af09b9446116ca8b1e2781",
+      "lf_sha256": "82f50bb68fb9a7773180d41c5c192fed88b0245ceec1079c141d2ccd92d4370d"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricAssembly.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricAssembly.cs",
+      "sha256": "ec7b15c2c4aba1d3c29c909f9549485434b8fad694622b4cee3badcd75e0fde1",
+      "lf_sha256": "ded726174ef160bd07421835c3ecce1d5c4db3eb083d50532893d1272377e5a6"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricDoorPlacement.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricDoorPlacement.cs",
+      "sha256": "cdc3ad61e3b912747a3ffaeed6fd81f73b9661cebf00798e958a8c21daefa48f",
+      "lf_sha256": "9577ae26956b625ad4c5c9c5d32194a6533541c2b59ad4026f58f12e1bdb92db"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricOrderInterfaces.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricOrderInterfaces.cs",
+      "sha256": "d046392536098610f9dccd17c1bd9351a4d3883e719dd7a4c6c7c495be3a558f",
+      "lf_sha256": "d046392536098610f9dccd17c1bd9351a4d3883e719dd7a4c6c7c495be3a558f"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricPhysicalAudit.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricPhysicalAudit.cs",
+      "sha256": "374914dfd60feb08ce03d50020a6767e86a06da9f3ca67fd5aa7228ab3b10a54",
+      "lf_sha256": "495ecf6c69f2b1aa689388c15dc4d3989b96aa3ff19793d59c518fb468de4f6b"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricProduction.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricProduction.cs",
+      "sha256": "f5f2c14a11668bfce7566610a4add7312d7367ef2b88e25f3795b5d29adaf062",
+      "lf_sha256": "f5f2c14a11668bfce7566610a4add7312d7367ef2b88e25f3795b5d29adaf062"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricProductionGeometry.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricProductionGeometry.cs",
+      "sha256": "7afb7fe5afdd7a9e8dfe15f5874eb3956070cd6980fb184bb7d661851b818ae4",
+      "lf_sha256": "7afb7fe5afdd7a9e8dfe15f5874eb3956070cd6980fb184bb7d661851b818ae4"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricProductionMarks.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricProductionMarks.cs",
+      "sha256": "f1670ea011573eb4aa1be0149f6d765ec4d7ff4aeabf9fe5263c0b06ad4c330f",
+      "lf_sha256": "f1670ea011573eb4aa1be0149f6d765ec4d7ff4aeabf9fe5263c0b06ad4c330f"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/NativeParametricVerification.cs",
+      "path": "workers/native_model_requests/parametric_v1/NativeParametricVerification.cs",
+      "sha256": "9c5e3fad9b3667f4cd12e2f61701f37b85ae534ff51510f7733c70e24037f07a",
+      "lf_sha256": "4918552957bf51134c5bdd479fd7c04d83d0803a265df6e5db6afa78873845b8"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/ProductionOrderDrawings.cs",
+      "path": "workers/native_model_requests/parametric_v1/ProductionOrderDrawings.cs",
+      "sha256": "8d5f4436311de5af51180a52101b46ea389c3f545348794c56110dd594fe73b5",
+      "lf_sha256": "8d5f4436311de5af51180a52101b46ea389c3f545348794c56110dd594fe73b5"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/build-selection.json",
+      "path": "workers/native_model_requests/parametric_v1/build-selection.json",
+      "sha256": "3a9e12b6c9ed948e42f8879c3ac6a32f8190f3b83d10f12bded75b634651d3b4",
+      "lf_sha256": "3a9e12b6c9ed948e42f8879c3ac6a32f8190f3b83d10f12bded75b634651d3b4"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/build.mjs",
+      "path": "workers/native_model_requests/parametric_v1/build.mjs",
+      "sha256": "df8315717ed083eb30586369edfb06a4ca37700ff94ee08f8a5e4f72503f4e61",
+      "lf_sha256": "df8315717ed083eb30586369edfb06a4ca37700ff94ee08f8a5e4f72503f4e61"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/build_production.mjs",
+      "path": "workers/native_model_requests/parametric_v1/build_production.mjs",
+      "sha256": "5d547d8267005dc2522177330fe2022bfa5125687d24f1f1aa3dc318a83eade3",
+      "lf_sha256": "5d547d8267005dc2522177330fe2022bfa5125687d24f1f1aa3dc318a83eade3"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/production_source.mjs",
+      "path": "workers/native_model_requests/parametric_v1/production_source.mjs",
+      "sha256": "3f39b50242224d1511302da1fe1f17f7063b886da5dbd1bbb4b34bcbab10d32d",
+      "lf_sha256": "3f39b50242224d1511302da1fe1f17f7063b886da5dbd1bbb4b34bcbab10d32d"
+    },
+    {
+      "source": "tools/lib/locker_16029_parametric_runtime.mjs",
+      "path": "tools/lib/locker_16029_parametric_runtime.mjs",
+      "sha256": "cdda1393adb9ad280721048214f8b05a86c35efc6532de07762c75747efc9cff",
+      "lf_sha256": "cdda1393adb9ad280721048214f8b05a86c35efc6532de07762c75747efc9cff"
+    },
+    {
+      "source": "tools/verify_16029_parametric_runtime.test.mjs",
+      "path": "tools/verify_16029_parametric_runtime.test.mjs",
+      "sha256": "1910eb162a5106cd122e995cfc74ad69492e8f39cba9a2663ba073856e7f7007",
+      "lf_sha256": "1910eb162a5106cd122e995cfc74ad69492e8f39cba9a2663ba073856e7f7007"
+    },
+    {
+      "source": "tools/verify_16029_parametric_resume.test.mjs",
+      "path": "tools/verify_16029_parametric_resume.test.mjs",
+      "sha256": "c03569a7375123f0759889a638588b71c9795d86c7672e57d1592f3b7ec343e9",
+      "lf_sha256": "c03569a7375123f0759889a638588b71c9795d86c7672e57d1592f3b7ec343e9"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/runtime-repair-selection.json",
+      "path": "workers/native_model_requests/parametric_v1/runtime-repair-selection.json",
+      "sha256": "f9ea9ed32d9157df5ba5325611ea326b102281143f849c473681976ff76b5384",
+      "lf_sha256": "f9ea9ed32d9157df5ba5325611ea326b102281143f849c473681976ff76b5384"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/build.mjs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/build.mjs",
+      "sha256": "f0c953f0e4f9eb7522ae42a1c6cc32c143d8d683b35e8b0a6959bb43a6d5bab6",
+      "lf_sha256": "f0c953f0e4f9eb7522ae42a1c6cc32c143d8d683b35e8b0a6959bb43a6d5bab6"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricAssembly.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricAssembly.cs",
+      "sha256": "712ee78c0bd67b3e6caaed463ef79d6b00e29958053047adb3d35fd807554392",
+      "lf_sha256": "712ee78c0bd67b3e6caaed463ef79d6b00e29958053047adb3d35fd807554392"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricDoor.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricDoor.cs",
+      "sha256": "b09dbdded09ca11f0da0a3f0114d9105ad838202105e7d77ceb25b3db8fbc57b",
+      "lf_sha256": "b09dbdded09ca11f0da0a3f0114d9105ad838202105e7d77ceb25b3db8fbc57b"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricDoorPlacement.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricDoorPlacement.cs",
+      "sha256": "c2e0bf8eaeb7798e708ae9526da5f943a81fb89b33957652d1c82d5a26f96866",
+      "lf_sha256": "c2e0bf8eaeb7798e708ae9526da5f943a81fb89b33957652d1c82d5a26f96866"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricEnvelope.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricEnvelope.cs",
+      "sha256": "540b8f6ceccf43bc3f1313df77455392c3b26638eb281a51aa765d1f6ba1b3a9",
+      "lf_sha256": "c1b964670800410e3b75462f81cdf1ad53f011f64036edeffb08114210a03750"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricLockBase.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricLockBase.cs",
+      "sha256": "c3ec81564c536e341053a97fdad6088e6bc8256faf16a78933733e630ad09586",
+      "lf_sha256": "c3ec81564c536e341053a97fdad6088e6bc8256faf16a78933733e630ad09586"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricLocks.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricLocks.cs",
+      "sha256": "467d217d798f02acb9fe5cfa8584dd272444e7f210f1b58a03d933fe0cb56ec6",
+      "lf_sha256": "c930f3bc666edbfd7ab45ab66f8caa26a61589b4da3ccb1533122dff01e6e2d8"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricPhysicalAudit.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricPhysicalAudit.cs",
+      "sha256": "85e8b7089d9d6e94b5d23e9e5c123adb1d2ed6892dda5697c27b42a92281365f",
+      "lf_sha256": "da4227baecac7718b61bcbb218a3ffcac5d69fd1a1af0a4ea4ea1c8b4f842cb9"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricVerification.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricVerification.cs",
+      "sha256": "f8d5eed097503a5aec68b83769a4957f8c9fc7227240565526e2e91abb4b92cf",
+      "lf_sha256": "0b00aedc84d6b6dec910f19da535190594afca089641b9464b2f8c26e7384328"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricWidth.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/NativeParametricWidth.cs",
+      "sha256": "8777f58a4149e6997d3d97674617ca2d80327713348a3c0cabcfd481f2d4a2d2",
+      "lf_sha256": "8777f58a4149e6997d3d97674617ca2d80327713348a3c0cabcfd481f2d4a2d2"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/ParametricContext.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/source/ParametricContext.cs",
+      "sha256": "cb49dfb1e5545feaeb38c270bab9025d489b541a1d482f44c35bca3a78f37732",
+      "lf_sha256": "653fff841d4eeebd05e90d371baa2f036525a2360eff9aac148196b72ce0da14"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/test_document_state.mjs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/test_document_state.mjs",
+      "sha256": "a75c0cacc5d3df30db06e347f1aae84cc9febb144f0389acbebf48e2e6a2f053",
+      "lf_sha256": "a75c0cacc5d3df30db06e347f1aae84cc9febb144f0389acbebf48e2e6a2f053"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/test_rear_holes.mjs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/test_rear_holes.mjs",
+      "sha256": "0a8e3131213911fe353d2cb8fdee9883cc542a690bb039f44f88b9879de28658",
+      "lf_sha256": "0a8e3131213911fe353d2cb8fdee9883cc542a690bb039f44f88b9879de28658"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/tests/DocumentStateHarness.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/tests/DocumentStateHarness.cs",
+      "sha256": "541737487456e320b6a7c0c16b96c646d099f0646178257a5f94da7a0cd28510",
+      "lf_sha256": "541737487456e320b6a7c0c16b96c646d099f0646178257a5f94da7a0cd28510"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/tests/RearHoleHarness.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/tests/RearHoleHarness.cs",
+      "sha256": "ea17682c0043e3f92c89d4dba3e0766f0b6e6169129c7ee294d43d99dac8436e",
+      "lf_sha256": "ea17682c0043e3f92c89d4dba3e0766f0b6e6169129c7ee294d43d99dac8436e"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/build.mjs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/build.mjs",
+      "sha256": "88b31021f8e5c1c88294fdc068068780ddfcbfebaeb72187bae2f61bbdec1fca",
+      "lf_sha256": "88b31021f8e5c1c88294fdc068068780ddfcbfebaeb72187bae2f61bbdec1fca"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricAssembly.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricAssembly.cs",
+      "sha256": "712ee78c0bd67b3e6caaed463ef79d6b00e29958053047adb3d35fd807554392",
+      "lf_sha256": "712ee78c0bd67b3e6caaed463ef79d6b00e29958053047adb3d35fd807554392"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricDoor.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricDoor.cs",
+      "sha256": "b09dbdded09ca11f0da0a3f0114d9105ad838202105e7d77ceb25b3db8fbc57b",
+      "lf_sha256": "b09dbdded09ca11f0da0a3f0114d9105ad838202105e7d77ceb25b3db8fbc57b"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricDoorPlacement.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricDoorPlacement.cs",
+      "sha256": "4337e70001b449355f28fbd2572b8cda2f422ca71484f66699b08640c6e2f96c",
+      "lf_sha256": "4337e70001b449355f28fbd2572b8cda2f422ca71484f66699b08640c6e2f96c"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricEnvelope.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricEnvelope.cs",
+      "sha256": "540b8f6ceccf43bc3f1313df77455392c3b26638eb281a51aa765d1f6ba1b3a9",
+      "lf_sha256": "c1b964670800410e3b75462f81cdf1ad53f011f64036edeffb08114210a03750"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricLockBase.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricLockBase.cs",
+      "sha256": "c3ec81564c536e341053a97fdad6088e6bc8256faf16a78933733e630ad09586",
+      "lf_sha256": "c3ec81564c536e341053a97fdad6088e6bc8256faf16a78933733e630ad09586"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricLocks.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricLocks.cs",
+      "sha256": "467d217d798f02acb9fe5cfa8584dd272444e7f210f1b58a03d933fe0cb56ec6",
+      "lf_sha256": "c930f3bc666edbfd7ab45ab66f8caa26a61589b4da3ccb1533122dff01e6e2d8"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricPhysicalAudit.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricPhysicalAudit.cs",
+      "sha256": "85e8b7089d9d6e94b5d23e9e5c123adb1d2ed6892dda5697c27b42a92281365f",
+      "lf_sha256": "da4227baecac7718b61bcbb218a3ffcac5d69fd1a1af0a4ea4ea1c8b4f842cb9"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricVerification.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricVerification.cs",
+      "sha256": "f8d5eed097503a5aec68b83769a4957f8c9fc7227240565526e2e91abb4b92cf",
+      "lf_sha256": "0b00aedc84d6b6dec910f19da535190594afca089641b9464b2f8c26e7384328"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricWidth.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/NativeParametricWidth.cs",
+      "sha256": "8777f58a4149e6997d3d97674617ca2d80327713348a3c0cabcfd481f2d4a2d2",
+      "lf_sha256": "8777f58a4149e6997d3d97674617ca2d80327713348a3c0cabcfd481f2d4a2d2"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/ParametricContext.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/source/ParametricContext.cs",
+      "sha256": "cb49dfb1e5545feaeb38c270bab9025d489b541a1d482f44c35bca3a78f37732",
+      "lf_sha256": "653fff841d4eeebd05e90d371baa2f036525a2360eff9aac148196b72ce0da14"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/test_rear_width.mjs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/test_rear_width.mjs",
+      "sha256": "c60d31f5882a525d544d5636d87fc83626500132026b3e7e3c46947f62882737",
+      "lf_sha256": "c60d31f5882a525d544d5636d87fc83626500132026b3e7e3c46947f62882737",
+      "archive_adjustment": "Only four fixture input paths now refer to adjacent account-free archived geometry. Runtime CAD source is unchanged.",
+      "archive_sha256": "e7772cd970ebc1370e96d5d624cad4515efdbca44b5b1fba1fef891806ba382e",
+      "archive_lf_sha256": "e7772cd970ebc1370e96d5d624cad4515efdbca44b5b1fba1fef891806ba382e"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/tests/RearWidthHarness.cs",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/tests/RearWidthHarness.cs",
+      "sha256": "e2a71d4c8877eaf1c8f60f58d7e4fb2635dcf068f345fdcc9fcdeed36eb88685",
+      "lf_sha256": "e2a71d4c8877eaf1c8f60f58d7e4fb2635dcf068f345fdcc9fcdeed36eb88685"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricAssembly.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricAssembly.cs",
+      "sha256": "d56fe463462295b1fd267d55be78569fa27b7964daa99324f72351fb8539da0d",
+      "lf_sha256": "a9dcf4a3aa8e3f708d3947042ae410ca82f2f453b473a22cedd6d05b32666194"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricDoor.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricDoor.cs",
+      "sha256": "b09dbdded09ca11f0da0a3f0114d9105ad838202105e7d77ceb25b3db8fbc57b",
+      "lf_sha256": "b09dbdded09ca11f0da0a3f0114d9105ad838202105e7d77ceb25b3db8fbc57b"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricDoorPlacement.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricDoorPlacement.cs",
+      "sha256": "92e838b65c57834f8273c236ee75d2e657d52fba023c1ad8c04d149280f728f0",
+      "lf_sha256": "d6b5e2de3549ad4c746a4516e227c970113180a5922433d092e7d39360f481c2"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricEnvelope.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricEnvelope.cs",
+      "sha256": "540b8f6ceccf43bc3f1313df77455392c3b26638eb281a51aa765d1f6ba1b3a9",
+      "lf_sha256": "c1b964670800410e3b75462f81cdf1ad53f011f64036edeffb08114210a03750"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricLockBase.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricLockBase.cs",
+      "sha256": "c3ec81564c536e341053a97fdad6088e6bc8256faf16a78933733e630ad09586",
+      "lf_sha256": "c3ec81564c536e341053a97fdad6088e6bc8256faf16a78933733e630ad09586"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricLocks.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricLocks.cs",
+      "sha256": "467d217d798f02acb9fe5cfa8584dd272444e7f210f1b58a03d933fe0cb56ec6",
+      "lf_sha256": "c930f3bc666edbfd7ab45ab66f8caa26a61589b4da3ccb1533122dff01e6e2d8"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricPhysicalAudit.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricPhysicalAudit.cs",
+      "sha256": "d5702b2fdecd1cb279fc5ecc9d2f67f261183c3ff9e1d9bc92d411b1c6b1cef1",
+      "lf_sha256": "beece8ac46663a4b69fa7ee76b00dd245250a1414993931db06a6462d774de36"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricVerification.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricVerification.cs",
+      "sha256": "f8d5eed097503a5aec68b83769a4957f8c9fc7227240565526e2e91abb4b92cf",
+      "lf_sha256": "0b00aedc84d6b6dec910f19da535190594afca089641b9464b2f8c26e7384328"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/NativeParametricWidth.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/NativeParametricWidth.cs",
+      "sha256": "8777f58a4149e6997d3d97674617ca2d80327713348a3c0cabcfd481f2d4a2d2",
+      "lf_sha256": "8777f58a4149e6997d3d97674617ca2d80327713348a3c0cabcfd481f2d4a2d2"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/source-snapshot/ParametricContext.cs",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/source-snapshot/ParametricContext.cs",
+      "sha256": "cb49dfb1e5545feaeb38c270bab9025d489b541a1d482f44c35bca3a78f37732",
+      "lf_sha256": "653fff841d4eeebd05e90d371baa2f036525a2360eff9aac148196b72ce0da14"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-engineer-feedback-20261008-r4/build.json",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/engineer-feedback-20261008-r4/build-manifest.json",
+      "sha256": "f7e382224436cd52e03bbfa966be3df8845015e1c69841dd0dfc41bea3a0ae80",
+      "lf_sha256": "f7e382224436cd52e03bbfa966be3df8845015e1c69841dd0dfc41bea3a0ae80"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-readonly-open-20261105-r4/build.json",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/readonly-open-20261105-r4/build-manifest.json",
+      "sha256": "7e132bdda65c36057629b12fd302dff5778171d8c50f2fddf0867f970765482e",
+      "lf_sha256": "7e132bdda65c36057629b12fd302dff5778171d8c50f2fddf0867f970765482e"
+    },
+    {
+      "source": "workers/native_model_requests/parametric_v1/bin-readonly-open-20261109-r4-rearwidth1/build.json",
+      "path": "workers/native_model_requests/parametric_v1/accepted_sources/readonly-open-20261109-r4-rearwidth1/build-manifest.json",
+      "sha256": "453f86b6d2d7683fd039ef28ec6e2bae2cf5af0bbfa839c76687fa318a761f44",
+      "lf_sha256": "453f86b6d2d7683fd039ef28ec6e2bae2cf5af0bbfa839c76687fa318a761f44"
+    },
+    {
+      "source": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_layout.mjs",
+      "path": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_layout.mjs",
+      "sha256": "ba646db880eb2c48c40162eaa4af98e5d91fc4319405acea7c36768ff4c1424b",
+      "lf_sha256": "50152ad2421fed87acd0c048f640c94cdfe64595f762723c91fae21f3f9effd3"
+    },
+    {
+      "source": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_portal.mjs",
+      "path": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_portal.mjs",
+      "sha256": "2902f9001e99f8c7b5b8addc1a60205957fa7d6c36741bde98a136d7ebce53bc",
+      "lf_sha256": "6191179467a758dd2fae25df28734fc3a95581fbebef78165cd531c009e82b56"
+    },
+    {
+      "source": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_studio.mjs",
+      "path": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_studio.mjs",
+      "sha256": "6e486dec9629f69a4902767778aec0fe6b5bf3a62243ba10f4053376c5d37f69",
+      "lf_sha256": "6e486dec9629f69a4902767778aec0fe6b5bf3a62243ba10f4053376c5d37f69"
+    },
+    {
+      "source": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_studio_client.mjs",
+      "path": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_studio_client.mjs",
+      "sha256": "68b025d86f04569f2a99c04d94a447f89013b802af8304c6dbb3f841cc6e307c",
+      "lf_sha256": "68b025d86f04569f2a99c04d94a447f89013b802af8304c6dbb3f841cc6e307c"
+    },
+    {
+      "source": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_studio_preview.mjs",
+      "path": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_studio_preview.mjs",
+      "sha256": "02a77c5958b1b33cd7781a6c2beddd1610e47da6518fff33d7d1aec466ea0361",
+      "lf_sha256": "02a77c5958b1b33cd7781a6c2beddd1610e47da6518fff33d7d1aec466ea0361"
+    },
+    {
+      "source": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_tasks.mjs",
+      "path": "data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/outdoor_22057_tasks.mjs",
+      "sha256": "4b676cd2dddf884ba88916bc656ddc4061279ef216aaedfcf131d7eae4578ca8",
+      "lf_sha256": "4b676cd2dddf884ba88916bc656ddc4061279ef216aaedfcf131d7eae4578ca8"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_preview_20261019_v17/portal/canopy_display.json",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_preview_20261019_v17/portal/canopy_display.json",
+      "sha256": "58e412bfa4cd17c878caefde83c099685878fa4e06fa3d7c1fd98e2370f14009",
+      "lf_sha256": "58e412bfa4cd17c878caefde83c099685878fa4e06fa3d7c1fd98e2370f14009"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_portal.mjs",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_portal.mjs",
+      "sha256": "6632eb7a3ea789e1563fe38345c2cb4910271814d0ac6d38837deaa16a07473a",
+      "lf_sha256": "77c2d83f680b2522df393e2835f00d7fa3b5ca721ee590a000b2deedccc44d57"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_studio_preview.mjs",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_studio_preview.mjs",
+      "sha256": "8468ba4b2309a3acec3832a69eb54b1800b1897cff7c03d8733a8cfb1ad15599",
+      "lf_sha256": "8468ba4b2309a3acec3832a69eb54b1800b1897cff7c03d8733a8cfb1ad15599"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_studio.css",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_studio.css",
+      "sha256": "154d32cdbb35e58fd688135ffc54b4c433075977e339e86c7f184668e3702521",
+      "lf_sha256": "9c17584ea5383e91b1797d3085920253f165b4710a17fbe60e4b1971bd431335"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_studio.mjs",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_studio.mjs",
+      "sha256": "dd5b302cd24a41fa88df01686b9c1ea4e28d107acf454b43fd6840156900b8ee",
+      "lf_sha256": "dd5b302cd24a41fa88df01686b9c1ea4e28d107acf454b43fd6840156900b8ee"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_preview_20261019_v17/portal/preview.css",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_preview_20261019_v17/portal/preview.css",
+      "sha256": "acd848abd74d7722ec8875120c5271f446e590a59a5b088eedcbbf92d58b65f9",
+      "lf_sha256": "acd848abd74d7722ec8875120c5271f446e590a59a5b088eedcbbf92d58b65f9"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/indoor_workspace_snapshot.css",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/indoor_workspace_snapshot.css",
+      "sha256": "6447dd9a185492fbef5207af6eba1e6d2bcb3606580910d3f896ac1d3205a431",
+      "lf_sha256": "39262677c501cba0500cf2327673f6e2cf4de6c91edf468b32663e52fbf38cb5"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/outdoor_22057_layout.mjs",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/outdoor_22057_layout.mjs",
+      "sha256": "ba646db880eb2c48c40162eaa4af98e5d91fc4319405acea7c36768ff4c1424b",
+      "lf_sha256": "50152ad2421fed87acd0c048f640c94cdfe64595f762723c91fae21f3f9effd3"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/outdoor_22057_studio_client.mjs",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/outdoor_22057_studio_client.mjs",
+      "sha256": "68b025d86f04569f2a99c04d94a447f89013b802af8304c6dbb3f841cc6e307c",
+      "lf_sha256": "68b025d86f04569f2a99c04d94a447f89013b802af8304c6dbb3f841cc6e307c"
+    },
+    {
+      "source": "external:outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/outdoor_22057_tasks.mjs",
+      "path": "data/outdoor_22057_repair_20261109/external_portal_sources/outputs/outdoor_22057_width600_portal_20261018_v16/portal_studio/lib/outdoor_22057_tasks.mjs",
+      "sha256": "4b676cd2dddf884ba88916bc656ddc4061279ef216aaedfcf131d7eae4578ca8",
+      "lf_sha256": "4b676cd2dddf884ba88916bc656ddc4061279ef216aaedfcf131d7eae4578ca8"
+    },
+    {
+      "source": "data/indoor_workbench_repair_20261109/rear_hole_820_probe/geometry.json",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/tests/fixtures/rear.json",
+      "sha256": "8cdc3280dfe86f8fba5cc3b958affc5a46687f65597e19ff9d16b15fa26ee6bb",
+      "lf_sha256": "8cdc3280dfe86f8fba5cc3b958affc5a46687f65597e19ff9d16b15fa26ee6bb"
+    },
+    {
+      "source": "data/indoor_workbench_repair_20261109/master_820_probe/geometry.json",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/tests/fixtures/master.json",
+      "sha256": "28d22c3fe4ecc59bcf5292e1aa2709e924da839a445b8f7dfb77df222d209a9b",
+      "lf_sha256": "28d22c3fe4ecc59bcf5292e1aa2709e924da839a445b8f7dfb77df222d209a9b"
+    },
+    {
+      "source": "data/indoor_workbench_repair_20261109/skin_820_probe/geometry.json",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/tests/fixtures/skin.json",
+      "sha256": "70d4c51257abd007c211e2bd81f62bb9e7e5a9811c4309689dc0e33a7b91aba2",
+      "lf_sha256": "70d4c51257abd007c211e2bd81f62bb9e7e5a9811c4309689dc0e33a7b91aba2"
+    },
+    {
+      "source": "data/parametric_attempts/PARAM-20261109122246471-03695E/evidence/repair-engineer-feedback.json",
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/tests/fixtures/wide.json",
+      "sha256": "b94cee3b5ebe8a58f3c4acc280485d8669b6ffc61d6110eb5ad0e38742a20c57",
+      "lf_sha256": "b94cee3b5ebe8a58f3c4acc280485d8669b6ffc61d6110eb5ad0e38742a20c57"
+    }
+  ]
+}

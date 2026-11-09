@@ -1,0 +1,9 @@
+{
+  "schema": "winnsen.locker16029.parametric_runtime_repair.v1",
+  "verified": true,
+  "buildTag": "readonly-open-20261109-r4-rearwidth1",
+  "repairProfile": "readonly-open-20261109-r4-rearwidth1",
+  "executableSha256": "C13F3D977C38CB6B18A178E184FE67FF08123A3678294D1C187D30A179CB38B1",
+  "acceptanceAttempt": "PARAM-20261109160635413-F3CEA5",
+  "acceptanceQualitySha256": "4A7238E1435F36739C6D18B9DBB048B838AD923CB38A6E4B9A126EFB8CA8A617"
+}

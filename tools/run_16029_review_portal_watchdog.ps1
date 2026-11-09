@@ -29,6 +29,12 @@ try {
   New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
 
   while ($true) {
+    $outdoorWorkerScript = Join-Path $PSScriptRoot 'run_outdoor_22057_portal_worker.mjs'
+    $outdoorWorker = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" -ErrorAction Stop |
+      Where-Object { $_.CommandLine -like "*$outdoorWorkerScript*--watch*" } | Select-Object -First 1
+    if (-not $outdoorWorker -and (Test-Path -LiteralPath $outdoorWorkerScript)) {
+      & $node (Join-Path $PSScriptRoot 'start_outdoor_22057_portal_worker.mjs') 2>&1 | ForEach-Object { Add-Content -LiteralPath $watchdogLog -Encoding UTF8 -Value $_ }
+    }
     $parametricWorker = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" -ErrorAction Stop |
       Where-Object { $_.CommandLine -like "*$parametricWorkerScript*--watch*" } |
       Select-Object -First 1

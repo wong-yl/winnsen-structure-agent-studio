@@ -9,7 +9,7 @@ import sys
 import tempfile
 import threading
 import unittest
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from pathlib import Path
 from unittest.mock import patch
 from zipfile import ZipFile
@@ -147,6 +147,64 @@ class ApiTests(unittest.TestCase):
             with self.subTest(capability=capability):
                 status, _ = self.request("POST", "/api/generation-tasks", {**self.payload, "capability_id": capability})
                 self.assertEqual(status, 410)
+
+    def test_renamed_capability_cannot_create_retired_script_tasks(self):
+        for script, runner in (
+            ("sw_build_locker_16029_direct_assembly.js", "solidworks"),
+            ("sw_clone_16029_baseline_template.js", "solidworks"),
+            ("sw_make_parametric_door_panel.js", "solidworks"),
+            ("generate_locker_16029_freecad.py", "freecad"),
+        ):
+            for command in (f'cscript.exe "scripts\\{script}"', f'cscript.exe "{self.root / script.upper()}"'):
+                with self.subTest(command=command):
+                    status, _ = self.request("POST", "/api/generation-tasks", {
+                        **self.payload, "cad_runner": runner, "command": command,
+                    })
+                    self.assertEqual(status, 410)
+        self.assertEqual(self.request("GET", "/api/generation-tasks"), (200, []))
+
+    def test_retired_script_symlink_cannot_use_a_different_name(self):
+        retired = self.root / "sw_build_locker_16029_direct_assembly.js"
+        retired.touch()
+        alias = self.root / "other-reference.js"
+        try:
+            alias.symlink_to(retired)
+        except OSError as error:
+            self.skipTest(f"Symlink creation is unavailable: {error}")
+        status, _ = self.request("POST", "/api/generation-tasks", {
+            **self.payload, "cad_runner": "solidworks", "command": f'cscript.exe "{alias}"',
+        })
+        self.assertEqual(status, 410)
+        self.assertEqual(self.request("GET", "/api/generation-tasks"), (200, []))
+
+    def test_resolved_retired_script_cannot_use_a_different_name(self):
+        retired = self.root / "sw_clone_16029_baseline_template.js"
+        retired.touch()
+        alias = self.root / "other-reference.js"
+        with patch.object(main, "resolve_script", return_value=(True, str(retired))) as resolver:
+            status, _ = self.request("POST", "/api/generation-tasks", {
+                **self.payload, "cad_runner": "solidworks", "command": f'cscript.exe "{alias}"',
+            })
+        self.assertEqual(status, 410)
+        resolver.assert_called_once_with(str(alias))
+        self.assertEqual(self.request("GET", "/api/generation-tasks"), (200, []))
+
+    def test_persisted_renamed_task_cannot_run_retired_script(self):
+        task = self.ready_task("solidworks")
+        with main.connect() as connection:
+            connection.execute("UPDATE generation_tasks SET command = ? WHERE id = ?", (
+                'cscript.exe "scripts/sw_build_locker_16029_direct_assembly.js"', task["id"],
+            ))
+        with patch.object(main, "build_dry_run") as dry_run, \
+                patch.object(main, "run_solidworks_manual_package") as worker, \
+                patch.object(main, "build_solidworks_manual_result") as package:
+            for action in ("dry-run", "execute", "run-solidworks-package"):
+                with self.subTest(action=action):
+                    self.assertEqual(self.request("POST", f'/api/generation-tasks/{task["id"]}/{action}')[0], 410)
+            dry_run.assert_not_called()
+            worker.assert_not_called()
+            package.assert_not_called()
+        self.assertEqual(self.request("GET", f'/api/generation-tasks/{task["id"]}')[0], 200)
 
     def test_persisted_16029_tasks_cannot_run_retired_workers(self):
         task = self.ready_task("solidworks")
@@ -336,6 +394,119 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.request("POST", "/api/drawing-sheetmetal-intake", {"files": [{**file, "size_bytes": 2}]})[0], 400)
         self.assertEqual(self.request("POST", "/api/drawing-sheetmetal-intake", {"files": [{**file, "name": "fixture.exe"}]})[0], 400)
         self.assertEqual(self.request("POST", "/api/drawing-sheetmetal-intake", {"files": [{**file, "content_base64": "invalid"}]})[0], 400)
+
+    def intake_payload(self, name="fixture.png"):
+        return {"files": [{"name": name, "content_base64": base64.b64encode(b"fixture").decode(), "size_bytes": 7}]}
+
+    def test_two_simultaneous_uploads_preserve_both_records(self):
+        original_write = main.write_drawing_sheetmetal_intake_records
+        first_snapshot = threading.Event()
+        release_first = threading.Event()
+
+        def pause_first_write(records):
+            if not first_snapshot.is_set():
+                first_snapshot.set()
+                self.assertTrue(release_first.wait(timeout=5))
+            return original_write(records)
+
+        with patch.object(main, "write_drawing_sheetmetal_intake_records", side_effect=pause_first_write):
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                first = executor.submit(self.request, "POST", "/api/drawing-sheetmetal-intake", self.intake_payload("first.png"))
+                try:
+                    self.assertTrue(first_snapshot.wait(timeout=5))
+                    second = executor.submit(self.request, "POST", "/api/drawing-sheetmetal-intake", self.intake_payload("second.png"))
+                    with self.assertRaises(FutureTimeoutError):
+                        second.result(timeout=0.2)
+                finally:
+                    release_first.set()
+                responses = [first.result(timeout=5), second.result(timeout=5)]
+        self.assertEqual([status for status, _ in responses], [201, 201])
+        status, records = self.request("GET", "/api/drawing-sheetmetal-intake")
+        self.assertEqual(status, 200)
+        self.assertEqual({record["id"] for record in records}, {record["id"] for _, record in responses})
+
+    def test_upload_and_extraction_update_preserve_each_other(self):
+        status, existing = self.request("POST", "/api/drawing-sheetmetal-intake", self.intake_payload())
+        self.assertEqual(status, 201)
+        original_write = main.write_drawing_sheetmetal_intake_records
+        update_snapshot = threading.Event()
+        release_update = threading.Event()
+
+        def pause_update_write(records):
+            if any(record.id == existing["id"] and record.dxf_extraction for record in records) and not update_snapshot.is_set():
+                update_snapshot.set()
+                self.assertTrue(release_update.wait(timeout=5))
+            return original_write(records)
+
+        with patch.object(main, "write_drawing_sheetmetal_intake_records", side_effect=pause_update_write):
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                update = executor.submit(self.request, "POST", f'/api/drawing-sheetmetal-intake/{existing["id"]}/run-dxf-extraction')
+                try:
+                    self.assertTrue(update_snapshot.wait(timeout=5))
+                    upload = executor.submit(self.request, "POST", "/api/drawing-sheetmetal-intake", self.intake_payload("new.png"))
+                    with self.assertRaises(FutureTimeoutError):
+                        upload.result(timeout=0.2)
+                finally:
+                    release_update.set()
+                updated_status, updated = update.result(timeout=5)
+                uploaded_status, uploaded = upload.result(timeout=5)
+        self.assertEqual((updated_status, uploaded_status), (200, 201))
+        self.assertEqual(updated["dxf_extraction"]["status"], "not_applicable")
+        records = self.request("GET", "/api/drawing-sheetmetal-intake")[1]
+        self.assertEqual({record["id"] for record in records}, {existing["id"], uploaded["id"]})
+        saved = next(record for record in records if record["id"] == existing["id"])
+        self.assertEqual(saved["dxf_extraction"]["status"], "not_applicable")
+
+    def test_upload_waits_for_manifest_writer_in_another_process(self):
+        program = (
+            "import sqlite3, sys\n"
+            "connection = sqlite3.connect(sys.argv[1])\n"
+            "connection.execute('BEGIN IMMEDIATE')\n"
+            "print('locked', flush=True)\n"
+            "sys.stdin.readline()\n"
+            "connection.commit()\n"
+            "connection.close()\n"
+        )
+        with subprocess.Popen(
+            [sys.executable, "-B", "-c", program, str(main.DB_PATH)],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        ) as writer:
+            self.assertEqual(writer.stdout.readline().strip(), "locked")
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                upload = executor.submit(self.request, "POST", "/api/drawing-sheetmetal-intake", self.intake_payload())
+                try:
+                    with self.assertRaises(FutureTimeoutError):
+                        upload.result(timeout=0.2)
+                finally:
+                    writer.stdin.write("release\n")
+                    writer.stdin.flush()
+                self.assertEqual(upload.result(timeout=5)[0], 201)
+            self.assertEqual(writer.wait(timeout=5), 0)
+        self.assertEqual(len(self.request("GET", "/api/drawing-sheetmetal-intake")[1]), 1)
+
+    def test_simultaneous_extraction_and_cad_updates_preserve_both_results(self):
+        status, existing = self.request("POST", "/api/drawing-sheetmetal-intake", self.intake_payload())
+        self.assertEqual(status, 201)
+        original_fetch = main.fetch_drawing_sheetmetal_intake_record
+        barrier = threading.Barrier(2)
+
+        def read_same_record(intake_id):
+            record = original_fetch(intake_id)
+            barrier.wait(timeout=5)
+            return record
+
+        with patch.object(main, "fetch_drawing_sheetmetal_intake_record", side_effect=read_same_record), \
+                patch.object(main.subprocess, "run") as worker:
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                futures = [executor.submit(
+                    self.request, "POST", f'/api/drawing-sheetmetal-intake/{existing["id"]}/{action}',
+                ) for action in ("run-dxf-extraction", "run-freecad-check")]
+                self.assertEqual([future.result(timeout=5)[0] for future in futures], [200, 200])
+            worker.assert_not_called()
+        saved = self.request("GET", "/api/drawing-sheetmetal-intake")[1][0]
+        self.assertEqual(saved["dxf_extraction"]["status"], "not_applicable")
+        self.assertEqual(saved["cad_check"]["status"], "not_applicable")
 
 
 if __name__ == "__main__":

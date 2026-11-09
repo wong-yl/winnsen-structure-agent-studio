@@ -463,7 +463,9 @@ try {
   assert.equal(parametricStored.deliveryMode, 'native_task_pending')
   assert.equal(parametricStored.modelReady, false)
   assert.equal(parametricStored.engineeringAssistanceReady, false)
-  const verifiedParametric = validate16029ParametricPublication(resolve(ROOT, 'data/parametric_attempts/PARAM-20260906115210111-B86FBD'))
+  const selectedBuild = JSON.parse(readFileSync(resolve(ROOT, 'workers/native_model_requests/parametric_v1/build-selection.json'), 'utf8'))
+  assert.equal(selectedBuild.verified, true, 'download fixture must come from an accepted default build')
+  const verifiedParametric = validate16029ParametricPublication(resolve(ROOT, 'data/parametric_attempts', selectedBuild.acceptanceAttempt))
   assert.equal(verifiedParametric.ok, true, verifiedParametric.reason)
   const publishedResponse = await fetch(`${baseUrl}/generation-request`, {
     method: 'POST', headers: { Cookie: cookie, 'Content-Type': 'application/json' },

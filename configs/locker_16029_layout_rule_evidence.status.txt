@@ -1,0 +1,20 @@
+﻿16029 handoff ready check
+Time: 2026-05-24 10:13:21
+
+PASS: 10/12/14 native SolidWorks references are ready for engineering review on this workstation.
+Dependency rows: 30
+  10door | checks=43/43 | dependencies=10/10 | doors=10 | shelves=8 | crossbars=8
+  12door | checks=43/43 | dependencies=10/10 | doors=12 | shelves=10 | crossbars=10
+  14door | checks=43/43 | dependencies=10/10 | doors=14 | shelves=12 | crossbars=12
+Pack-and-Go:
+  10door | files=72 | assemblies=19 | parts=53 | total_mb=31.628
+  12door | files=71 | assemblies=18 | parts=53 | total_mb=31.174
+  14door | files=72 | assemblies=19 | parts=53 | total_mb=31.639
+Pack-and-Go independence:
+  10door | top_refs=10 | external_refs=0 | empty_paths=0 | cad_files=72
+  12door | top_refs=10 | external_refs=0 | empty_paths=0 | cad_files=71
+  14door | top_refs=10 | external_refs=0 | empty_paths=0 | cad_files=72
+Verified rule packet:
+  10door | rows=5 | door_h=359.0 | pitch=366.0 | shelves=8 | crossbars=8 | right_route=yes | bbox_d=0.0
+  12door | rows=6 | door_h=298.0 | pitch=305.0 | shelves=10 | crossbars=10 | right_route=yes | bbox_d=0.0
+  14door | rows=7 | door_h=254.429 | pitch=261.429 | shelves=12 | crossbars=12 | right_route=yes | bbox_d=0.0

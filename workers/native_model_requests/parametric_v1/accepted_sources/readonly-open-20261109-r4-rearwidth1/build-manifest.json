@@ -1,0 +1,106 @@
+{
+  "executable": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\bin-readonly-open-20261109-r4-rearwidth1\\NativeParametricAssembly.exe",
+  "executableSha256": "C13F3D977C38CB6B18A178E184FE67FF08123A3678294D1C187D30A179CB38B1",
+  "sources": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricWidth.cs",
+      "sha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "normalizedSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricDoor.cs",
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "normalizedSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricLockBase.cs",
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "normalizedSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\ParametricContext.cs",
+      "sha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732",
+      "normalizedSha256": "653FFF841D4EEEBD05E90D371BAA2F036525A2360EFF9AAC148196B72CE0DA14"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricAssembly.cs",
+      "sha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392",
+      "normalizedSha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricVerification.cs",
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "normalizedSha256": "0B00AEDC84D6B6DEC910F19DA535190594AFCA089641B9464B2F8C26E7384328"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricLocks.cs",
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "normalizedSha256": "C930F3BC666EDBFD7AB45AB66F8CAA26A61589B4DA3CCB1533122DFF01E6E2D8"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricPhysicalAudit.cs",
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "normalizedSha256": "DA4227BAECAC7718B61BCBB218A3FFCAC5D69FD1A1AF0A4EA4EA1C8B4F842CB9"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricDoorPlacement.cs",
+      "sha256": "4337E70001B449355F28FBD2572B8CDA2F422CA71484F66699B08640C6E2F96C",
+      "normalizedSha256": "4337E70001B449355F28FBD2572B8CDA2F422CA71484F66699B08640C6E2F96C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\build-readonly-open-20261109-r4-rearwidth1\\NativeParametricEnvelope.cs",
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "normalizedSha256": "C1B964670800410E3B75462F81CDF1AD53F011F64036EDEFFB08114210A03750"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "name": "NativeParametricWidth.cs",
+      "normalizedSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2"
+    },
+    {
+      "name": "NativeParametricDoor.cs",
+      "normalizedSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "name": "NativeParametricLockBase.cs",
+      "normalizedSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "name": "ParametricContext.cs",
+      "normalizedSha256": "653FFF841D4EEEBD05E90D371BAA2F036525A2360EFF9AAC148196B72CE0DA14"
+    },
+    {
+      "name": "NativeParametricAssembly.cs",
+      "normalizedSha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392"
+    },
+    {
+      "name": "NativeParametricVerification.cs",
+      "normalizedSha256": "0B00AEDC84D6B6DEC910F19DA535190594AFCA089641B9464B2F8C26E7384328"
+    },
+    {
+      "name": "NativeParametricLocks.cs",
+      "normalizedSha256": "C930F3BC666EDBFD7AB45AB66F8CAA26A61589B4DA3CCB1533122DFF01E6E2D8"
+    },
+    {
+      "name": "NativeParametricPhysicalAudit.cs",
+      "normalizedSha256": "DA4227BAECAC7718B61BCBB218A3FFCAC5D69FD1A1AF0A4EA4EA1C8B4F842CB9"
+    },
+    {
+      "name": "NativeParametricDoorPlacement.cs",
+      "normalizedSha256": "4337E70001B449355F28FBD2572B8CDA2F422CA71484F66699B08640C6E2F96C"
+    },
+    {
+      "name": "NativeParametricEnvelope.cs",
+      "normalizedSha256": "C1B964670800410E3B75462F81CDF1AD53F011F64036EDEFFB08114210A03750"
+    }
+  ],
+  "repairProfile": "readonly-open-20261109-r4-rearwidth1",
+  "repairProvenance": {
+    "schema": "winnsen.locker16029.parametric_repair_source.v1",
+    "baselineBuildTag": "engineer-feedback-20261008-r4",
+    "baselineManifestSha256": "F7E382224436CD52E03BBFA966BE3DF8845015E1C69841DD0DFC41BEA3A0AE80",
+    "baselineExecutableSha256": "1D7CFDA1EDB0442E22E3BC45938AF9F6673A7D337FDF29B3DF95B6AE275FD11D",
+    "sourceDirectory": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261109-r4-rearwidth1\\source"
+  }
+}

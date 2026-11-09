@@ -4,6 +4,7 @@ import { createServer as createNetServer } from 'node:net'
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { randomBytes } from 'node:crypto'
+import { INDOOR_16029_PRODUCTION_PROFILE } from './lib/locker_16029_production_profile.mjs'
 
 const ROOT = resolve(process.cwd())
 const PORTAL_PATH = resolve(ROOT, 'tools/serve_16029_review_downloads.mjs')
@@ -70,7 +71,13 @@ function requestByReference(requests, customerRequirementReference) {
 }
 
 function assertNoLegacyGenerationTokens(value, label) {
-  const serialized = JSON.stringify(value).toLowerCase()
+  const serialized = JSON.stringify(value, (key, field) => {
+    if (['productionProfile', 'generatedProductionProfile'].includes(key)) {
+      assert.ok(field === '' || field === INDOOR_16029_PRODUCTION_PROFILE, `${label} has an unsupported process version`)
+      return undefined
+    }
+    return field
+  }).toLowerCase()
   for (const token of [
     'production',
     'review_generation',

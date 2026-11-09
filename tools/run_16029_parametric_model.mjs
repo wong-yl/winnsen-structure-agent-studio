@@ -1,5 +1,4 @@
 import { createHash, randomBytes } from 'node:crypto'
-import { spawn } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, copyFileSync, existsSync, lstatSync } from 'node:fs'
 import { resolve, dirname, relative, isAbsolute, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -7,6 +6,9 @@ import { createNativeTaskStore } from './lib/locker_16029_native_task_store.mjs'
 import { acquireNativeWorkerInstanceLock } from './run_16029_native_worker.mjs'
 import { build16029ParametricContract } from './lib/locker_16029_parametric_contract.mjs'
 import { compare16029PhysicalAudit } from './verify_16029_parametric_physical_quality.mjs'
+import { verify16029ParametricBuild } from './lib/locker_16029_parametric_build.mjs'
+import { MAX_PARAMETRIC_PHASE_TIMEOUT_MS, run16029ParametricPhaseProcess } from './lib/locker_16029_parametric_process.mjs'
+import { inventory16029ProductionFiles, production16029Profile, read16029ParametricResumeSnapshot, verify16029ProductionEvidence } from './lib/locker_16029_production_evidence.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const V35 = resolve(ROOT, 'workers/generated_models/review_generation_requests/v43-int-v35-one-door-one-lock-hole-fix-r1/native_cad/candidate_native_hierarchical_pack_and_go')
@@ -68,36 +70,45 @@ function verifyResumeCheckpoint(sourceAttempt, phase, plan, receipt) {
       authorization.executableSha256 !== hash(executable)) throw new Error('resume checkpoint receipt binding mismatch')
 }
 
-function readResumeSnapshot(sourceAttempt, backupPhase, priorPlan, priorReceipt, priorReceiptPath) {
-  const snapshotSource = scopedResumePath(resolve(sourceAttempt, 'backups', backupPhase), sourceAttempt)
-  if (!lstatSync(snapshotSource).isDirectory()) throw new Error('resume snapshot is not a directory')
-  const nextReceiptPath = scopedResumePath(resolve(sourceAttempt, 'receipts', backupPhase + '.json'), sourceAttempt)
-  const nextReceipt = json(nextReceiptPath)
-  verifyResumeCheckpoint(sourceAttempt, backupPhase, priorPlan, nextReceipt)
-  const nextAuthorization = json(resolve(sourceAttempt, 'authorizations', backupPhase + '.json'))
-  if (nextReceipt.predecessor !== hash(priorReceiptPath) || nextAuthorization.predecessor !== nextReceipt.predecessor ||
-      JSON.stringify(nextReceipt.before) !== JSON.stringify(priorReceipt.after) ||
-      JSON.stringify(nextAuthorization.preInventory) !== JSON.stringify(priorReceipt.after)) throw new Error('resume snapshot is not the checkpoint next-phase input')
-  if (!Array.isArray(priorReceipt.after) || !priorReceipt.after.length || !Array.isArray(priorReceipt.doorInventory)) throw new Error('resume snapshot checkpoint inventories are missing')
-  const expected = new Map()
-  for (const [boundRoot, snapshotRoot, rows, flat] of [
-    [resolve(sourceAttempt, 'native_cad/working_pack'), snapshotSource, priorReceipt.after, true],
-    [resolve(sourceAttempt, 'doors'), resolve(snapshotSource, 'doors'), priorReceipt.doorInventory, false],
-  ]) {
-    for (const row of rows) {
-      if (typeof row.path !== 'string' || !isAbsolute(row.path) || typeof row.relativePath !== 'string' ||
-          !row.relativePath || isAbsolute(row.relativePath) || !/^[A-F0-9]{64}$/.test(row.sha256)) throw new Error('resume snapshot inventory row is invalid')
-      const rel = relative(boundRoot, resolve(row.path))
-      if (!rel || rel.startsWith('..') || isAbsolute(rel) || rel !== row.relativePath || !cad(row.path) ||
-          (flat && dirname(resolve(row.path)) !== boundRoot)) throw new Error('resume snapshot inventory leaves its bound directory')
-      const source = resolve(snapshotRoot, rel), key = relative(snapshotSource, source).toLowerCase()
-      if (expected.has(key)) throw new Error('resume snapshot inventory contains duplicate paths')
-      expected.set(key, row.sha256)
+function readVerifiedResumePhases(sourceAttempt) {
+  const attemptsRoot = resolve(ROOT, 'data/parametric_attempts'), completed = new Set(), visited = new Set()
+  let current = resolve(sourceAttempt)
+  for (let depth = 0; depth < 20 && dirname(current) === attemptsRoot && !visited.has(current); depth++) {
+    visited.add(current)
+    const planPath = resolve(current, 'parametric_execution.json')
+    if (!existsSync(planPath)) break
+    const plan = json(scopedResumePath(planPath, current)), receiptFolder = resolve(current, 'receipts')
+    if (!existsSync(receiptFolder)) break
+    const executable = resolve(current, 'tools/NativeParametricAssembly.exe')
+    for (const name of readdirSync(receiptFolder).filter(file => /^[a-zA-Z0-9_-]+\.json$/.test(file))) {
+      const phase = name.slice(0, -5), receiptPath = scopedResumePath(resolve(receiptFolder, name), current)
+      const evidencePath = resolve(current, 'evidence', name), authorizationPath = resolve(current, 'authorizations', name)
+      if (![evidencePath, authorizationPath, executable].every(existsSync)) continue
+      try {
+        const receipt = json(receiptPath), evidence = json(scopedResumePath(evidencePath, current))
+        const authorization = json(scopedResumePath(authorizationPath, current)), executablePath = scopedResumePath(executable, current)
+        if (receipt.phase === phase && receipt.taskId === plan.taskId && receipt.planSha256 === hash(planPath) &&
+            receipt.authorizationSha256 === hash(authorizationPath) && receipt.evidenceSha256 === hash(evidencePath) &&
+            receipt.protectedSourcesUnchanged === true && evidence.phase === phase && evidence.success === true &&
+            authorization.phase === phase && authorization.taskId === plan.taskId &&
+            authorization.planSha256 === receipt.planSha256 && authorization.executableSha256 === hash(executablePath)) completed.add(phase)
+      } catch { }
     }
+    const ancestor = plan.resumedEvidence?.sourceAttempt
+    if (typeof ancestor !== 'string' || !ancestor) break
+    current = resolve(ancestor)
   }
-  const rows = inventory(snapshotSource)
-  if (rows.length !== expected.size || rows.some(row => expected.get(row.relativePath.toLowerCase()) !== row.sha256)) throw new Error('resume snapshot inventory mismatch')
-  return { snapshotSource, backupPhase, rows, cadRows: rows.filter(row => dirname(row.path) === snapshotSource) }
+  return completed
+}
+
+export function filterCompleted16029ResumePhases(order, completedPhases, shouldFilter) {
+  if (!shouldFilter) return order
+  const completed = completedPhases instanceof Set ? completedPhases : new Set(completedPhases)
+  return order.filter(phase => phase === 'clone' || !completed.has(phase))
+}
+
+function readResumeSnapshot(sourceAttempt, backupPhase, priorPlan, priorReceipt, priorReceiptPath) {
+  return read16029ParametricResumeSnapshot(sourceAttempt, backupPhase, priorPlan, priorReceipt, priorReceiptPath)
 }
 
 function sourceInputs(attempt, working) {
@@ -111,11 +122,13 @@ function sourceInputs(attempt, working) {
     circlip: [V35, '开口挡圈5.SLDPRT'], mechanical_lock_tongue: [V35, '锁舌.SLDPRT'],
     top_latch_left: [V35, '插销固定板2╱12_左.SLDPRT'], top_latch_right: [V35, '插销固定板2╱12_右.SLDPRT'],
     base_stiffener_source: [V35, '底座加强筋.sldprt'],
+    maintenance_weldment: [ORIGINAL_DOORS, '应急维护门焊接.SLDASM'],
+    maintenance_lock_bracket: [ORIGINAL_DOORS, '维护门锁孔.SLDPRT'],
   }
   const result = {}
   for (const [role, [folder, name]] of Object.entries(nativeSources)) {
     const source = resolve(folder, name)
-    const target = resolve(sourceFolder, role + '.SLDPRT')
+    const target = resolve(sourceFolder, role + (/\.SLDASM$/i.test(name) ? '.SLDASM' : '.SLDPRT'))
     copyFileSync(source, target, 1)
     result[role] = { path: target, sha256: hash(source) }
     if (hash(target) !== result[role].sha256) throw new Error('source copy hash mismatch')
@@ -123,15 +136,20 @@ function sourceInputs(attempt, working) {
   write(resolve(attempt, 'door_sources.json'), result)
 }
 
-export async function run16029ParametricModel(request, { phases = null, resumeSource = '', resumeStage = '', resumeBackupPhase = '', buildTag = 'unique-doors', onProgress = console.log } = {}) {
-  const resumePhases = ['verify-package','package','verify','repair-frame-slots','root','repair-partition-mates','locks-verify','locks','repair-base-foot','repair-interfaces','repair-door-placements','envelope','assemblies','base-hole']
+export async function run16029ParametricModel(request, { phases = null, resumeSource = '', resumeStage = '', resumeBackupPhase = '', buildTag, repairProfile = '', phaseTimeoutMs = 20 * 60 * 1000, preserveCadOnFailure = false, signal, onProgress = console.log } = {}) {
+  if (!Number.isInteger(phaseTimeoutMs) || phaseTimeoutMs < 1 || phaseTimeoutMs > MAX_PARAMETRIC_PHASE_TIMEOUT_MS) throw new Error('phase timeout must be 1–3600000 milliseconds')
+  const resumePhases = ['verify-package','package','verify','repair-base-mates','repair-frame-slots','root','repair-partition-mates','locks-verify','locks','repair-base-foot','repair-interfaces','repair-door-placements','envelope','assemblies','base-hole','clone']
   if (typeof resumeStage !== 'string' || typeof resumeBackupPhase !== 'string' ||
       (resumeStage && (!resumeSource || !resumePhases.includes(resumeStage))) ||
       (resumeBackupPhase && (!resumeStage || !/^[a-zA-Z0-9_-]+$/.test(resumeBackupPhase)))) throw new Error('invalid explicit resume checkpoint options')
   if (request.envelopeProbe && (resumeSource || !phases || !phases.includes('probe-envelope') || phases.some(phase => !['clone', 'probe-envelope'].includes(phase)))) throw new Error('Envelope diagnostics must run in a fresh isolated probe attempt and cannot enter packaging or delivery stages.')
   const contract = build16029ParametricContract(request)
+  const productionProfile = production16029Profile(request)
   const cabinet = contract.geometry.cabinet
   if (cabinet.heightMm < 1700 || cabinet.heightMm > 2200 || cabinet.depthMm < 250 || cabinet.depthMm > 650 || cabinet.widthMm < 700 || cabinet.widthMm > 1200) throw new Error('当前原生试验范围为700–1200W、1700–2200H、250–650D；每个结果须通过完整原生验收。')
+  const verifiedBuild = verify16029ParametricBuild(buildTag, { repairProfile })
+  if ((verifiedBuild.manifest.productionProfile || '') !== productionProfile) throw new Error('request production profile differs from the pinned build')
+  if (signal?.aborted) throw new Error('parametric request cancelled before execution')
   const id = `PARAM-${new Date().toISOString().replace(/[^0-9]/g, '')}-${randomBytes(3).toString('hex').toUpperCase()}`
   const workerId = `parametric-${process.pid}-${randomBytes(3).toString('hex')}`
   const attempt = resolve(ROOT, 'data/parametric_attempts', id)
@@ -145,6 +163,7 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
   let cloneInventory = null
   let resumedEvidence = null
   let resumedPhase = ''
+  let resumedSuccessfulPhases = new Set()
   let envelopeVerified = false
   const resumedDoorHeights = new Set()
   if (resumeSource) {
@@ -155,6 +174,7 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
       scopedResumePath(resolve(sourceAttempt, 'parametric_execution.json'), sourceAttempt)
     }
     const priorPlan = json(resolve(sourceAttempt, 'parametric_execution.json'))
+    resumedSuccessfulPhases = readVerifiedResumePhases(sourceAttempt)
     if (JSON.stringify(priorPlan.contract.input) !== JSON.stringify(contract.input) || JSON.stringify(priorPlan.contract.geometry) !== JSON.stringify(contract.geometry)) throw new Error('resume parameters differ from prior measured dimensions')
     resumedPhase = resumeStage || resumePhases.find(phase => existsSync(resolve(sourceAttempt, 'receipts', phase + '.json')))
     if (!resumedPhase) throw new Error('no verified native stage exists to resume')
@@ -169,15 +189,17 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
       snapshot = readResumeSnapshot(sourceAttempt, resumeBackupPhase, priorPlan, priorReceipt, priorReceiptPath)
       cloneSource = snapshot.snapshotSource
       cloneInventory = snapshot.cadRows
-      protectedInventory.push(...snapshot.rows, ...inventory(resolve(sourceAttempt, 'native_cad/working_pack')),
-        ...(existsSync(resolve(sourceAttempt, 'doors')) ? inventory(resolve(sourceAttempt, 'doors')) : []))
+      protectedInventory.push(...(snapshot.protectedRows || [...snapshot.rows, ...inventory(resolve(sourceAttempt, 'native_cad/working_pack')),
+        ...(existsSync(resolve(sourceAttempt, 'doors')) ? inventory(resolve(sourceAttempt, 'doors')) : [])]))
       write(resolve(attempt, 'protected_sources.before.json'), protectedInventory)
     } else {
       assertInventory(priorReceipt.after)
       cloneSource = resolve(sourceAttempt, 'native_cad/working_pack')
+      protectedInventory.push(...inventory(cloneSource))
     }
     resumedEvidence = { sourceAttempt, completedPhase: resumedPhase, receiptSha256: hash(priorReceiptPath), inventory: priorReceipt.after }
     if (snapshot) Object.assign(resumedEvidence, { snapshotSource: snapshot.snapshotSource, backupPhase: snapshot.backupPhase })
+    if (snapshot?.snapshotProof) Object.assign(resumedEvidence, { snapshotProof: snapshot.snapshotProof, snapshotAuthorizationPath: snapshot.snapshotAuthorizationPath, snapshotAuthorizationSha256: snapshot.snapshotAuthorizationSha256, snapshotPriorReceiptSha256: snapshot.snapshotPriorReceiptSha256 })
     write(resolve(attempt, 'resumed_source.json'), resumedEvidence)
     if(cabinet.heightMm!==1917||cabinet.depthMm!==550){
       let ancestor=sourceAttempt
@@ -214,8 +236,8 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
         for (const file of result.result.output_files) {
           const source = resolve(sourceFolder, file.relative_path)
           const moduleRelative = relative(sourceFolder, source)
-          if (snapshot && (!moduleRelative || isAbsolute(file.relative_path) || moduleRelative.startsWith('..') || isAbsolute(moduleRelative))) throw new Error('resumed door inventory mismatch')
-          if (snapshot && !cad(basename(source))) continue
+          if (!moduleRelative || isAbsolute(file.relative_path) || moduleRelative.startsWith('..') || isAbsolute(moduleRelative)) throw new Error('resumed door inventory mismatch')
+          if (!cad(basename(source))) continue
           const boundCurrent = priorReceipt.doorInventory?.find(row => row.path === resolve(boundFolder, file.relative_path))
           if (relative(sourceFolder, source).startsWith('..') || (snapshot && !boundCurrent) || hash(source) !== (boundCurrent?.sha256 || file.sha256)) throw new Error('resumed door inventory mismatch')
           if (snapshot) scopedResumePath(source, snapshot.snapshotSource)
@@ -266,28 +288,30 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
     task = await store.claimNext({ workerId, leaseMs: 30 * 60 * 1000 })
     if (task.id !== id) throw new Error('unexpected parametric task claim')
     task = await store.transition({ ...leaseArgs(), transitionId: id + '-planning', toState: 'planning' })
-    const plan = { schema: 'winnsen.locker16029.parametric_execution.v1', purpose: 'structure_engineering_assistance', taskId: id, taskPath: resolve(storeDir, id + '.json'), workerId, contract, resumedEvidence, sourceRightPartitionSha256: hash(resolve(working, '箱体竖隔板R.SLDPRT')) }
+    const plan = { schema: 'winnsen.locker16029.parametric_execution.v1', purpose: 'structure_engineering_assistance', feedbackRepairRequired: true, taskId: id, taskPath: resolve(storeDir, id + '.json'), workerId, contract, contractSha256: sha(JSON.stringify(contract)), resumedEvidence, sourceRightPartitionSha256: hash(resolve(working, '箱体竖隔板R.SLDPRT')) }
     const planPath = resolve(attempt, 'parametric_execution.json')
     write(planPath, plan)
     task = await store.transition({ ...leaseArgs(), transitionId: id + '-building', toState: 'building', patch: { execution: { started: true, cadStarted: false, modelReady: false }, progress: { stage: 'clone', percent: 0 } } })
     timer = setInterval(() => { heartbeatChain = heartbeatChain.then(async () => { if (!task.nativeBuild.lease) return; task = await store.heartbeat(leaseArgs()); lock.heartbeat() }).catch(error => { heartbeatError = error }) }, 20000)
-    if (!/^[a-zA-Z0-9_-]+$/.test(buildTag)) throw new Error('invalid native build tag')
-    const buildFolder = resolve(ROOT, 'workers/native_model_requests/parametric_v1', 'bin-' + buildTag)
-    const buildManifest = json(resolve(buildFolder, 'build.json'))
-    if (hash(buildManifest.executable) !== buildManifest.executableSha256) throw new Error('native executable no longer matches the built manifest')
+    const { folder: buildFolder, manifest: buildManifest } = verifiedBuild
     const pinnedTools = resolve(attempt, 'tools')
     mkdirSync(pinnedTools)
     for (const file of ['NativeParametricAssembly.exe', 'SolidWorks.Interop.sldworks.dll', 'SolidWorks.Interop.swconst.dll']) copyFileSync(resolve(buildFolder, file), resolve(pinnedTools, file), 1)
+    if (hash(resolve(pinnedTools, 'NativeParametricAssembly.exe')) !== buildManifest.executableSha256) throw new Error('pinned native executable differs from the verified build')
     write(resolve(pinnedTools, 'build.json'), buildManifest)
+    if (verifiedBuild.sourceSnapshot) write(resolve(pinnedTools, 'source_snapshot.json'), verifiedBuild.sourceSnapshot)
+    if (verifiedBuild.repairSource) write(resolve(pinnedTools, 'repair_source.json'), verifiedBuild.repairSource)
     const executable = resolve(pinnedTools, 'NativeParametricAssembly.exe')
     const heights = [...new Set([...contract.rowsByColumn.L, ...contract.rowsByColumn.R].map(row => row.doorHeightMm))]
-    const order = phases || ['clone', ...(resumeSource ? [] : ['probe', 'dimensions', 'derived', 'base-hole']), ...(resumedPhase && resumedPhase !== 'base-hole' ? [] : ['assemblies']), ...((cabinet.heightMm !== 1917 || cabinet.depthMm !== 550) && !envelopeVerified ? ['envelope'] : []), ...heights.map(height => Number(height.toFixed(6)).toString().replace('.', 'p')).filter(token => !resumedDoorHeights.has(token)).map(token => 'door-' + token), 'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', 'locks-verify', 'repair-partition-mates', ...(['root','verify','package','verify-package'].includes(resumedPhase) ? [] : ['root']), 'repair-frame-slots', ...(cabinet.heightMm !== 1917 ? ['repair-height-braces'] : []), ...(cabinet.depthMm !== 550 ? ['repair-depth-placements'] : []), 'repair-base-mates', 'verify', 'package', 'verify-package', 'verify-relocated', 'physical-audit']
+    const plannedOrder = phases || ['clone', ...(resumeSource ? [] : ['probe', 'dimensions', 'derived', 'base-hole']), ...(resumedPhase && resumedPhase !== 'base-hole' ? [] : ['assemblies']), ...((cabinet.heightMm !== 1917 || cabinet.depthMm !== 550) && !envelopeVerified ? ['envelope'] : []), ...heights.map(height => Number(height.toFixed(6)).toString().replace('.', 'p')).filter(token => !resumedDoorHeights.has(token)).map(token => 'door-' + token), 'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', 'locks-verify', 'repair-partition-mates', ...(['root','verify','package','verify-package'].includes(resumedPhase) ? [] : ['root']), 'repair-frame-slots', ...(cabinet.heightMm !== 1917 ? ['repair-height-braces'] : []), ...(cabinet.depthMm !== 550 ? ['repair-depth-placements'] : []), 'repair-base-mates', 'repair-engineer-feedback', ...(productionProfile ? ['production-apply', 'production-verify'] : []), 'verify', 'package', 'verify-package', 'verify-relocated', 'physical-audit']
+    const order = filterCompleted16029ResumePhases(plannedOrder, resumedSuccessfulPhases, !phases && Boolean(resumeSource))
     let predecessor = ''
     for (const phase of order) {
       activePhase = phase
       await heartbeatChain
       if (heartbeatError) throw heartbeatError
       task = await store.read(id)
+      if (signal?.aborted && task.nativeBuild.state !== 'cancel_requested') task = await store.cancel({ taskId: id, expectedRevision: task.revision, transitionId: id + '-cancel-signal-' + phase, reason: 'execution signal cancelled' })
       if (task.nativeBuild.state === 'cancel_requested') {
         task = await store.transition({ ...leaseArgs(), transitionId: id + '-cancelled-between-phases', toState: 'cancelled' })
         return { attempt, taskId: id, state: 'cancelled_after_atomic_stage', modelReady: false }
@@ -295,6 +319,9 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
       task = await store.heartbeat(leaseArgs())
       const before = inventory(working)
       const doorBefore = existsSync(doors) ? inventory(doors) : []
+      const protectedDoorFilesBefore = productionProfile && existsSync(doors) ? inventory16029ProductionFiles(doors) : []
+      if (productionProfile && phase === 'production-verify') verify16029ProductionEvidence(attempt, { throughPhase: 'production-apply' })
+      if (productionProfile && ['verify', 'package'].includes(phase)) verify16029ProductionEvidence(attempt, { throughPhase: 'production-verify' })
       const backup = resolve(attempt, 'backups', phase)
       const doorBackup = resolve(backup, 'doors')
       mkdirSync(backup)
@@ -310,15 +337,11 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
       activeDoorBefore = doorBefore
       activeDoorBackup = doorBackup
       const authPath = resolve(attempt, 'authorizations', phase + '.json')
-      write(authPath, { phase, planSha256: hash(planPath), executableSha256: hash(executable), taskId: id, workerId, leaseId: task.nativeBuild.lease.id, rightPartitionSha256: hash(resolve(working, '箱体竖隔板R.SLDPRT')), expiresAt: new Date(Date.now() + 29 * 60 * 1000).toISOString(), preInventory: before, predecessor })
+      write(authPath, { phase, planSha256: hash(planPath), executableSha256: hash(executable), taskId: id, workerId, leaseId: task.nativeBuild.lease.id, rightPartitionSha256: hash(resolve(working, '箱体竖隔板R.SLDPRT')), expiresAt: new Date(Date.now() + phaseTimeoutMs + 2 * 60 * 1000).toISOString(), preInventory: before, preDoorInventory: doorBefore, ...(productionProfile ? { protectedDoorFilesBefore } : {}), predecessor })
       onProgress(JSON.stringify({ taskId: id, phase, state: 'started', attempt }))
-      await new Promise((resolveRun, rejectRun) => {
-        const child = spawn(executable, [planPath, phase], { shell: false, windowsHide: true, cwd: working, env: { ...process.env, WINNSEN_PARAMETRIC_PLAN_SHA256: hash(planPath), WINNSEN_PARAMETRIC_AUTH_PATH: authPath, WINNSEN_PARAMETRIC_AUTH_SHA256: hash(authPath) } })
-        let stdout = '', stderr = ''
-        child.stdout.on('data', data => { stdout += data.toString(); onProgress(data.toString().trim()) })
-        child.stderr.on('data', data => { stderr += data.toString() })
-        child.on('error', rejectRun)
-        child.on('close', code => { write(resolve(attempt, 'evidence', phase + '.process.json'), { code, stdout, stderr }); if (code === 0) resolveRun(); else rejectRun(new Error(`PARAMETRIC_PHASE_FAILED ${phase}: ${stderr || stdout}`)) })
+      await run16029ParametricPhaseProcess(executable, [planPath, phase], { phase, attempt, cwd: working, timeoutMs: phaseTimeoutMs, signal, onProgress, preserveCadOnFailure,
+        env: { ...process.env, WINNSEN_PARAMETRIC_PLAN_SHA256: hash(planPath), WINNSEN_PARAMETRIC_AUTH_PATH: authPath, WINNSEN_PARAMETRIC_AUTH_SHA256: hash(authPath) },
+        isCancelled: async () => { const latest = await store.read(id); return latest.nativeBuild.state === 'cancel_requested' },
       })
       assertInventory(protectedInventory)
       const receiptPath = resolve(attempt, 'receipts', phase + '.json')
@@ -327,11 +350,14 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
       if (result.success !== true) throw new Error('stage evidence is not successful: ' + phase)
       if (phase === 'physical-audit') {
         const baselinePath = resolve(ROOT, 'data/parametric_attempts/PARAM-20260905130307482-41DE53/evidence/physical-audit.json')
-        const quality = compare16029PhysicalAudit(json(baselinePath), result, { doorCount: contract.geometry.doorCount })
-        write(resolve(attempt, 'evidence/physical-quality.json'), { ...quality, baselinePath, baselineSha256: hash(baselinePath), candidateEvidenceSha256: hash(resultPath) })
+        const packageEvidencePath = resolve(attempt, 'evidence/package.json')
+        const verificationEvidencePath = resolve(attempt, 'evidence/verify-package.json')
+        const quality = compare16029PhysicalAudit(json(baselinePath), result, { doorCount: contract.geometry.doorCount, packageInventory: json(packageEvidencePath).rows, packageVerification: json(verificationEvidencePath), ...(productionProfile ? { productionEvidence: verify16029ProductionEvidence(attempt) } : {}) })
+        write(resolve(attempt, 'evidence/physical-quality.json'), { ...quality, baselinePath, baselineSha256: hash(baselinePath), candidateEvidenceSha256: hash(resultPath), packageEvidenceSha256: hash(packageEvidencePath), packageVerificationEvidenceSha256: hash(verificationEvidencePath) })
         if (!quality.pass) throw new Error('generated physical geometry does not meet the measured V35 baseline; see physical-quality.json')
       }
-      write(receiptPath, { phase, taskId: id, planSha256: hash(planPath), authorizationSha256: hash(authPath), evidenceSha256: hash(resultPath), before, after: inventory(working), doorInventory: existsSync(resolve(attempt, 'doors')) ? inventory(resolve(attempt, 'doors')) : [], protectedSourcesUnchanged: true, predecessor })
+      write(receiptPath, { phase, taskId: id, planSha256: hash(planPath), authorizationSha256: hash(authPath), evidenceSha256: hash(resultPath), before, after: inventory(working), beforeDoorInventory: doorBefore, doorInventory: existsSync(resolve(attempt, 'doors')) ? inventory(resolve(attempt, 'doors')) : [], ...(productionProfile ? { protectedDoorFilesBefore, protectedDoorFilesAfter: existsSync(doors) ? inventory16029ProductionFiles(doors) : [] } : {}), protectedSourcesUnchanged: true, predecessor })
+      if (productionProfile && ['production-apply', 'production-verify', 'package'].includes(phase)) verify16029ProductionEvidence(attempt, { throughPhase: phase })
       predecessor = hash(receiptPath)
       activeBefore = []
       activeBackup = ''
@@ -341,6 +367,12 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
     }
     clearInterval(timer); timer = null
     await heartbeatChain
+    if (signal?.aborted) {
+      task = await store.read(id)
+      if (task.nativeBuild.state !== 'cancel_requested') task = await store.cancel({ taskId: id, expectedRevision: task.revision, transitionId: id + '-cancel-signal-after-phases', reason: 'execution signal cancelled after final phase' })
+      task = await store.transition({ ...leaseArgs(), transitionId: id + '-cancelled-after-phases', toState: 'cancelled' })
+      return { attempt, taskId: id, state: 'cancelled_after_atomic_stage', modelReady: false }
+    }
     task = await store.transition({ ...leaseArgs(), transitionId: id + '-validating', toState: 'validating', patch: { progress: { stage: 'independent_validation_pending', percent: 90 } } })
     task = await store.transition({ ...leaseArgs(), transitionId: id + '-candidate', toState: 'blocked', patch: { message: '原生阶段已执行；完整几何、干涉、展开与迁移验证尚待独立验收。', execution: { started: true, cadStarted: true, modelReady: false } } })
     return { attempt, taskId: id, stages: order, state: 'candidate_requires_validation', modelReady: false }
@@ -348,7 +380,9 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
     clearInterval(timer); timer = null
     await heartbeatChain
     assertInventory(protectedInventory)
-    if (activeBackup && (activeBefore.length || activeDoorBefore.length)) {
+    if (error.cleanupVerified === false) {
+      write(resolve(attempt, 'evidence', activePhase + '.rollback.json'), { success: false, reason: 'owned process cleanup could not be verified; rollback withheld while CAD may hold files', preservedFailedCandidateArtifacts: true })
+    } else if (activeBackup && (activeBefore.length || activeDoorBefore.length)) {
       const rollback = []
       for (const row of activeBefore) {
         const source = resolve(activeBackup, row.relativePath)
@@ -377,10 +411,15 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
       const latest = await store.read(id)
       if (latest.nativeBuild.lease?.id === task.nativeBuild.lease.id && latest.nativeBuild.lease?.workerId === workerId) {
         task = latest
-        if (task.nativeBuild.state === 'cancel_requested') task = await store.transition({ ...leaseArgs(), transitionId: id + '-cancelled-on-error', toState: 'cancelled' })
+        if (error.cleanupVerified === false) task = await store.transition({ ...leaseArgs(), transitionId: id + '-blocked-cleanup-' + activePhase, toState: 'blocked', patch: { blocker: { code: 'OWNED_PROCESS_CLEANUP_UNVERIFIED', message: error.message }, execution: { started: true, cadStarted: true, modelReady: false, processCleanupVerified: false } } })
+        else if (task.nativeBuild.state === 'cancel_requested' || error.code === 'PARAMETRIC_PHASE_CANCELLED') {
+          if (task.nativeBuild.state !== 'cancel_requested') task = await store.cancel({ taskId: id, expectedRevision: task.revision, transitionId: id + '-cancel-on-error', reason: 'phase execution cancelled' })
+          task = await store.transition({ ...leaseArgs(), transitionId: id + '-cancelled-on-error', toState: 'cancelled' })
+        }
         else task = await store.fail({ ...leaseArgs(), transitionId: id + '-failed-' + activePhase, code: 'parametric_native_execution_failed', message: error.message, retryable: false })
       }
     }
+    if (task?.nativeBuild?.state === 'cancelled') return { attempt, taskId: id, state: 'cancelled_after_atomic_stage', modelReady: false }
     throw Object.assign(error, { attempt })
   } finally {
     if (timer) clearInterval(timer)
@@ -391,7 +430,14 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const requestPath = process.argv[2]
-  if (!requestPath || !isAbsolute(resolve(requestPath))) throw new Error('Usage: node tools/run_16029_parametric_model.mjs <request.json> [phase,phase]')
-  try { console.log(JSON.stringify(await run16029ParametricModel(json(resolve(requestPath)), { phases: process.argv[3] && process.argv[3] !== '--resume-source' ? process.argv[3].split(',') : null, resumeSource: process.argv[3] === '--resume-source' ? process.argv[4] : '' }), null, 2)) }
+  if (!requestPath || !isAbsolute(resolve(requestPath))) throw new Error('Usage: node tools/run_16029_parametric_model.mjs <request.json> [phase,phase | --resume-source path] [--build-tag tag] [--phase-timeout-ms ms]')
+  const tagIndex = process.argv.indexOf('--build-tag'), timeoutIndex = process.argv.indexOf('--phase-timeout-ms'), repairIndex = process.argv.indexOf('--repair-profile')
+  const resumeSourceIndex = process.argv.indexOf('--resume-source'), resumeStageIndex = process.argv.indexOf('--resume-stage'), resumeBackupIndex = process.argv.indexOf('--resume-backup-phase')
+  const phaseArgument = process.argv[3] && !process.argv[3].startsWith('--') ? process.argv[3] : ''
+  try { console.log(JSON.stringify(await run16029ParametricModel(json(resolve(requestPath)), { phases: phaseArgument ? phaseArgument.split(',') : null,
+    resumeSource: resumeSourceIndex >= 0 ? process.argv[resumeSourceIndex + 1] : '', resumeStage: resumeStageIndex >= 0 ? process.argv[resumeStageIndex + 1] : '',
+    resumeBackupPhase: resumeBackupIndex >= 0 ? process.argv[resumeBackupIndex + 1] : '', buildTag: tagIndex >= 0 ? process.argv[tagIndex + 1] : undefined,
+    repairProfile: repairIndex >= 0 ? process.argv[repairIndex + 1] : '', preserveCadOnFailure: process.argv.includes('--preserve-cad-on-failure'),
+    ...(timeoutIndex >= 0 ? { phaseTimeoutMs: Number(process.argv[timeoutIndex + 1]) } : {}) }), null, 2)) }
   catch (error) { console.error(JSON.stringify({ error: error.message, attempt: error.attempt })); process.exitCode = 1 }
 }
