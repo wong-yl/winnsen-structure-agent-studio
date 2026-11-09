@@ -1,0 +1,9 @@
+[
+  {"document":"箱体焊接.SLDASM","dimension":"D1@距离19","baseline_mm":304,"height_factor":0.16666666666666666},
+  {"document":"箱体焊接.SLDASM","dimension":"D1@距离20","baseline_mm":304,"height_factor":0.16666666666666666},
+  {"document":"箱体焊接.SLDASM","dimension":"D1@距离21","baseline_mm":304,"height_factor":0.16666666666666666},
+  {"document":"箱体焊接.SLDASM","dimension":"D3@局部线性阵列1","baseline_mm":152,"height_factor":0.08333333333333333},
+  {"document":"箱体焊接.SLDASM","dimension":"D3@局部线性阵列2","baseline_mm":152,"height_factor":0.08333333333333333},
+  {"document":"户外快递副柜14门(1939×1000×550).SLDASM","dimension":"D3@柜门阵列1","baseline_mm":1368,"height_factor":0.75},
+  {"document":"户外快递副柜14门(1939×1000×550).SLDASM","dimension":"D3@柜门阵列2","baseline_mm":152,"height_factor":0.08333333333333333}
+]

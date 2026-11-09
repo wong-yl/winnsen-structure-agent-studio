@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/generation/qualification_sha256",
+    "before": "6359f2fe6cd2df7eeaffc656818e7bc0c62e8bfd940d5510a60bfdb90d6d16d0",
+    "after": "cb543f1076b26689dc88b2859a95b74b0d2d7a25df98bed4d84a8d293ed28712"
+  },
+  {
+    "path": "/generation/script",
+    "before": "D:\\机械结构工程师智能体\\outputs\\outdoor_22057_width600_portal_20261018_v16\\scripts\\portal_generate.py",
+    "after": "D:\\Winnsen_Structure_Agent_Studio\\data\\outdoor_22057_repair_20261109\\runtime_v24\\scripts\\portal_generate.py"
+  },
+  {
+    "path": "/generation/source_stage",
+    "before": "D:\\机械结构工程师智能体\\outputs\\outdoor_22057_width600_portal_20261018_v16",
+    "after": "D:\\Winnsen_Structure_Agent_Studio\\data\\outdoor_22057_repair_20261109\\runtime_v24"
+  },
+  {
+    "path": "/variable_trial_release_id",
+    "before": "OUT22057-WIDTH600-20261018-v16",
+    "after": "OUT22057-RUNTIME-GEOMETRY-REPAIR-20261109-v24"
+  }
+]

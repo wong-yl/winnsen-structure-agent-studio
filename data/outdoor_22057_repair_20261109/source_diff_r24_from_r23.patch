@@ -1,0 +1,35 @@
+--- runtime_v23/scripts/width600_native_r440/OutdoorShadeR145.cs
++++ runtime_v24/scripts/width600_native_r440/OutdoorShadeR145.cs
+@@ -158,7 +158,7 @@
+             row["standard_columns_unchanged"]=true;
+             if(persist){
+                 SaveDocs(top,row);row["native_save_performed"]=true;row["snapshot_before_saved_reload"]=row["snapshot"];
+-                savedReloadIdentity=Identity(Root);CloseSavedDocumentGraph(row);Writable=false;
++                savedReloadIdentity=Identity(Root);top=null;CloseSavedDocumentGraph(row);Writable=false;
+                 if(!row.ContainsKey("saved_reload_fresh_process_id"))RestartSavedReloadCad(row);
+                 Need(Sw.GetFirstDocument()==null&&Sw.GetProcessID()==Convert.ToInt32(row["saved_reload_fresh_process_id"])&&Sw.GetProcessID()!=Convert.ToInt32(row["generation_process_id"]),"Saved STEP export requires one fresh isolated CAD session");
+                 row["saved_reload_independent_session_required"]=true;row["saved_reload_export_process_id"]=Sw.GetProcessID();
+@@ -169,7 +169,7 @@
+             row["narrow_lamp_saved_parts"]=new[]{"雨棚LED灯罩壳.SLDPRT","塑料灯罩.SLDPRT","塑料板压条焊件.SLDPRT","LED硬灯条(蓝景13点白色930×16mm) L.SLDPRT","LED硬灯条(蓝景13点白色930×16mm) R.SLDPRT"}.Select(n=>new{name=n,health=LayoutFeatureHealth(Doc(n)),details=ShDetails(Doc(n))}).ToArray();
+             row["canopy_mates"]=LayoutMates(Doc("太阳能雨棚装配.SLDASM"));row["canopy_states"]=ShStates(Doc("太阳能雨棚装配.SLDASM"));
+             ExportCurrent(top,row,(string)c["id"]);
+-        }finally{Sw.CloseAllDocuments(true);Writable=initialWritable;row["final_identity"]=Identity(Root);if(savedReloadIdentity!=null){CheckIdentity(Root,savedReloadIdentity);row["saved_reload_files_unchanged"]=true;}if(!persist){CheckIdentity(Root,before);row["files_unchanged"]=true;}}
++        }finally{if(Sw!=null)Sw.CloseAllDocuments(true);Writable=initialWritable;row["final_identity"]=Identity(Root);if(savedReloadIdentity!=null){CheckIdentity(Root,savedReloadIdentity);row["saved_reload_files_unchanged"]=true;}if(!persist){CheckIdentity(Root,before);row["files_unchanged"]=true;}}
+     }
+     static void SizingSurvey(Dictionary<string,object> c, Dictionary<string,object> row)
+     {
+--- runtime_v23/scripts/width600_native_r440/SavedReloadSessionR301.cs
++++ runtime_v24/scripts/width600_native_r440/SavedReloadSessionR301.cs
+@@ -15,7 +15,11 @@
+         var receipt=new Dictionary<string,object>{{"process_id",previous.Id},{"process_start_utc",previous.StartTime.ToUniversalTime().ToString("o")},{"exit_app_called",false}};
+         row["generation_process_id"]=previous.Id;row["saved_reload_exit_receipt"]=exitPath;
+         Sw.CommandInProgress=false;Sw.ExitApp();receipt["exit_app_called"]=true;
+-        File.WriteAllText(exitPath,Json.Serialize(receipt),new UTF8Encoding(false));Sw=null;
++        File.WriteAllText(exitPath,Json.Serialize(receipt),new UTF8Encoding(false));
++        var oldApplication=Sw;Sw=null;
++        row["owned_application_reference_release_count"]=System.Runtime.InteropServices.Marshal.ReleaseComObject(oldApplication);oldApplication=null;
++        GC.Collect();GC.WaitForPendingFinalizers();GC.Collect();
++        row["old_application_reference_released_before_wait"]=true;Flush("saved_reload_old_application_reference_released");
+         var cleanup=new ProcessStartInfo("powershell.exe","-NoProfile -ExecutionPolicy Bypass -File \""+Path.Combine(Stage,"scripts","cleanup_owned_residual_poll_r4.ps1")+"\" -EvidenceName \"evidence/"+exitName+"\""){UseShellExecute=false,CreateNoWindow=true};
+         using(var child=Process.Start(cleanup)){child.WaitForExit();Need(child.ExitCode==0,"Owned saved reload session cleanup failed");}
+         Need(Process.GetProcessesByName("SLDWORKS").Length==0,"Saved reload requires no existing CAD process");

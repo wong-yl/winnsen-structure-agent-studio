@@ -1,0 +1,101 @@
+--- D:\Winnsen_Structure_Agent_Studio\data\outdoor_22057_repair_20261109\runtime_v19\scripts\width600_native_r440\CoverFastenersR312.cs
++++ D:\Winnsen_Structure_Agent_Studio\data\outdoor_22057_repair_20261109\runtime_v22\scripts\width600_native_r440\CoverFastenersR312.cs
+@@ -26,12 +26,16 @@
+         if(Math.Abs(width-950)<1e-8)return;
+         double delta=(width-950)/2000;
+         var inner=Doc("箱体内顶板.SLDPRT");
++        var seed=(Sketch)RmFeature(inner,"草图21").GetSpecificFeature2();
++        var targets=(seed.GetSketchBlockInstances() as Array??new object[0]).Cast<SketchBlockInstance>().ToDictionary(b=>b.Name,b=>{double x=((double[])b.BlockToSketchTransform.ArrayData)[9];Need(Math.Abs(Math.Abs(x)-.1625)<1e-7||Math.Abs(Math.Abs(x)-.3575)<1e-7,"Unexpected seed cover nut datum");return Math.Sign(x)*(Math.Abs(x)>.25?width/2000-.1175:.1625);});
++        Need(targets.Count==4&&targets.Values.Distinct().Count()==4,"Four distinct cover nut targets required");
+         MoveCoverProfile(inner,"草图20",x=>Math.Abs(x)<.25?x:x+Math.Sign(x)*delta,log);
+         RmActivate(inner,"cover_nut_blocks");inner.ClearSelection2(true);Need(RmFeature(inner,"草图21").Select2(false,0),"Cannot select cover nut blocks");inner.EditSketch();var s=(Sketch)inner.GetActiveSketch2();
+         var blocks=(s.GetSketchBlockInstances() as Array??new object[0]).Cast<SketchBlockInstance>().Select(b=>new{block=b,position=(double[])b.InstancePosition.ArrayData,transform=(double[])b.BlockToSketchTransform.ArrayData}).ToArray();Need(blocks.Length==4,"Four standard M4 blocks required");
+         s.RelationManager.DeleteAllRelations();var math=(MathUtility)Sw.GetMathUtility();
+-        foreach(var b in blocks){var p=(double[])b.position.Clone();if(Math.Abs(b.transform[9])>.25)p[0]+=Math.Sign(b.transform[9])*delta;b.block.InstancePosition=(MathPoint)math.CreatePoint(p);Need(((double[])b.block.InstancePosition.ArrayData).Zip(p,(a,v)=>Math.Abs(a-v)).Max()<1e-8,"Nut block target mismatch");inner.ClearSelection2(true);Need(b.block.Select(false,null),"Cannot constrain nut block");inner.SketchAddConstraints("sgFIXED");}
++        foreach(var b in blocks){var p=(double[])b.position.Clone();p[0]+=targets[b.block.Name]-b.transform[9];b.block.InstancePosition=(MathPoint)math.CreatePoint(p);Need(((double[])b.block.InstancePosition.ArrayData).Zip(p,(a,v)=>Math.Abs(a-v)).Max()<1e-8,"Nut block target mismatch");inner.ClearSelection2(true);Need(b.block.Select(false,null),"Cannot constrain nut block");inner.SketchAddConstraints("sgFIXED");}
+         FixCoverProfile(inner,s);Need(s.GetConstrainedStatus()==3,"Cover nut blocks must be constrained");
++        Need(blocks.All(b=>Math.Abs(((double[])b.block.BlockToSketchTransform.ArrayData)[9]-targets[b.block.Name])<1e-8),"Cover nut absolute datum mismatch");
+         row["cover_fastener_width_linkage"]=new{width_mm=width,cover_slot_half_pitch_mm=width/4-140,cover_edge_inset_mm=90,inner_bores_abs_x_mm=new[]{162.5,width/2-117.5},standard_nut_geometry_preserved=true,blocks=blocks.Select(b=>new{name=b.block.Name,before=b.transform,after=b.block.BlockToSketchTransform.ArrayData}).ToArray()};
+         inner.SketchManager.InsertSketch(true);inner.ClearSelection2(true);Flush("cover_fasteners_prepared");
+     }
+--- D:\Winnsen_Structure_Agent_Studio\data\outdoor_22057_repair_20261109\runtime_v19\scripts\width600_native_r440\LayoutBuildR170.cs
++++ D:\Winnsen_Structure_Agent_Studio\data\outdoor_22057_repair_20261109\runtime_v22\scripts\width600_native_r440\LayoutBuildR170.cs
+@@ -77,6 +77,64 @@
+         LayoutReferences("箱体右侧板焊接.SLDASM",new Dictionary<string,string>{{"箱体侧板加强筋.SLDPRT","OUT_RightSideRib.SLDPRT"}},copies);
+         File.WriteAllText(Path.Combine(Root,"generated_layout_manifest.json"),Json.Serialize(new{rows=rows,native_documents=122+rows.Count*3+rows.Count(r=>(string)r["side"]=="R")+1}),new System.Text.UTF8Encoding(false));
+     }
++    static object DividerMateSignatures(ModelDoc2 owner,string rightName)
++    {
++        return Features(owner).Where(f=>f.GetTypeName2().StartsWith("Mate")).OrderBy(f=>f.Name).Select(f=>{
++            var mate=f.GetSpecificFeature2() as Mate2;var entities=new List<object>();
++            if(mate!=null)for(int i=0;i<mate.GetMateEntityCount();i++){
++                var entity=(MateEntity2)mate.MateEntity(i);var component=entity.ReferenceComponent as Component2;
++                string name=component==null?null:component.Name2;var values=entity.EntityParams as double[]??new double[0];
++                var plane=entity.ReferenceType==3&&values.Length>=6?new[]{values[3],values[4],values[5],values.Take(3).Zip(values.Skip(3).Take(3),(a,b)=>a*b).Sum()}:values;
++                entities.Add(new{component=name==rightName?"__divider_right_rib__":name,type=entity.ReferenceType,parameters=plane.Select(v=>Math.Round(v,8)).ToArray()});
++            }
++            return new{name=f.Name,type=f.GetTypeName2(),suppressed=f.IsSuppressed2(1,null),entities=entities};
++        }).ToArray();
++    }
++    static void VerifyDividerRightRib(Dictionary<string,object> c,Dictionary<string,object> row)
++    {
++        if(LayoutRows(c).Count==0)return;
++        var owner=Doc("箱体竖隔板 焊接.SLDASM");var parts=((Array)((AssemblyDoc)owner).GetComponents(true)).Cast<Component2>().ToArray();
++        var right=parts.Single(p=>Path.GetFileName(p.GetPathName())=="OUT_RightSideRib.SLDPRT");
++        var left=parts.Single(p=>Path.GetFileName(p.GetPathName())=="箱体侧板加强筋.SLDPRT");
++        double width=Convert.ToDouble(((IList)c["dimensions_mm"])[1]);var transform=(double[])right.Transform2.ArrayData;
++        Need(!right.IsFixed()&&right.GetConstrainedStatus()==3&&((Array)right.GetMates()).Length==3&&!left.IsFixed()&&left.GetConstrainedStatus()==3,"Divider ribs lost their native mate constraints");
++        Need(Math.Abs(transform[9]-(width/2000-.0005))<1e-7&&Math.Abs(transform[10])<1e-7&&Math.Abs(transform[11]+.115)<1e-7,"Divider right rib did not follow original cabinet datums");
++        Need(Math.Abs(transform[0]-1)+Math.Abs(transform[4]-1)+Math.Abs(transform[8]-1)+Math.Abs(transform[1])+Math.Abs(transform[2])+Math.Abs(transform[3])+Math.Abs(transform[5])+Math.Abs(transform[6])+Math.Abs(transform[7])<1e-7,"Divider right rib orientation changed");
++        Need(owner.Extension.GetWhatsWrongCount()==0,"Divider mate graph unhealthy after row linkage");
++        row["divider_right_rib_final"]=new{states=ShStates(owner),mates=LayoutMates(owner),health=LayoutFeatureHealth(owner),fully_constrained=true,original_three_mates_retained=true};Flush("divider_right_rib_final");
++    }
++    static void BindDividerRightRib(Dictionary<string,object> c,Dictionary<string,object> row)
++    {
++        if(LayoutRows(c).Count==0)return;
++        Need(Writable&&Within(Root,Stage)&&System.IO.Path.GetFileName(Root).StartsWith("generated_"),"Divider binding requires a fresh writable candidate");
++        var owner=Doc("箱体竖隔板 焊接.SLDASM");RmActivate(owner,"divider_right_rib_binding");var assembly=(AssemblyDoc)owner;
++        var parts=((Array)assembly.GetComponents(true)).Cast<Component2>().ToArray();
++        var ribs=parts.Where(p=>Path.GetFileName(p.GetPathName())=="箱体侧板加强筋.SLDPRT").ToArray();
++        Need(ribs.Length==2&&!parts.Any(p=>Path.GetFileName(p.GetPathName())=="OUT_RightSideRib.SLDPRT"),"Fresh divider must contain its two original rib instances");
++        var right=ribs.Single(p=>p.Name2.Split('/').Last()=="箱体侧板加强筋-2");
++        var old=(double[])right.Transform2.ArrayData;string configuration=right.ReferencedConfiguration;int constrained=right.GetConstrainedStatus();
++        row["divider_right_rib_direct_owner_probe"]=new{fixed_instance=right.IsFixed(),constrained=constrained,mate_count=right.GetMates()==null?0:((Array)right.GetMates()).Length,mates=LayoutMates(owner),states=ShStates(owner),health=LayoutFeatureHealth(owner)};Flush("divider_right_rib_direct_owner_probe");
++        Need(!right.IsFixed()&&constrained==3&&right.GetMates()!=null&&((Array)right.GetMates()).Length==3&&owner.Extension.GetWhatsWrongCount()==0,"Divider right rib must retain its three original native mates");
++        Need(Math.Abs(old[4]-1)<1e-8&&Math.Abs(old[1])+Math.Abs(old[7])<1e-8,"Divider right rib Y direction differs from row datum");
++        var before=parts.ToDictionary(p=>p.Name2,p=>new{path=p.GetPathName(),transform=(double[])p.Transform2.ArrayData,fixed_instance=p.IsFixed(),constrained=p.GetConstrainedStatus()});
++        string oldName=right.Name2;string replacement=Path.Combine(Root,"OUT_RightSideRib.SLDPRT");
++        Need(!Doc("箱体侧板加强筋.SLDPRT").GetSaveFlag()&&!Doc("OUT_RightSideRib.SLDPRT").GetSaveFlag(),"Refuse replacement with unsaved rib edits");
++        string mates=Json.Serialize(DividerMateSignatures(owner,right.Name2)),dimensions=Json.Serialize(Dims(owner));row["divider_right_rib_before"]=new{parts=before,mates=LayoutMates(owner)};Flush("divider_right_rib_before");
++        RmActivate(owner,"divider_right_rib_replace");owner.ClearSelection2(true);Need(right.Select4(false,null,false),"Cannot select the single divider right rib");
++        bool replaced=assembly.ReplaceComponents2(replacement,configuration,false,0,true);
++        row["divider_right_rib_replace"]=new{replaced=replaced,replace_all_instances=false,reattach_mates=true,path=replacement};Flush("divider_right_rib_replace");
++        Need(replaced,"Cannot bind divider right rib to right-column reliefs");owner.ClearSelection2(true);RequireCandidateWriteGraph("divider_right_rib_references");
++        Need(owner.ForceRebuild3(false)&&owner.Extension.GetWhatsWrongCount()==0,"Divider failed rebuild after single-rib binding");
++        var after=((Array)assembly.GetComponents(true)).Cast<Component2>().ToArray();
++        Need(after.Length==parts.Length&&after.Count(p=>Path.GetFileName(p.GetPathName())=="箱体侧板加强筋.SLDPRT")==1,"Divider left rib was unexpectedly replaced");
++        var bound=after.Single(p=>string.Equals(p.GetPathName(),replacement,StringComparison.OrdinalIgnoreCase));
++        Need(bound.ReferencedConfiguration==configuration&&!bound.IsFixed()&&bound.GetConstrainedStatus()==constrained&&((Array)bound.GetMates()).Length==3,"Divider right rib configuration or constraint changed");
++        foreach(var component in after){var expected=before[string.Equals(component.GetPathName(),replacement,StringComparison.OrdinalIgnoreCase)?oldName:component.Name2];var actual=(double[])component.Transform2.ArrayData;
++            Need(expected.transform.Zip(actual,(a,b)=>Math.Abs(a-b)).Max()<1e-8&&component.IsFixed()==expected.fixed_instance&&component.GetConstrainedStatus()==expected.constrained,"Divider component placement changed during binding");}
++        Need(Json.Serialize(DividerMateSignatures(owner,bound.Name2))==mates&&Json.Serialize(Dims(owner))==dimensions,"Divider mate planes, distances or suppression changed during binding");
++        row["divider_right_rib_binding"]=new{path=replacement,before_transform=old,after_transform=bound.Transform2.ArrayData,configuration=configuration,fixed_instance=bound.IsFixed(),constrained=bound.GetConstrainedStatus(),left_rib_retained=true,mates_preserved=true,mate_signatures=DividerMateSignatures(owner,bound.Name2),mates=LayoutMates(owner),states=ShStates(owner)};
++        Flush("divider_right_rib_binding");
++    }
+     static double LayoutExtremeY(Component2 component,bool upper)
+     {
+         object info;var bodies=component.GetBodies3(0,out info) as Array;Need(bodies!=null&&bodies.Length>0,"Part bodies required for placement");
+--- D:\Winnsen_Structure_Agent_Studio\data\outdoor_22057_repair_20261109\runtime_v19\scripts\width600_native_r440\OutdoorShadeR145.cs
++++ D:\Winnsen_Structure_Agent_Studio\data\outdoor_22057_repair_20261109\runtime_v22\scripts\width600_native_r440\OutdoorShadeR145.cs
+@@ -149,9 +149,9 @@
+         double[] dims=((IEnumerable)c["dimensions_mm"]).Cast<object>().Select(Convert.ToDouble).ToArray();
+         Dictionary<string,string> savedReloadIdentity=null;bool initialWritable=Writable;
+         try {
+-            bool resume=persist&&c.ContainsKey("resume_layout_parts")&&Convert.ToBoolean(c["resume_layout_parts"]);if(resume)CheckLayoutPartsCheckpoint(c,row);else if(persist&&!c.ContainsKey("cover_span_repair_source")&&!c.ContainsKey("hinge_pitch_repair_source"))PrepareLayout(c,row);var top=OpenTop(row);var columns=ShColumnBodies();
++            bool resume=persist&&c.ContainsKey("resume_layout_parts")&&Convert.ToBoolean(c["resume_layout_parts"]);if(resume)CheckLayoutPartsCheckpoint(c,row);else if(persist&&!c.ContainsKey("cover_span_repair_source")&&!c.ContainsKey("hinge_pitch_repair_source"))PrepareLayout(c,row);var top=OpenTop(row);if(persist)BindDividerRightRib(c,row);var columns=ShColumnBodies();
+             if(persist){Need(!resume,"Expanded generator requires a fresh isolated request");if(c.ContainsKey("cover_span_repair_source")){var coverChanges=new List<object>();row["input_changes"]=coverChanges;SyncCoverSpan(dims[1],coverChanges,row);row["reused_verified_layout_without_regeneration"]=true;}else if(c.ContainsKey("hinge_pitch_repair_source")){row["reused_saved_high_layout_checkpoint_not_previously_accepted"]=true;row["input_changes"]=new List<object>();}else{ApplyInputs(top,dims[0],dims[1],dims[2],row);BuildLayout(top,c,row);BuildLayoutFeatures(c,row);}RebuildAll(top,row);}else {RmActivate(top,"independent_reopen");Need(top.ForceRebuild3(false),"Reopened top rebuild failed");}
+-            if(persist){SyncLeftRearRib(dims[1],(List<object>)row["input_changes"],row);ReanchorRightRibMate(dims[0],dims[1],row);RefreshLayoutAssemblyGraph(top,row);row["preaudit_instance_counts"]=InstanceBodyCounts(top);RequireCandidateWriteGraph("preaudit_save_loaded_references");SaveDocs(top,row);row["preaudit_candidate_saved_not_accepted"]=true;Flush("preaudit_candidate_saved_not_accepted");}row["snapshot"]=Snapshot(top,false);row["full_rebuild_return"]=true;row["health_pass"]=true;row["part_sizes"]=Sizes();
++            if(persist){SyncLeftRearRib(dims[1],(List<object>)row["input_changes"],row);ReanchorRightRibMate(dims[0],dims[1],row);RefreshLayoutAssemblyGraph(top,row);VerifyDividerRightRib(c,row);row["preaudit_instance_counts"]=InstanceBodyCounts(top);RequireCandidateWriteGraph("preaudit_save_loaded_references");SaveDocs(top,row);row["preaudit_candidate_saved_not_accepted"]=true;Flush("preaudit_candidate_saved_not_accepted");}row["snapshot"]=Snapshot(top,false);row["full_rebuild_return"]=true;row["health_pass"]=true;row["part_sizes"]=Sizes();
+             row["canopy_equations"]=Eqs(Doc("太阳能雨棚装配.SLDASM"));row["canopy_states"]=ShStates(Doc("太阳能雨棚装配.SLDASM"));
+             row["controls"]=new[]{"防水寄存柜 模型.SLDPRT","遮阳板.SLDPRT","雨棚LED灯罩壳.SLDPRT","箱体雨棚安装架.SLDPRT"}.Select(n=>new{name=n,dimensions=Dims(Doc(n))}).ToArray();
+             var after=ShColumnBodies();foreach(var item in columns){Need(after[item.Key].Length==item.Value.Length,"Standard column body count changed");for(int i=0;i<item.Value.Length;i++)Need(after[item.Key][i].Zip(item.Value[i],(a,b)=>Math.Abs(a-b)).Max()<1e-9,"Standard column local geometry changed");}

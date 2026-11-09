@@ -1,0 +1,29 @@
+--- runtime_v22/scripts\width600_native_r440\FeedbackCadBaseR145.cs
++++ runtime_v23/scripts\width600_native_r440\FeedbackCadBaseR145.cs
+@@ -287,6 +287,14 @@
+     static object Sizes() {return new[]{"箱体左侧板.SLDPRT","箱体内顶板.SLDPRT","箱体顶板.SLDPRT","箱体底板.SLDPRT","防水柜门 模型.SLDPRT","防水柜门1╱12L.SLDPRT","防水柜门2╱12L.SLDPRT","防水柜门3╱12L.SLDPRT","立柱连接架.SLDPRT","雨棚LED灯罩壳.SLDPRT","太阳能板(1140×840).SLDPRT","遮阳板.SLDPRT"}.Select(n=>new{name=n,box_m=((PartDoc)Doc(n)).GetPartBox(true)}).ToArray();}
+     static void ExportCurrent(ModelDoc2 top,Dictionary<string,object> row,string label) {
+         string path=Path.Combine(Path.GetDirectoryName(EvidencePath),Path.GetFileNameWithoutExtension(EvidencePath)+"_"+label+".step");Need(!File.Exists(path),"Preserve export");
++        var previous=Sw.ActiveDoc as ModelDoc2;
++        string previousPath=previous==null?null:previous.GetPathName();
++        int selectedBefore=((SelectionMgr)top.SelectionManager).GetSelectedObjectCount2(-1);
++        RmActivate(top,"step_export_active_top");
++        var active=Sw.ActiveDoc as ModelDoc2;var selection=top.SelectionManager as SelectionMgr;
++        Need(active!=null&&Path.GetFullPath(active.GetPathName()).Equals(Path.GetFullPath(top.GetPathName()),StringComparison.OrdinalIgnoreCase),"STEP export target is not the active top assembly");
++        Need(((Configuration)active.GetActiveConfiguration()).Name=="BOTTOM_SHORT_PIN_FIX"&&selection!=null&&selection.GetSelectedObjectCount2(-1)==0,"STEP export requires the saved top configuration and an empty selection");
++        row["step_export_preflight"]=new{previous_active_document=previousPath,target=top.GetPathName(),active_document=active.GetPathName(),configuration=((Configuration)active.GetActiveConfiguration()).Name,selected_before=selectedBefore,selected_after=selection.GetSelectedObjectCount2(-1),read_only=active.IsOpenedReadOnly(),process_id=Sw.GetProcessID()};
+         int e=0,w=0;Flush("export/"+label);bool ok=top.Extension.SaveAs(path,0,3,null,ref e,ref w);
+         row["export"]=new{path=path,saved=ok,errors=e,warnings=w,sha256=File.Exists(path)?Hash(path):null};Need(ok&&e==0&&w==0,"STEP export failed");
+     }
+--- runtime_v22/scripts\width600_native_r440\OutdoorShadeR145.cs
++++ runtime_v23/scripts\width600_native_r440\OutdoorShadeR145.cs
+@@ -159,6 +159,9 @@
+             if(persist){
+                 SaveDocs(top,row);row["native_save_performed"]=true;row["snapshot_before_saved_reload"]=row["snapshot"];
+                 savedReloadIdentity=Identity(Root);CloseSavedDocumentGraph(row);Writable=false;
++                if(!row.ContainsKey("saved_reload_fresh_process_id"))RestartSavedReloadCad(row);
++                Need(Sw.GetFirstDocument()==null&&Sw.GetProcessID()==Convert.ToInt32(row["saved_reload_fresh_process_id"])&&Sw.GetProcessID()!=Convert.ToInt32(row["generation_process_id"]),"Saved STEP export requires one fresh isolated CAD session");
++                row["saved_reload_independent_session_required"]=true;row["saved_reload_export_process_id"]=Sw.GetProcessID();
+                 top=OpenTop(row);RmActivate(top,"saved_file_reload_before_export");Need(top.ForceRebuild3(false),"Saved cabinet failed read-only reload");
+                 row["snapshot"]=Snapshot(top,false);row["saved_file_reload_before_export"]=true;CheckIdentity(Root,savedReloadIdentity);
+             }else row["native_save_performed"]=false;

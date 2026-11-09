@@ -1,0 +1,12 @@
+{
+  "status": "STATIC_PASS_RUNTIME_PENDING",
+  "candidate_support_files": 815,
+  "parent_support_files_unchanged": 814,
+  "protected_original_paths_unchanged": 385,
+  "seed_files_unchanged": 130,
+  "save_gate_unchanged": true,
+  "all_audit_sources_and_tolerances_unchanged": true,
+  "lock_queue_natural_shutdown_unchanged": true,
+  "release_gate_unchanged": true,
+  "production_release": false
+}

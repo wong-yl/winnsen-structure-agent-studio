@@ -1,0 +1,56 @@
+{
+  "packageReady": true,
+  "archive": "WINNSEN_22057_fixed_size_trial_candidate_v7.zip",
+  "bytes": 53709631,
+  "sha256": "41bbea11db71687b74e312d0d8858f8b6db78efd941a6d686c0d602b7929f064",
+  "released": true,
+  "production_release": false,
+  "supported_specification": "1939H/1000W/550D/14 doors",
+  "width_resize_eligible": true,
+  "qualification": "local_source_unavailable_relocation_and_geometry_verified",
+  "colleague_machine_acceptance": "UNVERIFIED",
+  "release_id": "OUT22057-FIXED-20261010-v8",
+  "released_at": "2026-10-10T15:07:46.334691+08:00",
+  "generation": {
+    "enabled": true,
+    "layout": {
+      "enabled": true,
+      "version": "outdoor-dual-column-v1",
+      "gap_mm": 6,
+      "min_door_height_mm": 170,
+      "min_bottom_door_height_mm": 170,
+      "max_column_doors": 11,
+      "max_total_doors": 22,
+      "height_dependent_column_limit": "min(11,floor((H-115)/176))",
+      "height_closure_required": true
+    },
+    "ranges_mm": {
+      "height": [
+        1700,
+        2200
+      ],
+      "width": [
+        600,
+        1200
+      ],
+      "depth": [
+        450,
+        700
+      ]
+    },
+    "default_specification": {
+      "height": 1939,
+      "width": 950,
+      "depth": 550
+    },
+    "source_stage": "D:\\机械结构工程师智能体\\outputs\\outdoor_22057_width600_portal_20261018_v16",
+    "script": "D:\\机械结构工程师智能体\\outputs\\outdoor_22057_width600_portal_20261018_v16\\scripts\\portal_generate.py",
+    "python": "C:/Users/Administrator/AppData/Local/Programs/Python/Python310/python.exe",
+    "qualification_sha256": "6359f2fe6cd2df7eeaffc656818e7bc0c62e8bfd940d5510a60bfdb90d6d16d0",
+    "script_sha256": "bc91f966c482246c56423a5642b2aaae563eabebd2d1fc94ed8c75d94c91d975"
+  },
+  "variable_trial_release_id": "OUT22057-WIDTH600-20261018-v16",
+  "variable_trial_released_at": "2026-10-19T01:57:24.960369+00:00",
+  "variable_trial_authorized": true,
+  "engineering_assistance": true
+}

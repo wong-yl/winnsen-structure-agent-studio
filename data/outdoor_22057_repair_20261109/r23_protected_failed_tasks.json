@@ -1,0 +1,20 @@
+{
+  "status": "PRESERVED_BASELINE",
+  "tasks": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\outdoor_22057_tasks\\OUT22057-59263d53-54f3-48b0-a263-0e226233069e.json",
+      "sha256": "ad6d25b95dbff6b8543677ce878054635b4809b8038131f8ced84032d606f6b0",
+      "state": "failed"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\outdoor_22057_tasks\\OUT22057-5a052ec0-2402-432b-9bd6-ef78117f37d4.json",
+      "sha256": "d087ae04de830ab136df5e0f11c68ef0082f1ba1ee430f683aafb94b337b9178",
+      "state": "failed"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\outdoor_22057_tasks\\OUT22057-8bdbcd9b-3e71-4ae1-bea6-4c6b96940ff2.json",
+      "sha256": "dbaf089d15e20161b2be1c2a50e48281298164a4e2d8be559804b5887eb5d93b",
+      "state": "failed"
+    }
+  ]
+}

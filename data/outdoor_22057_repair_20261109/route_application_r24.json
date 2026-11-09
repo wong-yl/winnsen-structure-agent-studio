@@ -1,0 +1,14 @@
+{
+  "status": "APPLIED",
+  "applied_utc": "2026-11-09T05:43:39.167233+00:00",
+  "gate": "D:\\Winnsen_Structure_Agent_Studio\\data\\outdoor_22057_release\\release_gate.json",
+  "before_sha256": "557024c2da6d8bb3d0207ded666a91a740423a67cea63a160541a1e286bb1754",
+  "candidate_sha256": "c41b44430654a057b4332ae7c8ac01d487f4a76df51b50d11cce192b7c82d5fb",
+  "qualification_sha256": "cb543f1076b26689dc88b2859a95b74b0d2d7a25df98bed4d84a8d293ed28712",
+  "cad_processes": 0,
+  "queues_idle": true,
+  "service_healthy": true,
+  "original_failed_tasks_changed": false,
+  "production_release": false,
+  "portal_acceptance": "PENDING_FRESH_TASK"
+}
