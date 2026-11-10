@@ -1,0 +1,41 @@
+﻿{
+    "schema":  "right-identity-build-v1",
+    "builtAtUtc":  "2026-11-10T11:45:34.7125930Z",
+    "buildPassed":  true,
+    "source":  "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs",
+    "sourceSha256":  "DC4C7D36E7CDCAF0CD7EFFA6A2EFB4E934424FACFEFF8CA2255978A3D27496DF",
+    "executable":  "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\RightIdentityProbe.exe",
+    "compiler":  "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe",
+    "compilerArguments":  [
+                              "/nologo",
+                              "/target:exe",
+                              "/platform:x64",
+                              "/optimize+",
+                              "/warn:4",
+                              "/out:D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\RightIdentityProbe.exe",
+                              "/reference:System.Core.dll",
+                              "/reference:System.Web.Extensions.dll",
+                              "/reference:D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\tools\\SolidWorks.Interop.sldworks.dll",
+                              "/reference:D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\tools\\SolidWorks.Interop.swconst.dll",
+                              "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs"
+                          ],
+    "compilerExitCode":  0,
+    "compilerOutput":  [
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(30,49): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.FilePin.path����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(30,55): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.FilePin.sha256����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(30,75): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.FilePin.size����ֵ���ֶν�һֱ������Ĭ��ֵ 0",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,49): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.schema����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,57): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.sourceAttempt����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,87): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.locksEvidence����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,102): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.right����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,109): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.parameterSource����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,126): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.left����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+                           "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs(31,149): warning CS0649: ��δ���ֶΡ�RightIdentityProbe.Binding.inventory����ֵ���ֶν�һֱ������Ĭ��ֵ null"
+                       ],
+    "apiSignatureEvidence":  "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\api-signatures.json",
+    "buildScriptSha256":  "730B3E9DF08A83AB453EE9C25458579EC877982B70F47A18D91CB314A9BD5E51",
+    "nativeCadExecuted":  false,
+    "mainInvoked":  false,
+    "modelAccepted":  false,
+    "executableSha256":  "0F2CCA7206F5020C86385212B10DE6EAD190C5000533ABF61B6FB4EDF2DD25BC"
+}

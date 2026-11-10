@@ -1,0 +1,151 @@
+{
+  "schema": "right-owner-rebind-v2-freeze-v1",
+  "state": "ready_for_primary_review",
+  "frozenAtUtc": "2026-11-10T14:38:15.769755+00:00",
+  "artifacts": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\6CC2370DB5F4\\owner-compile.log",
+      "sha256": "2772CC2CFA46275FEF671BDBEDF2D7BB73270A67729B6605B815122950FEAC84",
+      "size": 5110
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\6CC2370DB5F4\\relink-compile.log",
+      "sha256": "112715FAD75AE1DA882E4271C5F678A8E8C98C634C7B5AD3F8C2FAF6B54BACA7",
+      "size": 5328
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\6CC2370DB5F4\\RelinkProbe.exe",
+      "sha256": "4FD629FB099E757A1A07E98F70F00914F7AE4229BDB85214DC9CD200C2C47794",
+      "size": 52224
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\6CC2370DB5F4\\RightOwnerRebindProbe.exe",
+      "sha256": "627005CC4BB42D92231489813C4DF513F5CD49FCBC2F29977BCE24D3C319BD47",
+      "size": 61952
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\6CC2370DB5F4\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\6CC2370DB5F4\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\BE36ADA078ED\\owner-compile.log",
+      "sha256": "2F1AC162E39F5DF203DEC709425F1594DE41BD3301A9AC0666CE9D6C69564668",
+      "size": 5110
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\BE36ADA078ED\\relink-compile.log",
+      "sha256": "EE3E6E4A2535ED155DE8DAD5872CA61C5E6551C140AE1272248C2087639FF633",
+      "size": 5334
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\BE36ADA078ED\\RelinkProbe.exe",
+      "sha256": "EB6F50B698C99240833462945DE4CA55EBA0F780B11AD7B2E3FA5AB35E184915",
+      "size": 52224
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\BE36ADA078ED\\RightOwnerRebindProbe.exe",
+      "sha256": "CAF2D2C74AA28F662DE19B475F39CA47127A0DE2E4A18928A1027AA483685054",
+      "size": 61952
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\BE36ADA078ED\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\bin\\BE36ADA078ED\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\build.json",
+      "sha256": "D27EE7D7B721E61C48271963FE26420668F43E208F5F81E4FB3A8031585AA925",
+      "size": 14940
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\build.ps1",
+      "sha256": "6AC28CDA5499FD985EDE7111DDD3084D8E6868E7C637C895DCFE5A0C9F116479",
+      "size": 2952
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\initial-build.json",
+      "sha256": "5E1AB8924B15FD4255840A37E1DA2F967388742AD9BC4677E0E66E49B00BF345",
+      "size": 14946
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\observe.py",
+      "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2",
+      "size": 10222
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\OriginalGeometry.cs",
+      "sha256": "99B2481EDC974A43153B4F3C2F25A0AD5081E6480DD3909BDFDB63D06C96851D",
+      "size": 27373
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\plan.json",
+      "sha256": "A02C827D0E8C8F5C31B06B38DBF4EF2993187BEF7A17B38485151E63F6A88C4E",
+      "size": 73944
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\preparation-checks.json",
+      "sha256": "406BDDEC1CCBE3995CBF461F2A0AC3220CB4C5948910F04AB89F7493BAFB06E4",
+      "size": 1191
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\README.md",
+      "sha256": "AFF3A98306964160B9DE0D5A9E9DFE72C499E349798DD8726D2D26F037EB2C4C",
+      "size": 2438
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\RelinkProbe.cs",
+      "sha256": "2B79DBEB4C3AF469CA1E255136DE7AA2BCFE096AE65C739103C9A0F581288A4F",
+      "size": 43305
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\RightOwnerRebindProbe.cs",
+      "sha256": "6CC2370DB5F4EB600233B6F81598FFE6DB24A268C98349989EBFCF1BC5574C1C",
+      "size": 35507
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\run.mjs",
+      "sha256": "1F1B268931CDE18E1F39C9831E9BD205792429FF4737F248CE6679E7C3C641FA",
+      "size": 20824
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\scope-change.diff",
+      "sha256": "6339D8C34BB19FB406539DA22C76778037DFCE4E5B6F33B87FCF0DB4D7F87087",
+      "size": 24201
+    }
+  ],
+  "previousV1Freeze": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v1\\freeze-manifest.json",
+    "sha256": "CE51C60B567CE6E37495B03198289D4F679BD8A3E7F0DD6DF2C3FB2E1579D470"
+  },
+  "previousV1FailedProbe": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v1\\runs\\20261110142344214-relink-34912\\relink\\probe.json",
+    "sha256": "A2D6CADF04D87D6C20C600281956B458873E4B3E76578AB417E024A6A82573E1"
+  },
+  "previousV1FailureNotReclassified": true,
+  "runtimeOwnerCount": 107,
+  "expectedRuntimeDependencyEdges": 180,
+  "candidateDependencyCalls": 214,
+  "excludedProtectedDoorSources13": 13,
+  "candidateCadTotal": 120,
+  "sourceCadTotal": 119,
+  "candidateDependencyIsolationScope": "107 runtime files only; 13 protected templates excluded",
+  "nativeCadExecuted": false,
+  "dryRunInvoked": false,
+  "cadCopiesCreated": 0,
+  "finiteMateBoundaryWitnessComplete": false,
+  "modelAccepted": false,
+  "engineeringAccepted": false,
+  "operationComplete": false,
+  "strictColdAcceptancePassed": false
+}

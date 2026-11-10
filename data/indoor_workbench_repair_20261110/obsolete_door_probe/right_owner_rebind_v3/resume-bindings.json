@@ -1,0 +1,64 @@
+{
+  "schema": "right-owner-rebind-v3-resume-binding-v1",
+  "allowedCandidateRoot": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt",
+  "validRelinkResult": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\runs\\20261110144002173-relink-30828\\result.json",
+    "sha256": "B3AFEC35CD9E405686AB8D3A69958DB6A0F2AB85FAE82078FD4B3A6FAA734F43"
+  },
+  "reusedGeometryEvidence": {
+    "originalRight": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\runs\\20261110144712684-repair-25108\\repair\\probe.json",
+      "sha256": "1E1E65C4E326FF91142485A1291737EBB9A9F0C2B347209A90BEE0B5BC944260",
+      "inspection": "part_geometry",
+      "partPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "vertexCount": 568,
+      "originalRightGatePassed": true
+    },
+    "freshRight": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\runs\\20261110125058267-28268\\mirror-create\\probe.json",
+      "sha256": "FFC367645BF1BC5623D78FAD719F5E3978339099B5243AEF40DA198C9961422F",
+      "inspection": "original_mirror_gate_before_save",
+      "mirrorGate": true,
+      "savedCandidateSha256": "66F594147670F7BDD6FA835D874D2E8BDE10DC81B7905A6C3B8B9BA5C79B95FF"
+    }
+  },
+  "evidencePins": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\runs\\20261110144002173-relink-30828\\result.json",
+      "sha256": "B3AFEC35CD9E405686AB8D3A69958DB6A0F2AB85FAE82078FD4B3A6FAA734F43",
+      "size": 45402
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\freeze-manifest.json",
+      "sha256": "3BE68D6AF79831F62802BD53FCDBBBC47F5D20FE67DD3014E0FF496390DB99DD",
+      "size": 8117
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\runs\\20261110144712684-repair-25108\\repair\\probe.json",
+      "sha256": "1E1E65C4E326FF91142485A1291737EBB9A9F0C2B347209A90BEE0B5BC944260",
+      "size": 614866
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\runs\\20261110144712684-repair-25108\\repair\\manifest.json",
+      "sha256": "6D23EACBB5AA613D3BF69F0D0F44CCC75AA80B1FCC1AAC6665F559A8CE3E9BAB",
+      "size": 75542
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\runs\\20261110144712684-repair-25108\\repair\\session.json",
+      "sha256": "5530E9B296E638C9CDE6E351F3F72BB43B6F1F138CB76F3F8D2BD7B498F1F316",
+      "size": 1806
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\runs\\20261110125058267-28268\\mirror-create\\probe.json",
+      "sha256": "FFC367645BF1BC5623D78FAD719F5E3978339099B5243AEF40DA198C9961422F",
+      "size": 330069
+    }
+  ],
+  "reuseCandidateWithoutCopyOrRelink": true,
+  "geometryResampled": false,
+  "evidenceOnlyResearch": true,
+  "historicalFailuresNotReclassified": true,
+  "finiteMateBoundaryWitnessComplete": false,
+  "modelAccepted": false,
+  "engineeringAccepted": false
+}

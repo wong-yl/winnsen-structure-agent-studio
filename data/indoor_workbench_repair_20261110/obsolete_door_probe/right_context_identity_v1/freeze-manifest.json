@@ -1,0 +1,152 @@
+{
+  "schema": "right-context-identity-freeze-v1",
+  "frozenAtUtc": "2026-11-10T13:33:52.671902+00:00",
+  "status": "ready_for_primary_review",
+  "sourceSha256": "C079E1F9F68AC87B0D1EC9FBB47594B90AD5E35E13B9BB61B8FCB20419DB7EE5",
+  "executableSha256": "2DF8591470AD9D495382167F177DAA35CBA903769052B2AAB0A14EE5C31FB25B",
+  "stages": [
+    "root-only",
+    "left-weld-only",
+    "right-weld-only"
+  ],
+  "targets": {
+    "root-only": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "sha256": "E30FED0D7936FA6BA1ED245E6C74725B8736959DD343F742A71410D96DA0829A",
+      "size": 1942964
+    },
+    "left-weld-only": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "sha256": "9CC3F4CC5C789EC4ABC22FD78F42070E1699A6342378F17E397F7ECC0394351B",
+      "size": 420520
+    },
+    "right-weld-only": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "sha256": "856E3B242EE5BD473788A33BB61A4631B778CB34EBCB3624006C341D88411CD6",
+      "size": 259406
+    }
+  },
+  "openOptions": 3,
+  "documentTypeBySuffix": {
+    ".SLDASM": 2,
+    ".SLDPRT": 1
+  },
+  "maximumDiagnosticSecondsPerStage": 180,
+  "naturalExitSeconds": 45,
+  "fixedSourceInventoryCount": 119,
+  "originalSource": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs",
+    "sha256": "DC4C7D36E7CDCAF0CD7EFFA6A2EFB4E934424FACFEFF8CA2255978A3D27496DF",
+    "size": 20327
+  },
+  "originalRunner": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\run-right-identity.mjs",
+    "sha256": "1C874EAF4576B524DC9E93926708F353329204344C72190E9D34C570EDD501FA",
+    "size": 16793
+  },
+  "observerByteIdenticalToOriginal": true,
+  "inheritedSafetyBlocks": [
+    {
+      "name": "process-portal",
+      "originalSha256": "1B1849183F29C2EFA83E5E0E1DABDBE43F83B05FCEB43A3383AEA2DC3BE509E4",
+      "currentSha256": "1B1849183F29C2EFA83E5E0E1DABDBE43F83B05FCEB43A3383AEA2DC3BE509E4",
+      "identical": true
+    },
+    {
+      "name": "timeout-child-lock-release",
+      "originalSha256": "3CDC16ECDB465D7B1A565FEEEB220AD1122C6070561CD9F3EF5409D274AA44C6",
+      "currentSha256": "3CDC16ECDB465D7B1A565FEEEB220AD1122C6070561CD9F3EF5409D274AA44C6",
+      "identical": true
+    }
+  ],
+  "checks": {
+    "compilerExitCode": 0,
+    "compilerWarnings": 11,
+    "nodeSyntax": "PASS",
+    "observerAst": "PASS",
+    "sourceDiff": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\source-diff.patch",
+      "sha256": "BB1D2E82279EDF4CBFAF7A5893137CCE4EA39CF3D0449372D286791FD0110B89",
+      "size": 9818
+    },
+    "nativeOwnerAndShutdownBlocks": "text-identical",
+    "noSaveRebuildReplaceCopyApis": true
+  },
+  "noSave": true,
+  "noRebuild": true,
+  "noReplace": true,
+  "noCadCopies": true,
+  "nativeCadExecuted": false,
+  "dryRunExecuted": false,
+  "modelAccepted": false,
+  "operationComplete": false,
+  "strictColdAcceptancePassed": false,
+  "artifacts": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\bin\\C079E1F9F68A\\api-signatures.json",
+      "sha256": "7405EC0D6C045FD7010B00D9C6D109B9A29E806EE3E1B0F6527DF3265C40DC78",
+      "size": 11692
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\bin\\C079E1F9F68A\\compile.log",
+      "sha256": "E8C34533139983DA06DFE38AD8E7A0C05B9081962AC2F101FD7CC7DE3C0CDCC1",
+      "size": 2841
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\bin\\C079E1F9F68A\\RightIdentityProbe.exe",
+      "sha256": "2DF8591470AD9D495382167F177DAA35CBA903769052B2AAB0A14EE5C31FB25B",
+      "size": 26112
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\bin\\C079E1F9F68A\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\bin\\C079E1F9F68A\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\build.json",
+      "sha256": "E37BFA2C517D96A43E7111BA5E9C18335A8A66388A470BACFA48183A10A943D1",
+      "size": 5589
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\build.ps1",
+      "sha256": "B4DCE8B4D193D53E4C4C51FCA1186C6667E902628FE75B81453FA2B7678C755A",
+      "size": 3563
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\observe-right-identity.py",
+      "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2",
+      "size": 10222
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\original-pins.json",
+      "sha256": "E1D09EA546627DE53377045442BAFC154CB4FC182C677F9601C2747A27C5E262",
+      "size": 2517
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\RightIdentityProbe.cs",
+      "sha256": "C079E1F9F68AC87B0D1EC9FBB47594B90AD5E35E13B9BB61B8FCB20419DB7EE5",
+      "size": 20447
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\run-right-context-identity.mjs",
+      "sha256": "386A0C183C8A21D5E2B68BAE3A1B6D341E35192DD9C37D772E6F7FA3C46356AD",
+      "size": 15979
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\source-binding.json",
+      "sha256": "A98EE16168513A58DFC199C9997BB1B21194CC50DDDF411D4B4228DD9FD95F04",
+      "size": 84743
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_context_identity_v1\\source-diff.patch",
+      "sha256": "BB1D2E82279EDF4CBFAF7A5893137CCE4EA39CF3D0449372D286791FD0110B89",
+      "size": 9818
+    }
+  ],
+  "selfExcludedFromArtifactHashes": true
+}

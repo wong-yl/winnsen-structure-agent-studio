@@ -1,0 +1,302 @@
+[
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/build.json",
+    "size": 5169,
+    "sha256": "2EC1A3A832C934EE7B4006FB6AF8E7F11EFF715F2ABCAB3E177B870CD4C70A19"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/build.ps1",
+    "size": 3547,
+    "sha256": "730B3E9DF08A83AB453EE9C25458579EC877982B70F47A18D91CB314A9BD5E51"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/freeze-manifest.json",
+    "size": 10755,
+    "sha256": "74330DD6C996291CF72525AE0B2916ECBF60147ECA0BBEB65F3E15280650BD08"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/observe-right-identity.py",
+    "size": 10222,
+    "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/README.md",
+    "size": 5377,
+    "sha256": "0AC202EC5DF232E89324FABAD8A86567B5D7A5D0DC43035E5B2FA539A1721CDB"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/RightIdentityProbe.cs",
+    "size": 20327,
+    "sha256": "DC4C7D36E7CDCAF0CD7EFFA6A2EFB4E934424FACFEFF8CA2255978A3D27496DF"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/run-right-identity.mjs",
+    "size": 16793,
+    "sha256": "1C874EAF4576B524DC9E93926708F353329204344C72190E9D34C570EDD501FA"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/static-check.ps1",
+    "size": 13835,
+    "sha256": "FCB17F99D8E029D17C0EFA7FDA2454133CE2DC9799D4622BDEC7713BB1EB7728"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/tests-offline.mjs",
+    "size": 3630,
+    "sha256": "8259AAB295312189A3993BA2E7A1CCD9A747A5E9E22AF6AAD46A1C2FBEA21659"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_context_identity_v1/build.json",
+    "size": 5589,
+    "sha256": "E37BFA2C517D96A43E7111BA5E9C18335A8A66388A470BACFA48183A10A943D1"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_context_identity_v1/build.ps1",
+    "size": 3563,
+    "sha256": "B4DCE8B4D193D53E4C4C51FCA1186C6667E902628FE75B81453FA2B7678C755A"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_context_identity_v1/freeze-manifest.json",
+    "size": 7226,
+    "sha256": "7A75424D1D9FA227FC7FB8174D526C14CBBE96837E7973CF981A01EB8E3C2D57"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_context_identity_v1/observe-right-identity.py",
+    "size": 10222,
+    "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_context_identity_v1/RightIdentityProbe.cs",
+    "size": 20447,
+    "sha256": "C079E1F9F68AC87B0D1EC9FBB47594B90AD5E35E13B9BB61B8FCB20419DB7EE5"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_context_identity_v1/run-right-context-identity.mjs",
+    "size": 15979,
+    "sha256": "386A0C183C8A21D5E2B68BAE3A1B6D341E35192DD9C37D772E6F7FA3C46356AD"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/build.json",
+    "size": 10420,
+    "sha256": "A7941A013E99635755AE0A603269BE0F45F11025E1F328FCC03209E11558B61E"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/build.ps1",
+    "size": 3780,
+    "sha256": "6F4F5F02AA0F93B5D996AFF24A70218DF866FDBE3248C6C83699AD3422F1B879"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/freeze-manifest.json",
+    "size": 17360,
+    "sha256": "061BF3C513E5652C063615A48AE8D58A34C6741A79AF6A8047A58055D0D3B59D"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/observe-right-mirror.py",
+    "size": 10222,
+    "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/OriginalGeometry.cs",
+    "size": 27373,
+    "sha256": "99B2481EDC974A43153B4F3C2F25A0AD5081E6480DD3909BDFDB63D06C96851D"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/prepare.py",
+    "size": 20451,
+    "sha256": "4D28B56AE7E33507E1BBEBD3D4F4407B61D80FE25FD03B4816DF2C70739A219D"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/README.md",
+    "size": 2172,
+    "sha256": "80B91B22A90D9DE25DC1D681F21398EB46D11F5B9DE4238F73E52FB496ECE1F5"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/RightMirrorFreshProbe.cs",
+    "size": 28654,
+    "sha256": "492DC13AF60E7BE6C8D13FCBF09C8BE810410A6B8C8AF9D9CBC99AD86CBD39F7"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/run-right-mirror.mjs",
+    "size": 19386,
+    "sha256": "A69424076B12FC2E2B0CA02F2023EEF04DC73FF19B1014C68619EB991577AB7A"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/static-check.ps1",
+    "size": 11502,
+    "sha256": "6E66264FC7F016A68A104FC1D6C877E97BB5D5B5CC1316166F8BA4D28B296B48"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/tests-offline.mjs",
+    "size": 3650,
+    "sha256": "EA1B79469FE52031DD8CA0601887D74FC9085D74884366B72F68DB962C3468CE"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_resume_v1/build.json",
+    "size": 10440,
+    "sha256": "7A645B98C8985D3EE90ACF8996C91AE47F6B6BAD69177B84F58EFF0E59FAE0C4"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_resume_v1/build.ps1",
+    "size": 2986,
+    "sha256": "B015AC30B0407DAA746C16EAE847CF50682DC971CFE8131A7102E12A3FEADE52"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_resume_v1/freeze-manifest.json",
+    "size": 6259,
+    "sha256": "D97863AC73CA909B01B4D1D1FAF239B17CD1E2FAC45604A679DC76B3976D90A7"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_resume_v1/README.md",
+    "size": 1702,
+    "sha256": "85BBC311BBA947473B3200104B163CA26A4CE0AC4139F6E2D61D4B5E222DEC83"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_resume_v1/RightMirrorFreshProbe.cs",
+    "size": 28654,
+    "sha256": "1FE15E8BD895CA97A821C071C06BD2446F5F03B77BBA447403DA4CA822158131"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_resume_v1/run-right-mirror-resume.mjs",
+    "size": 20603,
+    "sha256": "C8BF27B26529A309B847B1CA767F001EDFD23F277741A38B096AAE67052F3E09"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/build.json",
+    "size": 14940,
+    "sha256": "8924C06F19A851C739DD8204BE74C346EDA3C18FF002B05602055CEB6D615FE0"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/build.ps1",
+    "size": 2984,
+    "sha256": "E86DD2FA16EB6FE21A8CD8D07B82C527FFAEC2FC51216A6D0119DACD7D629BC0"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/freeze-manifest.json",
+    "size": 11635,
+    "sha256": "CE51C60B567CE6E37495B03198289D4F679BD8A3E7F0DD6DF2C3FB2E1579D470"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/observe.py",
+    "size": 10222,
+    "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/OriginalGeometry.cs",
+    "size": 27373,
+    "sha256": "99B2481EDC974A43153B4F3C2F25A0AD5081E6480DD3909BDFDB63D06C96851D"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/plan.json",
+    "size": 73075,
+    "sha256": "11D010BBD9CEEDE9F5DFFF88CAC8D6B94E866B388E3F5F3D97F182480F76CB5C"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/README.md",
+    "size": 4064,
+    "sha256": "A3A8E9FE2252529D578B9CA8C3321A3DA8A3940E2152ED11AA31C5C05A7A0612"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/RelinkProbe.cs",
+    "size": 40985,
+    "sha256": "EE4A2436140F86CF3D3086BFD9AD166B9D5B62302D621EC1624A44332BC087A4"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/RightOwnerRebindProbe.cs",
+    "size": 35828,
+    "sha256": "7C656A1E62F9A2411214A26439CD6685B716119C8355AFF6998DA4B12BD90789"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v1/run.mjs",
+    "size": 20206,
+    "sha256": "68B86D22669074E0CE54FF05FD95C65D20ADF90DC10EBC6049E6B4F0B64E0CCF"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/build.json",
+    "size": 14940,
+    "sha256": "D27EE7D7B721E61C48271963FE26420668F43E208F5F81E4FB3A8031585AA925"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/build.ps1",
+    "size": 2952,
+    "sha256": "6AC28CDA5499FD985EDE7111DDD3084D8E6868E7C637C895DCFE5A0C9F116479"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/freeze-manifest.json",
+    "size": 8117,
+    "sha256": "3BE68D6AF79831F62802BD53FCDBBBC47F5D20FE67DD3014E0FF496390DB99DD"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/observe.py",
+    "size": 10222,
+    "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/OriginalGeometry.cs",
+    "size": 27373,
+    "sha256": "99B2481EDC974A43153B4F3C2F25A0AD5081E6480DD3909BDFDB63D06C96851D"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/plan.json",
+    "size": 73944,
+    "sha256": "A02C827D0E8C8F5C31B06B38DBF4EF2993187BEF7A17B38485151E63F6A88C4E"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/README.md",
+    "size": 2438,
+    "sha256": "AFF3A98306964160B9DE0D5A9E9DFE72C499E349798DD8726D2D26F037EB2C4C"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/RelinkProbe.cs",
+    "size": 43305,
+    "sha256": "2B79DBEB4C3AF469CA1E255136DE7AA2BCFE096AE65C739103C9A0F581288A4F"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/RightOwnerRebindProbe.cs",
+    "size": 35507,
+    "sha256": "6CC2370DB5F4EB600233B6F81598FFE6DB24A268C98349989EBFCF1BC5574C1C"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v2/run.mjs",
+    "size": 20824,
+    "sha256": "1F1B268931CDE18E1F39C9831E9BD205792429FF4737F248CE6679E7C3C641FA"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/build.json",
+    "size": 6353,
+    "sha256": "4A0FF40367E0D080F52AE3F47DDFEBC046FD644AAC34E69A0F90426A48E2C97F"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/build.ps1",
+    "size": 2776,
+    "sha256": "6BA9114CCF1AD1DC7070579291F2980D2BD30B81E4A378F60EE35E679AF99084"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/freeze-manifest.json",
+    "size": 4434,
+    "sha256": "89800B9B4C0449D561AFCBB8BBB5D7E1938B40F8966E9B088522DFACC9646384"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/observe.py",
+    "size": 10222,
+    "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/plan.json",
+    "size": 73944,
+    "sha256": "A02C827D0E8C8F5C31B06B38DBF4EF2993187BEF7A17B38485151E63F6A88C4E"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/resume-bindings.json",
+    "size": 3766,
+    "sha256": "86E8DEF9D8E566FBABBB4668F4E89A0EB3F8D32FC40EF5B08E7BD34BC94CA992"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/RightOwnerRebindProbe.cs",
+    "size": 37457,
+    "sha256": "EEBAD36D040E79F5AB0A2A6A9CF3CE10BE11902CCF946314E50B0D21CAD4DC12"
+  },
+  {
+    "path": "data/indoor_workbench_repair_20261110/obsolete_door_probe/right_owner_rebind_v3/run.mjs",
+    "size": 20855,
+    "sha256": "3DAA2C21C3F26DEA7299C2AD74E163F6C4CCE848C485693E3C180FF376C48237"
+  }
+]

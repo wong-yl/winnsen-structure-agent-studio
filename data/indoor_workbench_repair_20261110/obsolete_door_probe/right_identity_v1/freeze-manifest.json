@@ -1,0 +1,230 @@
+{
+  "schema": "right-identity-freeze-v1",
+  "frozenAtUtc": "2026-11-10T12:04:00.091Z",
+  "status": "ready_for_primary_review",
+  "ownedDirectory": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1",
+  "writeBoundary": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1",
+  "sourceAttempt": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B",
+  "artifacts": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\api-signatures.json",
+      "relativePath": "bin\\DC4C7D36E7CD\\api-signatures.json",
+      "sha256": "7405EC0D6C045FD7010B00D9C6D109B9A29E806EE3E1B0F6527DF3265C40DC78",
+      "size": 11692
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\compile.log",
+      "relativePath": "bin\\DC4C7D36E7CD\\compile.log",
+      "sha256": "71052483EBE942E8C18260D8F7B0BDA72E43893C236BE7A7523D85D5A9142AF3",
+      "size": 2503
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\RightIdentityProbe.exe",
+      "relativePath": "bin\\DC4C7D36E7CD\\RightIdentityProbe.exe",
+      "sha256": "0F2CCA7206F5020C86385212B10DE6EAD190C5000533ABF61B6FB4EDF2DD25BC",
+      "size": 25600
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\SolidWorks.Interop.sldworks.dll",
+      "relativePath": "bin\\DC4C7D36E7CD\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\bin\\DC4C7D36E7CD\\SolidWorks.Interop.swconst.dll",
+      "relativePath": "bin\\DC4C7D36E7CD\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\build.json",
+      "relativePath": "build.json",
+      "sha256": "2EC1A3A832C934EE7B4006FB6AF8E7F11EFF715F2ABCAB3E177B870CD4C70A19",
+      "size": 5169
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\build.ps1",
+      "relativePath": "build.ps1",
+      "sha256": "730B3E9DF08A83AB453EE9C25458579EC877982B70F47A18D91CB314A9BD5E51",
+      "size": 3547
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\dry-run-20261110120005497-35200.json",
+      "relativePath": "dry-run-20261110120005497-35200.json",
+      "sha256": "6C08D201BC05AE368D271D5F511A20B448A726FA3E4FD0785FCC21B558F69397",
+      "size": 6945241
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\dry-run-20261110120239480-7556.json",
+      "relativePath": "dry-run-20261110120239480-7556.json",
+      "sha256": "62651117304B63CA5E43EBC1064B877B22AD95C6A06DB69F9160B4D4E2A151C4",
+      "size": 6945752
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\observe-right-identity.py",
+      "relativePath": "observe-right-identity.py",
+      "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2",
+      "size": 10222
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\README.md",
+      "relativePath": "README.md",
+      "sha256": "0AC202EC5DF232E89324FABAD8A86567B5D7A5D0DC43035E5B2FA539A1721CDB",
+      "size": 5377
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\RightIdentityProbe.cs",
+      "relativePath": "RightIdentityProbe.cs",
+      "sha256": "DC4C7D36E7CDCAF0CD7EFFA6A2EFB4E934424FACFEFF8CA2255978A3D27496DF",
+      "size": 20327
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\run-right-identity.mjs",
+      "relativePath": "run-right-identity.mjs",
+      "sha256": "1C874EAF4576B524DC9E93926708F353329204344C72190E9D34C570EDD501FA",
+      "size": 16793
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\source-binding.json",
+      "relativePath": "source-binding.json",
+      "sha256": "4445F5F8B60B0867F07D391959AB96670FDE53E6E8C85D802E4BF3C2C8623438",
+      "size": 83756
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\static-check.ps1",
+      "relativePath": "static-check.ps1",
+      "sha256": "FCB17F99D8E029D17C0EFA7FDA2454133CE2DC9799D4622BDEC7713BB1EB7728",
+      "size": 13835
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\static-validation.json",
+      "relativePath": "static-validation.json",
+      "sha256": "A1A0FD94781DD2EC5920D5E5162F000D547501A9C1D622FF8B9EA3BBABE58AEE",
+      "size": 13838
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\tests-offline.mjs",
+      "relativePath": "tests-offline.mjs",
+      "sha256": "8259AAB295312189A3993BA2E7A1CCD9A747A5E9E22AF6AAD46A1C2FBEA21659",
+      "size": 3630
+    }
+  ],
+  "selfExcludedToAvoidRecursiveHash": true,
+  "sourceBinding": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\source-binding.json",
+    "relativePath": "source-binding.json",
+    "sha256": "4445F5F8B60B0867F07D391959AB96670FDE53E6E8C85D802E4BF3C2C8623438",
+    "size": 83756
+  },
+  "build": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\build.json",
+    "relativePath": "build.json",
+    "sha256": "2EC1A3A832C934EE7B4006FB6AF8E7F11EFF715F2ABCAB3E177B870CD4C70A19",
+    "size": 5169
+  },
+  "sourceSha256": "DC4C7D36E7CDCAF0CD7EFFA6A2EFB4E934424FACFEFF8CA2255978A3D27496DF",
+  "executableSha256": "0F2CCA7206F5020C86385212B10DE6EAD190C5000533ABF61B6FB4EDF2DD25BC",
+  "staticValidation": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\static-validation.json",
+    "relativePath": "static-validation.json",
+    "sha256": "A1A0FD94781DD2EC5920D5E5162F000D547501A9C1D622FF8B9EA3BBABE58AEE",
+    "size": 13838
+  },
+  "finalDryRun": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\dry-run-20261110120239480-7556.json",
+    "relativePath": "dry-run-20261110120239480-7556.json",
+    "sha256": "62651117304B63CA5E43EBC1064B877B22AD95C6A06DB69F9160B4D4E2A151C4",
+    "size": 6945752
+  },
+  "supersededDryRuns": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\dry-run-20261110120005497-35200.json",
+      "relativePath": "dry-run-20261110120005497-35200.json",
+      "sha256": "6C08D201BC05AE368D271D5F511A20B448A726FA3E4FD0785FCC21B558F69397",
+      "size": 6945241,
+      "reason": "Superseded by explicit current PROGRESS protection in final dry-run"
+    }
+  ],
+  "verification": {
+    "csharpCompilation": {
+      "passed": true,
+      "compilerExitCode": 0,
+      "sourceAndExecutableHashesMatch": true,
+      "warningCodes": [
+        "CS0649"
+      ],
+      "warningCount": 10,
+      "mainInvoked": false
+    },
+    "nodeSyntax": {
+      "command": "node --check data/indoor_workbench_repair_20261110/obsolete_door_probe/right_identity_v1/run-right-identity.mjs",
+      "exitCode": 0
+    },
+    "pythonSyntax": {
+      "method": "ast.parse without bytecode cache",
+      "passed": true
+    },
+    "static": {
+      "count": 25,
+      "passed": 25,
+      "failed": 0,
+      "compiledIlCadWhitelistPassed": true
+    },
+    "nodeBehavior": {
+      "count": 5,
+      "failed": 0,
+      "actualChildGuardInjectedObservationCases": 12,
+      "externalProcessesSpawned": false
+    },
+    "dryRun": {
+      "passed": true,
+      "protectedCount": 19499,
+      "portalCount": 87,
+      "activeTaskOrNonnullLeaseCount": 0,
+      "cadAndMonitorEmpty": true,
+      "taskCreated": false,
+      "attemptCreated": false,
+      "cadCopiesCreated": 0
+    },
+    "staticArtifactVersionsVerifiedAtFreeze": true,
+    "currentProgress": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\PROGRESS.md",
+      "sha256": "84352C72AACC8061D62D652ACE37197FDB24DC19BA50ADBD6910F321C82FA49F",
+      "size": 26674
+    }
+  },
+  "executionContract": {
+    "arms": [
+      "right-only",
+      "parameter-source-only",
+      "left-close-right"
+    ],
+    "independentFreshCadSessionPerArm": true,
+    "partType": 1,
+    "openOptions": 3,
+    "maximumDiagnosticSeconds": 180,
+    "naturalExitSeconds": 45,
+    "globalDataDirLock": true,
+    "portalReadonlyGatePerArm": true,
+    "timeoutStopsLaterArms": true,
+    "timeoutPreservesCadAndUnknownProcesses": true,
+    "missingIdentityOrSessionPreservesGlobalLock": true,
+    "liveNativeChildObservedByIdentityOrConservativePidPresence": true,
+    "currentProtectionHashesRecapturedEachPreflight": true,
+    "unknownExternalReferencesReportedOnly": true,
+    "completeDependencyGraphCoverage": false
+  },
+  "nativeCadExecuted": false,
+  "modelAccepted": false,
+  "operationComplete": false,
+  "strictColdAcceptancePassed": false,
+  "productionAcceptanceEvaluated": false,
+  "warningCauseProven": false,
+  "primaryReviewRequired": true,
+  "workerStoppedWritingAfterFreeze": true,
+  "limitations": [
+    "UNVERIFIED: no native CAD execution in worker scope",
+    "UNVERIFIED: warning33 cause and eventual repaired model remain unproven",
+    "No production or default profile changes; no portal writes; no commits or pushes"
+  ]
+}

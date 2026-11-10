@@ -1,0 +1,56 @@
+{
+  "schema": "right-owner-rebind-build-v1",
+  "builtAtUtc": "2026-11-10T15:14:55.9858810Z",
+  "buildPassed": true,
+  "artifacts": [
+    {
+      "kind": "owner",
+      "executable": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\bin\\EEBAD36D040E\\RightOwnerRebindProbe.exe",
+      "buildPassed": true,
+      "compilerExitCode": 0,
+      "compilerOutput": [
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(33,45): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Pin.path����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(33,51): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Pin.sha256����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(33,71): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Pin.size����ֵ���ֶν�һֱ������Ĭ��ֵ 0",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,50): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.schema����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,58): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.candidateRoot����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,73): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.owner����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,80): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.right����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,87): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.rebound����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,96): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.total����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,103): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.left����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,109): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.parameterSource����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,126): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.activeRight����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,152): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.candidatePins����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,167): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.sourcePins����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,179): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.evidencePins����ֵ���ֶν�һֱ������Ĭ��ֵ null",
+        "data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs(34,209): warning CS0649: ��δ���ֶΡ�RightOwnerRebindProbe.Manifest.rightRows����ֵ���ֶν�һֱ������Ĭ��ֵ null"
+      ],
+      "compilerArguments": [
+        "/nologo",
+        "/target:exe",
+        "/platform:x64",
+        "/optimize+",
+        "/warn:4",
+        "/out:D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\bin\\EEBAD36D040E\\RightOwnerRebindProbe.exe",
+        "/reference:System.Core.dll",
+        "/reference:System.Web.Extensions.dll",
+        "/reference:D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\tools\\SolidWorks.Interop.sldworks.dll",
+        "/reference:D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\tools\\SolidWorks.Interop.swconst.dll",
+        "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs"
+      ],
+      "executableSha256": "19105AF53D4F8608413868337D7DFB16F4ADF3A81362B424BD1794B9E7A4DE1B"
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v3\\RightOwnerRebindProbe.cs",
+      "sha256": "EEBAD36D040E79F5AB0A2A6A9CF3CE10BE11902CCF946314E50B0D21CAD4DC12"
+    }
+  ],
+  "buildScriptSha256": "6BA9114CCF1AD1DC7070579291F2980D2BD30B81E4A378F60EE35E679AF99084",
+  "nativeCadExecuted": false,
+  "mainInvoked": false,
+  "modelAccepted": false,
+  "engineeringAccepted": false
+}

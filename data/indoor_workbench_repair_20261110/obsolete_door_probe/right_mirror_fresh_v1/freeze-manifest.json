@@ -1,0 +1,340 @@
+{
+  "schema": "right-mirror-fresh-freeze-v1",
+  "frozenAtUtc": "2026-11-10T12:48:43.372371+00:00",
+  "status": "ready_for_primary_review",
+  "ownedRoot": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1",
+  "sourceAttempt": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B",
+  "objective": "Fresh readonly saved source, original linked mirror and bends, temporary cold gate, candidate File.Replace, final cold gate.",
+  "stages": [
+    "mirror-create",
+    "temporary-cold",
+    "final-cold"
+  ],
+  "parameters": {
+    "partType": 1,
+    "sourceAndColdOpenOptions": 3,
+    "strictOpenErrors": 0,
+    "strictOpenWarnings": 0,
+    "requiredReadOnly": true,
+    "requiredSaveFlag": false,
+    "rightRows": 9,
+    "maximumDiagnosticSecondsPerStage": 180,
+    "naturalExitSeconds": 45
+  },
+  "linkedSourceGate": {
+    "beforeCandidateSaveAndBothColdStages": true,
+    "exactPinnedParameterSourceOnly": true,
+    "nonemptyFiles": true,
+    "matchingFilesAndStatusesLengths": true,
+    "allowedStatuses": [
+      3,
+      4
+    ]
+  },
+  "sourceProtection": {
+    "sourceSaveAllowed": false,
+    "sourceRebuildAllowed": false,
+    "candidateOnlySave": true,
+    "loadedFixedInventoryCount": 119,
+    "exactUnsavedMirrorComIdentityException": true,
+    "unknownLoadedPathsAccepted": false,
+    "temporaryColdMustPassBeforeFileReplace": true,
+    "replacementOnlyWithinOwnedRun": true,
+    "globalLockAndHeartbeatPreserved": true,
+    "timeoutPreservesCadAndGlobalLock": true,
+    "cadForceTerminationAllowed": false
+  },
+  "build": {
+    "report": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\build.json",
+      "relativePath": "build.json",
+      "sha256": "A7941A013E99635755AE0A603269BE0F45F11025E1F328FCC03209E11558B61E",
+      "size": 10420
+    },
+    "sourceSha256": "492DC13AF60E7BE6C8D13FCBF09C8BE810410A6B8C8AF9D9CBC99AD86CBD39F7",
+    "originalGeometry": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\OriginalGeometry.cs",
+      "sha256": "99B2481EDC974A43153B4F3C2F25A0AD5081E6480DD3909BDFDB63D06C96851D"
+    },
+    "executable": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\492DC13AF60E\\RightMirrorFreshProbe.exe",
+    "executableSha256": "00A4AEEBFAF6089F8D5D14E9431E6B434D74AA7087B6C79008AB3ADD9DD272D6",
+    "compilerExitCode": 0,
+    "compilerWarningCount": 25,
+    "compilerWarningCodes": [
+      "CS0649"
+    ]
+  },
+  "originalMethodVerification": {
+    "chunks": 36,
+    "verbatimOriginalAndGeneratedTextAndSha256": true,
+    "originalGeometryChangedDuringReviewFixes": false,
+    "extraction": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\extraction.json",
+      "relativePath": "extraction.json",
+      "sha256": "B1FD1FB6ECE9F5A8B6BB9295BB4D55AB43B34C236951AA65DAC309760E6D6273",
+      "size": 48583
+    },
+    "checkerJsonEncoding": "UTF-8",
+    "supersededFailureCause": "Windows PowerShell 5.1 implicit GB2312 decoding corrupted Chinese in chunk index 28; no original method change or gate relaxation."
+  },
+  "verification": {
+    "static": {
+      "report": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\static-validation.json",
+        "relativePath": "static-validation.json",
+        "sha256": "AB836C983BD67EF13125E00CD402D99049D621B3E20355CD2366418C1D95135D",
+        "size": 11068
+      },
+      "passed": 20,
+      "failed": 0
+    },
+    "runnerBehavior": {
+      "passed": 5,
+      "failed": 0
+    },
+    "nodeSyntax": "PASS",
+    "pythonObserverAst": "PASS",
+    "observerByteIdenticalToRightIdentityV1": true,
+    "commands": [
+      "powershell.exe -NoProfile -NonInteractive -File data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/build.ps1",
+      "powershell.exe -NoProfile -NonInteractive -File data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/static-check.ps1",
+      "node --check data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/run-right-mirror.mjs",
+      "python AST parse of observe-right-mirror.py",
+      "node data/indoor_workbench_repair_20261110/obsolete_door_probe/right_mirror_fresh_v1/run-right-mirror.mjs --dry-run"
+    ]
+  },
+  "dryRun": {
+    "report": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\dry-run-20261110124446078-13824.json",
+      "relativePath": "dry-run-20261110124446078-13824.json",
+      "sha256": "F4A0577E8E738F85AB67B030AD157C430A8665B113E101C0357C9446463A8E38",
+      "size": 6967959
+    },
+    "protectedCount": 19573,
+    "portalCount": 87,
+    "historicalProtectionListUsedForPathsOnly": true,
+    "currentProtectionHashesCapturedNow": true,
+    "fullProbeIncluded": true,
+    "progress": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\PROGRESS.md",
+      "sha256": "1F825ED44CB386D6051A0A2EEBEEDD936B2623198A416BD35E524ED7F5F580AD",
+      "size": 28458
+    },
+    "finiteMigrationFreeze": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\finite_migration_v7\\freeze-manifest.json",
+      "sha256": "E4874E78DC8CB310EF7608945F0AEF9A32E9E948742598F4C994D0711D0E99B9",
+      "size": 10947
+    },
+    "finiteMigrationProtectedFiles": 32,
+    "cadAndMonitorEmpty": true
+  },
+  "supersededBuildDirectories": [
+    "bin/6FE6E4CBD9F2",
+    "bin/9C0D962E4763"
+  ],
+  "prepareScriptIsOneShotSupersededGenerator": true,
+  "nativeCadExecuted": false,
+  "mainInvoked": false,
+  "nativeRunsCreated": false,
+  "modelAccepted": false,
+  "operationComplete": false,
+  "strictColdAcceptancePassed": false,
+  "productionReceiptCreated": false,
+  "runtimeAcceptance": "UNVERIFIED: worker has no native execution authority; primary must review and perform the staged native run.",
+  "artifactCount": 32,
+  "artifacts": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\492DC13AF60E\\api-signatures.json",
+      "relativePath": "bin/492DC13AF60E/api-signatures.json",
+      "sha256": "7405EC0D6C045FD7010B00D9C6D109B9A29E806EE3E1B0F6527DF3265C40DC78",
+      "size": 11692
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\492DC13AF60E\\compile.log",
+      "relativePath": "bin/492DC13AF60E/compile.log",
+      "sha256": "BDAD066CF10CA2C7903B06D4A8FA88BDE75FE18E4532571E681BF128DE34B39B",
+      "size": 6687
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\492DC13AF60E\\RightMirrorFreshProbe.exe",
+      "relativePath": "bin/492DC13AF60E/RightMirrorFreshProbe.exe",
+      "sha256": "00A4AEEBFAF6089F8D5D14E9431E6B434D74AA7087B6C79008AB3ADD9DD272D6",
+      "size": 52736
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\492DC13AF60E\\SolidWorks.Interop.sldworks.dll",
+      "relativePath": "bin/492DC13AF60E/SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\492DC13AF60E\\SolidWorks.Interop.swconst.dll",
+      "relativePath": "bin/492DC13AF60E/SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\6FE6E4CBD9F2\\api-signatures.json",
+      "relativePath": "bin/6FE6E4CBD9F2/api-signatures.json",
+      "sha256": "7405EC0D6C045FD7010B00D9C6D109B9A29E806EE3E1B0F6527DF3265C40DC78",
+      "size": 11692
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\6FE6E4CBD9F2\\build-first.json",
+      "relativePath": "bin/6FE6E4CBD9F2/build-first.json",
+      "sha256": "32EEC4D64C5263AC612755A2C7DCC3E3801F85A122D42FF73CA3365C3A38333E",
+      "size": 10420
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\6FE6E4CBD9F2\\compile.log",
+      "relativePath": "bin/6FE6E4CBD9F2/compile.log",
+      "sha256": "BDAD066CF10CA2C7903B06D4A8FA88BDE75FE18E4532571E681BF128DE34B39B",
+      "size": 6687
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\6FE6E4CBD9F2\\RightMirrorFreshProbe.exe",
+      "relativePath": "bin/6FE6E4CBD9F2/RightMirrorFreshProbe.exe",
+      "sha256": "6C438B455CC2F80A0F7B33BED46AF3529B510A6F728DF332975C8086AEB35258",
+      "size": 52224
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\6FE6E4CBD9F2\\SolidWorks.Interop.sldworks.dll",
+      "relativePath": "bin/6FE6E4CBD9F2/SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\6FE6E4CBD9F2\\SolidWorks.Interop.swconst.dll",
+      "relativePath": "bin/6FE6E4CBD9F2/SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\api-signatures.json",
+      "relativePath": "bin/9C0D962E4763/api-signatures.json",
+      "sha256": "7405EC0D6C045FD7010B00D9C6D109B9A29E806EE3E1B0F6527DF3265C40DC78",
+      "size": 11692
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\build-superseded.json",
+      "relativePath": "bin/9C0D962E4763/build-superseded.json",
+      "sha256": "81283739964BD9A72496720303EE2E028B78298EC42868F0972AE7C5BAAAC6E3",
+      "size": 10420
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\compile.log",
+      "relativePath": "bin/9C0D962E4763/compile.log",
+      "sha256": "BDAD066CF10CA2C7903B06D4A8FA88BDE75FE18E4532571E681BF128DE34B39B",
+      "size": 6687
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\RightMirrorFreshProbe.exe",
+      "relativePath": "bin/9C0D962E4763/RightMirrorFreshProbe.exe",
+      "sha256": "CCEFBA3654BF6997A656235D2E6D02BF7C2D864BA30CFDBBA859B1516DC8F1EB",
+      "size": 52736
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\SolidWorks.Interop.sldworks.dll",
+      "relativePath": "bin/9C0D962E4763/SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\SolidWorks.Interop.swconst.dll",
+      "relativePath": "bin/9C0D962E4763/SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\bin\\9C0D962E4763\\static-before-review-fixes.json",
+      "relativePath": "bin/9C0D962E4763/static-before-review-fixes.json",
+      "sha256": "63A0DA01F7FA1F08EF0259ADFF0AEE01E29E5BBD7F81429B50D42ADDEC1DD46B",
+      "size": 10951
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\build.json",
+      "relativePath": "build.json",
+      "sha256": "A7941A013E99635755AE0A603269BE0F45F11025E1F328FCC03209E11558B61E",
+      "size": 10420
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\build.ps1",
+      "relativePath": "build.ps1",
+      "sha256": "6F4F5F02AA0F93B5D996AFF24A70218DF866FDBE3248C6C83699AD3422F1B879",
+      "size": 3780
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\dry-run-20261110124446078-13824.json",
+      "relativePath": "dry-run-20261110124446078-13824.json",
+      "sha256": "F4A0577E8E738F85AB67B030AD157C430A8665B113E101C0357C9446463A8E38",
+      "size": 6967959
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\extraction.json",
+      "relativePath": "extraction.json",
+      "sha256": "B1FD1FB6ECE9F5A8B6BB9295BB4D55AB43B34C236951AA65DAC309760E6D6273",
+      "size": 48583
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\observe-right-mirror.py",
+      "relativePath": "observe-right-mirror.py",
+      "sha256": "80821A729081675E4F9011E9C010F8707B5FF16461FEA07B18BCA182CC0E87C2",
+      "size": 10222
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\OriginalGeometry.cs",
+      "relativePath": "OriginalGeometry.cs",
+      "sha256": "99B2481EDC974A43153B4F3C2F25A0AD5081E6480DD3909BDFDB63D06C96851D",
+      "size": 27373
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\prepare.py",
+      "relativePath": "prepare.py",
+      "sha256": "4D28B56AE7E33507E1BBEBD3D4F4407B61D80FE25FD03B4816DF2C70739A219D",
+      "size": 20451
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\README.md",
+      "relativePath": "README.md",
+      "sha256": "80B91B22A90D9DE25DC1D681F21398EB46D11F5B9DE4238F73E52FB496ECE1F5",
+      "size": 2172
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\RightMirrorFreshProbe.cs",
+      "relativePath": "RightMirrorFreshProbe.cs",
+      "sha256": "492DC13AF60E7BE6C8D13FCBF09C8BE810410A6B8C8AF9D9CBC99AD86CBD39F7",
+      "size": 28654
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\run-right-mirror.mjs",
+      "relativePath": "run-right-mirror.mjs",
+      "sha256": "A69424076B12FC2E2B0CA02F2023EEF04DC73FF19B1014C68619EB991577AB7A",
+      "size": 19386
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\source-binding.json",
+      "relativePath": "source-binding.json",
+      "sha256": "33B035285F936F4FE80F484886E649FCBF68526BDF01FB2101D468630EEC1674",
+      "size": 87215
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\static-check.ps1",
+      "relativePath": "static-check.ps1",
+      "sha256": "6E66264FC7F016A68A104FC1D6C877E97BB5D5B5CC1316166F8BA4D28B296B48",
+      "size": 11502
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\static-validation.json",
+      "relativePath": "static-validation.json",
+      "sha256": "AB836C983BD67EF13125E00CD402D99049D621B3E20355CD2366418C1D95135D",
+      "size": 11068
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\tests-offline.mjs",
+      "relativePath": "tests-offline.mjs",
+      "sha256": "EA1B79469FE52031DD8CA0601887D74FC9085D74884366B72F68DB962C3468CE",
+      "size": 3650
+    }
+  ],
+  "selfExcludedFromArtifactHashes": true
+}

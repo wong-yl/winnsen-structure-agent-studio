@@ -1,0 +1,903 @@
+{
+  "schema": "right-owner-rebind-plan-v1",
+  "researchOnly": true,
+  "sourceBinding": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_identity_v1\\source-binding.json",
+    "sha256": "4445F5F8B60B0867F07D391959AB96670FDE53E6E8C85D802E4BF3C2C8623438"
+  },
+  "mirrorBinding": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\source-binding.json",
+    "sha256": "33B035285F936F4FE80F484886E649FCBF68526BDF01FB2101D468630EEC1674"
+  },
+  "sourceAttempt": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B",
+  "candidateRoot": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt",
+  "sourceCounts": {
+    "working": 76,
+    "doors": 30,
+    "door_sources": 13
+  },
+  "candidateCadCount": 120,
+  "fresh": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\runs\\20261110125058267-28268\\candidate\\lock_right_native.SLDPRT",
+    "sha256": "66F594147670F7BDD6FA835D874D2E8BDE10DC81B7905A6C3B8B9BA5C79B95FF",
+    "size": 1258522
+  },
+  "files": [
+    {
+      "fileName": "native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖 模型.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖 模型.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖 模型.sldprt",
+      "sha256": "EFB6F24549E94CA9196180412A2442D3A5144B60AE6B502CA1363FA30DAF0420",
+      "size": 654768
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "sha256": "A7171EF6CFFB5DD90389C653BE53E2C66C3150EE35B6278540F71B2E00B21104",
+      "size": 251925
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "sha256": "96FDC26B2DEF1289D637587A4FFCE0921AE5FB403558C433D455D697C959C3FD",
+      "size": 495109
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "sha256": "1D65900F307035710A8A11B9ED89D4012513393C029197803D40381C23654CB3",
+      "size": 396223
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "sha256": "182354D4A949F23AB330A22031D31A33A2B66720853AD8946E9C49A055C37F7A",
+      "size": 376826
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "sha256": "550B88B1AC0587E05D3967F1D68CAB8587B87A0264DFC799A0D236F95284C3EF",
+      "size": 439844
+    },
+    {
+      "fileName": "native_cad\\working_pack\\上盖焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\上盖焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\上盖焊接.SLDASM",
+      "sha256": "21CE1A9001B508A9E98201A836F4743537B595A0808EC3D8366BB7C670903635",
+      "size": 388666
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "sha256": "254BA36AB2B876DACBC7646CCAF9900416DF24DEA05AC399FCED9549CD9518E7",
+      "size": 123826
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "sha256": "6AC6549453F199AB06A3F32B39A514A0EF62A80F85F24BE9E15B8521CC3D16A7",
+      "size": 129314
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "sha256": "D38114771F3C511464A55C74CDC4F0E9551EE6028DCBD4A513F79791F5D79D7C",
+      "size": 121746
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "sha256": "0B678998C15EFB957617AE249ED37E7E916B7DAE2076881C1D3FE11581BCED0D",
+      "size": 128028
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "sha256": "9897DC7B2E223A345904A773992D4499945E7CE7DCC4FC813E64293EF4D46075",
+      "size": 120874
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "sha256": "B36CF487CB17DA2DE47CFFABD3F6B08B49CAE0A74E4110E341AF2C81F31E076C",
+      "size": 126302
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "sha256": "508328A906D9DDF24E74BC9E2FF74E3C3D2C72A46E0AAC2054621411D4370777",
+      "size": 392764
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "sha256": "88FA42CFDCF1AC171E57FE234C8143DECE42F51F6EA110132223DB38595C9214",
+      "size": 149059
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "sha256": "79C14B943A9D16867B6A8DCD0E4D1883F996C6376D9D1B130FF8603C38CFE2AC",
+      "size": 371885
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "sha256": "F83109C8246D20D60420CD17BB1DA0A4EA349C66228A3CFC490E26146A535708",
+      "size": 145782
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "sha256": "20D2F9D39BB236C0935C3C83FC631865659F6598CE71C928A71F428A7AC24718",
+      "size": 365742
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "sha256": "BBB7E9E93B70324F59CC9B163504239FF6921F3634152F64D823FC9A8C3DAF42",
+      "size": 143643
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "sha256": "50657BF360E080DEB04B4B0CD9C60A19EC4C50CC2CF81CC80CC43C50D4A2584B",
+      "size": 178458
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "sha256": "3C382FDB4ABC5459D3BD1226A4E92042BF1E516E75D4F30751284534DD508AF9",
+      "size": 177029
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "sha256": "D0A7EBCE8D420390CBE7319B489629675AB17E31374831A3A419E22402D0BB72",
+      "size": 176506
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "sha256": "7C9B25822EB3BA9ED311185DFD3953FD479C367763C9497E6AE91B1D1FEB1E52",
+      "size": 171586
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "sha256": "E86D3E0BB6A6A62955348AC5F06923C73D570880420F764FD19A18308C9F3537",
+      "size": 170188
+    },
+    {
+      "fileName": "native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "sha256": "237C09A6E3B987C96231835AC3A7E4666CC4789E0CA7FF14EA9344655E223EC1",
+      "size": 168375
+    },
+    {
+      "fileName": "native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868
+    },
+    {
+      "fileName": "native_cad\\working_pack\\底座 模型.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\底座 模型.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\底座 模型.sldprt",
+      "sha256": "90E44DC52522FAEB2580248991B5054D9D88411DB1671AAAE36673910CF97FAE",
+      "size": 374492
+    },
+    {
+      "fileName": "native_cad\\working_pack\\底座加强筋.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\底座加强筋.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\底座加强筋.sldprt",
+      "sha256": "A6FBCAA68EEFCE51F5C6D54EAB0D6464251EE38D4DF1A87078FE567D6ACF4883",
+      "size": 207066
+    },
+    {
+      "fileName": "native_cad\\working_pack\\底座外框.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\底座外框.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\底座外框.sldprt",
+      "sha256": "EFAF0FF1AA7E663B165E712EE91032A54B92301B38F160F93FF0D0908143147A",
+      "size": 365069
+    },
+    {
+      "fileName": "native_cad\\working_pack\\底座底板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\底座底板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\底座底板.sldprt",
+      "sha256": "CD237EC94553B1CB1AD1148847351557CA713B69A86B3FDE304581ACACC73D46",
+      "size": 604532
+    },
+    {
+      "fileName": "native_cad\\working_pack\\底座焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\底座焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\底座焊接.SLDASM",
+      "sha256": "4BB60AF13A43E1F38139802131330D29D5DD2EE3FFEE7F27DB3530D41DA7A075",
+      "size": 551697
+    },
+    {
+      "fileName": "native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "sha256": "A3EEE813D2DF9656C193C854A3E5D3D10B6DD4AE8017A5A710F8EF9B29996F4F",
+      "size": 69576
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "sha256": "3E1BCABD5569A02B282140210FDF862021D9E7BFD4857729B3725D546CFFEE6F",
+      "size": 67564
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "sha256": "920F3F824F0C33EF6E809D7C0F1623DE32051CDF41C65338CC737C0821864FBC",
+      "size": 68038
+    },
+    {
+      "fileName": "native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "sha256": "A02CE97639AE31BFA879748E9448AB855D3F43DDA367EE45FBB9C4FE0185C9C6",
+      "size": 67801
+    },
+    {
+      "fileName": "native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "sha256": "20735027C2DD2009DA1607C7350FDF80CA3559D3E6CC0F542718F48A16E2DFC7",
+      "size": 119686
+    },
+    {
+      "fileName": "native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "sha256": "80C1FC45A9F46E7148BD6B0FD7F600A029D091F847A5E730DD9D842950919426",
+      "size": 111155
+    },
+    {
+      "fileName": "native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "sha256": "48C5E0EF8A8EBE435BDA735FDD6EFEE7A32B43787D4E80006C57053378AD4639",
+      "size": 108444
+    },
+    {
+      "fileName": "native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "sha256": "5D95765A9605FEF1B3E2A9A47CE779D01C7C2402D580729CF8464849D95CFC0A",
+      "size": 2639794
+    },
+    {
+      "fileName": "native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "sha256": "E30FED0D7936FA6BA1ED245E6C74725B8736959DD343F742A71410D96DA0829A",
+      "size": 1942964
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "sha256": "ECA5D288585923B4A8BEDE6E1EB5AD9B33A6449DE12F8F260301306DA6CEAA53",
+      "size": 338231
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "sha256": "78BCC8E46AACD320F1B11545FD8597A7B7CA85A108D29BABCF0025D12EB20D54",
+      "size": 224041
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体右侧板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体右侧板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体右侧板.sldprt",
+      "sha256": "ADFB18D43351063B7856A5266368E9902259ED88F269CA1224D06C69ADD37229",
+      "size": 529530
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "sha256": "C3A3890F1EA78DBEAC3ACCD1AE70C1619C09032504A9290E9989608FB1227AAE",
+      "size": 463203
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体左侧板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体左侧板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体左侧板.sldprt",
+      "sha256": "C3863AA1BA2F02DDA52B61E19FCC663C6C8EC6DB5B9BEA9F1FF3C9E9B57F6658",
+      "size": 548172
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "sha256": "8BACC44D2651E6EBA5BE5B2E2459D358BEE5B0B1D3825499A935A6C8374CBC6F",
+      "size": 399148
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体横层板L.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体横层板L.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体横层板L.sldprt",
+      "sha256": "64E9F400FFA2D0C9984D9A747AB4AAD40811FEE356220411FDEC8A4B961C3F59",
+      "size": 513439
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "sha256": "D3CFAC8A7959AF7DBD86CA94846E65D95367C8415B6D02A476FA14F275462B45",
+      "size": 117778
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "sha256": "850191D474A5AD17987200BCC0369A0230BCEF4D5619E365592D0EE84F678E6B",
+      "size": 523636
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "sha256": "8DB8CEB17FC8B1491A71EB7A91E8453E176588B0285BB4DC8CE15F83EA8D7EB3",
+      "size": 114678
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "sha256": "DA780B4BB9A914C8EBB8307EB69315F00C613C83ACA689B6918401F168C4A320",
+      "size": 182718
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "sha256": "7D55237D49B654EC3DC19715DC0681FF3688CDBEC8E1517D1D567A4932508772",
+      "size": 959110
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "sha256": "9CC3F4CC5C789EC4ABC22FD78F42070E1699A6342378F17E397F7ECC0394351B",
+      "size": 420520
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "sha256": "1F3C0BBF20E2E4E1811663BBD403D75C8AA9EC00BEF7281BFC94B2A6CCAF95E8",
+      "size": 1259348
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体竖隔板R参数源.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板R参数源.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R参数源.SLDPRT",
+      "sha256": "061C20B4E618F820B63A0D8F1F9F81E22BA21F925DD05D5D0D2CF330056BA428",
+      "size": 1253766
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "sha256": "856E3B242EE5BD473788A33BB61A4631B778CB34EBCB3624006C341D88411CD6",
+      "size": 259406
+    },
+    {
+      "fileName": "native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "sha256": "293397722BB67A9CFFB78D448AD4D5C2FBC3F1E299AF95B0C57A2E3D65A42B6C",
+      "size": 275059
+    },
+    {
+      "fileName": "native_cad\\working_pack\\螺母M12.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\螺母M12.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\螺母M12.SLDPRT",
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD",
+      "size": 166179
+    },
+    {
+      "fileName": "native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344",
+      "size": 100245
+    },
+    {
+      "fileName": "native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "sha256": "78B607C43E7A180275982E3997FF63C250633AF8060BD714735434A6327ECA35",
+      "size": 252557
+    },
+    {
+      "fileName": "native_cad\\working_pack\\锁舌.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\锁舌.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\锁舌.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 上.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 上.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 上.sldprt",
+      "sha256": "1AEB78A3B6C95791682C25FDAFD99AA538C9F82053D60323E1E60504B5395053",
+      "size": 336982
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 下.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 下.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 下.sldprt",
+      "sha256": "841A11F8F5CD96D96F0F3249ACB2EBABE5A23FAA335ABA3E914AE5477A3E27AF",
+      "size": 339459
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 右.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 右.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 右.sldprt",
+      "sha256": "EF6EFFF0C44CF6911370709D3F84DFDAE24D601ED86C7677DCE35F731E64FBAA",
+      "size": 449387
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 左.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 左.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 左.sldprt",
+      "sha256": "C8C140F04C938853B2833582DBF83BF5468B9A5A510FF00F512EC0C537E74B1A",
+      "size": 417899
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 横隔板.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 横隔板.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 横隔板.sldprt",
+      "sha256": "EA8085A6E6A2C6075E8A0B01B706EF72C780745F3B38DDDE0BFDE669B613DEBE",
+      "size": 226986
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "sha256": "BE0316545AA285A4C1A515C66E6884801888874193A6B02D6624A94F85827D38",
+      "size": 240750
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "sha256": "B4F4E8CBCD760707552578E0104A15D60821E5EB04A2A85F9895847CF8C04DD3",
+      "size": 553844
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "sha256": "6AB1E3A775E1B74C22E6F8243F1C1CC75AFB9CFBAD69204B2EC09B13FDF6B2B3",
+      "size": 532708
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门框焊接.sldasm",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门框焊接.sldasm",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门框焊接.sldasm",
+      "sha256": "5C46F431639416F147BE60F86AD1B1242C9CA2D63CB359977CA2C8B4826370CD",
+      "size": 371341
+    },
+    {
+      "fileName": "native_cad\\working_pack\\门轴销.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\native_cad\\working_pack\\门轴销.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\门轴销.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536
+    },
+    {
+      "fileName": "doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "sha256": "61F11FB11F8AC6FF3CD52DA3078A46358D0DB7AB686297E3F2774A0908313ED1",
+      "size": 131806
+    },
+    {
+      "fileName": "doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "sha256": "91E0D394C993FCC55884396AA17B8D05216B52B9334776BA2027A45B9981AB15",
+      "size": 130684
+    },
+    {
+      "fileName": "doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "sha256": "54BAB32A5E67B70B2623ED7CFA732840AEBBE7B0F07352E4093689F9B184BCBD",
+      "size": 178127
+    },
+    {
+      "fileName": "doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "sha256": "2E68FD0E7EFFD1ABD7C863C7FBCD993DADA61930D0B2302A36DB6C2587A69708",
+      "size": 180446
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "sha256": "0C9C0E1F4832D4A352165C9DBE7A4DAF9F01C89D43A8293F35AFF2D3D85AAFFE",
+      "size": 83299
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "sha256": "52393F174F6365F6FB789EABEDBBC2B795A1786E6EAA5E22B5A09C9DCE191646",
+      "size": 70466
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "sha256": "0E3990EF199D88968843225128411D3BC7512AD2777F3A60B0101F5D57F746E1",
+      "size": 391122
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "sha256": "379E8618E96699F84DF49A8706ED7828F9D9CEF1ECF54F62A6A13F64A258D6E6",
+      "size": 920390
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "sha256": "BA556B1003C8A76D8AFEA4D182FD9D76792CEAEE06DF603E855698E43017F0E4",
+      "size": 122650
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "sha256": "1381CE588EF5655A88FC14F760085DC51B9470B2D0D3954C39E7EE6512DC9B55",
+      "size": 169080
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "sha256": "78C2CAEBCD8F4234318B0B3F6B1A5DCAE3B04A91F66804B95C7B516B486ED01C",
+      "size": 95532
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "sha256": "BB2029578F5189F3AB2E9578F94E9078510B2B02FFA5AF7C3AAF6E02177E1990",
+      "size": 69139
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "fileName": "doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "sha256": "CCEF1109F70F4E3797116BBE6309DAE2278722A3A6B40F97ABF48FD159FF79BF",
+      "size": 170539
+    },
+    {
+      "fileName": "doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "sha256": "7F2FBF38EF33DFB890C14935C8F9D4C018BD1828FA083C80E59A6EBD73C74830",
+      "size": 127604
+    },
+    {
+      "fileName": "doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "sha256": "801FDAF7BBE827C63877EF75B2CA4E6332754AC5AA5FD534C328B5422BE71929",
+      "size": 126690
+    },
+    {
+      "fileName": "doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "sha256": "B5187CDFA906EB6570B4E932B9CA05BAAE1013300F395A4BE58B4A02883BDBAD",
+      "size": 177108
+    },
+    {
+      "fileName": "doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "sha256": "18696CB0157E12DA115F65AB16202D486283F79CCB0048AAC0FEA616124B6691",
+      "size": 174492
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "sha256": "D0C4116DF26EB87E6CA99780E98B06489B3BF79284682DFA7E0BF0528476CCC2",
+      "size": 82909
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "sha256": "87A9582F3326215842D32A52E73DF75314C3BCA85F1D8B5929ECFDD83E72ECE6",
+      "size": 71470
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "sha256": "EC2174986F115B6BD5AEE3DE6B9DD4F2155890C96064527B383A5FE9B7130DAC",
+      "size": 388808
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "sha256": "DB0F585E8CA0CC6B73E265CE85ECD6D8032C50472C0F73BD1C342874F3B5F91A",
+      "size": 907891
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "sha256": "B86760F3C8991634DCBA92F078A380F7475C570452B769F499071750CC468526",
+      "size": 122174
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "sha256": "BF3C688BE785770B4FC86D85C222756E2264BEF66C1E3F60493B124B9F90D04C",
+      "size": 169271
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "sha256": "3AB759546BC7055DEB088277395C9A62A26720EA10725ED1C96A45C518B60E88",
+      "size": 95007
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "sha256": "2A45CA39B4C19CD3F7DB3357AAF98866EBA87863C2269E42E5DC8BA7DE30EADA",
+      "size": 68849
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "fileName": "doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "sha256": "2BFD4662924F7D234FD01473007DD275981D3D60D4A728AFEE24E8147A8FCCA4",
+      "size": 170791
+    },
+    {
+      "fileName": "door_sources\\base_stiffener_source.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\base_stiffener_source.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\base_stiffener_source.SLDPRT",
+      "sha256": "C66D9077E508AAD2CD8CC6C0B0E73F903FA619493E9A4769C53A14865A74B249",
+      "size": 209489
+    },
+    {
+      "fileName": "door_sources\\bushing.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\bushing.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\bushing.SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868
+    },
+    {
+      "fileName": "door_sources\\circlip.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\circlip.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\circlip.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354
+    },
+    {
+      "fileName": "door_sources\\hinge_pin.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\hinge_pin.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\hinge_pin.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536
+    },
+    {
+      "fileName": "door_sources\\hook_pad.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\hook_pad.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\hook_pad.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321
+    },
+    {
+      "fileName": "door_sources\\latch_plate.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\latch_plate.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\latch_plate.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929
+    },
+    {
+      "fileName": "door_sources\\left_panel_seed.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\left_panel_seed.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\left_panel_seed.SLDPRT",
+      "sha256": "F34138A9BE009D5A0C68604F57B278584DB686623943C2DE319A2999ACA488A2",
+      "size": 445989
+    },
+    {
+      "fileName": "door_sources\\maintenance_lock_bracket.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\maintenance_lock_bracket.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\maintenance_lock_bracket.SLDPRT",
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9",
+      "size": 175991
+    },
+    {
+      "fileName": "door_sources\\maintenance_weldment.SLDASM",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\maintenance_weldment.SLDASM",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\maintenance_weldment.SLDASM",
+      "sha256": "3FDCFE0B02BE24BFD290C5EA7AC60A2457E9854805E0657B624C77474919D0BB",
+      "size": 92610
+    },
+    {
+      "fileName": "door_sources\\mechanical_lock_tongue.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\mechanical_lock_tongue.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\mechanical_lock_tongue.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932
+    },
+    {
+      "fileName": "door_sources\\stiffener_seed.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\stiffener_seed.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\stiffener_seed.SLDPRT",
+      "sha256": "F4D4973F72CB604BF52BF802BC378E9BA042A4FE8034C196CA7666A964ACCB28",
+      "size": 121752
+    },
+    {
+      "fileName": "door_sources\\top_latch_left.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\top_latch_left.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\top_latch_left.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "fileName": "door_sources\\top_latch_right.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110111643911-CE439B\\door_sources\\top_latch_right.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\door_sources\\top_latch_right.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "fileName": "native_cad/working_pack/right_rebound_native.SLDPRT",
+      "sourcePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_mirror_fresh_v1\\runs\\20261110125058267-28268\\candidate\\lock_right_native.SLDPRT",
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\right_rebound_native.SLDPRT",
+      "sha256": "66F594147670F7BDD6FA835D874D2E8BDE10DC81B7905A6C3B8B9BA5C79B95FF",
+      "size": 1258522
+    }
+  ],
+  "rightRows": [
+    134.77777777777777,
+    347.3333333333333,
+    559.8888888888889,
+    772.4444444444443,
+    985,
+    1197.5555555555557,
+    1410.1111111111113,
+    1622.666666666667,
+    1835.2222222222226
+  ],
+  "owner": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+  "right": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+  "rebound": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\right_rebound_native.SLDPRT",
+  "left": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+  "parameterSource": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\箱体竖隔板R参数源.SLDPRT",
+  "total": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v2\\candidate_attempt\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+  "modelAccepted": false,
+  "engineeringAccepted": false,
+  "finiteMateBoundaryWitnessComplete": false,
+  "nativeCadExecuted": false,
+  "runtimeOwnerCount": 107,
+  "runtimeWorkingPackCount": 77,
+  "runtimeDoorCount": 30,
+  "expectedRuntimeDependencyEdges": 180,
+  "excludedProtectedDoorSources13": 13,
+  "dependencyIsolationScope": "107 runtime files only; 13 protected templates excluded",
+  "v1FailureEvidence": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v1\\runs\\20261110142344214-relink-34912\\relink\\probe.json",
+    "sha256": "A2D6CADF04D87D6C20C600281956B458873E4B3E76578AB417E024A6A82573E1"
+  },
+  "v1Freeze": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\right_owner_rebind_v1\\freeze-manifest.json",
+    "sha256": "CE51C60B567CE6E37495B03198289D4F679BD8A3E7F0DD6DF2C3FB2E1579D470"
+  },
+  "v1FailureNotReclassified": true
+}
