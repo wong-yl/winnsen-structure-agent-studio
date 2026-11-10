@@ -1,0 +1,81 @@
+{
+  "schema": "obsolete-door-stage-continuation-prepared-freeze-v2",
+  "generatedAtUtc": "2026-11-10T10:41:53.678Z",
+  "status": "ready_for_primary_review",
+  "nativeCadExecuted": false,
+  "attemptCreated": false,
+  "taskCreated": false,
+  "artifacts": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\dry-run-20261110104017510-4648.json",
+      "sha256": "82D8D5E844EB56E486FCA916E89F061A17DEC46A3794D819A260781FCC138BE1",
+      "size": 6972159
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\README.md",
+      "sha256": "4F96F00B165A96E29C32D6183C49510BFD57988578E537839967C21AC40F7767",
+      "size": 9003
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\research-gates.mjs",
+      "sha256": "FE70B884938997DFAE71398ABEB3BD61CB585BE4C7D2B2E6262D992C38973688",
+      "size": 21921
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\run-stage-continuation.mjs",
+      "sha256": "A1AD991387FCD2B905EAD12E49BF465477752CCB33B4DEEBFDA925024C2D735A",
+      "size": 48164
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check-20261110103334584-27780.json",
+      "sha256": "0CD2185F175F01C85EAF53F3CCE2E4C4432BE5247B0B770E64969D4939593444",
+      "size": 6207
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check-20261110103859427-26108.json",
+      "sha256": "33A7467B5605C652F40D2029C56D28AF0192869CCF00687930CF0EEDE0F5CE72",
+      "size": 6757
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check.mjs",
+      "sha256": "CC0A381212305139DE0576384EA5643B4D253AD71325ADF4AE4D34099191FFF9",
+      "size": 19873
+    }
+  ],
+  "authoritativeStaticCheck": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check-20261110103859427-26108.json",
+    "sha256": "33A7467B5605C652F40D2029C56D28AF0192869CCF00687930CF0EEDE0F5CE72",
+    "count": 56,
+    "failed": 0
+  },
+  "authoritativeDryRun": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\dry-run-20261110104017510-4648.json",
+    "sha256": "82D8D5E844EB56E486FCA916E89F061A17DEC46A3794D819A260781FCC138BE1",
+    "candidateCount": 75,
+    "protectedCount": 19050,
+    "historicalProtectionCount": 18612,
+    "historicalProtectionCoveragePassed": true,
+    "portalFiles": 87
+  },
+  "stageOrder": [
+    "clone",
+    "envelope",
+    "door-471p25",
+    "door-205p555556",
+    "repair-door-placements",
+    "repair-interfaces",
+    "repair-base-foot",
+    "locks",
+    "locks-verify"
+  ],
+  "modelAccepted": false,
+  "primaryMustPerformNativeRunAndFinalAcceptance": true,
+  "unverified": [
+    "native phases through locks-verify on a new candidate",
+    "root assembly and strict complete cold reopen",
+    "exact new right bounding box",
+    "all finite surface boundaries",
+    "independent persisted source dependency reenumeration",
+    "warning32 resolution"
+  ]
+}

@@ -10,7 +10,8 @@ import { production16029Profile } from './locker_16029_production_evidence.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const BASELINE = 'engineer-feedback-20261008-r4'
-const REPAIRS = ['readonly-open-20261105-r4', 'readonly-open-20261109-r4-rearwidth1']
+const DOOR_PRECISION_REPAIRS = ['readonly-open-20261110-r4-doorprecision1', 'readonly-open-20261110-r4-doorprecision2', 'readonly-open-20261110-r4-doorprecision3']
+const REPAIRS = ['readonly-open-20261105-r4', 'readonly-open-20261109-r4-rearwidth1', 'readonly-open-20261110-r4-reargeometry1', ...DOOR_PRECISION_REPAIRS]
 const sha = value => createHash('sha256').update(value).digest('hex').toUpperCase()
 const hash = path => sha(readFileSync(path))
 const read = path => JSON.parse(readFileSync(path, 'utf8'))
@@ -30,12 +31,13 @@ function regular(path) {
   return path
 }
 
-function verifySegment(result, phases, contract, build, attemptsRoot, existing, source = null) {
+function verifySegment(result, phases, contract, build, attemptsRoot, existing, source = null, doorModules = null) {
   requireValue(result?.state === 'candidate_requires_validation' && same(result.stages, phases), 'runtime bridge stage sequence differs from the required segment')
   const attempt = resolve(result.attempt || '')
   requireValue(dirname(attempt) === attemptsRoot && basename(attempt) === result.taskId && !existing.has(basename(attempt)), 'runtime bridge requires a newly created isolated attempt')
   const planPath = regular(resolve(attempt, 'parametric_execution.json')), plan = read(planPath)
   requireValue(plan.taskId === result.taskId && same(plan.contract, contract), 'runtime bridge request or task identity changed')
+  requireValue(!doorModules || same(plan.doorModules, doorModules), 'runtime bridge door module map differs from the request contract')
   if (source) {
     requireValue(plan.resumedEvidence?.sourceAttempt === source.attempt && plan.resumedEvidence.completedPhase === 'repair-frame-slots' &&
       plan.resumedEvidence.receiptSha256 === hash(regular(resolve(source.attempt, 'receipts/repair-frame-slots.json'))) &&
@@ -53,7 +55,8 @@ function verifySegment(result, phases, contract, build, attemptsRoot, existing, 
     const authorizationPath = regular(resolve(attempt, 'authorizations', phase + '.json'))
     const receipt = read(receiptPath), evidence = read(evidencePath), authorization = read(authorizationPath)
     const evidenceMatchesPhase = phase.startsWith('door-')
-      ? Number.isFinite(evidence.heightMm) && 'door-' + Number(evidence.heightMm.toFixed(6)).toString().replace('.', 'p') === phase
+      ? Number.isFinite(evidence.heightMm) && 'door-' + Number(evidence.heightMm.toFixed(6)).toString().replace('.', 'p') === phase &&
+        (!doorModules || evidence.heightMm === doorModules.find(module => module.token === phase.slice(5))?.heightMm)
       : evidence.phase === phase
     requireValue(receipt.phase === phase && receipt.taskId === plan.taskId && receipt.planSha256 === planSha256 &&
       receipt.evidenceSha256 === hash(evidencePath) && receipt.authorizationSha256 === hash(authorizationPath) &&
@@ -81,19 +84,26 @@ export async function run16029ParametricRuntime(request, options = {}, {
   const pin = build => ({ executableSha256: build.manifest.executableSha256, manifestSha256: hash(regular(resolve(build.folder, 'build.json'))) })
   const baselinePin = pin(baseline), repairPin = pin(repaired)
   const contract = build16029ParametricContract(request), { heightMm, depthMm } = contract.geometry.cabinet
-  const heights = [...new Set([...contract.rowsByColumn.L, ...contract.rowsByColumn.R].map(row => row.doorHeightMm))]
+  const doorHeights = new Map()
+  for (const row of [...contract.rowsByColumn.L, ...contract.rowsByColumn.R]) {
+    const height = row.doorHeightMm, token = Number(height.toFixed(6)).toString().replace('.', 'p')
+    requireValue(!doorHeights.has(token) || doorHeights.get(token) === height, 'Distinct contract door heights map to the same door module identifier')
+    doorHeights.set(token, height)
+  }
   const prefix = ['clone', 'probe', 'dimensions', 'derived', 'base-hole', 'assemblies',
     ...(heightMm !== 1917 || depthMm !== 550 ? ['envelope'] : []),
-    ...heights.map(height => 'door-' + Number(height.toFixed(6)).toString().replace('.', 'p')),
+    ...[...doorHeights.keys()].map(token => 'door-' + token),
     'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', 'locks-verify', 'repair-partition-mates', 'root', 'repair-frame-slots']
   const suffix = ['clone', ...(heightMm !== 1917 ? ['repair-height-braces'] : []),
     ...(depthMm !== 550 ? ['repair-depth-placements'] : []), 'repair-base-mates', 'repair-engineer-feedback',
     'verify', 'package', 'verify-package', 'verify-relocated', 'physical-audit']
   const attemptsRoot = resolve(root, 'data/parametric_attempts')
   const existing = new Set(existsSync(attemptsRoot) ? readdirSync(attemptsRoot) : [])
-  const first = await runModel(request, { ...options, buildTag: BASELINE, repairProfile: '', phases: prefix })
+  const preciseDoors = DOOR_PRECISION_REPAIRS.includes(repair.buildTag)
+  const doorModules = preciseDoors ? [...doorHeights].map(([token, heightMm]) => ({ token, heightMm })) : null
+  const first = await runModel(request, { ...options, ...(preciseDoors ? repair : { buildTag: BASELINE, repairProfile: '' }), phases: prefix })
   if (first.state === 'cancelled_after_atomic_stage') return first
-  const source = verifySegment(first, prefix, contract, baselinePin, attemptsRoot, existing)
+  const source = verifySegment(first, prefix, contract, preciseDoors ? repairPin : baselinePin, attemptsRoot, existing, null, doorModules)
   await options.beforeResume?.()
   requireValue(!options.signal?.aborted, 'runtime bridge cancelled before resume')
   const cad = inspectCad()
@@ -102,6 +112,6 @@ export async function run16029ParametricRuntime(request, options = {}, {
   const second = await runModel(request, { ...options, ...repair, resumeSource: source.attempt, resumeStage: 'repair-frame-slots' })
   if (second.state === 'cancelled_after_atomic_stage') return second
   existing.add(basename(source.attempt))
-  verifySegment(second, suffix, contract, repairPin, attemptsRoot, existing, source)
+  verifySegment(second, suffix, contract, repairPin, attemptsRoot, existing, source, doorModules)
   return second
 }

@@ -1,0 +1,2792 @@
+{
+  "schema": "obsolete-door-v3-source-binding-v1",
+  "generatedAtUtc": "2026-11-10T11:00:08.809Z",
+  "researchOnly": true,
+  "sourceAttempt": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9",
+  "sourceState": "after-native-repair-interfaces-before-wrapper-case-sensitive-rejection",
+  "working": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "sha256": "5D95765A9605FEF1B3E2A9A47CE779D01C7C2402D580729CF8464849D95CFC0A",
+      "size": 2639794,
+      "relativePath": "标准寄存柜 模型.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "sha256": "5F61C0DC18170DA049BB59C2629245E7F2EF803AF4D6210836555762C29F63FA",
+      "size": 1941754,
+      "relativePath": "标准寄存柜1917×1000×550(总装配).SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929,
+      "relativePath": "插销固定板.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024,
+      "relativePath": "插销固定板2╱12_右.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768,
+      "relativePath": "插销固定板2╱12_左.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "sha256": "A3EEE813D2DF9656C193C854A3E5D3D10B6DD4AE8017A5A710F8EF9B29996F4F",
+      "size": 69576,
+      "relativePath": "插销固定板4╱12_右.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "sha256": "3E1BCABD5569A02B282140210FDF862021D9E7BFD4857729B3725D546CFFEE6F",
+      "size": 67564,
+      "relativePath": "插销固定板4╱12_左.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "sha256": "920F3F824F0C33EF6E809D7C0F1623DE32051CDF41C65338CC737C0821864FBC",
+      "size": 68038,
+      "relativePath": "插销固定板6╱12_右.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "sha256": "A02CE97639AE31BFA879748E9448AB855D3F43DDA367EE45FBB9C4FE0185C9C6",
+      "size": 67801,
+      "relativePath": "插销固定板6╱12_左.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "sha256": "E8A1A4BAC9AB703E27EA68161EE8DB7B75AC7E0E1C87486CFE2E0F05C0944403",
+      "size": 123697,
+      "relativePath": "储物柜门2╱12焊接_右.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "sha256": "E9BB1B34E5790D7A9A692A57B73BB5785B7243745C7AA191C85070D85CFC41C1",
+      "size": 129127,
+      "relativePath": "储物柜门2╱12焊接_左.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "sha256": "A650CDEADFDD8FAD48949E9EA04FFEF9F750BD32863330CEB8647861690B0753",
+      "size": 122500,
+      "relativePath": "储物柜门4╱12焊接_右.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "sha256": "5A0C7E3B364D38A7C1D3520D4ADCAC9C3C3B83F4F84BC7ABE8029EFC132AAF2A",
+      "size": 127835,
+      "relativePath": "储物柜门4╱12焊接_左.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "sha256": "CE7381A690D8B2B4B51B3DA9A89D4827C14F297614E11E21E2BA4D3D403857FF",
+      "size": 120651,
+      "relativePath": "储物柜门6╱12焊接_右.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "sha256": "043051400746106F8E20CBE4ECFCB3C3B936BA6A54145ECE53F68DD557D3F315",
+      "size": 126166,
+      "relativePath": "储物柜门6╱12焊接_左.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "sha256": "88FA42CFDCF1AC171E57FE234C8143DECE42F51F6EA110132223DB38595C9214",
+      "size": 149059,
+      "relativePath": "储物柜门板2╱12_右.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "sha256": "5E09647AC1288B6E4189E9FE27875D1AE72C5C13E8E4EAD79EBF8782DE68CA64",
+      "size": 391729,
+      "relativePath": "储物柜门板2╱12_W307.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "sha256": "F83109C8246D20D60420CD17BB1DA0A4EA349C66228A3CFC490E26146A535708",
+      "size": 145782,
+      "relativePath": "储物柜门板4╱12_右.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "sha256": "79C14B943A9D16867B6A8DCD0E4D1883F996C6376D9D1B130FF8603C38CFE2AC",
+      "size": 371885,
+      "relativePath": "储物柜门板4╱12_W307.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "sha256": "BBB7E9E93B70324F59CC9B163504239FF6921F3634152F64D823FC9A8C3DAF42",
+      "size": 143643,
+      "relativePath": "储物柜门板6╱12_右.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "sha256": "20D2F9D39BB236C0935C3C83FC631865659F6598CE71C928A71F428A7AC24718",
+      "size": 365742,
+      "relativePath": "储物柜门板6╱12_W307.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "sha256": "BE48C2618C4EFF4BA0A468D80AD142606BF5D25B8DF92C0CD9F0D6B2C8BFE749",
+      "size": 179463,
+      "relativePath": "储物柜门装配_L2.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "sha256": "84705089B17F78EE00C5744EEB5282033977FA86D106487854AB2917B87B2E69",
+      "size": 176334,
+      "relativePath": "储物柜门装配_L4.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "sha256": "17A894BD2B6ED2F1FFC85223380FEA2D28B54884D0858ADEEC706F94211F1038",
+      "size": 176016,
+      "relativePath": "储物柜门装配_L6.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "sha256": "48F31403906877730B5D3C8394C345391ED23D2FE505E3A027B72EEF464FF03A",
+      "size": 171667,
+      "relativePath": "储物柜门装配_R2.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "sha256": "B4FDD4C62C05C8EA00A4CA8DC00A666E7467A58436BAA18A9B2C19BD3EE1DF5F",
+      "size": 169413,
+      "relativePath": "储物柜门装配_R4.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "sha256": "1D23CDEC04213A78EFF962E113665D209DAA5C65CB8E1A6379E0674F996F789C",
+      "size": 168924,
+      "relativePath": "储物柜门装配_R6.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座 模型.sldprt",
+      "sha256": "7F5F2CE0C6E90D1F6629CA8A80F3F30B1543C589505F0369E90E47E3F7E021C4",
+      "size": 374794,
+      "relativePath": "底座 模型.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座底板.sldprt",
+      "sha256": "5179FDB63601538D51965DB66A293B6F1A3EB7E1CCC3C80A51FD65ECA2E0B462",
+      "size": 603513,
+      "relativePath": "底座底板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座焊接.SLDASM",
+      "sha256": "61DA716D16BBF787FBC4F56B8181E6E9F3EDBD338AE52E9B32D0E72029A27A96",
+      "size": 537343,
+      "relativePath": "底座焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座加强筋.sldprt",
+      "sha256": "552A02A95F9D448140A7D1CF20422A532952A49B929F51B1AB249E9064B42F4A",
+      "size": 206580,
+      "relativePath": "底座加强筋.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座外框.sldprt",
+      "sha256": "4B53283CDB15DD2BAF5CBEB47C55CAC14C7F1128F00147C39154EAE152D22485",
+      "size": 364445,
+      "relativePath": "底座外框.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344",
+      "size": 100245,
+      "relativePath": "调整脚 M12X60(模型).SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "sha256": "20735027C2DD2009DA1607C7350FDF80CA3559D3E6CC0F542718F48A16E2DFC7",
+      "size": 119686,
+      "relativePath": "柜门加强筋2╱12.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "sha256": "80C1FC45A9F46E7148BD6B0FD7F600A029D091F847A5E730DD9D842950919426",
+      "size": 111155,
+      "relativePath": "柜门加强筋4╱12.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "sha256": "48C5E0EF8A8EBE435BDA735FDD6EFEE7A32B43787D4E80006C57053378AD4639",
+      "size": 108444,
+      "relativePath": "柜门加强筋6╱12.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354,
+      "relativePath": "开口挡圈5.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\螺母M12.SLDPRT",
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD",
+      "size": 166179,
+      "relativePath": "螺母M12.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板.sldprt",
+      "sha256": "80FE16C7C5EC852A09984F0C1BE751E53EF5BA0C2BFC97173F1FA1D2A676BAAC",
+      "size": 226868,
+      "relativePath": "门框 横隔板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "sha256": "6EA01A2DFE4F8A50BE58840F9A048A5D9F312F76EE01157211A7110B192ADB36",
+      "size": 239653,
+      "relativePath": "门框 横隔板R.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 上.sldprt",
+      "sha256": "B81488051D3A7CEC8CED2B2AFD7D976F3FA233BAC46E1357DEBE534E2E6C1477",
+      "size": 337254,
+      "relativePath": "门框 上.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "sha256": "D96ABC28088334B9ECA9BB4D475B8114D3C7646850196550F118D2F7F282C469",
+      "size": 554330,
+      "relativePath": "门框 竖隔板L.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "sha256": "35ED0C7608ABC9CF516BE62B924E6FD555C835492F66E434CD99C9CF49536B3D",
+      "size": 533487,
+      "relativePath": "门框 竖隔板R.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 下.sldprt",
+      "sha256": "E535F4B2C7C08A74B4E7EAC07EA8E39FBAEAEEF5F8FE9DD66E3B5D362FB120A3",
+      "size": 339973,
+      "relativePath": "门框 下.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 右.sldprt",
+      "sha256": "3587117D35997EB16549322E0B197DB8BEDC0F1087D4EB0343BF4E87A3CE8C6C",
+      "size": 449683,
+      "relativePath": "门框 右.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 左.sldprt",
+      "sha256": "F24524ADB8A27161D66ABCD584D79FD37B8AB91E1A9C9B15CBC334D4DCDC9988",
+      "size": 417458,
+      "relativePath": "门框 左.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框焊接.sldasm",
+      "sha256": "0BABE3FA92A56AEDEB90CA27E93DDD34C9C85D365F4C525916B946F56072693E",
+      "size": 371986,
+      "relativePath": "门框焊接.sldasm"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门轴销.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536,
+      "relativePath": "门轴销.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖 模型.sldprt",
+      "sha256": "8499FFCB0CAAA2BCDD807494B896F7344AD273DD8C881CA064703F5A7ADA6302",
+      "size": 653338,
+      "relativePath": "上盖 模型.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖焊接.SLDASM",
+      "sha256": "B6EE441E7204F5D21620091C261AEEE0F33E76319BFCDC4572BA66432E8C1958",
+      "size": 388530,
+      "relativePath": "上盖焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "sha256": "1264DAE08265A3261866CFDA41736F24804C269E1186E7C2E28E007B9D06545A",
+      "size": 438255,
+      "relativePath": "上盖壳体底板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "sha256": "7566B458F90EB9780F11A52A94D34B9942B1FAE74CF016F86FD56F5939045348",
+      "size": 395637,
+      "relativePath": "上盖壳体后侧板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "sha256": "D99C92C241090C58657DF8185E7D851D38209077AB71971885B1463D3F0A1473",
+      "size": 251983,
+      "relativePath": "上盖壳体前侧板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "sha256": "A45EBF9B4FC780DA122DAAC45CC894F06FCB546BC10FF07DD5F1915BF38F574C",
+      "size": 494838,
+      "relativePath": "上盖壳体右侧板.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "sha256": "7350DD96969D7F48FE0E93A9A2976F15492B1115B0991C90C30F692DD3B4A9BF",
+      "size": 376932,
+      "relativePath": "上盖壳体左侧板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868,
+      "relativePath": "塑料轴套(云绅模具).SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "sha256": "78B607C43E7A180275982E3997FF63C250633AF8060BD714735434A6327ECA35",
+      "size": 252557,
+      "relativePath": "锁控维护条_源钣金.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁舌.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932,
+      "relativePath": "锁舌.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "sha256": "0487E09319DCCDF07EB30B7732AD3FEE1C26ED184322661F009086178466E654",
+      "size": 338122,
+      "relativePath": "箱体侧板加强筋1.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "sha256": "625F8B2E0021496D9DACF6D01A75399F9A60986D2CD0CF36537ECA90D138E89B",
+      "size": 223252,
+      "relativePath": "箱体侧板加强筋2.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "sha256": "DA780B4BB9A914C8EBB8307EB69315F00C613C83ACA689B6918401F168C4A320",
+      "size": 182718,
+      "relativePath": "箱体横层板加强筋.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L.sldprt",
+      "sha256": "0175D8E0E8823648D117AB99E004B1B27896C46D0C2DBA74B6A8498DCEDBA81D",
+      "size": 512837,
+      "relativePath": "箱体横层板L.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "sha256": "C6544EE9BC9D77B7E57E8980356DB5F1B7691C5817D1E4A7EAC12B6FA73588FD",
+      "size": 117495,
+      "relativePath": "箱体横层板L焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "sha256": "DEC739A19D68B59AF3DBDB2CD5BACCCA32CFA2C5BC076BA24B22D98CDA9E6EF7",
+      "size": 523485,
+      "relativePath": "箱体横层板R.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "sha256": "3FEF166113A10F18CB1435C4B427193B28CD54650FB861B482CF825392E7B883",
+      "size": 114333,
+      "relativePath": "箱体横层板R焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "sha256": "F75B52F0B54B2136E30BB47C391AF2DB237E9530A2AF0C9FA13C605CB597E007",
+      "size": 273757,
+      "relativePath": "箱体竖隔板加强件.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "sha256": "081B1471BA158FB441D7EBB52A16247228831667119810A4EC20C42F14322A59",
+      "size": 900012,
+      "relativePath": "箱体竖隔板L.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "sha256": "3981BA4D2031E4E9628053C0DE91261F2792A81FF218FD2B41CD86E623918850",
+      "size": 419581,
+      "relativePath": "箱体竖隔板L焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "sha256": "66C89B98E4ADADC98E2969F9FDFDB2F1DB8F6895F20AD961E9F6AA46A63E15A6",
+      "size": 995819,
+      "relativePath": "箱体竖隔板R.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "sha256": "982F53DBD7F257A0FA65C92CDBE759ACBE16D6F67D449F80D03CB85AE25420BB",
+      "size": 259351,
+      "relativePath": "箱体竖隔板R焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板.sldprt",
+      "sha256": "287993307458776DCAE771FE9B9F57705A3F4DB0236D50DD3F02AFD1769BCCDB",
+      "size": 528007,
+      "relativePath": "箱体右侧板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "sha256": "F6A8BF30C9806191906C8183FB684615F78E36907E4D5E6DF28D7B3AFFACD0C5",
+      "size": 463967,
+      "relativePath": "箱体右侧板焊接.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板.sldprt",
+      "sha256": "ABB705DD97DF277D1C7883303FCAAE8376E00774663B48858BDABA303F3F02C6",
+      "size": 547057,
+      "relativePath": "箱体左侧板.sldprt"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "sha256": "78B5C674E43B2226E277A25FA5A024F503E0268AF6F526E8CF5F8E6E5DBBDE6C",
+      "size": 398848,
+      "relativePath": "箱体左侧板焊接.sldasm"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321,
+      "relativePath": "U型锁钩垫板.SLDPRT"
+    }
+  ],
+  "doors": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "sha256": "FA08D5DD8D757F5E11F1DE3C777C33882F8B7CE42FA38FF7BB88CC7BD830D901",
+      "size": 130734,
+      "relativePath": "H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "sha256": "05DC8E4A0495F2E1177E1E7DB561FDAD96DA714CEBF3941513759D19359E08AA",
+      "size": 130021,
+      "relativePath": "H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "sha256": "83A81DF48C50FB6056A2F9FF8A4AC1D7FEEB517A6CB5DD7160ABEDB7B826B9F3",
+      "size": 177414,
+      "relativePath": "H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "sha256": "A9FF4565516705B729E09A9B8F0FED9E799A1E384E04FCF5287395342B8C8DBE",
+      "size": 179426,
+      "relativePath": "H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "sha256": "0C9C0E1F4832D4A352165C9DBE7A4DAF9F01C89D43A8293F35AFF2D3D85AAFFE",
+      "size": 83299,
+      "relativePath": "H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "sha256": "52393F174F6365F6FB789EABEDBBC2B795A1786E6EAA5E22B5A09C9DCE191646",
+      "size": 70466,
+      "relativePath": "H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "sha256": "0E3990EF199D88968843225128411D3BC7512AD2777F3A60B0101F5D57F746E1",
+      "size": 391122,
+      "relativePath": "H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "sha256": "379E8618E96699F84DF49A8706ED7828F9D9CEF1ECF54F62A6A13F64A258D6E6",
+      "size": 920390,
+      "relativePath": "H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "sha256": "BA556B1003C8A76D8AFEA4D182FD9D76792CEAEE06DF603E855698E43017F0E4",
+      "size": 122650,
+      "relativePath": "H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "sha256": "1381CE588EF5655A88FC14F760085DC51B9470B2D0D3954C39E7EE6512DC9B55",
+      "size": 169080,
+      "relativePath": "H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "sha256": "78C2CAEBCD8F4234318B0B3F6B1A5DCAE3B04A91F66804B95C7B516B486ED01C",
+      "size": 95532,
+      "relativePath": "H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "sha256": "BB2029578F5189F3AB2E9578F94E9078510B2B02FFA5AF7C3AAF6E02177E1990",
+      "size": 69139,
+      "relativePath": "H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768,
+      "relativePath": "H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024,
+      "relativePath": "H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "sha256": "CCEF1109F70F4E3797116BBE6309DAE2278722A3A6B40F97ABF48FD159FF79BF",
+      "size": 170539,
+      "relativePath": "H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "sha256": "DB4C5F6025C7420687D1313FB2D782C512FA3EECE3A03381F78F7AD8F52EADA5",
+      "size": 127179,
+      "relativePath": "H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "sha256": "D20D20624D8B55FBF1EB93A45131C650DAF889D83716CBD929C1ECD327974731",
+      "size": 126012,
+      "relativePath": "H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "sha256": "927ACFF52E142597E2EDE9738D683A2686C683602E212DAA7EE6013AF13FAF13",
+      "size": 175423,
+      "relativePath": "H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "sha256": "B746C43E331C87A3814D26FD428B7D47F7139B62480F159DE0EA425FA490488F",
+      "size": 174842,
+      "relativePath": "H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "sha256": "D0C4116DF26EB87E6CA99780E98B06489B3BF79284682DFA7E0BF0528476CCC2",
+      "size": 82909,
+      "relativePath": "H471p25\\parts\\circlip_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "sha256": "87A9582F3326215842D32A52E73DF75314C3BCA85F1D8B5929ECFDD83E72ECE6",
+      "size": 71470,
+      "relativePath": "H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "sha256": "EC2174986F115B6BD5AEE3DE6B9DD4F2155890C96064527B383A5FE9B7130DAC",
+      "size": 388808,
+      "relativePath": "H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "sha256": "DB0F585E8CA0CC6B73E265CE85ECD6D8032C50472C0F73BD1C342874F3B5F91A",
+      "size": 907891,
+      "relativePath": "H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "sha256": "B86760F3C8991634DCBA92F078A380F7475C570452B769F499071750CC468526",
+      "size": 122174,
+      "relativePath": "H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "sha256": "BF3C688BE785770B4FC86D85C222756E2264BEF66C1E3F60493B124B9F90D04C",
+      "size": 169271,
+      "relativePath": "H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "sha256": "3AB759546BC7055DEB088277395C9A62A26720EA10725ED1C96A45C518B60E88",
+      "size": 95007,
+      "relativePath": "H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "sha256": "2A45CA39B4C19CD3F7DB3357AAF98866EBA87863C2269E42E5DC8BA7DE30EADA",
+      "size": 68849,
+      "relativePath": "H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768,
+      "relativePath": "H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024,
+      "relativePath": "H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "sha256": "2BFD4662924F7D234FD01473007DD275981D3D60D4A728AFEE24E8147A8FCCA4",
+      "size": 170791,
+      "relativePath": "H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT"
+    }
+  ],
+  "sources": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\base_stiffener_source.SLDPRT",
+      "sha256": "C66D9077E508AAD2CD8CC6C0B0E73F903FA619493E9A4769C53A14865A74B249",
+      "size": 209489,
+      "relativePath": "base_stiffener_source.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\bushing.SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868,
+      "relativePath": "bushing.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\circlip.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354,
+      "relativePath": "circlip.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\hinge_pin.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536,
+      "relativePath": "hinge_pin.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\hook_pad.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321,
+      "relativePath": "hook_pad.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\latch_plate.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929,
+      "relativePath": "latch_plate.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\left_panel_seed.SLDPRT",
+      "sha256": "F34138A9BE009D5A0C68604F57B278584DB686623943C2DE319A2999ACA488A2",
+      "size": 445989,
+      "relativePath": "left_panel_seed.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\maintenance_lock_bracket.SLDPRT",
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9",
+      "size": 175991,
+      "relativePath": "maintenance_lock_bracket.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\maintenance_weldment.SLDASM",
+      "sha256": "3FDCFE0B02BE24BFD290C5EA7AC60A2457E9854805E0657B624C77474919D0BB",
+      "size": 92610,
+      "relativePath": "maintenance_weldment.SLDASM"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\mechanical_lock_tongue.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932,
+      "relativePath": "mechanical_lock_tongue.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\stiffener_seed.SLDPRT",
+      "sha256": "F4D4973F72CB604BF52BF802BC378E9BA042A4FE8034C196CA7666A964ACCB28",
+      "size": 121752,
+      "relativePath": "stiffener_seed.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\top_latch_left.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768,
+      "relativePath": "top_latch_left.SLDPRT"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\top_latch_right.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024,
+      "relativePath": "top_latch_right.SLDPRT"
+    }
+  ],
+  "allAncestorFiles": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\clone.json",
+      "sha256": "302D4FBA1F3375166E7B5FEBC79EB3F9108F7584B875C1AD8459376F913F3A58",
+      "size": 25970
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\door-205p555556.json",
+      "sha256": "88FC70FEEA5CA2ADB0ED039FD47DD9B4503E2D2235DF056BC0EE7BB96327D0B3",
+      "size": 30842
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\door-471p25.json",
+      "sha256": "AD40ADC3EE523D1E134082CC5A926B0776711451E96D0B1210BD6F68C2A9014E",
+      "size": 26040
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\envelope.json",
+      "sha256": "FE1883F29BAA16CB18A3B079705C40DE50B69CCD1C0586290A241EEC3D35692E",
+      "size": 26037
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\repair-door-placements.json",
+      "sha256": "C8A977B869210F254E79BC12775EF3735B63E2D00C52B3A94A53703C4FE4EA1A",
+      "size": 35853
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\repair-interfaces.json",
+      "sha256": "9FEDEB56102C91612400F831FE3630D6530262449752A0BB239206BFE159DE83",
+      "size": 37336
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "sha256": "FA08D5DD8D757F5E11F1DE3C777C33882F8B7CE42FA38FF7BB88CC7BD830D901",
+      "size": 130734
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "sha256": "05DC8E4A0495F2E1177E1E7DB561FDAD96DA714CEBF3941513759D19359E08AA",
+      "size": 130021
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "sha256": "83A81DF48C50FB6056A2F9FF8A4AC1D7FEEB517A6CB5DD7160ABEDB7B826B9F3",
+      "size": 177414
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "sha256": "A9FF4565516705B729E09A9B8F0FED9E799A1E384E04FCF5287395342B8C8DBE",
+      "size": 179426
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\door_module_flat_import_manifest.json",
+      "sha256": "51631810D27DEB95240431C46EA7045F28506EFC2E9BF735C6DD6A115BB1AEF8",
+      "size": 3615
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "sha256": "0C9C0E1F4832D4A352165C9DBE7A4DAF9F01C89D43A8293F35AFF2D3D85AAFFE",
+      "size": 83299
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "sha256": "52393F174F6365F6FB789EABEDBBC2B795A1786E6EAA5E22B5A09C9DCE191646",
+      "size": 70466
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "sha256": "0E3990EF199D88968843225128411D3BC7512AD2777F3A60B0101F5D57F746E1",
+      "size": 391122
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "sha256": "379E8618E96699F84DF49A8706ED7828F9D9CEF1ECF54F62A6A13F64A258D6E6",
+      "size": 920390
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "sha256": "BA556B1003C8A76D8AFEA4D182FD9D76792CEAEE06DF603E855698E43017F0E4",
+      "size": 122650
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "sha256": "1381CE588EF5655A88FC14F760085DC51B9470B2D0D3954C39E7EE6512DC9B55",
+      "size": 169080
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "sha256": "78C2CAEBCD8F4234318B0B3F6B1A5DCAE3B04A91F66804B95C7B516B486ED01C",
+      "size": 95532
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "sha256": "BB2029578F5189F3AB2E9578F94E9078510B2B02FFA5AF7C3AAF6E02177E1990",
+      "size": 69139
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "sha256": "CCEF1109F70F4E3797116BBE6309DAE2278722A3A6B40F97ABF48FD159FF79BF",
+      "size": 170539
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "sha256": "DB4C5F6025C7420687D1313FB2D782C512FA3EECE3A03381F78F7AD8F52EADA5",
+      "size": 127179
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "sha256": "D20D20624D8B55FBF1EB93A45131C650DAF889D83716CBD929C1ECD327974731",
+      "size": 126012
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "sha256": "927ACFF52E142597E2EDE9738D683A2686C683602E212DAA7EE6013AF13FAF13",
+      "size": 175423
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "sha256": "B746C43E331C87A3814D26FD428B7D47F7139B62480F159DE0EA425FA490488F",
+      "size": 174842
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\door_module_flat_import_manifest.json",
+      "sha256": "FB25DF9D7B0DAF9C4B432219C3EA0B372EA820DA3236628B3ABF18BF4B84A047",
+      "size": 3511
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "sha256": "D0C4116DF26EB87E6CA99780E98B06489B3BF79284682DFA7E0BF0528476CCC2",
+      "size": 82909
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "sha256": "87A9582F3326215842D32A52E73DF75314C3BCA85F1D8B5929ECFDD83E72ECE6",
+      "size": 71470
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "sha256": "EC2174986F115B6BD5AEE3DE6B9DD4F2155890C96064527B383A5FE9B7130DAC",
+      "size": 388808
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "sha256": "DB0F585E8CA0CC6B73E265CE85ECD6D8032C50472C0F73BD1C342874F3B5F91A",
+      "size": 907891
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "sha256": "B86760F3C8991634DCBA92F078A380F7475C570452B769F499071750CC468526",
+      "size": 122174
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "sha256": "BF3C688BE785770B4FC86D85C222756E2264BEF66C1E3F60493B124B9F90D04C",
+      "size": 169271
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "sha256": "3AB759546BC7055DEB088277395C9A62A26720EA10725ED1C96A45C518B60E88",
+      "size": 95007
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "sha256": "2A45CA39B4C19CD3F7DB3357AAF98866EBA87863C2269E42E5DC8BA7DE30EADA",
+      "size": 68849
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "sha256": "2BFD4662924F7D234FD01473007DD275981D3D60D4A728AFEE24E8147A8FCCA4",
+      "size": 170791
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\base_stiffener_source.SLDPRT",
+      "sha256": "C66D9077E508AAD2CD8CC6C0B0E73F903FA619493E9A4769C53A14865A74B249",
+      "size": 209489
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\bushing.SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\circlip.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\hinge_pin.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\hook_pad.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\latch_plate.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\left_panel_seed.SLDPRT",
+      "sha256": "F34138A9BE009D5A0C68604F57B278584DB686623943C2DE319A2999ACA488A2",
+      "size": 445989
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\maintenance_lock_bracket.SLDPRT",
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9",
+      "size": 175991
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\maintenance_weldment.SLDASM",
+      "sha256": "3FDCFE0B02BE24BFD290C5EA7AC60A2457E9854805E0657B624C77474919D0BB",
+      "size": 92610
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\mechanical_lock_tongue.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\stiffener_seed.SLDPRT",
+      "sha256": "F4D4973F72CB604BF52BF802BC378E9BA042A4FE8034C196CA7666A964ACCB28",
+      "size": 121752
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\top_latch_left.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources\\top_latch_right.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources.json",
+      "sha256": "B122B86C80F2DBF0865C9814B125206B76BACA4E256C6E46BC5D19A7016E88B4",
+      "size": 3315
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\clone.json",
+      "sha256": "2D4915E771BC4C963291DC1E27D6DAE66E827226E6D8A3D564FC25557CB48EC2",
+      "size": 55166
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\clone.process.json",
+      "sha256": "3179503A8EF8149B544634E27973606BB4A991CA62DA2841DE7D062A66DECF07",
+      "size": 618
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\clone.sessions.json",
+      "sha256": "BB9E594DA74B5D3EF19BC44D3E1A0C29FACFCC7D985DC3B4ACC2FAAED1F29E15",
+      "size": 2965
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-205p555556.json",
+      "sha256": "4F9B3834B2935379CDD203313FC20066C2A9B71D51E3A1163CB626CB1A3E24B0",
+      "size": 39799
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-205p555556.process.json",
+      "sha256": "BAF43BA41350D34EED9603CF1163A33E6A1ED27537D8033062FB9DC7567AAA5C",
+      "size": 107340
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-471p25.json",
+      "sha256": "9A54AE7B5E86F73BB44AFAC6E2F56D18337A09B69BABAA53ACE2429F84C89382",
+      "size": 39012
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-471p25.process.json",
+      "sha256": "FCA9B676123A633348B49753E9388B9E8F62D803C0FE055DE4A063283E1411E0",
+      "size": 104880
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\envelope.document-state.json",
+      "sha256": "4B342E83DECF80240E257C1AD76216A3CA4A0E9C408B8EA960113823F3157A1B",
+      "size": 26283
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\envelope.json",
+      "sha256": "3934F4AAED6E78D446CF6E7B7CD7F67F3BCB8F82AB20F48C8F9868ECD0A4FF26",
+      "size": 228749
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\envelope.process.json",
+      "sha256": "83DD7AA1E6A4424A865999DB487C587116CA3AED7F1F9546B64855798959DF69",
+      "size": 2326
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\envelope.sessions.json",
+      "sha256": "D044A5AC28DFC49079BBCB5D92D9B2EE157042BF190700C2AEEB0C77DC364756",
+      "size": 2968
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-door-placements.document-state.json",
+      "sha256": "01EDBA94A8BCE357550327F4E47113C80F0D4E0E811EFE25FFEC523018212D9F",
+      "size": 2936
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-door-placements.json",
+      "sha256": "659868359F5CB896E96FAFA2BD53F8A23B42A97901D1A113E4D20E8340203A0F",
+      "size": 1188
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-door-placements.process.json",
+      "sha256": "DB930EFB448E78DDA8C7F6299401DE5FC107232EAFF093EF4C9CCD0BF46C1D2F",
+      "size": 633
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-door-placements.sessions.json",
+      "sha256": "E62E0A80CD010F027EDFAA804C8553C6EA2F080FE6BB5B63A87A70DA54AAEF6F",
+      "size": 2980
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-interfaces.document-state.json",
+      "sha256": "1B168852A0FEF8AC7DCA46BB83A441BE1B05CF44D0C9189A4180994992D46BD7",
+      "size": 947
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-interfaces.json",
+      "sha256": "32EA47B5DA5E4BB52EADF5AB8B5DE8ABA11525B0BB699CE56AB1029FA2BE2612",
+      "size": 668
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-interfaces.process.json",
+      "sha256": "90FA1325CF4D33B11EBB18247E27827ED2DA8C9AA1694FB1F8A7F1F4223E86BD",
+      "size": 630
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-interfaces.sessions.json",
+      "sha256": "C75BA1B9A70E2A4CAE903B6F070BDAA99A6C4F6016D36CCD391D9E5D8E72EEED",
+      "size": 2973
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-14412.json",
+      "sha256": "66D2767CEABD17DB4E7CE1475564DD60A3B23BC1FA38DA58ECF8ED097362928B",
+      "size": 359
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-2104.json",
+      "sha256": "CF317D57372805D4BB1B16B79E7CEFEC39E38DCFD87F4AFD40FD4F2EFB064A5C",
+      "size": 347
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-24648.json",
+      "sha256": "D04085BAE69FE17F123B219394512CD227AE362FDAC66662B00573515FBB8734",
+      "size": 360
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-27708.json",
+      "sha256": "44FEDD3BFC18C11DBB213A75F616D4553FBDC4B2C530CC0B84398D11464C2248",
+      "size": 348
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-30108.json",
+      "sha256": "2EC6700FBAA35248F056C6247AAA34AEF2CAD8C27F8787490D9C4491ADBA05DF",
+      "size": 351
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-30480.json",
+      "sha256": "88DE5BF1B42C3F044962850F0767A838B78C1FE293DAF617C3C00D6CC2669805",
+      "size": 359
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-33416.json",
+      "sha256": "E66BF71AFCA1DB48185D06FB8795C1B48CC71E96A0E8C6F4CF4822E2ABB1A409",
+      "size": 360
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-34456.json",
+      "sha256": "A3E6E00A6506D1B22FBFF2A32A74186A1039C90D9857D5849835EFC89A6B9AD8",
+      "size": 359
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-35616.json",
+      "sha256": "6F15A83CC40507051A3A4085ACBABFD0DFC6384C02064C33DFB9A1CF077D7DA7",
+      "size": 359
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-35648.json",
+      "sha256": "E200853FEA3806543831A8117C0EE6695E0723A97D2DC6E2EB2FB0BDC8CAF8D7",
+      "size": 348
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-480.json",
+      "sha256": "A3A638C5C4F0DD17DCE27769BF0F7389116822338940DF4724F20E20F5C5C598",
+      "size": 358
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\session-7528.json",
+      "sha256": "6960030906D33C5E00DFD5D7B592F34C3881EEFD8A8A460E4EF86EFE32398CC4",
+      "size": 364
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖 模型.sldprt",
+      "sha256": "8499FFCB0CAAA2BCDD807494B896F7344AD273DD8C881CA064703F5A7ADA6302",
+      "size": 653338
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "sha256": "D99C92C241090C58657DF8185E7D851D38209077AB71971885B1463D3F0A1473",
+      "size": 251983
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "sha256": "A45EBF9B4FC780DA122DAAC45CC894F06FCB546BC10FF07DD5F1915BF38F574C",
+      "size": 494838
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "sha256": "7566B458F90EB9780F11A52A94D34B9942B1FAE74CF016F86FD56F5939045348",
+      "size": 395637
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "sha256": "7350DD96969D7F48FE0E93A9A2976F15492B1115B0991C90C30F692DD3B4A9BF",
+      "size": 376932
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "sha256": "1264DAE08265A3261866CFDA41736F24804C269E1186E7C2E28E007B9D06545A",
+      "size": 438255
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖焊接.SLDASM",
+      "sha256": "B6EE441E7204F5D21620091C261AEEE0F33E76319BFCDC4572BA66432E8C1958",
+      "size": 388530
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "sha256": "E8A1A4BAC9AB703E27EA68161EE8DB7B75AC7E0E1C87486CFE2E0F05C0944403",
+      "size": 123697
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "sha256": "E9BB1B34E5790D7A9A692A57B73BB5785B7243745C7AA191C85070D85CFC41C1",
+      "size": 129127
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "sha256": "A650CDEADFDD8FAD48949E9EA04FFEF9F750BD32863330CEB8647861690B0753",
+      "size": 122500
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "sha256": "5A0C7E3B364D38A7C1D3520D4ADCAC9C3C3B83F4F84BC7ABE8029EFC132AAF2A",
+      "size": 127835
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "sha256": "CE7381A690D8B2B4B51B3DA9A89D4827C14F297614E11E21E2BA4D3D403857FF",
+      "size": 120651
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "sha256": "043051400746106F8E20CBE4ECFCB3C3B936BA6A54145ECE53F68DD557D3F315",
+      "size": 126166
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "sha256": "5E09647AC1288B6E4189E9FE27875D1AE72C5C13E8E4EAD79EBF8782DE68CA64",
+      "size": 391729
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "sha256": "88FA42CFDCF1AC171E57FE234C8143DECE42F51F6EA110132223DB38595C9214",
+      "size": 149059
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "sha256": "79C14B943A9D16867B6A8DCD0E4D1883F996C6376D9D1B130FF8603C38CFE2AC",
+      "size": 371885
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "sha256": "F83109C8246D20D60420CD17BB1DA0A4EA349C66228A3CFC490E26146A535708",
+      "size": 145782
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "sha256": "20D2F9D39BB236C0935C3C83FC631865659F6598CE71C928A71F428A7AC24718",
+      "size": 365742
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "sha256": "BBB7E9E93B70324F59CC9B163504239FF6921F3634152F64D823FC9A8C3DAF42",
+      "size": 143643
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "sha256": "BE48C2618C4EFF4BA0A468D80AD142606BF5D25B8DF92C0CD9F0D6B2C8BFE749",
+      "size": 179463
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "sha256": "84705089B17F78EE00C5744EEB5282033977FA86D106487854AB2917B87B2E69",
+      "size": 176334
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "sha256": "17A894BD2B6ED2F1FFC85223380FEA2D28B54884D0858ADEEC706F94211F1038",
+      "size": 176016
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "sha256": "48F31403906877730B5D3C8394C345391ED23D2FE505E3A027B72EEF464FF03A",
+      "size": 171667
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "sha256": "B4FDD4C62C05C8EA00A4CA8DC00A666E7467A58436BAA18A9B2C19BD3EE1DF5F",
+      "size": 169413
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "sha256": "1D23CDEC04213A78EFF962E113665D209DAA5C65CB8E1A6379E0674F996F789C",
+      "size": 168924
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座 模型.sldprt",
+      "sha256": "7F5F2CE0C6E90D1F6629CA8A80F3F30B1543C589505F0369E90E47E3F7E021C4",
+      "size": 374794
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座加强筋.sldprt",
+      "sha256": "552A02A95F9D448140A7D1CF20422A532952A49B929F51B1AB249E9064B42F4A",
+      "size": 206580
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座外框.sldprt",
+      "sha256": "4B53283CDB15DD2BAF5CBEB47C55CAC14C7F1128F00147C39154EAE152D22485",
+      "size": 364445
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座底板.sldprt",
+      "sha256": "5179FDB63601538D51965DB66A293B6F1A3EB7E1CCC3C80A51FD65ECA2E0B462",
+      "size": 603513
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座焊接.SLDASM",
+      "sha256": "61DA716D16BBF787FBC4F56B8181E6E9F3EDBD338AE52E9B32D0E72029A27A96",
+      "size": 537343
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97",
+      "size": 69024
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847",
+      "size": 67768
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "sha256": "A3EEE813D2DF9656C193C854A3E5D3D10B6DD4AE8017A5A710F8EF9B29996F4F",
+      "size": 69576
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "sha256": "3E1BCABD5569A02B282140210FDF862021D9E7BFD4857729B3725D546CFFEE6F",
+      "size": 67564
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "sha256": "920F3F824F0C33EF6E809D7C0F1623DE32051CDF41C65338CC737C0821864FBC",
+      "size": 68038
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "sha256": "A02CE97639AE31BFA879748E9448AB855D3F43DDA367EE45FBB9C4FE0185C9C6",
+      "size": 67801
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "sha256": "20735027C2DD2009DA1607C7350FDF80CA3559D3E6CC0F542718F48A16E2DFC7",
+      "size": 119686
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "sha256": "80C1FC45A9F46E7148BD6B0FD7F600A029D091F847A5E730DD9D842950919426",
+      "size": 111155
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "sha256": "48C5E0EF8A8EBE435BDA735FDD6EFEE7A32B43787D4E80006C57053378AD4639",
+      "size": 108444
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "sha256": "5D95765A9605FEF1B3E2A9A47CE779D01C7C2402D580729CF8464849D95CFC0A",
+      "size": 2639794
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "sha256": "5F61C0DC18170DA049BB59C2629245E7F2EF803AF4D6210836555762C29F63FA",
+      "size": 1941754
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "sha256": "0487E09319DCCDF07EB30B7732AD3FEE1C26ED184322661F009086178466E654",
+      "size": 338122
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "sha256": "625F8B2E0021496D9DACF6D01A75399F9A60986D2CD0CF36537ECA90D138E89B",
+      "size": 223252
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板.sldprt",
+      "sha256": "287993307458776DCAE771FE9B9F57705A3F4DB0236D50DD3F02AFD1769BCCDB",
+      "size": 528007
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "sha256": "F6A8BF30C9806191906C8183FB684615F78E36907E4D5E6DF28D7B3AFFACD0C5",
+      "size": 463967
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板.sldprt",
+      "sha256": "ABB705DD97DF277D1C7883303FCAAE8376E00774663B48858BDABA303F3F02C6",
+      "size": 547057
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "sha256": "78B5C674E43B2226E277A25FA5A024F503E0268AF6F526E8CF5F8E6E5DBBDE6C",
+      "size": 398848
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L.sldprt",
+      "sha256": "0175D8E0E8823648D117AB99E004B1B27896C46D0C2DBA74B6A8498DCEDBA81D",
+      "size": 512837
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "sha256": "C6544EE9BC9D77B7E57E8980356DB5F1B7691C5817D1E4A7EAC12B6FA73588FD",
+      "size": 117495
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "sha256": "DEC739A19D68B59AF3DBDB2CD5BACCCA32CFA2C5BC076BA24B22D98CDA9E6EF7",
+      "size": 523485
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "sha256": "3FEF166113A10F18CB1435C4B427193B28CD54650FB861B482CF825392E7B883",
+      "size": 114333
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "sha256": "DA780B4BB9A914C8EBB8307EB69315F00C613C83ACA689B6918401F168C4A320",
+      "size": 182718
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "sha256": "081B1471BA158FB441D7EBB52A16247228831667119810A4EC20C42F14322A59",
+      "size": 900012
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "sha256": "3981BA4D2031E4E9628053C0DE91261F2792A81FF218FD2B41CD86E623918850",
+      "size": 419581
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "sha256": "66C89B98E4ADADC98E2969F9FDFDB2F1DB8F6895F20AD961E9F6AA46A63E15A6",
+      "size": 995819
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "sha256": "982F53DBD7F257A0FA65C92CDBE759ACBE16D6F67D449F80D03CB85AE25420BB",
+      "size": 259351
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "sha256": "F75B52F0B54B2136E30BB47C391AF2DB237E9530A2AF0C9FA13C605CB597E007",
+      "size": 273757
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\螺母M12.SLDPRT",
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD",
+      "size": 166179
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344",
+      "size": 100245
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "sha256": "78B607C43E7A180275982E3997FF63C250633AF8060BD714735434A6327ECA35",
+      "size": 252557
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁舌.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 上.sldprt",
+      "sha256": "B81488051D3A7CEC8CED2B2AFD7D976F3FA233BAC46E1357DEBE534E2E6C1477",
+      "size": 337254
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 下.sldprt",
+      "sha256": "E535F4B2C7C08A74B4E7EAC07EA8E39FBAEAEEF5F8FE9DD66E3B5D362FB120A3",
+      "size": 339973
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 右.sldprt",
+      "sha256": "3587117D35997EB16549322E0B197DB8BEDC0F1087D4EB0343BF4E87A3CE8C6C",
+      "size": 449683
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 左.sldprt",
+      "sha256": "F24524ADB8A27161D66ABCD584D79FD37B8AB91E1A9C9B15CBC334D4DCDC9988",
+      "size": 417458
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板.sldprt",
+      "sha256": "80FE16C7C5EC852A09984F0C1BE751E53EF5BA0C2BFC97173F1FA1D2A676BAAC",
+      "size": 226868
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "sha256": "6EA01A2DFE4F8A50BE58840F9A048A5D9F312F76EE01157211A7110B192ADB36",
+      "size": 239653
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "sha256": "D96ABC28088334B9ECA9BB4D475B8114D3C7646850196550F118D2F7F282C469",
+      "size": 554330
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "sha256": "35ED0C7608ABC9CF516BE62B924E6FD555C835492F66E434CD99C9CF49536B3D",
+      "size": 533487
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框焊接.sldasm",
+      "sha256": "0BABE3FA92A56AEDEB90CA27E93DDD34C9C85D365F4C525916B946F56072693E",
+      "size": 371986
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门轴销.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+      "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+      "size": 11458
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\clone-before.json",
+      "sha256": "22296F503BF8726910A8C7A732C59F85244D2F6EF450A6A1A628656B05EAAE20",
+      "size": 59735
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\clone-observation.json",
+      "sha256": "14A2B9C9BBB502C28349E7A970245D621F1B58DC07A13FB12EB94DBCE51EA929",
+      "size": 52476
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-205p555556-before.json",
+      "sha256": "AD9FB5F10E1EF1B38836FBEC229BAE94BF1FE572EFFE686135E20EB8DC1FAD73",
+      "size": 64607
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-205p555556-observation.json",
+      "sha256": "70F70705A16AC0BC5A6E95450A11D2C5E685D259B9F4A94F7221079250E8AD68",
+      "size": 67351
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-471p25-before.json",
+      "sha256": "5E6EF431D53B34150E330C1174400F52081F0FD11253CB8B6FD3392EAA9A0404",
+      "size": 59805
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-471p25-observation.json",
+      "sha256": "DBEBC783CD983794FC38DB765A424708CE94D86D6E9E144BF7633A52A4BEC397",
+      "size": 57517
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\envelope-before.json",
+      "sha256": "DBCAFDF2E4C8F1558C93F3E88701E3D65DE193BF63BB891280EE75B193BB8FF6",
+      "size": 59802
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\envelope-observation.json",
+      "sha256": "1EAEC86A4286899CE0B3D476B8A45BB1A38C35025706D6A3A355C5E81CFF0732",
+      "size": 53833
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\failure.json",
+      "sha256": "B4FCD40F8390001913E68AE7984E62F8F88A575D6DE291B0BE66909D0221DE4C",
+      "size": 294
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\portal-before.json",
+      "sha256": "6661D79D890FCF8EE4D2AB061A4451CCF908E603CA9F85363F5305BC64A61D5C",
+      "size": 16313
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\protected-after-failure.json",
+      "sha256": "9F2945F4F8AA0BABC1C9A1BE3C4B69074C9C9D6EA967A224DE4D955DD9A73CAA",
+      "size": 8191397
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\protected-before.json",
+      "sha256": "193BBB24683140D5BA44DBDF1BFC34DA3CF624E8DD0175C56A24A543585EF3C4",
+      "size": 6831469
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\repair-door-placements-before.json",
+      "sha256": "D0A9FDD09233647CDE5BA24384799A703CA018E046C7C632A69439164D3FAAE3",
+      "size": 69618
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\repair-door-placements-observation.json",
+      "sha256": "FD9BD9B82CC0AA2370723B6936C91E4E9A000C8EB669AB149CE1DD2E86A21442",
+      "size": 73666
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\repair-interfaces-before.json",
+      "sha256": "8655AFD101A0DC41F72819431D7A9C437DC4197A7BCECDCF879476BEC2F4F5B2",
+      "size": 71101
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\source-and-copy-mapping.json",
+      "sha256": "ADC55BA4C7BFB59F2192C62284FA8D2332B249F3CE9BBC479CDA5F88F60FCD2D",
+      "size": 74937
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\source-preparation.json",
+      "sha256": "F6C3F3047BECE73823160AD625B181E1DD9E128E4AD3CC546751C89FCBD86977",
+      "size": 12171
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\task_store\\native_model_request_index.json",
+      "sha256": "E5995B9ED9239496C3C147253BEBD508C7676722E3C3D3C83FFD05B4C234A87A",
+      "size": 3402
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\task_store\\PARAM-20261110104244594-C292D9.json",
+      "sha256": "D5E23DE2B7BE939A93B9B77EDBE91AF54BD948E8CB047E1BB2DA79218179A95D",
+      "size": 2934
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\tools\\build.json",
+      "sha256": "E2AE899FDD6A37E3CCD8E067FCBBB766DDA02FE2EBECC5CD5F2C03622766988D",
+      "size": 6055
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\tools\\NativeParametricAssembly.exe",
+      "sha256": "AD7E642311109DAE8ADD7463B7A8AEB60877301F59B6DDF08BBC3B97F7EB56FA",
+      "size": 1041920
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\tools\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC",
+      "size": 2645544
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\tools\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359",
+      "size": 435240
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "sha256": "7C49E40EB69CD5F04B557E814EF0B537B83F9048AD4CA83CF47F2A1AAADE60EE",
+      "size": 126936
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "sha256": "D1480331C53DD13687768C48BEE3AE697A0A95DF22D0AE611C1AEA157DB70E31",
+      "size": 129768
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "sha256": "DBE467156AC97E4E0D228460A7493D1017B620B23C5C84F9CBFF15755A5E73EC",
+      "size": 173010
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "sha256": "E3BA3917C9580B9B784C01A27DC6129A75E0D33800A88DC027864E81F17040AF",
+      "size": 173327
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "sha256": "0C9C0E1F4832D4A352165C9DBE7A4DAF9F01C89D43A8293F35AFF2D3D85AAFFE",
+      "size": 83299
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "sha256": "52393F174F6365F6FB789EABEDBBC2B795A1786E6EAA5E22B5A09C9DCE191646",
+      "size": 70466
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "sha256": "0E3990EF199D88968843225128411D3BC7512AD2777F3A60B0101F5D57F746E1",
+      "size": 391122
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "sha256": "379E8618E96699F84DF49A8706ED7828F9D9CEF1ECF54F62A6A13F64A258D6E6",
+      "size": 920390
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "sha256": "BA556B1003C8A76D8AFEA4D182FD9D76792CEAEE06DF603E855698E43017F0E4",
+      "size": 122650
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "sha256": "1381CE588EF5655A88FC14F760085DC51B9470B2D0D3954C39E7EE6512DC9B55",
+      "size": 169080
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "sha256": "78C2CAEBCD8F4234318B0B3F6B1A5DCAE3B04A91F66804B95C7B516B486ED01C",
+      "size": 95532
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "sha256": "BB2029578F5189F3AB2E9578F94E9078510B2B02FFA5AF7C3AAF6E02177E1990",
+      "size": 69139
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\relocation_probe\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "sha256": "CCEF1109F70F4E3797116BBE6309DAE2278722A3A6B40F97ABF48FD159FF79BF",
+      "size": 170539
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\bushing.SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\circlip.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\hinge_pin.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\hook_pad.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\latch_plate.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\left_panel_seed.SLDPRT",
+      "sha256": "F34138A9BE009D5A0C68604F57B278584DB686623943C2DE319A2999ACA488A2",
+      "size": 445989
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\mechanical_lock_tongue.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\source_backups\\stiffener_seed.SLDPRT",
+      "sha256": "F4D4973F72CB604BF52BF802BC378E9BA042A4FE8034C196CA7666A964ACCB28",
+      "size": 121752
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "sha256": "C2304F9EE88EDF30A903CDB690956D29F02B70759DBC7EF7AED5919F3519019D",
+      "size": 121304
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "sha256": "48D95C4ED6F8D8FE83C05155A804AD1D6B968F53B286A890BD0A466AEDA32864",
+      "size": 121434
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "sha256": "E1C75BFBC0998DEFA315EF567FF45C30E23A2C7EA5F9D189CE2A456DF9F73EDE",
+      "size": 166560
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "sha256": "03C4BFE7770BC8E91FFACC34212DFF6A5376CEDEBAE27D3785D5E5CB23E1BE23",
+      "size": 167739
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\circlip_W387_H471p25.SLDPRT",
+      "sha256": "D0C4116DF26EB87E6CA99780E98B06489B3BF79284682DFA7E0BF0528476CCC2",
+      "size": 82909
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "sha256": "87A9582F3326215842D32A52E73DF75314C3BCA85F1D8B5929ECFDD83E72ECE6",
+      "size": 71470
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "sha256": "EC2174986F115B6BD5AEE3DE6B9DD4F2155890C96064527B383A5FE9B7130DAC",
+      "size": 388808
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "sha256": "DB0F585E8CA0CC6B73E265CE85ECD6D8032C50472C0F73BD1C342874F3B5F91A",
+      "size": 907891
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "sha256": "B86760F3C8991634DCBA92F078A380F7475C570452B769F499071750CC468526",
+      "size": 122174
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "sha256": "BF3C688BE785770B4FC86D85C222756E2264BEF66C1E3F60493B124B9F90D04C",
+      "size": 169271
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "sha256": "3AB759546BC7055DEB088277395C9A62A26720EA10725ED1C96A45C518B60E88",
+      "size": 95007
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "sha256": "2A45CA39B4C19CD3F7DB3357AAF98866EBA87863C2269E42E5DC8BA7DE30EADA",
+      "size": 68849
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\relocation_probe\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "sha256": "2BFD4662924F7D234FD01473007DD275981D3D60D4A728AFEE24E8147A8FCCA4",
+      "size": 170791
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\bushing.SLDPRT",
+      "sha256": "930EE6070D278D5299D1EECED4F43367EE404A0E921517DE45297C30A8A12C7B",
+      "size": 69868
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\circlip.SLDPRT",
+      "sha256": "84ACBBAD72BC3DB175AD77C5DB5ED5F4A74410435C3CDEF1574B6A7808DCC754",
+      "size": 82354
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\hinge_pin.SLDPRT",
+      "sha256": "B7289A146C9827050573FACEF66DCA06919FC41B943C39548AF536FE21516BC0",
+      "size": 71536
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\hook_pad.SLDPRT",
+      "sha256": "93378BDFB9666CDE8379F59A0506E7A4508AFAEDAC47121C3B8CBDAE56480834",
+      "size": 182321
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\latch_plate.SLDPRT",
+      "sha256": "4B511C2FB2371060D998F2C0667C12980DF4A151E5CF4FDCD2934F7C7AAC1C5C",
+      "size": 169929
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\left_panel_seed.SLDPRT",
+      "sha256": "F34138A9BE009D5A0C68604F57B278584DB686623943C2DE319A2999ACA488A2",
+      "size": 445989
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\mechanical_lock_tongue.SLDPRT",
+      "sha256": "26603389858218CE45164EEA57294016830D671B00B689982B1483B1FDE7E719",
+      "size": 94932
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\source_backups\\stiffener_seed.SLDPRT",
+      "sha256": "F4D4973F72CB604BF52BF802BC378E9BA042A4FE8034C196CA7666A964ACCB28",
+      "size": 121752
+    }
+  ],
+  "protectedV2Files": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\dry-run-20261110104017510-4648.json",
+      "sha256": "82D8D5E844EB56E486FCA916E89F061A17DEC46A3794D819A260781FCC138BE1",
+      "size": 6972159
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\freeze-manifest.json",
+      "sha256": "9E1A124864B044CD8EB789EB8C288A360C48C474ED0B3AC7B4B2EBEE458FBAAB",
+      "size": 3595
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\README.md",
+      "sha256": "4F96F00B165A96E29C32D6183C49510BFD57988578E537839967C21AC40F7767",
+      "size": 9003
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\research-gates.mjs",
+      "sha256": "FE70B884938997DFAE71398ABEB3BD61CB585BE4C7D2B2E6262D992C38973688",
+      "size": 21921
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\run-stage-continuation.mjs",
+      "sha256": "A1AD991387FCD2B905EAD12E49BF465477752CCB33B4DEEBFDA925024C2D735A",
+      "size": 48164
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check-20261110103334584-27780.json",
+      "sha256": "0CD2185F175F01C85EAF53F3CCE2E4C4432BE5247B0B770E64969D4939593444",
+      "size": 6207
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check-20261110103859427-26108.json",
+      "sha256": "33A7467B5605C652F40D2029C56D28AF0192869CCF00687930CF0EEDE0F5CE72",
+      "size": 6757
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check.mjs",
+      "sha256": "CC0A381212305139DE0576384EA5643B4D253AD71325ADF4AE4D34099191FFF9",
+      "size": 19873
+    }
+  ],
+  "stageNodes": [
+    {
+      "phase": "clone",
+      "plan": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+        "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+        "size": 11458
+      },
+      "authorization": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\clone.json",
+        "sha256": "302D4FBA1F3375166E7B5FEBC79EB3F9108F7584B875C1AD8459376F913F3A58",
+        "size": 25970
+      },
+      "nativeEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\clone.json",
+        "sha256": "2D4915E771BC4C963291DC1E27D6DAE66E827226E6D8A3D564FC25557CB48EC2",
+        "size": 55166
+      },
+      "processEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\clone.process.json",
+        "sha256": "3179503A8EF8149B544634E27973606BB4A991CA62DA2841DE7D062A66DECF07",
+        "size": 618
+      },
+      "beforeResearch": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\clone-before.json",
+        "sha256": "22296F503BF8726910A8C7A732C59F85244D2F6EF450A6A1A628656B05EAAE20",
+        "size": 59735
+      },
+      "observation": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\clone-observation.json",
+        "sha256": "14A2B9C9BBB502C28349E7A970245D621F1B58DC07A13FB12EB94DBCE51EA929",
+        "size": 52476
+      }
+    },
+    {
+      "phase": "envelope",
+      "plan": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+        "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+        "size": 11458
+      },
+      "authorization": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\envelope.json",
+        "sha256": "FE1883F29BAA16CB18A3B079705C40DE50B69CCD1C0586290A241EEC3D35692E",
+        "size": 26037
+      },
+      "nativeEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\envelope.json",
+        "sha256": "3934F4AAED6E78D446CF6E7B7CD7F67F3BCB8F82AB20F48C8F9868ECD0A4FF26",
+        "size": 228749
+      },
+      "processEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\envelope.process.json",
+        "sha256": "83DD7AA1E6A4424A865999DB487C587116CA3AED7F1F9546B64855798959DF69",
+        "size": 2326
+      },
+      "beforeResearch": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\envelope-before.json",
+        "sha256": "DBCAFDF2E4C8F1558C93F3E88701E3D65DE193BF63BB891280EE75B193BB8FF6",
+        "size": 59802
+      },
+      "observation": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\envelope-observation.json",
+        "sha256": "1EAEC86A4286899CE0B3D476B8A45BB1A38C35025706D6A3A355C5E81CFF0732",
+        "size": 53833
+      }
+    },
+    {
+      "phase": "door-471p25",
+      "plan": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+        "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+        "size": 11458
+      },
+      "authorization": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\door-471p25.json",
+        "sha256": "AD40ADC3EE523D1E134082CC5A926B0776711451E96D0B1210BD6F68C2A9014E",
+        "size": 26040
+      },
+      "nativeEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-471p25.json",
+        "sha256": "9A54AE7B5E86F73BB44AFAC6E2F56D18337A09B69BABAA53ACE2429F84C89382",
+        "size": 39012
+      },
+      "processEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-471p25.process.json",
+        "sha256": "FCA9B676123A633348B49753E9388B9E8F62D803C0FE055DE4A063283E1411E0",
+        "size": 104880
+      },
+      "beforeResearch": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-471p25-before.json",
+        "sha256": "5E6EF431D53B34150E330C1174400F52081F0FD11253CB8B6FD3392EAA9A0404",
+        "size": 59805
+      },
+      "observation": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-471p25-observation.json",
+        "sha256": "DBEBC783CD983794FC38DB765A424708CE94D86D6E9E144BF7633A52A4BEC397",
+        "size": 57517
+      }
+    },
+    {
+      "phase": "door-205p555556",
+      "plan": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+        "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+        "size": 11458
+      },
+      "authorization": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\door-205p555556.json",
+        "sha256": "88FC70FEEA5CA2ADB0ED039FD47DD9B4503E2D2235DF056BC0EE7BB96327D0B3",
+        "size": 30842
+      },
+      "nativeEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-205p555556.json",
+        "sha256": "4F9B3834B2935379CDD203313FC20066C2A9B71D51E3A1163CB626CB1A3E24B0",
+        "size": 39799
+      },
+      "processEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\door-205p555556.process.json",
+        "sha256": "BAF43BA41350D34EED9603CF1163A33E6A1ED27537D8033062FB9DC7567AAA5C",
+        "size": 107340
+      },
+      "beforeResearch": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-205p555556-before.json",
+        "sha256": "AD9FB5F10E1EF1B38836FBEC229BAE94BF1FE572EFFE686135E20EB8DC1FAD73",
+        "size": 64607
+      },
+      "observation": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\door-205p555556-observation.json",
+        "sha256": "70F70705A16AC0BC5A6E95450A11D2C5E685D259B9F4A94F7221079250E8AD68",
+        "size": 67351
+      }
+    },
+    {
+      "phase": "repair-door-placements",
+      "plan": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+        "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+        "size": 11458
+      },
+      "authorization": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\repair-door-placements.json",
+        "sha256": "C8A977B869210F254E79BC12775EF3735B63E2D00C52B3A94A53703C4FE4EA1A",
+        "size": 35853
+      },
+      "nativeEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-door-placements.json",
+        "sha256": "659868359F5CB896E96FAFA2BD53F8A23B42A97901D1A113E4D20E8340203A0F",
+        "size": 1188
+      },
+      "processEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-door-placements.process.json",
+        "sha256": "DB930EFB448E78DDA8C7F6299401DE5FC107232EAFF093EF4C9CCD0BF46C1D2F",
+        "size": 633
+      },
+      "beforeResearch": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\repair-door-placements-before.json",
+        "sha256": "D0A9FDD09233647CDE5BA24384799A703CA018E046C7C632A69439164D3FAAE3",
+        "size": 69618
+      },
+      "observation": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\repair-door-placements-observation.json",
+        "sha256": "FD9BD9B82CC0AA2370723B6936C91E4E9A000C8EB669AB149CE1DD2E86A21442",
+        "size": 73666
+      }
+    },
+    {
+      "phase": "repair-interfaces",
+      "plan": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\parametric_execution.json",
+        "sha256": "4280234D78B4BBA4E972EB5F2C9BF08FBACD66B7DCE105CFD3FCE4C8BA90FD5E",
+        "size": 11458
+      },
+      "authorization": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\authorizations\\repair-interfaces.json",
+        "sha256": "9FEDEB56102C91612400F831FE3630D6530262449752A0BB239206BFE159DE83",
+        "size": 37336
+      },
+      "nativeEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-interfaces.json",
+        "sha256": "32EA47B5DA5E4BB52EADF5AB8B5DE8ABA11525B0BB699CE56AB1029FA2BE2612",
+        "size": 668
+      },
+      "processEvidence": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\evidence\\repair-interfaces.process.json",
+        "sha256": "90FA1325CF4D33B11EBB18247E27827ED2DA8C9AA1694FB1F8A7F1F4223E86BD",
+        "size": 630
+      },
+      "beforeResearch": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\repair-interfaces-before.json",
+        "sha256": "8655AFD101A0DC41F72819431D7A9C437DC4197A7BCECDCF879476BEC2F4F5B2",
+        "size": 71101
+      },
+      "observation": null
+    }
+  ],
+  "failure": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\failure.json",
+    "sha256": "B4FCD40F8390001913E68AE7984E62F8F88A575D6DE291B0BE66909D0221DE4C",
+    "size": 294
+  },
+  "protectedBefore": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\protected-before.json",
+    "sha256": "193BBB24683140D5BA44DBDF1BFC34DA3CF624E8DD0175C56A24A543585EF3C4",
+    "size": 6831469
+  },
+  "protectedAfterFailure": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\research\\protected-after-failure.json",
+    "sha256": "9F2945F4F8AA0BABC1C9A1BE3C4B69074C9C9D6EA967A224DE4D955DD9A73CAA",
+    "size": 8191397
+  },
+  "sourceManifest": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\door_sources.json",
+    "sha256": "B122B86C80F2DBF0865C9814B125206B76BACA4E256C6E46BC5D19A7016E88B4",
+    "size": 3315
+  },
+  "inheritedPending": {
+    "state": "pending_native_locks_replacement",
+    "rightBeforeSha256": "E1E350021A0779C368A97FB1C4DAA2859A2D89A8AE29F5822EBB867F1F270409",
+    "sourceRightSha256": "1DB48AC81F9D48B6BE43E86348E0363CCC5195A8BD21AC7C282063C7A2C6384A",
+    "exactFrozenGeometryOnly": true,
+    "sourceStatuses": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "finalGeometryAccepted": false,
+    "mustBeDischargedBy": [
+      "locks",
+      "locks-verify"
+    ],
+    "frozenNativeProfile": "readonly-open-20261110-r4-doorprecision3",
+    "sourceResponsibility": "NativeParametricEnvelope.cs retains this exact MirrorStock; NativeParametricLocks.cs Run creates the R parameter source and replaces the formal right only after native geometry/reflection gates",
+    "rightAfterEnvelopeSha256": "66C89B98E4ADADC98E2969F9FDFDB2F1DB8F6895F20AD961E9F6AA46A63E15A6",
+    "envelopeLeftSha256": "081B1471BA158FB441D7EBB52A16247228831667119810A4EC20C42F14322A59",
+    "frozenNativeEvidenceSha256": "3934F4AAED6E78D446CF6E7B7CD7F67F3BCB8F82AB20F48C8F9868ECD0A4FF26"
+  },
+  "sourceRightAfterEnvelopeSha256": "66C89B98E4ADADC98E2969F9FDFDB2F1DB8F6895F20AD961E9F6AA46A63E15A6",
+  "sourceRightAfterInterfacesSha256": "66C89B98E4ADADC98E2969F9FDFDB2F1DB8F6895F20AD961E9F6AA46A63E15A6",
+  "sourceLeftAfterEnvelopeSha256": "081B1471BA158FB441D7EBB52A16247228831667119810A4EC20C42F14322A59",
+  "sourceLeftAfterInterfacesSha256": "081B1471BA158FB441D7EBB52A16247228831667119810A4EC20C42F14322A59",
+  "referenceAliases": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜 模型.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\标准寄存柜1917×1000×550(总装配).SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_右.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板2╱12_左.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_右.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板4╱12_左.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_右.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\插销固定板6╱12_左.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_右.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门2╱12焊接_左.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_右.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门4╱12焊接_左.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_右.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门6╱12焊接_左.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_右.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板2╱12_W307.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_右.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板4╱12_W307.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_右.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门板6╱12_W307.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L2.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L4.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_L6.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R2.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R4.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\储物柜门装配_R6.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座 模型.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座 模型.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座底板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座底板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座加强筋.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座加强筋.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座外框.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\底座外框.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\调整脚 M12X60(模型).SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋2╱12.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋4╱12.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\柜门加强筋6╱12.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\开口挡圈5.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\螺母M12.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\螺母M12.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 横隔板R.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 上.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 上.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板L.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 竖隔板R.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 下.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 下.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 右.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 右.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 左.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框 左.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框焊接.sldasm",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门框焊接.sldasm",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门轴销.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\门轴销.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖 模型.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖 模型.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体底板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体后侧板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体前侧板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体右侧板.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\上盖壳体左侧板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\塑料轴套(云绅模具).SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁控维护条_源钣金.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁舌.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\锁舌.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋1.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体侧板加强筋2.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板加强筋.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板L焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体横层板R焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板加强件.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板L焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体竖隔板R焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体右侧板焊接.SLDASM",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板.sldprt",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板.sldprt",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\箱体左侧板焊接.sldasm",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\native_cad\\working_pack\\U型锁钩垫板.SLDPRT",
+      "basis": "exact current source working file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_left_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\top_latch_right_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_left_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\top_latch_right_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "basis": "exact placement-after source door file"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_left_W387_H471p25.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\door_weld_right_W387_H471p25.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_left_W387_H471p25.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\assemblies\\ordinary_door_right_W387_H471p25.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\circlip_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\circlip_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_hinge_pin_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_left_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_panel_right_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\door_stiffener_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\hinge_latch_plate_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\mechanical_lock_tongue_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\plastic_bushing_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H471p25-20261110T104625791Z\\candidate\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H471p25\\parts\\u_hook_pad_W387_H471p25.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_left_W387_H205p555556.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\door_weld_right_W387_H205p555556.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_left_W387_H205p555556.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\assemblies\\ordinary_door_right_W387_H205p555556.SLDASM",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\circlip_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_hinge_pin_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_left_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_panel_right_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\door_stiffener_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\hinge_latch_plate_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\mechanical_lock_tongue_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\plastic_bushing_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\transactions\\PARAM-20261110104244594-C292D9-H205p555556-20261110T104822145Z\\candidate\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "file": "D:\\Winnsen_Structure_Agent_Studio\\data\\parametric_attempts\\PARAM-20261110104244594-C292D9\\doors\\H205p555556\\parts\\u_hook_pad_W387_H205p555556.SLDPRT",
+      "basis": "exact native generation staging-root/output-relative path alias; not proof of current persisted dependency"
+    }
+  ],
+  "currentDependencyGraphComplete": false,
+  "allFrozenCurrentDependencyEdgesCovered": false,
+  "ancestorCloneReplacementCount": 140,
+  "ancestorCloneCountIsNotV3Expectation": true,
+  "modelAccepted": false
+}

@@ -3406,26 +3406,47 @@ async function renderPage(request) {
         const count = column.heightValues.length
         const available = height - 87 - 7 * count
         column.allocationError = ''
+        column.resolvedHeights = null
+        column.resolvedDoors = null
         if (column.allocationMode === 'ratio') {
           const weights = column.ratios.map((value) => value.trim() ? Number(value) : NaN)
           if (weights.some((value) => !Number.isFinite(value) || value < .001) || !Number.isFinite(weights.reduce((sum, value) => sum + value, 0))) {
             column.allocationError = '每扇门的比例须大于 0，至少 0.001。'
             column.heightValues = weights.map(() => '')
-          } else column.heightValues = distributeDoorBudget(height - 87, weights).map((pitch) => formatDoorMm(pitch - 7))
+          } else if (productionProfile) column.heightValues = distributeDoorBudget(height - 87, weights).map((pitch) => formatDoorMm(pitch - 7))
+          else {
+            const total = weights.reduce((sum, value) => sum + value, 0)
+            column.resolvedHeights = weights.map((weight) => (height - 87) * weight / total - 7)
+            column.resolvedDoors = weights.map((heightUnits) => ({ heightUnits }))
+            column.heightValues = column.resolvedHeights.map(formatDoorMm)
+          }
           return
         }
         const autoRows = column.automatic.map((automatic, index) => automatic ? index : -1).filter((index) => index >= 0)
         if (!autoRows.length) return
+        if (!productionProfile && autoRows.length === count) {
+          column.resolvedHeights = Array(count).fill((height - 87) / count - 7)
+          column.resolvedDoors = Array.from({ length:count }, () => ({ heightUnits:1 }))
+          column.heightValues = column.resolvedHeights.map(formatDoorMm)
+          if (column.resolvedHeights.some((value) => value < 100)) column.allocationError = '门高至少 100 mm；请减少门数或增加柜高。'
+          return
+        }
         const fixed = column.heightValues.filter((value, index) => !column.automatic[index]).map((value) => value.trim() ? Number(value) : NaN)
         if (fixed.some((value) => !Number.isFinite(value) || value < 100)) {
           column.allocationError = '先填写固定门高，每扇至少 100 mm；余下由自动门分配。'
           autoRows.forEach((index) => { column.heightValues[index] = '' })
           return
         }
-        const remainder = (Math.round(available * 1000) - fixed.reduce((sum, value) => sum + Math.round(value * 1000), 0)) / 1000
-        const assigned = distributeDoorBudget(remainder, autoRows.map(() => 1))
+        const remainder = productionProfile
+          ? (Math.round(available * 1000) - fixed.reduce((sum, value) => sum + Math.round(value * 1000), 0)) / 1000
+          : available - fixed.reduce((sum, value) => sum + value, 0)
+        const assigned = productionProfile ? distributeDoorBudget(remainder, autoRows.map(() => 1)) : autoRows.map(() => remainder / autoRows.length)
         if (remainder < autoRows.length * 100) column.allocationError = '固定门高占用过多，' + autoRows.length + ' 扇自动门还需 ' + formatDoorMm(autoRows.length * 100 - remainder) + ' mm 才能达到每门 100 mm；请减小固定门高或增加柜高。'
         autoRows.forEach((index, row) => { column.heightValues[index] = Number.isFinite(assigned[row]) ? formatDoorMm(assigned[row]) : '' })
+        if (!productionProfile) {
+          column.resolvedHeights = column.heightValues.map((value, index) => column.automatic[index] ? assigned[autoRows.indexOf(index)] : Number(value))
+          column.resolvedDoors = column.resolvedHeights.map((heightMm) => ({ heightMm }))
+        }
       }
 
       function syncDoorColumnInputs(height) {
@@ -3502,7 +3523,7 @@ async function renderPage(request) {
         const columns = doorColumns.map((column) => {
           const count = Number(column.countInput.value)
           const countValid = Number.isInteger(count) && count >= 1 && count <= 24 && count === column.heightValues.length
-          const heights = column.heightValues.map((value) => value.trim() ? Number(value) : NaN)
+          const heights = column.resolvedHeights || column.heightValues.map((value) => value.trim() ? Number(value) : NaN)
           const heightsValid = heights.length > 0 && heights.every((value) => Number.isFinite(value) && value >= 100)
           const precisionValid = Array.from(column.list.querySelectorAll('input')).every((input) => !input.validity.stepMismatch)
           const used = heights.reduce((sum, value) => sum + value, 0)
@@ -3510,7 +3531,7 @@ async function renderPage(request) {
           const difference = available - used
           const closed = Number.isFinite(difference) && Math.abs(difference) < .0005
           return { side:column.side, label:column.label, count, countValid, heights, heightsValid, precisionValid, used, available, difference, closed, allocationError:column.allocationError,
-            doors:heights.map((heightMm) => ({ heightMm })) }
+            doors:column.resolvedDoors || heights.map((heightMm) => ({ heightMm })) }
         })
         const countValid = columns.every((column) => column.countValid)
         const total = countValid ? columns.reduce((sum, column) => sum + column.count, 0) : 0

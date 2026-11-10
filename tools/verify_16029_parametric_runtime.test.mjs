@@ -14,6 +14,13 @@ import { run16029ParametricPortalTask } from './run_16029_parametric_portal_work
 const BASELINE = 'engineer-feedback-20261008-r4'
 const REPAIR = 'readonly-open-20261105-r4'
 const REARWIDTH_REPAIR = 'readonly-open-20261109-r4-rearwidth1'
+const REARGEOMETRY_REPAIR = 'readonly-open-20261110-r4-reargeometry1'
+const DOOR_PRECISION_REPAIR = 'readonly-open-20261110-r4-doorprecision1'
+const DOOR_PRECISION_REPAIR2 = 'readonly-open-20261110-r4-doorprecision2'
+const DOOR_PRECISION_REPAIR3 = 'readonly-open-20261110-r4-doorprecision3'
+const DOOR_PRECISION_REPAIRS = [DOOR_PRECISION_REPAIR, DOOR_PRECISION_REPAIR2, DOOR_PRECISION_REPAIR3]
+const REPAIR_PROFILES = [REPAIR, REARWIDTH_REPAIR, REARGEOMETRY_REPAIR, ...DOOR_PRECISION_REPAIRS]
+const repairLabel = tag => tag === REPAIR ? '' : tag === REARWIDTH_REPAIR ? ' rear-width repair' : tag === REARGEOMETRY_REPAIR ? ' rear-geometry repair' : ' ' + tag
 const RECORDED_ATTEMPT = resolve(dirname(fileURLToPath(import.meta.url)), '../data/parametric_attempts/PARAM-20261109111020502-DAEB5A')
 const sha = bytes => createHash('sha256').update(bytes).digest('hex').toUpperCase()
 const hash = path => sha(readFileSync(path))
@@ -46,6 +53,7 @@ const suffixFor = request => [
 
 function bindReceipts(result, evidenceByPhase = new Map()) {
   const planPath = resolve(result.attempt, 'parametric_execution.json'), plan = read(planPath)
+  const heights = [...plan.contract.rowsByColumn.L, ...plan.contract.rowsByColumn.R].map(row => row.doorHeightMm)
   const planSha256 = hash(planPath), executableSha256 = hash(resolve(result.attempt, 'tools/NativeParametricAssembly.exe'))
   let predecessor = ''
   for (const phase of result.stages) {
@@ -54,7 +62,7 @@ function bindReceipts(result, evidenceByPhase = new Map()) {
     const receiptPath = resolve(result.attempt, 'receipts', phase + '.json')
     write(authorizationPath, { phase, taskId: plan.taskId, planSha256, executableSha256 })
     write(evidencePath, evidenceByPhase.get(phase) || (phase.startsWith('door-')
-      ? { success: true, heightMm: Number(phase.slice(5).replace('p', '.')), result: { success: false } }
+      ? { success: true, heightMm: heights.find(height => 'door-' + Number(height.toFixed(6)).toString().replace('.', 'p') === phase), result: { success: false } }
       : { phase, success: true }))
     write(receiptPath, { phase, taskId: plan.taskId, planSha256, authorizationSha256: hash(authorizationPath),
       evidenceSha256: hash(evidencePath), protectedSourcesUnchanged: true, predecessor })
@@ -82,7 +90,7 @@ function harness(t, request = requestFor(), repairTag = REPAIR) {
     rmSync(root, { recursive: true, force: true })
   })
   const builds = new Map()
-  for (const tag of [BASELINE, REPAIR, REARWIDTH_REPAIR]) {
+  for (const tag of [BASELINE, ...REPAIR_PROFILES]) {
     const folder = resolve(root, 'workers/native_model_requests/parametric_v1', 'bin-' + tag)
     mkdirSync(folder, { recursive: true })
     const executable = resolve(folder, 'NativeParametricAssembly.exe')
@@ -101,7 +109,11 @@ function harness(t, request = requestFor(), repairTag = REPAIR) {
     const stages = options.phases || suffixFor(input)
     const resumedEvidence = options.resumeSource ? { sourceAttempt: options.resumeSource, completedPhase: options.resumeStage,
       receiptSha256: hash(resolve(options.resumeSource, 'receipts/repair-frame-slots.json')) } : null
-    write(resolve(attempt, 'parametric_execution.json'), { taskId, contract: build16029ParametricContract(input), resumedEvidence })
+    const contract = build16029ParametricContract(input)
+    const doorModules = DOOR_PRECISION_REPAIRS.includes(options.buildTag)
+      ? [...new Set([...contract.rowsByColumn.L, ...contract.rowsByColumn.R].map(row => row.doorHeightMm))]
+        .map(heightMm => ({ token: Number(heightMm.toFixed(6)).toString().replace('.', 'p'), heightMm })) : undefined
+    write(resolve(attempt, 'parametric_execution.json'), { taskId, contract, resumedEvidence, ...(doorModules ? { doorModules } : {}) })
     mkdirSync(resolve(attempt, 'tools'))
     copyFileSync(build.executable, resolve(attempt, 'tools/NativeParametricAssembly.exe'))
     copyFileSync(resolve(build.folder, 'build.json'), resolve(attempt, 'tools/build.json'))
@@ -128,8 +140,8 @@ function harness(t, request = requestFor(), repairTag = REPAIR) {
 }
 
 test('runtime bridge pins two fresh segments and uses requested height/depth stages', async t => {
-  for (const repairTag of [REPAIR, REARWIDTH_REPAIR]) for (const [height, depth] of [[1917, 550], [2000, 550], [1917, 600], [2000, 600]]) {
-    await t.test(height + 'H/' + depth + 'D' + (repairTag === REPAIR ? '' : ' rear-width repair'), async t => {
+  for (const repairTag of REPAIR_PROFILES) for (const [height, depth] of [[1917, 550], [2000, 550], [1917, 600], [2000, 600]]) {
+    await t.test(height + 'H/' + depth + 'D' + repairLabel(repairTag), async t => {
       const h = harness(t, requestFor(height, depth), repairTag), controller = new AbortController()
       const progress = () => {}, beforeResume = async () => { h.events.push('beforeResume'); await Promise.resolve() }
       const result = await h.run({ signal: controller.signal, onProgress: progress, beforeResume, phaseTimeoutMs: 123456 })
@@ -137,8 +149,8 @@ test('runtime bridge pins two fresh segments and uses requested height/depth sta
       const [first, second] = h.calls
       const doors = height === 1917 ? ['door-603', 'door-1213'] : ['door-630p666667', 'door-1268p333333']
       assert.deepEqual(first.options.phases, prefixFor(h.request, doors))
-      assert.equal(first.options.buildTag, BASELINE)
-      assert.equal(first.options.repairProfile, '')
+      assert.equal(first.options.buildTag, DOOR_PRECISION_REPAIRS.includes(repairTag) ? repairTag : BASELINE)
+      assert.equal(first.options.repairProfile, DOOR_PRECISION_REPAIRS.includes(repairTag) ? repairTag : '')
       assert.equal(second.options.buildTag, repairTag)
       assert.equal(second.options.repairProfile, repairTag)
       assert.equal(second.options.resumeSource, resolve(h.root, 'data/parametric_attempts/PARAM-fixture-1'))
@@ -178,6 +190,119 @@ test('dynamic door phases use all distinct measured heights in column order', as
     assert.equal(evidence.success, true)
     assert.equal(evidence.result.success, false)
   }
+})
+
+for (const repairTag of DOOR_PRECISION_REPAIRS) test('door-precision prefix uses the candidate executable and preserves complete equal-division heights: ' + repairTag, async t => {
+  const request = { cabinet: { widthMm: 900, heightMm: 2000, depthMm: 500 },
+    columns: [{ side: 'L', doors: Array.from({ length: 4 }, () => ({ heightUnits: 1 })) },
+      { side: 'R', doors: Array.from({ length: 9 }, () => ({ heightUnits: 1 })) }] }
+  const h = harness(t, request, repairTag)
+  await h.run()
+  const [first, second] = h.calls
+  assert.equal(first.options.buildTag, repairTag)
+  assert.equal(first.options.repairProfile, repairTag)
+  assert.deepEqual(first.options.phases.filter(phase => phase.startsWith('door-')), ['door-471p25', 'door-205p555556'])
+  const evidence = read(resolve(second.options.resumeSource, 'evidence/door-205p555556.json'))
+  assert.equal(evidence.heightMm, 1913 / 9 - 7)
+  assert.notEqual(evidence.heightMm, 205.555556)
+  assert.equal(hash(resolve(second.options.resumeSource, 'tools/NativeParametricAssembly.exe')),
+    h.builds.get(repairTag).manifest.executableSha256)
+})
+
+test('door-precision accepts historical explicit heights without redistributing them', async t => {
+  const request = { cabinet: { widthMm: 900, heightMm: 2000, depthMm: 500 },
+    columns: [{ side: 'L', doors: Array.from({ length: 4 }, () => ({ heightMm: 471.25 })) },
+      { side: 'R', doors: [...Array(8).fill(205.555), 205.56].map(heightMm => ({ heightMm })) }] }
+  const before = JSON.stringify(request), h = harness(t, request, DOOR_PRECISION_REPAIR)
+  await h.run()
+  assert.equal(JSON.stringify(request), before)
+  assert.deepEqual(h.calls[0].options.phases.filter(phase => phase.startsWith('door-')),
+    ['door-471p25', 'door-205p555', 'door-205p56'])
+  for (const height of [205.555, 205.56]) {
+    const phase = 'door-' + String(height).replace('.', 'p')
+    assert.equal(read(resolve(h.calls[1].options.resumeSource, 'evidence', phase + '.json')).heightMm, height)
+  }
+})
+
+test('distinct exact heights sharing one six-decimal identifier stop before generation', async t => {
+  for (const repairTag of REPAIR_PROFILES) await t.test(repairTag, async t => {
+    const request = requestFor()
+    request.columns = [{ side: 'L', doors: [603.0000001, 1212.9999999].map(heightMm => ({ heightMm })) },
+      { side: 'R', doors: [603.0000002, 1212.9999998].map(heightMm => ({ heightMm })) }]
+    const h = harness(t, request, repairTag)
+    await assert.rejects(h.run(), /Distinct contract door heights map to the same door module identifier/)
+    assert.equal(h.calls.length, 0)
+    assert.equal(h.inspectCadCalls, 0)
+  })
+})
+
+for (const repairTag of DOOR_PRECISION_REPAIRS) test('door-precision rejects rounded door evidence even when its identifier and receipt chain match: ' + repairTag, async t => {
+  const h = harness(t, requestFor(2000), repairTag)
+  h.respond = (input, options, index) => {
+    const result = h.fixture(input, options)
+    if (index === 1) {
+      const phase = result.stages.find(phase => phase.startsWith('door-'))
+      update(resolve(result.attempt, 'evidence', phase + '.json'), evidence => { evidence.heightMm = Number(evidence.heightMm.toFixed(6)) })
+      rebindReceiptChain(result)
+    }
+    return result
+  }
+  await assert.rejects(h.run(), /runtime bridge receipt binding failed: door-/)
+  assert.equal(h.calls.length, 1)
+  assert.equal(h.inspectCadCalls, 0)
+})
+
+for (const repairTag of DOOR_PRECISION_REPAIRS) test('door-precision rejects the observed CLR decimal conversion drift with a valid identifier and rebound receipts: ' + repairTag, async t => {
+  const request = { cabinet: { widthMm: 900, heightMm: 2000, depthMm: 500 },
+    columns: [{ side: 'L', doors: Array.from({ length: 4 }, () => ({ heightUnits: 1 })) },
+      { side: 'R', doors: Array.from({ length: 9 }, () => ({ heightUnits: 1 })) }] }
+  const h = harness(t, request, repairTag)
+  h.respond = (input, options, index) => {
+    const result = h.fixture(input, options)
+    if (index === 1) {
+      update(resolve(result.attempt, 'evidence/door-205p555556.json'), evidence => {
+        assert.equal(evidence.heightMm, 205.55555555555554)
+        evidence.heightMm = 205.55555555555551
+      })
+      rebindReceiptChain(result)
+    }
+    return result
+  }
+  await assert.rejects(h.run(), /runtime bridge receipt binding failed: door-205p555556/)
+  assert.equal(h.calls.length, 1)
+  assert.equal(h.inspectCadCalls, 0)
+})
+
+test('door-precision keeps the JS midpoint identifier and the full explicitly supplied height', async t => {
+  const request = requestFor()
+  request.columns = ['L', 'R'].map(side => ({ side, doors: [100.0000005, 1715.9999995].map(heightMm => ({ heightMm })) }))
+  const h = harness(t, request, DOOR_PRECISION_REPAIR)
+  await h.run()
+  assert.deepEqual(h.calls[0].options.phases.filter(phase => phase.startsWith('door-')), ['door-100', 'door-1716'])
+  const plan = read(resolve(h.calls[1].options.resumeSource, 'parametric_execution.json'))
+  assert.deepEqual(plan.doorModules, [{ token: '100', heightMm: 100.0000005 }, { token: '1716', heightMm: 1715.9999995 }])
+  assert.equal(read(resolve(h.calls[1].options.resumeSource, 'evidence/door-100.json')).heightMm, 100.0000005)
+})
+
+for (const repairTag of DOOR_PRECISION_REPAIRS) test('door-precision binds both segment module maps to the exact requested contract: ' + repairTag, async t => {
+  const cases = [
+    ['missing map', plan => { delete plan.doorModules }],
+    ['rounded height', plan => { plan.doorModules[0].heightMm = Number(plan.doorModules[0].heightMm.toFixed(6)) }],
+    ['changed identifier', plan => { plan.doorModules[0].token = '630p666666' }],
+    ['duplicate module', plan => { plan.doorModules.push({ ...plan.doorModules[0] }) }],
+    ['missing module', plan => { plan.doorModules.pop() }],
+    ['reordered modules', plan => { plan.doorModules.reverse() }],
+  ]
+  for (const segment of [1, 2]) for (const [label, mutate] of cases) await t.test('segment ' + segment + ': ' + label, async t => {
+    const h = harness(t, requestFor(2000), repairTag)
+    h.respond = (input, options, index) => {
+      const result = h.fixture(input, options)
+      if (index === segment) update(resolve(result.attempt, 'parametric_execution.json'), mutate)
+      return result
+    }
+    await assert.rejects(h.run(), /runtime bridge door module map differs from the request contract/)
+    assert.equal(h.calls.length, segment)
+  })
 })
 
 test('native door evidence rejects missing, wrong or nonnumeric heights and unsuccessful outer results', async t => {
@@ -256,7 +381,7 @@ test('first-segment failure propagates without checking CAD or attempting resume
 })
 
 test('atomic-stage cancellation returns either segment immediately without validating its incomplete fixtures', async t => {
-  for (const repairTag of [REPAIR, REARWIDTH_REPAIR]) for (const segment of [1, 2]) await t.test('segment ' + segment + (repairTag === REPAIR ? '' : ' rear-width repair'), async t => {
+  for (const repairTag of REPAIR_PROFILES) for (const segment of [1, 2]) await t.test('segment ' + segment + repairLabel(repairTag), async t => {
     const h = harness(t, requestFor(), repairTag), cancelled = { state: 'cancelled_after_atomic_stage', attempt: 'unfinished', stages: [] }
     h.respond = (input, options, index) => index === segment ? cancelled : h.fixture(input, options)
     assert.equal(await h.run(), cancelled)
@@ -326,7 +451,7 @@ test('manual, production and envelope requests bypass automatic runtime repair s
     ['production profile', {}, { productionProfile: INDOOR_16029_PRODUCTION_PROFILE }],
     ['envelope probe', {}, { envelopeProbe: true }],
   ]
-  for (const repairTag of [REPAIR, REARWIDTH_REPAIR]) for (const [label, options, extra = {}] of cases) await t.test(label + (repairTag === REPAIR ? '' : ' rear-width repair'), async t => {
+  for (const repairTag of REPAIR_PROFILES) for (const [label, options, extra = {}] of cases) await t.test(label + repairLabel(repairTag), async t => {
     const h = harness(t, { ...requestFor(), ...extra }, repairTag), sentinel = { state: 'manual-fixture' }
     h.respond = () => sentinel
     h.dependencies.readRepair = () => assert.fail('explicit requests must not read automatic selection')
@@ -374,6 +499,11 @@ test('unsupported repair selection and changed default baseline stop before mode
     ['rear-width build with r4 profile', REARWIDTH_REPAIR, REPAIR],
     ['rear-width build with missing profile', REARWIDTH_REPAIR, undefined],
     ['rear-width build with r5 profile', REARWIDTH_REPAIR, 'readonly-open-20261105-r5'],
+    ['rear-geometry build with r4 profile', REARGEOMETRY_REPAIR, REPAIR],
+    ['rear-geometry build with rear-width profile', REARGEOMETRY_REPAIR, REARWIDTH_REPAIR],
+    ['rear-geometry build with missing profile', REARGEOMETRY_REPAIR, undefined],
+    ['r4 build with rear-geometry profile', REPAIR, REARGEOMETRY_REPAIR],
+    ['rear-width build with rear-geometry profile', REARWIDTH_REPAIR, REARGEOMETRY_REPAIR],
   ]) await t.test(label, async t => {
     const h = harness(t); h.repair = { buildTag, repairProfile }
     await assert.rejects(h.run(), /selected repair profile/)
@@ -393,7 +523,7 @@ test('results must have the exact ordered stages, task identity and request cont
     ['changed request', result => update(resolve(result.attempt, 'parametric_execution.json'), plan => { plan.contract.input.cabinet.widthMm++ })],
     ['changed derived contract', result => update(resolve(result.attempt, 'parametric_execution.json'), plan => { plan.contract.geometry.doorLeafWidthMm++ })],
   ]
-  for (const repairTag of [REPAIR, REARWIDTH_REPAIR]) for (const segment of [1, 2]) for (const [label, mutate] of cases) await t.test('segment ' + segment + ': ' + label + (repairTag === REPAIR ? '' : ' rear-width repair'), async t => {
+  for (const repairTag of REPAIR_PROFILES) for (const segment of [1, 2]) for (const [label, mutate] of cases) await t.test('segment ' + segment + ': ' + label + repairLabel(repairTag), async t => {
     const h = harness(t, requestFor(), repairTag)
     h.respond = (input, options, index) => { const result = h.fixture(input, options); if (index === segment) mutate(result); return result }
     await assert.rejects(h.run(), /runtime bridge/)
@@ -435,7 +565,7 @@ test('second segment must use this request checkpoint without a backup or snapsh
     ['backup override', resumed => { resumed.backupPhase = 'repair-height-braces' }],
     ['snapshot override', resumed => { resumed.snapshotSource = 'foreign-snapshot' }],
   ]
-  for (const repairTag of [REPAIR, REARWIDTH_REPAIR]) for (const [label, mutate] of cases) await t.test(label + (repairTag === REPAIR ? '' : ' rear-width repair'), async t => {
+  for (const repairTag of REPAIR_PROFILES) for (const [label, mutate] of cases) await t.test(label + repairLabel(repairTag), async t => {
     const h = harness(t, requestFor(), repairTag)
     h.respond = (input, options, index) => {
       const result = h.fixture(input, options)
@@ -475,7 +605,7 @@ test('both segments require pinned program bytes, exact receipt coverage and a b
       update(receiptPath(result), receipt => { receipt.authorizationSha256 = hash(authorizationPath(result)) })
     }],
   ]
-  for (const repairTag of [REPAIR, REARWIDTH_REPAIR]) for (const segment of [1, 2]) for (const [label, mutate] of cases) await t.test('segment ' + segment + ': ' + label + (repairTag === REPAIR ? '' : ' rear-width repair'), async t => {
+  for (const repairTag of REPAIR_PROFILES) for (const segment of [1, 2]) for (const [label, mutate] of cases) await t.test('segment ' + segment + ': ' + label + repairLabel(repairTag), async t => {
     const h = harness(t, requestFor(), repairTag)
     h.respond = (input, options, index) => { const result = h.fixture(input, options); if (index === segment) mutate(result); return result }
     await assert.rejects(h.run(), /runtime bridge/)

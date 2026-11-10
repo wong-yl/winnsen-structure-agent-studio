@@ -17,6 +17,10 @@ const attemptId = 'PARAM-acceptance-fixture'
 const attempt = resolve(root, 'data/parametric_attempts', attemptId)
 const buildTag = 'engineer-feedback-20261008-r4'
 const rearWidthRepairTag = 'readonly-open-20261109-r4-rearwidth1'
+const rearGeometryRepairTag = 'readonly-open-20261110-r4-reargeometry1'
+const doorPrecisionRepairTag = 'readonly-open-20261110-r4-doorprecision1'
+const doorPrecision2RepairTag = 'readonly-open-20261110-r4-doorprecision2'
+const doorPrecision3RepairTag = 'readonly-open-20261110-r4-doorprecision3'
 const hashBytes = bytes => createHash('sha256').update(bytes).digest('hex').toUpperCase()
 const hash = path => hashBytes(readFileSync(path))
 const write = (path, value) => { mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, JSON.stringify(value, null, 2) + '\n') }
@@ -109,8 +113,10 @@ function createRepairBuild(tag) {
     const name = basename(source.path)
     let text = readFileSync(resolve(baselineFolder, 'source-snapshot', name), 'utf8')
     if (['NativeParametricAssembly.cs', 'NativeParametricDoorPlacement.cs'].includes(name) ||
+      ([doorPrecision2RepairTag, doorPrecision3RepairTag].includes(tag) && name === 'ParametricContext.cs') ||
+      (tag === doorPrecision3RepairTag && name === 'NativeParametricWidth.cs') ||
       (['readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(tag) && name === 'NativeParametricLocks.cs') ||
-      (['readonly-open-20261105-r4', rearWidthRepairTag, 'readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(tag) && name === 'NativeParametricPhysicalAudit.cs') ||
+      (['readonly-open-20261105-r4', rearWidthRepairTag, rearGeometryRepairTag, doorPrecisionRepairTag, doorPrecision2RepairTag, doorPrecision3RepairTag, 'readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(tag) && name === 'NativeParametricPhysicalAudit.cs') ||
       (['readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(tag) && ['NativeParametricDoor.cs', 'NativeParametricWidth.cs'].includes(name))) text += '\n// independent writable-open repair fixture: ' + tag + '\n'
     writeText(resolve(directory, name), text)
     const path = resolve(generated, name)
@@ -260,7 +266,7 @@ try {
 
   assert.equal(READONLY_OPEN_REPAIR_PROFILE, 'readonly-open-20261105-r1')
   assert.deepEqual(read16029ParametricRuntimeRepair(snapshotOptions), {})
-  assert.deepEqual(READONLY_OPEN_REPAIR_PROFILES, ['readonly-open-20261105-r1', 'readonly-open-20261105-r2', 'readonly-open-20261105-r3', 'readonly-open-20261105-r4', 'readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7', rearWidthRepairTag])
+  assert.deepEqual(READONLY_OPEN_REPAIR_PROFILES, ['readonly-open-20261105-r1', 'readonly-open-20261105-r2', 'readonly-open-20261105-r3', 'readonly-open-20261105-r4', 'readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7', rearWidthRepairTag, rearGeometryRepairTag, doorPrecisionRepairTag, doorPrecision2RepairTag, doorPrecision3RepairTag])
   for (const repairTag of READONLY_OPEN_REPAIR_PROFILES) {
     const repair = createRepairBuild(repairTag)
     const repairOptions = { ...snapshotOptions, repairProfile: repair.tag }
@@ -268,7 +274,7 @@ try {
     const repairManifestBytes = readFileSync(repair.manifestPath)
     const selectedBuildBytes = readFileSync(selectionPath)
     const checkedRepair = verify16029ParametricBuild(repair.tag, repairOptions)
-    if (['readonly-open-20261105-r4', rearWidthRepairTag].includes(repair.tag)) {
+    if (['readonly-open-20261105-r4', rearWidthRepairTag, rearGeometryRepairTag, doorPrecisionRepairTag, doorPrecision2RepairTag, doorPrecision3RepairTag].includes(repair.tag)) {
       const runtimePath = resolve(sourceFolder, 'runtime-repair-selection.json')
       const acceptedId = 'PARAM-runtime-repair-acceptance-fixture-' + repair.tag
       const accepted = setupAcceptance({ executable: repair.executable, executableSha256: hash(repair.executable) },
@@ -326,8 +332,10 @@ try {
     assert.equal(checkedRepair.repairSource.sources.length, 10)
     assert.equal(checkedRepair.sourceSnapshot, undefined)
     const mutableNames = ['NativeParametricAssembly.cs', 'NativeParametricDoorPlacement.cs',
+      ...([doorPrecision2RepairTag, doorPrecision3RepairTag].includes(repairTag) ? ['ParametricContext.cs'] : []),
+      ...(repairTag === doorPrecision3RepairTag ? ['NativeParametricWidth.cs'] : []),
       ...(['readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(repairTag) ? ['NativeParametricLocks.cs'] : []),
-      ...(['readonly-open-20261105-r4', rearWidthRepairTag, 'readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(repairTag) ? ['NativeParametricPhysicalAudit.cs'] : []),
+      ...(['readonly-open-20261105-r4', rearWidthRepairTag, rearGeometryRepairTag, doorPrecisionRepairTag, doorPrecision2RepairTag, doorPrecision3RepairTag, 'readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(repairTag) ? ['NativeParametricPhysicalAudit.cs'] : []),
       ...(['readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(repairTag) ? ['NativeParametricDoor.cs', 'NativeParametricWidth.cs'] : [])]
     assert.deepEqual(checkedRepair.repairSource.sources.filter(row => row.sha256 !== row.baselineSha256).map(row => row.name).sort(), mutableNames.sort())
     assert.equal(verify16029ParametricBuild(undefined, snapshotOptions).tag, buildTag)
@@ -371,9 +379,10 @@ try {
     const protectedRepairSource = resolve(repair.directory, 'ParametricContext.cs')
     const protectedRepairBytes = readFileSync(protectedRepairSource)
     writeText(protectedRepairSource, Buffer.concat([protectedRepairBytes, Buffer.from('\nunauthorized change\n')]))
-    assert.throws(() => verify16029ParametricBuild(repair.tag, repairOptions), /changed a protected source: ParametricContext.cs/)
+    assert.throws(() => verify16029ParametricBuild(repair.tag, repairOptions), [doorPrecision2RepairTag, doorPrecision3RepairTag].includes(repairTag)
+      ? /native build source drift: ParametricContext.cs/ : /changed a protected source: ParametricContext.cs/)
     writeText(protectedRepairSource, protectedRepairBytes)
-    if (['readonly-open-20261105-r4', rearWidthRepairTag].includes(repairTag)) for (const name of ['NativeParametricLockBase.cs', 'NativeParametricVerification.cs', 'NativeParametricEnvelope.cs']) {
+    if (['readonly-open-20261105-r4', rearWidthRepairTag, rearGeometryRepairTag, doorPrecisionRepairTag, doorPrecision2RepairTag, doorPrecision3RepairTag].includes(repairTag)) for (const name of ['NativeParametricLockBase.cs', 'NativeParametricVerification.cs', 'NativeParametricEnvelope.cs']) {
       const protectedSource = resolve(repair.directory, name), bytes = readFileSync(protectedSource)
       writeText(protectedSource, Buffer.concat([bytes, Buffer.from('\nunauthorized repair source change\n')]))
       assert.throws(() => verify16029ParametricBuild(repair.tag, repairOptions), new RegExp('changed a protected source: ' + name.replace('.', '\\.')))
@@ -389,7 +398,7 @@ try {
     if (!['readonly-open-20261105-r5', 'readonly-open-20261105-r5-monitor1', 'readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(repairTag)) for (const name of ['NativeParametricDoor.cs', 'NativeParametricWidth.cs']) {
       const protectedSource = resolve(repair.directory, name), bytes = readFileSync(protectedSource)
       writeText(protectedSource, Buffer.concat([bytes, Buffer.from('\nunauthorized process cleanup change\n')]))
-      assert.throws(() => verify16029ParametricBuild(repair.tag, repairOptions), new RegExp('changed a protected source: ' + name.replace('.', '\\.')))
+      assert.throws(() => verify16029ParametricBuild(repair.tag, repairOptions), new RegExp((repairTag === doorPrecision3RepairTag && name === 'NativeParametricWidth.cs' ? 'native build source drift: ' : 'changed a protected source: ') + name.replace('.', '\\.')))
       writeText(protectedSource, bytes)
     }
     if (!['readonly-open-20261105-r5-locksession1', 'readonly-open-20261105-r5-lockcontext2', 'readonly-open-20261105-r5-lockconfig3', 'readonly-open-20261105-r5-lockreadonly4', 'readonly-open-20261105-r5-locksettle5', 'readonly-open-20261107-r5-ownerreplace6', 'readonly-open-20261107-r5-ownerreplace6b', 'readonly-open-20261107-r5-framesession7'].includes(repairTag)) {

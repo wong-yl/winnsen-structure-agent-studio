@@ -30,6 +30,8 @@ configs/locker_16029_layout_rule_evidence.status.txt -text whitespace=cr-at-eol
 workers/native_model_requests/parametric_v1/repairs/readonly-open-20261105-r4/** -text whitespace=cr-at-eol
 workers/native_model_requests/parametric_v1/repairs/readonly-open-20261109-r4-rearwidth1/** -text whitespace=cr-at-eol
 workers/native_model_requests/parametric_v1/accepted_sources/** -text whitespace=cr-at-eol
+workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-*/** -text whitespace=cr-at-eol
+data/indoor_workbench_repair_20261110/obsolete_door_probe/** -text whitespace=cr-at-eol
 data/outdoor_22057_repair_20261109/runtime_v24/portal_studio/lib/** -text whitespace=cr-at-eol
 data/outdoor_22057_repair_20261109/external_portal_sources/** -text whitespace=cr-at-eol
 

@@ -1,0 +1,849 @@
+{
+  "schema": "indoor-repair-progress-upload-selection-v1",
+  "baseCommit": "449b42936c56382de422342f98b5be885fdb9c11",
+  "files": [
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\axis_equivalence_v1\\analyze_axis_equivalence.py",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/axis_equivalence_v1/analyze_axis_equivalence.py",
+      "size": 17834,
+      "sha256": "513C335ED61EC1C277D8849E1E297252A6EEC555D79A0FB0024086CA2B1AE184",
+      "snapshotRawSha256": "513C335ED61EC1C277D8849E1E297252A6EEC555D79A0FB0024086CA2B1AE184",
+      "normalizedLfSha256": "513C335ED61EC1C277D8849E1E297252A6EEC555D79A0FB0024086CA2B1AE184"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\closed_dependency\\DependencyProbe.cs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/closed_dependency/DependencyProbe.cs",
+      "size": 25869,
+      "sha256": "B1D4C3E2195784D43E8B5ACCF4E64D0B930C56B57EF393E19205AF6BF10C529C",
+      "snapshotRawSha256": "B1D4C3E2195784D43E8B5ACCF4E64D0B930C56B57EF393E19205AF6BF10C529C",
+      "normalizedLfSha256": "EEC1D05D6B78DF0A2AFFB01F46AEA4E072E82AE902917B3AC0731BFB17CEC37C"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\closed_dependency\\build.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/closed_dependency/build.ps1",
+      "size": 4205,
+      "sha256": "1C0F39F43718451C9895768A6225B653A58F3180F2E8F4E50621283F4AF722FC",
+      "snapshotRawSha256": "1C0F39F43718451C9895768A6225B653A58F3180F2E8F4E50621283F4AF722FC",
+      "normalizedLfSha256": "3EF8D0A7BB3C09F7847405FD200669E1C134EF7926F97553384F8D4D83F9C01E"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\closed_dependency\\static-check.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/closed_dependency/static-check.ps1",
+      "size": 11843,
+      "sha256": "0BB65F343E86066B3A9DEB11EB6249C7E76FCC7B0BE0494504D19223652FA9B4",
+      "snapshotRawSha256": "0BB65F343E86066B3A9DEB11EB6249C7E76FCC7B0BE0494504D19223652FA9B4",
+      "normalizedLfSha256": "D91A46F168C7F46EFEC9D7200384B173C5D1DB28157FFF94CC4616BAEA95F8EC"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\cold_diagnostic\\DiagnosticProbe.cs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/cold_diagnostic/DiagnosticProbe.cs",
+      "size": 58399,
+      "sha256": "D088CE76A7983CFE495412548CCDD8ACD71736EA6CB1C1012BFB32DF4B562C35",
+      "snapshotRawSha256": "D088CE76A7983CFE495412548CCDD8ACD71736EA6CB1C1012BFB32DF4B562C35",
+      "normalizedLfSha256": "025B2BBC58C5CE4B21C428AF49B2E27F83F5A252AE3FF7128E88FD2D58842F54"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\cold_diagnostic\\build.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/cold_diagnostic/build.ps1",
+      "size": 4810,
+      "sha256": "C5CD497BB8F22003EE1CBDE8B338EE41C0C67EBC357AFAC6CEC4BA4E89AC7AC5",
+      "snapshotRawSha256": "C5CD497BB8F22003EE1CBDE8B338EE41C0C67EBC357AFAC6CEC4BA4E89AC7AC5",
+      "normalizedLfSha256": "C5CD497BB8F22003EE1CBDE8B338EE41C0C67EBC357AFAC6CEC4BA4E89AC7AC5"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\cold_diagnostic\\static-check.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/cold_diagnostic/static-check.ps1",
+      "size": 10841,
+      "sha256": "6E51286FA43D21C7D92A40042302367E0A02DABAFA5646668BDD905CB08B37E8",
+      "snapshotRawSha256": "6E51286FA43D21C7D92A40042302367E0A02DABAFA5646668BDD905CB08B37E8",
+      "normalizedLfSha256": "6E51286FA43D21C7D92A40042302367E0A02DABAFA5646668BDD905CB08B37E8"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\mate_finite_witness_v1\\MateFiniteWitness.cs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/mate_finite_witness_v1/MateFiniteWitness.cs",
+      "size": 37059,
+      "sha256": "AC080E796179D1D7DFA881C77F4CE59E6E85AE522C3E66AAB7168215F6799BD9",
+      "snapshotRawSha256": "AC080E796179D1D7DFA881C77F4CE59E6E85AE522C3E66AAB7168215F6799BD9",
+      "normalizedLfSha256": "AC080E796179D1D7DFA881C77F4CE59E6E85AE522C3E66AAB7168215F6799BD9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\mate_finite_witness_v1\\PureCases.cs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/mate_finite_witness_v1/PureCases.cs",
+      "size": 13047,
+      "sha256": "73CFA0FF64A6E2E2FFBA1D768AFF8FEDB1E8BEBFF21C249708ADE1544C525709",
+      "snapshotRawSha256": "73CFA0FF64A6E2E2FFBA1D768AFF8FEDB1E8BEBFF21C249708ADE1544C525709",
+      "normalizedLfSha256": "73CFA0FF64A6E2E2FFBA1D768AFF8FEDB1E8BEBFF21C249708ADE1544C525709"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\mate_finite_witness_v1\\README.md",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/mate_finite_witness_v1/README.md",
+      "size": 5941,
+      "sha256": "2A5EB5C23B15052068C4F25B0B29E379786D19F5381E6905024B3C5A8AF0FA25",
+      "snapshotRawSha256": "2A5EB5C23B15052068C4F25B0B29E379786D19F5381E6905024B3C5A8AF0FA25",
+      "normalizedLfSha256": "2A5EB5C23B15052068C4F25B0B29E379786D19F5381E6905024B3C5A8AF0FA25"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\mate_finite_witness_v1\\build.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/mate_finite_witness_v1/build.ps1",
+      "size": 6650,
+      "sha256": "F8CF857D4F0C87D0983744D1751BC6B3D6C4E025245235379F48C70F3BC143FB",
+      "snapshotRawSha256": "F8CF857D4F0C87D0983744D1751BC6B3D6C4E025245235379F48C70F3BC143FB",
+      "normalizedLfSha256": "F8CF857D4F0C87D0983744D1751BC6B3D6C4E025245235379F48C70F3BC143FB"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\observe-cold-diagnostic.py",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/observe-cold-diagnostic.py",
+      "size": 6399,
+      "sha256": "C234CF763E94038CD942B98283C07E055B27DEA51D1B7893CB89027F3A398FEA",
+      "snapshotRawSha256": "C234CF763E94038CD942B98283C07E055B27DEA51D1B7893CB89027F3A398FEA",
+      "normalizedLfSha256": "C234CF763E94038CD942B98283C07E055B27DEA51D1B7893CB89027F3A398FEA"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\observe.py",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/observe.py",
+      "size": 6115,
+      "sha256": "160D693613D9EB412590E815B91182D8F5599A491233A10682BB1B5C58C4E24D",
+      "snapshotRawSha256": "160D693613D9EB412590E815B91182D8F5599A491233A10682BB1B5C58C4E24D",
+      "normalizedLfSha256": "160D693613D9EB412590E815B91182D8F5599A491233A10682BB1B5C58C4E24D"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\relink_v6\\RelinkProbe.cs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/relink_v6/RelinkProbe.cs",
+      "size": 40493,
+      "sha256": "800EB49A2ADDB8910DB33E5E10C32630CF59103C06A80EEC2F8CBE29B3245E1B",
+      "snapshotRawSha256": "800EB49A2ADDB8910DB33E5E10C32630CF59103C06A80EEC2F8CBE29B3245E1B",
+      "normalizedLfSha256": "FE7C85058A263AE7C52D6EEF8278E8B19CE4F7C8472D45947DDCF22EDBA28A0B"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\relink_v6\\build.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/relink_v6/build.ps1",
+      "size": 4747,
+      "sha256": "CAE4283E02F16E6221D5EE7B51C5CDCD70C7F06BF39999041586213A173EBD6E",
+      "snapshotRawSha256": "CAE4283E02F16E6221D5EE7B51C5CDCD70C7F06BF39999041586213A173EBD6E",
+      "normalizedLfSha256": "CADB656C9CFF540A6A70D1A186EC6A9E9B94AF84010127DCF79008A55193EA33"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\relink_v6\\static-check.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/relink_v6/static-check.ps1",
+      "size": 18025,
+      "sha256": "86389893793E6A4C776A29B749E3F98453B7A3E68FAE040FFFD1A3B1A6B851E0",
+      "snapshotRawSha256": "86389893793E6A4C776A29B749E3F98453B7A3E68FAE040FFFD1A3B1A6B851E0",
+      "normalizedLfSha256": "F904C7283E11CA0554F22BCC45F284F69FF6D56AD25467E65C586472FC1E7095"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\run-cold-diagnostic.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/run-cold-diagnostic.mjs",
+      "size": 6566,
+      "sha256": "76E59CDD5883A20742A9BCB9060D5DCEC1ACFD325F51900788256FEC59ACFD16",
+      "snapshotRawSha256": "76E59CDD5883A20742A9BCB9060D5DCEC1ACFD325F51900788256FEC59ACFD16",
+      "normalizedLfSha256": "76E59CDD5883A20742A9BCB9060D5DCEC1ACFD325F51900788256FEC59ACFD16"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\run-dependency.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/run-dependency.mjs",
+      "size": 6569,
+      "sha256": "DB539A3F4D916379AC0602998F8DD86BA388EA99910EC0D9DAEB287412A9426C",
+      "snapshotRawSha256": "DB539A3F4D916379AC0602998F8DD86BA388EA99910EC0D9DAEB287412A9426C",
+      "normalizedLfSha256": "DB539A3F4D916379AC0602998F8DD86BA388EA99910EC0D9DAEB287412A9426C"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\run-relink-v6.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/run-relink-v6.mjs",
+      "size": 6821,
+      "sha256": "A9A9552008C2C2A940CEFFF8DD28581FE71053991E0AF6DAF0334E0114587822",
+      "snapshotRawSha256": "A9A9552008C2C2A940CEFFF8DD28581FE71053991E0AF6DAF0334E0114587822",
+      "normalizedLfSha256": "A9A9552008C2C2A940CEFFF8DD28581FE71053991E0AF6DAF0334E0114587822"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\run-v6.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/run-v6.mjs",
+      "size": 10425,
+      "sha256": "A769FE697DCBFDCFDD603B19AB60C4C6E061CB0E41FF4B1176E1A07C3FEE8E85",
+      "snapshotRawSha256": "A769FE697DCBFDCFDD603B19AB60C4C6E061CB0E41FF4B1176E1A07C3FEE8E85",
+      "normalizedLfSha256": "A769FE697DCBFDCFDD603B19AB60C4C6E061CB0E41FF4B1176E1A07C3FEE8E85"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v1\\README.md",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v1/README.md",
+      "size": 3178,
+      "sha256": "699A4984A84D65B946F1F610303E141B12D6BD285FE3243729EC6D2B070AFDCA",
+      "snapshotRawSha256": "699A4984A84D65B946F1F610303E141B12D6BD285FE3243729EC6D2B070AFDCA",
+      "normalizedLfSha256": "699A4984A84D65B946F1F610303E141B12D6BD285FE3243729EC6D2B070AFDCA"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v1\\audit-postrun.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v1/audit-postrun.mjs",
+      "size": 17411,
+      "sha256": "2574383B05095C148DCE03533CD769B9B2E8E634954D581CBC1C635EA33F71AF",
+      "snapshotRawSha256": "2574383B05095C148DCE03533CD769B9B2E8E634954D581CBC1C635EA33F71AF",
+      "normalizedLfSha256": "2574383B05095C148DCE03533CD769B9B2E8E634954D581CBC1C635EA33F71AF"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v1\\run-stage-continuation.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v1/run-stage-continuation.mjs",
+      "size": 36665,
+      "sha256": "913FD65DA9B2EAD39E8B468F3280B6E56AFB6357636E1F6C28BEFD53E986EE25",
+      "snapshotRawSha256": "913FD65DA9B2EAD39E8B468F3280B6E56AFB6357636E1F6C28BEFD53E986EE25",
+      "normalizedLfSha256": "913FD65DA9B2EAD39E8B468F3280B6E56AFB6357636E1F6C28BEFD53E986EE25"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v1\\static-check.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v1/static-check.mjs",
+      "size": 5206,
+      "sha256": "290A17580F6D3C62A62E104D72CCC2394FC7118B50FF48A2CF7D3292A0B5EEE0",
+      "snapshotRawSha256": "290A17580F6D3C62A62E104D72CCC2394FC7118B50FF48A2CF7D3292A0B5EEE0",
+      "normalizedLfSha256": "290A17580F6D3C62A62E104D72CCC2394FC7118B50FF48A2CF7D3292A0B5EEE0"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\README.md",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v2/README.md",
+      "size": 9003,
+      "sha256": "4F96F00B165A96E29C32D6183C49510BFD57988578E537839967C21AC40F7767",
+      "snapshotRawSha256": "4F96F00B165A96E29C32D6183C49510BFD57988578E537839967C21AC40F7767",
+      "normalizedLfSha256": "4F96F00B165A96E29C32D6183C49510BFD57988578E537839967C21AC40F7767"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\freeze-manifest.json",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v2/freeze-manifest.json",
+      "size": 3595,
+      "sha256": "9E1A124864B044CD8EB789EB8C288A360C48C474ED0B3AC7B4B2EBEE458FBAAB",
+      "snapshotRawSha256": "9E1A124864B044CD8EB789EB8C288A360C48C474ED0B3AC7B4B2EBEE458FBAAB",
+      "normalizedLfSha256": "9E1A124864B044CD8EB789EB8C288A360C48C474ED0B3AC7B4B2EBEE458FBAAB"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\research-gates.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v2/research-gates.mjs",
+      "size": 21921,
+      "sha256": "FE70B884938997DFAE71398ABEB3BD61CB585BE4C7D2B2E6262D992C38973688",
+      "snapshotRawSha256": "FE70B884938997DFAE71398ABEB3BD61CB585BE4C7D2B2E6262D992C38973688",
+      "normalizedLfSha256": "FE70B884938997DFAE71398ABEB3BD61CB585BE4C7D2B2E6262D992C38973688"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\run-stage-continuation.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v2/run-stage-continuation.mjs",
+      "size": 48164,
+      "sha256": "A1AD991387FCD2B905EAD12E49BF465477752CCB33B4DEEBFDA925024C2D735A",
+      "snapshotRawSha256": "A1AD991387FCD2B905EAD12E49BF465477752CCB33B4DEEBFDA925024C2D735A",
+      "normalizedLfSha256": "A1AD991387FCD2B905EAD12E49BF465477752CCB33B4DEEBFDA925024C2D735A"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v2\\static-check.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v2/static-check.mjs",
+      "size": 19873,
+      "sha256": "CC0A381212305139DE0576384EA5643B4D253AD71325ADF4AE4D34099191FFF9",
+      "snapshotRawSha256": "CC0A381212305139DE0576384EA5643B4D253AD71325ADF4AE4D34099191FFF9",
+      "normalizedLfSha256": "CC0A381212305139DE0576384EA5643B4D253AD71325ADF4AE4D34099191FFF9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v3\\README.md",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v3/README.md",
+      "size": 4053,
+      "sha256": "ACDD42C8A5F1298F119E2CCEDB2A0CD09ADE6A7786071E353CE1D5CFD85BB602",
+      "snapshotRawSha256": "ACDD42C8A5F1298F119E2CCEDB2A0CD09ADE6A7786071E353CE1D5CFD85BB602",
+      "normalizedLfSha256": "ACDD42C8A5F1298F119E2CCEDB2A0CD09ADE6A7786071E353CE1D5CFD85BB602"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v3\\freeze-manifest.json",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v3/freeze-manifest.json",
+      "size": 4796,
+      "sha256": "A4EA7BCCA4B5B0876A5771528390D962688AB0AE6C30F1E4C68308A42D83B71F",
+      "snapshotRawSha256": "A4EA7BCCA4B5B0876A5771528390D962688AB0AE6C30F1E4C68308A42D83B71F",
+      "normalizedLfSha256": "A4EA7BCCA4B5B0876A5771528390D962688AB0AE6C30F1E4C68308A42D83B71F"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v3\\research-gates.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v3/research-gates.mjs",
+      "size": 26045,
+      "sha256": "BEC48EB836A53CBDBFB5419EA4BFCC875F63E23B90C6EB8B787DAFBE0B10E1C4",
+      "snapshotRawSha256": "BEC48EB836A53CBDBFB5419EA4BFCC875F63E23B90C6EB8B787DAFBE0B10E1C4",
+      "normalizedLfSha256": "BEC48EB836A53CBDBFB5419EA4BFCC875F63E23B90C6EB8B787DAFBE0B10E1C4"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v3\\run-stage-continuation.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v3/run-stage-continuation.mjs",
+      "size": 49601,
+      "sha256": "C9570DEAE5BD1529DB996C782DE916434ADF4CB6A391E2E820BCB686A5E31211",
+      "snapshotRawSha256": "C9570DEAE5BD1529DB996C782DE916434ADF4CB6A391E2E820BCB686A5E31211",
+      "normalizedLfSha256": "C9570DEAE5BD1529DB996C782DE916434ADF4CB6A391E2E820BCB686A5E31211"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v3\\source-binding.json",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v3/source-binding.json",
+      "size": 178882,
+      "sha256": "E2F59AE0B0DAE5665C249D63F9A7FD7612E70F976895604813C0B0129AFE4D7B",
+      "snapshotRawSha256": "E2F59AE0B0DAE5665C249D63F9A7FD7612E70F976895604813C0B0129AFE4D7B",
+      "normalizedLfSha256": "E2F59AE0B0DAE5665C249D63F9A7FD7612E70F976895604813C0B0129AFE4D7B"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\stage_continuation_v3\\static-check.mjs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/stage_continuation_v3/static-check.mjs",
+      "size": 17201,
+      "sha256": "6E16D09221DC1AEDC49EF4D50B4E3A5CB79B87F5DC977B779BD36C8F9EC83AE6",
+      "snapshotRawSha256": "6E16D09221DC1AEDC49EF4D50B4E3A5CB79B87F5DC977B779BD36C8F9EC83AE6",
+      "normalizedLfSha256": "6E16D09221DC1AEDC49EF4D50B4E3A5CB79B87F5DC977B779BD36C8F9EC83AE6"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\v6\\IdentityProbe.cs",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/v6/IdentityProbe.cs",
+      "size": 71451,
+      "sha256": "395B780B20000D24735B4C9CC1A6F7AE9368ED4F7928B81BD601CA5767BD9BBC",
+      "snapshotRawSha256": "395B780B20000D24735B4C9CC1A6F7AE9368ED4F7928B81BD601CA5767BD9BBC",
+      "normalizedLfSha256": "395B780B20000D24735B4C9CC1A6F7AE9368ED4F7928B81BD601CA5767BD9BBC"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\v6\\build.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/v6/build.ps1",
+      "size": 5096,
+      "sha256": "21ECD6D3592251871F173B901E2EFD5B69964DEB85947AF4D2509DA02B5FD145",
+      "snapshotRawSha256": "21ECD6D3592251871F173B901E2EFD5B69964DEB85947AF4D2509DA02B5FD145",
+      "normalizedLfSha256": "1BFD4945EFBAD5FB343D608A6E423DC2AB84535B729961F600612D3C20AA61EB"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\v6\\static-check.py",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/v6/static-check.py",
+      "size": 13558,
+      "sha256": "522C9F9B4D43D391740347FA2525BED98A1BF94E78C9B2DAB626A18750FBCEB1",
+      "snapshotRawSha256": "522C9F9B4D43D391740347FA2525BED98A1BF94E78C9B2DAB626A18750FBCEB1",
+      "normalizedLfSha256": "522C9F9B4D43D391740347FA2525BED98A1BF94E78C9B2DAB626A18750FBCEB1"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\obsolete_door_probe\\v6\\static-runtime.ps1",
+      "destination": "data/indoor_workbench_repair_20261110/obsolete_door_probe/v6/static-runtime.ps1",
+      "size": 5478,
+      "sha256": "9CE0605D804C6C1724098A72A029963D322B07EDEC62BF7715DDCEAEB7017226",
+      "snapshotRawSha256": "9CE0605D804C6C1724098A72A029963D322B07EDEC62BF7715DDCEAEB7017226",
+      "normalizedLfSha256": "66138B09C97FA018A95D4D82218CB4560C2E6876BFC32050A0BA2FB34708CAC1"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\lib\\locker_16029_parametric_build.mjs",
+      "destination": "tools/lib/locker_16029_parametric_build.mjs",
+      "size": 30199,
+      "sha256": "76E0447FA860D8DB447765BE788AC1C3EE05BBEF9E5E8617042C4E91254F4B48",
+      "snapshotRawSha256": "76E0447FA860D8DB447765BE788AC1C3EE05BBEF9E5E8617042C4E91254F4B48",
+      "normalizedLfSha256": "A5164677D64D55218FEFDE3402D9FE32B67C4A5D28A58A295DFBB58FABD6E65D"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\lib\\locker_16029_parametric_runtime.mjs",
+      "destination": "tools/lib/locker_16029_parametric_runtime.mjs",
+      "size": 9031,
+      "sha256": "E65E98C783EC2DE08533CA7DD49DF617C49578F66E7D5E5DEC63027C04764C9E",
+      "snapshotRawSha256": "E65E98C783EC2DE08533CA7DD49DF617C49578F66E7D5E5DEC63027C04764C9E",
+      "normalizedLfSha256": "E65E98C783EC2DE08533CA7DD49DF617C49578F66E7D5E5DEC63027C04764C9E"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\run_16029_parametric_model.mjs",
+      "destination": "tools/run_16029_parametric_model.mjs",
+      "size": 36888,
+      "sha256": "8B39865ED61726CA127E003914D9FB40274F2E4E75AE7BB82125DD3CE205EA5E",
+      "snapshotRawSha256": "8B39865ED61726CA127E003914D9FB40274F2E4E75AE7BB82125DD3CE205EA5E",
+      "normalizedLfSha256": "8B39865ED61726CA127E003914D9FB40274F2E4E75AE7BB82125DD3CE205EA5E"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\serve_16029_review_downloads.mjs",
+      "destination": "tools/serve_16029_review_downloads.mjs",
+      "size": 321484,
+      "sha256": "39CE6C00309F009482378D4A59327EFF78E6BB5A3CB446913C6F4F52CA0FB08D",
+      "snapshotRawSha256": "39CE6C00309F009482378D4A59327EFF78E6BB5A3CB446913C6F4F52CA0FB08D",
+      "normalizedLfSha256": "AB486B45463230C417B718C733B86A1989E142FFEB862B0F37CBB9AFCFC61C47"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\verify_16029_parametric_build.test.mjs",
+      "destination": "tools/verify_16029_parametric_build.test.mjs",
+      "size": 37382,
+      "sha256": "D54BDCF3A5A49128FDFDE116C63D28670882EE0B07796B88AB7809BA3A72E943",
+      "snapshotRawSha256": "D54BDCF3A5A49128FDFDE116C63D28670882EE0B07796B88AB7809BA3A72E943",
+      "normalizedLfSha256": "B53F87A47ECD29798D090EFA72CB3DEFC201E3E432D335F190F886A141C70F91"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\verify_16029_parametric_resume.test.mjs",
+      "destination": "tools/verify_16029_parametric_resume.test.mjs",
+      "size": 1359,
+      "sha256": "A50D2DADA43DA7B51794FC36C19A177BB932FDFC427E96A3647C7714CBF7D755",
+      "snapshotRawSha256": "A50D2DADA43DA7B51794FC36C19A177BB932FDFC427E96A3647C7714CBF7D755",
+      "normalizedLfSha256": "A50D2DADA43DA7B51794FC36C19A177BB932FDFC427E96A3647C7714CBF7D755"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\tools\\verify_16029_parametric_runtime.test.mjs",
+      "destination": "tools/verify_16029_parametric_runtime.test.mjs",
+      "size": 40724,
+      "sha256": "2F91B55002B937A5FC6AD95C58FD30FD3DE8AF01672BEA7D84F31FCA788DA323",
+      "snapshotRawSha256": "2F91B55002B937A5FC6AD95C58FD30FD3DE8AF01672BEA7D84F31FCA788DA323",
+      "normalizedLfSha256": "2F91B55002B937A5FC6AD95C58FD30FD3DE8AF01672BEA7D84F31FCA788DA323"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\DOOR_PRECISION.md",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/DOOR_PRECISION.md",
+      "size": 1998,
+      "sha256": "763558BD9B6CEFC68F47039A3A35DFDC7D5CF8B201492E866C85F4413B4A8772",
+      "snapshotRawSha256": "763558BD9B6CEFC68F47039A3A35DFDC7D5CF8B201492E866C85F4413B4A8772",
+      "normalizedLfSha256": "763558BD9B6CEFC68F47039A3A35DFDC7D5CF8B201492E866C85F4413B4A8772"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\build.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/build.mjs",
+      "size": 5193,
+      "sha256": "61574BABB5B2810781681F01BD95AE06582EDF3A662B88E0C0995320C5FF03EC",
+      "snapshotRawSha256": "61574BABB5B2810781681F01BD95AE06582EDF3A662B88E0C0995320C5FF03EC",
+      "normalizedLfSha256": "A9732328CBFE07554A60009ACE2943EDC3D288E070CCE702D631E8872D4C0747"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricAssembly.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricAssembly.cs",
+      "size": 64706,
+      "sha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "snapshotRawSha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "normalizedLfSha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricDoor.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricDoor.cs",
+      "size": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "snapshotRawSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "normalizedLfSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricDoorPlacement.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricDoorPlacement.cs",
+      "size": 97622,
+      "sha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "snapshotRawSha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "normalizedLfSha256": "7283224F0E7304040A1D81046D6BA23C833CF80CC7EB65BEE23FA38DC7B4DC59"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricEnvelope.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricEnvelope.cs",
+      "size": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "snapshotRawSha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "normalizedLfSha256": "C1B964670800410E3B75462F81CDF1AD53F011F64036EDEFFB08114210A03750"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricLockBase.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricLockBase.cs",
+      "size": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "snapshotRawSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "normalizedLfSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricLocks.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricLocks.cs",
+      "size": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "snapshotRawSha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "normalizedLfSha256": "C930F3BC666EDBFD7AB45AB66F8CAA26A61589B4DA3CCB1533122DFF01E6E2D8"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricPhysicalAudit.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricPhysicalAudit.cs",
+      "size": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "snapshotRawSha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "normalizedLfSha256": "DA4227BAECAC7718B61BCBB218A3FFCAC5D69FD1A1AF0A4EA4EA1C8B4F842CB9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricVerification.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricVerification.cs",
+      "size": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "snapshotRawSha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "normalizedLfSha256": "0B00AEDC84D6B6DEC910F19DA535190594AFCA089641B9464B2F8C26E7384328"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\NativeParametricWidth.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/NativeParametricWidth.cs",
+      "size": 187322,
+      "sha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "snapshotRawSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "normalizedLfSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\source\\ParametricContext.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/source/ParametricContext.cs",
+      "size": 8859,
+      "sha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732",
+      "snapshotRawSha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732",
+      "normalizedLfSha256": "653FFF841D4EEEBD05E90D371BAA2F036525A2360EFF9AAC148196B72CE0DA14"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\test_door_precision.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/test_door_precision.mjs",
+      "size": 11852,
+      "sha256": "ED375D8489C41C20FE30D629CCC1B0D75C5335829748727E40417EEEEBFB0F9D",
+      "snapshotRawSha256": "ED375D8489C41C20FE30D629CCC1B0D75C5335829748727E40417EEEEBFB0F9D",
+      "normalizedLfSha256": "ED375D8489C41C20FE30D629CCC1B0D75C5335829748727E40417EEEEBFB0F9D"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\tests\\DoorPrecisionHarness.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/tests/DoorPrecisionHarness.cs",
+      "size": 5729,
+      "sha256": "E3F7620D107AA89E3F27973E047D466F022FC4F93C84C14A29E58555E8A3F3F7",
+      "snapshotRawSha256": "E3F7620D107AA89E3F27973E047D466F022FC4F93C84C14A29E58555E8A3F3F7",
+      "normalizedLfSha256": "E3F7620D107AA89E3F27973E047D466F022FC4F93C84C14A29E58555E8A3F3F7"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\NUMERIC_ROUNDTRIP.md",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/NUMERIC_ROUNDTRIP.md",
+      "size": 2064,
+      "sha256": "0C6C370983F09CB93DF8ABEF8CE913354EFC933E2F374F32EACD7ABF84DA978C",
+      "snapshotRawSha256": "0C6C370983F09CB93DF8ABEF8CE913354EFC933E2F374F32EACD7ABF84DA978C",
+      "normalizedLfSha256": "0C6C370983F09CB93DF8ABEF8CE913354EFC933E2F374F32EACD7ABF84DA978C"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\build.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/build.mjs",
+      "size": 5217,
+      "sha256": "F82DD03A2B30B7F906CE470B2F82B94745EC7E4F66DB6AED22E4EAF449AE6E4E",
+      "snapshotRawSha256": "F82DD03A2B30B7F906CE470B2F82B94745EC7E4F66DB6AED22E4EAF449AE6E4E",
+      "normalizedLfSha256": "1C8B787182D1CBCD6D14835955B1D889B13EB00B5A89C8FDF1983F5979A03726"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricAssembly.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricAssembly.cs",
+      "size": 64706,
+      "sha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "snapshotRawSha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "normalizedLfSha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricDoor.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricDoor.cs",
+      "size": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "snapshotRawSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "normalizedLfSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricDoorPlacement.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricDoorPlacement.cs",
+      "size": 97622,
+      "sha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "snapshotRawSha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "normalizedLfSha256": "7283224F0E7304040A1D81046D6BA23C833CF80CC7EB65BEE23FA38DC7B4DC59"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricEnvelope.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricEnvelope.cs",
+      "size": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "snapshotRawSha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "normalizedLfSha256": "C1B964670800410E3B75462F81CDF1AD53F011F64036EDEFFB08114210A03750"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricLockBase.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricLockBase.cs",
+      "size": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "snapshotRawSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "normalizedLfSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricLocks.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricLocks.cs",
+      "size": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "snapshotRawSha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "normalizedLfSha256": "C930F3BC666EDBFD7AB45AB66F8CAA26A61589B4DA3CCB1533122DFF01E6E2D8"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricPhysicalAudit.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricPhysicalAudit.cs",
+      "size": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "snapshotRawSha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "normalizedLfSha256": "DA4227BAECAC7718B61BCBB218A3FFCAC5D69FD1A1AF0A4EA4EA1C8B4F842CB9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricVerification.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricVerification.cs",
+      "size": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "snapshotRawSha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "normalizedLfSha256": "0B00AEDC84D6B6DEC910F19DA535190594AFCA089641B9464B2F8C26E7384328"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\NativeParametricWidth.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/NativeParametricWidth.cs",
+      "size": 187322,
+      "sha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "snapshotRawSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "normalizedLfSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\source\\ParametricContext.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/source/ParametricContext.cs",
+      "size": 8988,
+      "sha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA",
+      "snapshotRawSha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA",
+      "normalizedLfSha256": "53098EF110EDE77487D44909E84C9D1168381BB373970D17DE0F1C79D17224F9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\test_numeric_roundtrip.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/test_numeric_roundtrip.mjs",
+      "size": 9659,
+      "sha256": "00F485FB13F49D6E837364DE025EC2049733A2753848AE34ABD1C855CDF2FA90",
+      "snapshotRawSha256": "00F485FB13F49D6E837364DE025EC2049733A2753848AE34ABD1C855CDF2FA90",
+      "normalizedLfSha256": "00F485FB13F49D6E837364DE025EC2049733A2753848AE34ABD1C855CDF2FA90"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision2\\tests\\NumericRoundtripHarness.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision2/tests/NumericRoundtripHarness.cs",
+      "size": 1462,
+      "sha256": "03BCE75A3B589A7D21197DFB39C68A72E0FF22DE1067533E2505645F236457A4",
+      "snapshotRawSha256": "03BCE75A3B589A7D21197DFB39C68A72E0FF22DE1067533E2505645F236457A4",
+      "normalizedLfSha256": "03BCE75A3B589A7D21197DFB39C68A72E0FF22DE1067533E2505645F236457A4"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\README.md",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/README.md",
+      "size": 3977,
+      "sha256": "AEA8A6CF9B72AB9935AE39FC1377A5EC411B7CB08FB84B897CFBF16FB71745CF",
+      "snapshotRawSha256": "AEA8A6CF9B72AB9935AE39FC1377A5EC411B7CB08FB84B897CFBF16FB71745CF",
+      "normalizedLfSha256": "AEA8A6CF9B72AB9935AE39FC1377A5EC411B7CB08FB84B897CFBF16FB71745CF"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\build.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/build.mjs",
+      "size": 5245,
+      "sha256": "003A8DB6E3D3C02A34E92633E6BDB2AB2368E30E45A635309D44BCAE1D0D1B3D",
+      "snapshotRawSha256": "003A8DB6E3D3C02A34E92633E6BDB2AB2368E30E45A635309D44BCAE1D0D1B3D",
+      "normalizedLfSha256": "51AA8642DBC71F3AAAED1CFEA98996DB528174D5980DF23E297B5A477A59B767"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricAssembly.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricAssembly.cs",
+      "size": 64706,
+      "sha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "snapshotRawSha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "normalizedLfSha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricDoor.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricDoor.cs",
+      "size": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "snapshotRawSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "normalizedLfSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricDoorPlacement.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricDoorPlacement.cs",
+      "size": 97622,
+      "sha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "snapshotRawSha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "normalizedLfSha256": "7283224F0E7304040A1D81046D6BA23C833CF80CC7EB65BEE23FA38DC7B4DC59"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricEnvelope.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricEnvelope.cs",
+      "size": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "snapshotRawSha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "normalizedLfSha256": "C1B964670800410E3B75462F81CDF1AD53F011F64036EDEFFB08114210A03750"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricLockBase.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricLockBase.cs",
+      "size": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "snapshotRawSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "normalizedLfSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricLocks.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricLocks.cs",
+      "size": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "snapshotRawSha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "normalizedLfSha256": "C930F3BC666EDBFD7AB45AB66F8CAA26A61589B4DA3CCB1533122DFF01E6E2D8"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricPhysicalAudit.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricPhysicalAudit.cs",
+      "size": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "snapshotRawSha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "normalizedLfSha256": "DA4227BAECAC7718B61BCBB218A3FFCAC5D69FD1A1AF0A4EA4EA1C8B4F842CB9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricVerification.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricVerification.cs",
+      "size": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "snapshotRawSha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "normalizedLfSha256": "0B00AEDC84D6B6DEC910F19DA535190594AFCA089641B9464B2F8C26E7384328"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\NativeParametricWidth.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/NativeParametricWidth.cs",
+      "size": 194130,
+      "sha256": "835332B9A0DB25E98A7AFA83FE9E55D5E548C08312CE06A303FA287EE19D6E8F",
+      "snapshotRawSha256": "835332B9A0DB25E98A7AFA83FE9E55D5E548C08312CE06A303FA287EE19D6E8F",
+      "normalizedLfSha256": "835332B9A0DB25E98A7AFA83FE9E55D5E548C08312CE06A303FA287EE19D6E8F"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\source\\ParametricContext.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/source/ParametricContext.cs",
+      "size": 8988,
+      "sha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA",
+      "snapshotRawSha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA",
+      "normalizedLfSha256": "53098EF110EDE77487D44909E84C9D1168381BB373970D17DE0F1C79D17224F9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\test_monitor_cleanup.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/test_monitor_cleanup.mjs",
+      "size": 9358,
+      "sha256": "7EC55062941822C5D98BF1582F5CB8475A430B236809C0EF97F725438622FB61",
+      "snapshotRawSha256": "7EC55062941822C5D98BF1582F5CB8475A430B236809C0EF97F725438622FB61",
+      "normalizedLfSha256": "7EC55062941822C5D98BF1582F5CB8475A430B236809C0EF97F725438622FB61"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\tests\\WidthMonitorCleanupHarness.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/tests/WidthMonitorCleanupHarness.cs",
+      "size": 31906,
+      "sha256": "8E07498DF8879D2414AA705058F18085D9F560E9ED1056028A73DD95A3A09E54",
+      "snapshotRawSha256": "8E07498DF8879D2414AA705058F18085D9F560E9ED1056028A73DD95A3A09E54",
+      "normalizedLfSha256": "8E07498DF8879D2414AA705058F18085D9F560E9ED1056028A73DD95A3A09E54"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\tests\\final_validation.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/tests/final_validation.mjs",
+      "size": 5194,
+      "sha256": "A18CBB47D8710D5FF7D6564D69357C1044FEED70C70AE64662F9C4448E779BE9",
+      "snapshotRawSha256": "A18CBB47D8710D5FF7D6564D69357C1044FEED70C70AE64662F9C4448E779BE9",
+      "normalizedLfSha256": "A18CBB47D8710D5FF7D6564D69357C1044FEED70C70AE64662F9C4448E779BE9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision3\\worker-evidence.md",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision3/worker-evidence.md",
+      "size": 4273,
+      "sha256": "FDC012C2AF7857C623FCE893CDEE8278DF0AA91CE8CE6E632301797923F5D827",
+      "snapshotRawSha256": "FDC012C2AF7857C623FCE893CDEE8278DF0AA91CE8CE6E632301797923F5D827",
+      "normalizedLfSha256": "FDC012C2AF7857C623FCE893CDEE8278DF0AA91CE8CE6E632301797923F5D827"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\build.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/build.mjs",
+      "size": 5192,
+      "sha256": "F2ABBF9383C914F1B514ABAD973D061544F74AD3F5C20DE9A9B617F73320E2C3",
+      "snapshotRawSha256": "F2ABBF9383C914F1B514ABAD973D061544F74AD3F5C20DE9A9B617F73320E2C3",
+      "normalizedLfSha256": "6E8A96780FD10816953AE1E577B986159DC744CFE7E419940EB43CD8BE428D91"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricAssembly.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricAssembly.cs",
+      "size": 62361,
+      "sha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392",
+      "snapshotRawSha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392",
+      "normalizedLfSha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricDoor.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricDoor.cs",
+      "size": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "snapshotRawSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "normalizedLfSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricDoorPlacement.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricDoorPlacement.cs",
+      "size": 97514,
+      "sha256": "4F05153A65A86D0708F33D1EE10202B7C11B25E0B0E7ED553E60031226254F27",
+      "snapshotRawSha256": "4F05153A65A86D0708F33D1EE10202B7C11B25E0B0E7ED553E60031226254F27",
+      "normalizedLfSha256": "0E9A24DB92D32E1DD2B8F9A74687AAB31C28FCF2F5EF9A3027DB0995AF94A876"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricEnvelope.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricEnvelope.cs",
+      "size": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "snapshotRawSha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "normalizedLfSha256": "C1B964670800410E3B75462F81CDF1AD53F011F64036EDEFFB08114210A03750"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricLockBase.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricLockBase.cs",
+      "size": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "snapshotRawSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "normalizedLfSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricLocks.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricLocks.cs",
+      "size": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "snapshotRawSha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "normalizedLfSha256": "C930F3BC666EDBFD7AB45AB66F8CAA26A61589B4DA3CCB1533122DFF01E6E2D8"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricPhysicalAudit.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricPhysicalAudit.cs",
+      "size": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "snapshotRawSha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "normalizedLfSha256": "DA4227BAECAC7718B61BCBB218A3FFCAC5D69FD1A1AF0A4EA4EA1C8B4F842CB9"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricVerification.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricVerification.cs",
+      "size": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "snapshotRawSha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "normalizedLfSha256": "0B00AEDC84D6B6DEC910F19DA535190594AFCA089641B9464B2F8C26E7384328"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\NativeParametricWidth.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/NativeParametricWidth.cs",
+      "size": 187322,
+      "sha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "snapshotRawSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "normalizedLfSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\source\\ParametricContext.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/source/ParametricContext.cs",
+      "size": 8859,
+      "sha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732",
+      "snapshotRawSha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732",
+      "normalizedLfSha256": "653FFF841D4EEEBD05E90D371BAA2F036525A2360EFF9AAC148196B72CE0DA14"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\test_rear_width.mjs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/test_rear_width.mjs",
+      "size": 15830,
+      "sha256": "0B6CE5544BB72E5FA2E76496A680E1BA87FDA4EC657EAD6E2F6520AEFDD9DC90",
+      "snapshotRawSha256": "0B6CE5544BB72E5FA2E76496A680E1BA87FDA4EC657EAD6E2F6520AEFDD9DC90",
+      "normalizedLfSha256": "0B6CE5544BB72E5FA2E76496A680E1BA87FDA4EC657EAD6E2F6520AEFDD9DC90"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-reargeometry1\\tests\\RearWidthHarness.cs",
+      "destination": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-reargeometry1/tests/RearWidthHarness.cs",
+      "size": 48518,
+      "sha256": "142D7057B2AA4FAB907A5291159E70958949BC066A709642368EDBD7650CD50D",
+      "snapshotRawSha256": "142D7057B2AA4FAB907A5291159E70958949BC066A709642368EDBD7650CD50D",
+      "normalizedLfSha256": "142D7057B2AA4FAB907A5291159E70958949BC066A709642368EDBD7650CD50D"
+    },
+    {
+      "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\indoor_workbench_repair_20261110\\PROGRESS.md",
+      "destination": "docs/indoor_repair_progress_20261110.timeline.md",
+      "size": 26674,
+      "sha256": "84352C72AACC8061D62D652ACE37197FDB24DC19BA50ADBD6910F321C82FA49F",
+      "snapshotRawSha256": "84352C72AACC8061D62D652ACE37197FDB24DC19BA50ADBD6910F321C82FA49F",
+      "normalizedLfSha256": "F36991E133E18E2B87DEBC1C46E9D6DDFCDADA80A115C155EEAF8E98A7A23EFB"
+    }
+  ],
+  "defaultProfileChanged": false,
+  "modelAccepted": false,
+  "productionRelease": false,
+  "excluded": [
+    "native CAD and exports",
+    "binary executables and SDK",
+    "raw task/account/auth/session evidence",
+    "other windows outdoor and drawing changes",
+    "unfinished right_identity_v1 and finite_migration_v7"
+  ],
+  "scope": "incomplete indoor repair source snapshot; no runtime activation or CAD acceptance"
+}
