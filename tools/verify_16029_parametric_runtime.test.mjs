@@ -18,7 +18,10 @@ const REARGEOMETRY_REPAIR = 'readonly-open-20261110-r4-reargeometry1'
 const DOOR_PRECISION_REPAIR = 'readonly-open-20261110-r4-doorprecision1'
 const DOOR_PRECISION_REPAIR2 = 'readonly-open-20261110-r4-doorprecision2'
 const DOOR_PRECISION_REPAIR3 = 'readonly-open-20261110-r4-doorprecision3'
-const DOOR_PRECISION_REPAIRS = [DOOR_PRECISION_REPAIR, DOOR_PRECISION_REPAIR2, DOOR_PRECISION_REPAIR3]
+const FRAME_CONTEXTS_REPAIR = 'readonly-open-20261111-r4-framecontexts1'
+const OLD_ROOTS_REPAIR = 'readonly-open-20261111-r4-oldroots1'
+const RIGHT_OWNER_REPAIR = 'readonly-open-20261111-r4-rightowner1'
+const DOOR_PRECISION_REPAIRS = [DOOR_PRECISION_REPAIR, DOOR_PRECISION_REPAIR2, DOOR_PRECISION_REPAIR3, FRAME_CONTEXTS_REPAIR, OLD_ROOTS_REPAIR, RIGHT_OWNER_REPAIR]
 const REPAIR_PROFILES = [REPAIR, REARWIDTH_REPAIR, REARGEOMETRY_REPAIR, ...DOOR_PRECISION_REPAIRS]
 const repairLabel = tag => tag === REPAIR ? '' : tag === REARWIDTH_REPAIR ? ' rear-width repair' : tag === REARGEOMETRY_REPAIR ? ' rear-geometry repair' : ' ' + tag
 const RECORDED_ATTEMPT = resolve(dirname(fileURLToPath(import.meta.url)), '../data/parametric_attempts/PARAM-20261109111020502-DAEB5A')
@@ -38,10 +41,12 @@ const requestFor = (heightMm = 1917, depthMm = 550) => ({
   cabinet: { widthMm: 850, heightMm, depthMm },
   columns: ['L', 'R'].map(side => ({ side, doors: [{ heightUnits: 1 }, { heightUnits: 2 }] })),
 })
-const prefixFor = (request, doors) => [
+const prefixFor = (request, doors, repairTag = REPAIR) => [
   'clone', 'probe', 'dimensions', 'derived', 'base-hole', 'assemblies',
+  ...([OLD_ROOTS_REPAIR, RIGHT_OWNER_REPAIR].includes(repairTag) ? ['repair-obsolete-doors'] : []),
   ...(request.cabinet.heightMm !== 1917 || request.cabinet.depthMm !== 550 ? ['envelope'] : []),
-  ...doors, 'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', 'locks-verify',
+  ...doors, 'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks',
+  ...(repairTag === RIGHT_OWNER_REPAIR ? ['repair-right-owner'] : []), 'locks-verify',
   'repair-partition-mates', 'root', 'repair-frame-slots',
 ]
 const suffixFor = request => [
@@ -148,7 +153,7 @@ test('runtime bridge pins two fresh segments and uses requested height/depth sta
       assert.equal(h.calls.length, 2)
       const [first, second] = h.calls
       const doors = height === 1917 ? ['door-603', 'door-1213'] : ['door-630p666667', 'door-1268p333333']
-      assert.deepEqual(first.options.phases, prefixFor(h.request, doors))
+      assert.deepEqual(first.options.phases, prefixFor(h.request, doors, repairTag))
       assert.equal(first.options.buildTag, DOOR_PRECISION_REPAIRS.includes(repairTag) ? repairTag : BASELINE)
       assert.equal(first.options.repairProfile, DOOR_PRECISION_REPAIRS.includes(repairTag) ? repairTag : '')
       assert.equal(second.options.buildTag, repairTag)
@@ -173,6 +178,36 @@ test('runtime bridge pins two fresh segments and uses requested height/depth sta
         'runModel:1', 'beforeResume', 'inspectCad', 'runModel:2'])
     })
   }
+})
+
+test('profile migrations precede their dependent native checks', async t => {
+  for (const repairTag of [FRAME_CONTEXTS_REPAIR, OLD_ROOTS_REPAIR, RIGHT_OWNER_REPAIR]) await t.test(repairTag, async t => {
+    const h = harness(t, requestFor(2000, 600), repairTag)
+    await h.run()
+    const phases = h.calls[0].options.phases
+    const migrationIndex = phases.indexOf('repair-obsolete-doors')
+    if ([OLD_ROOTS_REPAIR, RIGHT_OWNER_REPAIR].includes(repairTag)) {
+      assert.equal(migrationIndex, phases.indexOf('assemblies') + 1)
+      assert.equal(phases[migrationIndex + 1], 'envelope')
+    } else assert.equal(migrationIndex, -1)
+    if (repairTag === RIGHT_OWNER_REPAIR) {
+      assert.equal(phases.indexOf('repair-right-owner'), phases.indexOf('locks') + 1)
+      assert.equal(phases[phases.indexOf('repair-right-owner') + 1], 'locks-verify')
+    } else assert.equal(phases.indexOf('repair-right-owner'), -1)
+  })
+})
+
+test('a failed right-owner repair blocks the runtime continuation despite rebound receipts', async t => {
+  const h = harness(t, requestFor(2000, 500), RIGHT_OWNER_REPAIR)
+  h.respond = (input, options) => {
+    const result = h.fixture(input, options)
+    update(resolve(result.attempt, 'evidence/repair-right-owner.json'), evidence => { evidence.success = false })
+    rebindReceiptChain(result)
+    return result
+  }
+  await assert.rejects(h.run(), /runtime bridge receipt binding failed: repair-right-owner/)
+  assert.equal(h.calls.length, 1)
+  assert.equal(h.inspectCadCalls, 0)
 })
 
 test('dynamic door phases use all distinct measured heights in column order', async t => {

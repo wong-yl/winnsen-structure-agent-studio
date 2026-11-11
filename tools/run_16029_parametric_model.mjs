@@ -138,7 +138,7 @@ function sourceInputs(attempt, working) {
 
 export async function run16029ParametricModel(request, { phases = null, resumeSource = '', resumeStage = '', resumeBackupPhase = '', buildTag, repairProfile = '', phaseTimeoutMs = 20 * 60 * 1000, preserveCadOnFailure = false, signal, onProgress = console.log } = {}) {
   if (!Number.isInteger(phaseTimeoutMs) || phaseTimeoutMs < 1 || phaseTimeoutMs > MAX_PARAMETRIC_PHASE_TIMEOUT_MS) throw new Error('phase timeout must be 1–3600000 milliseconds')
-  const resumePhases = ['verify-package','package','verify','repair-base-mates','repair-frame-slots','root','repair-partition-mates','locks-verify','locks','repair-base-foot','repair-interfaces','repair-door-placements','envelope','assemblies','base-hole','clone']
+  const resumePhases = ['verify-package','package','verify','repair-base-mates','repair-frame-slots','root','repair-partition-mates','locks-verify','repair-right-owner','locks','repair-base-foot','repair-interfaces','repair-door-placements','envelope','repair-obsolete-doors','assemblies','base-hole','clone']
   if (typeof resumeStage !== 'string' || typeof resumeBackupPhase !== 'string' ||
       (resumeStage && (!resumeSource || !resumePhases.includes(resumeStage))) ||
       (resumeBackupPhase && (!resumeStage || !/^[a-zA-Z0-9_-]+$/.test(resumeBackupPhase)))) throw new Error('invalid explicit resume checkpoint options')
@@ -234,7 +234,7 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
         const resultPath = resolve(proofAttempt, 'evidence', 'door-' + heightToken + '.json')
         const receipt = json(receiptPath), result = json(resultPath)
         if (!result.success || receipt.evidenceSha256 !== hash(resultPath)) throw new Error('resumed door evidence mismatch')
-        if (['readonly-open-20261110-r4-doorprecision1','readonly-open-20261110-r4-doorprecision2','readonly-open-20261110-r4-doorprecision3'].includes(repairProfile) &&
+        if (['readonly-open-20261110-r4-doorprecision1','readonly-open-20261110-r4-doorprecision2','readonly-open-20261110-r4-doorprecision3', 'readonly-open-20261111-r4-framecontexts1', 'readonly-open-20261111-r4-oldroots1', 'readonly-open-20261111-r4-rightowner1'].includes(repairProfile) &&
             (!heightTokens.includes(heightToken) || result.heightMm !== heights[heightTokens.indexOf(heightToken)])) throw new Error('resumed door evidence does not bind the full contract height')
         const sourceFolder = resolve(sourceDoorRoot, doorFolder.name)
         const boundFolder = resolve(boundDoorRoot, doorFolder.name)
@@ -294,7 +294,8 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
     if (task.id !== id) throw new Error('unexpected parametric task claim')
     task = await store.transition({ ...leaseArgs(), transitionId: id + '-planning', toState: 'planning' })
     const plan = { schema: 'winnsen.locker16029.parametric_execution.v1', purpose: 'structure_engineering_assistance', feedbackRepairRequired: true, taskId: id, taskPath: resolve(storeDir, id + '.json'), workerId, contract, contractSha256: sha(JSON.stringify(contract)), resumedEvidence, sourceRightPartitionSha256: hash(resolve(working, '箱体竖隔板R.SLDPRT')) }
-    if (['readonly-open-20261110-r4-doorprecision1','readonly-open-20261110-r4-doorprecision2','readonly-open-20261110-r4-doorprecision3'].includes(repairProfile)) plan.doorModules = heights.map((heightMm, index) => ({ token:heightTokens[index], heightMm }))
+    if (['readonly-open-20261110-r4-doorprecision1','readonly-open-20261110-r4-doorprecision2','readonly-open-20261110-r4-doorprecision3', 'readonly-open-20261111-r4-framecontexts1', 'readonly-open-20261111-r4-oldroots1', 'readonly-open-20261111-r4-rightowner1'].includes(repairProfile)) plan.doorModules = heights.map((heightMm, index) => ({ token:heightTokens[index], heightMm }))
+    if (['readonly-open-20261111-r4-oldroots1', 'readonly-open-20261111-r4-rightowner1'].includes(repairProfile)) plan.obsoleteDoorSourceInventory = cloneInventory || inventory(cloneSource)
     const planPath = resolve(attempt, 'parametric_execution.json')
     write(planPath, plan)
     task = await store.transition({ ...leaseArgs(), transitionId: id + '-building', toState: 'building', patch: { execution: { started: true, cadStarted: false, modelReady: false }, progress: { stage: 'clone', percent: 0 } } })
@@ -308,7 +309,7 @@ export async function run16029ParametricModel(request, { phases = null, resumeSo
     if (verifiedBuild.sourceSnapshot) write(resolve(pinnedTools, 'source_snapshot.json'), verifiedBuild.sourceSnapshot)
     if (verifiedBuild.repairSource) write(resolve(pinnedTools, 'repair_source.json'), verifiedBuild.repairSource)
     const executable = resolve(pinnedTools, 'NativeParametricAssembly.exe')
-    const plannedOrder = phases || ['clone', ...(resumeSource ? [] : ['probe', 'dimensions', 'derived', 'base-hole']), ...(resumedPhase && resumedPhase !== 'base-hole' ? [] : ['assemblies']), ...((cabinet.heightMm !== 1917 || cabinet.depthMm !== 550) && !envelopeVerified ? ['envelope'] : []), ...heights.map(height => Number(height.toFixed(6)).toString().replace('.', 'p')).filter(token => !resumedDoorHeights.has(token)).map(token => 'door-' + token), 'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', 'locks-verify', 'repair-partition-mates', ...(['root','verify','package','verify-package'].includes(resumedPhase) ? [] : ['root']), 'repair-frame-slots', ...(cabinet.heightMm !== 1917 ? ['repair-height-braces'] : []), ...(cabinet.depthMm !== 550 ? ['repair-depth-placements'] : []), 'repair-base-mates', 'repair-engineer-feedback', ...(productionProfile ? ['production-apply', 'production-verify'] : []), 'verify', 'package', 'verify-package', 'verify-relocated', 'physical-audit']
+    const plannedOrder = phases || ['clone', ...(resumeSource ? [] : ['probe', 'dimensions', 'derived', 'base-hole']), ...(resumedPhase && resumedPhase !== 'base-hole' ? [] : ['assemblies']), ...(['readonly-open-20261111-r4-oldroots1', 'readonly-open-20261111-r4-rightowner1'].includes(repairProfile) ? ['repair-obsolete-doors'] : []), ...((cabinet.heightMm !== 1917 || cabinet.depthMm !== 550) && !envelopeVerified ? ['envelope'] : []), ...heights.map(height => Number(height.toFixed(6)).toString().replace('.', 'p')).filter(token => !resumedDoorHeights.has(token)).map(token => 'door-' + token), 'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', ...(repairProfile === 'readonly-open-20261111-r4-rightowner1' ? ['repair-right-owner'] : []), 'locks-verify', 'repair-partition-mates', ...(['root','verify','package','verify-package'].includes(resumedPhase) ? [] : ['root']), 'repair-frame-slots', ...(cabinet.heightMm !== 1917 ? ['repair-height-braces'] : []), ...(cabinet.depthMm !== 550 ? ['repair-depth-placements'] : []), 'repair-base-mates', 'repair-engineer-feedback', ...(productionProfile ? ['production-apply', 'production-verify'] : []), 'verify', 'package', 'verify-package', 'verify-relocated', 'physical-audit']
     const order = filterCompleted16029ResumePhases(plannedOrder, resumedSuccessfulPhases, !phases && Boolean(resumeSource))
     let predecessor = ''
     for (const phase of order) {

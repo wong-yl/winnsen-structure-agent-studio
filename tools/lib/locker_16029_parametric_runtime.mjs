@@ -10,7 +10,7 @@ import { production16029Profile } from './locker_16029_production_evidence.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const BASELINE = 'engineer-feedback-20261008-r4'
-const DOOR_PRECISION_REPAIRS = ['readonly-open-20261110-r4-doorprecision1', 'readonly-open-20261110-r4-doorprecision2', 'readonly-open-20261110-r4-doorprecision3']
+const DOOR_PRECISION_REPAIRS = ['readonly-open-20261110-r4-doorprecision1', 'readonly-open-20261110-r4-doorprecision2', 'readonly-open-20261110-r4-doorprecision3', 'readonly-open-20261111-r4-framecontexts1', 'readonly-open-20261111-r4-oldroots1', 'readonly-open-20261111-r4-rightowner1']
 const REPAIRS = ['readonly-open-20261105-r4', 'readonly-open-20261109-r4-rearwidth1', 'readonly-open-20261110-r4-reargeometry1', ...DOOR_PRECISION_REPAIRS]
 const sha = value => createHash('sha256').update(value).digest('hex').toUpperCase()
 const hash = path => sha(readFileSync(path))
@@ -91,9 +91,10 @@ export async function run16029ParametricRuntime(request, options = {}, {
     doorHeights.set(token, height)
   }
   const prefix = ['clone', 'probe', 'dimensions', 'derived', 'base-hole', 'assemblies',
+    ...(['readonly-open-20261111-r4-oldroots1', 'readonly-open-20261111-r4-rightowner1'].includes(repair.buildTag) ? ['repair-obsolete-doors'] : []),
     ...(heightMm !== 1917 || depthMm !== 550 ? ['envelope'] : []),
     ...[...doorHeights.keys()].map(token => 'door-' + token),
-    'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', 'locks-verify', 'repair-partition-mates', 'root', 'repair-frame-slots']
+    'repair-door-placements', 'repair-interfaces', 'repair-base-foot', 'locks', ...(repair.buildTag === 'readonly-open-20261111-r4-rightowner1' ? ['repair-right-owner'] : []), 'locks-verify', 'repair-partition-mates', 'root', 'repair-frame-slots']
   const suffix = ['clone', ...(heightMm !== 1917 ? ['repair-height-braces'] : []),
     ...(depthMm !== 550 ? ['repair-depth-placements'] : []), 'repair-base-mates', 'repair-engineer-feedback',
     'verify', 'package', 'verify-package', 'verify-relocated', 'physical-audit']

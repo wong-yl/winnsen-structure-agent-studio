@@ -1,0 +1,204 @@
+{
+  "recordedAt": "2026-11-11T16:35:11.996089+08:00",
+  "sourceRoot": "D:\\Winnsen_Structure_Agent_Studio",
+  "scope": "indoor recovery integration and accepted runtime selection; source only",
+  "files": [
+    {
+      "path": "tools/lib/locker_16029_parametric_build.mjs",
+      "bytes": 30400,
+      "sha256": "97D1E92404087259946251B15B612BBB2E32C26685F1B831205D77CBA9553D61"
+    },
+    {
+      "path": "tools/lib/locker_16029_parametric_runtime.mjs",
+      "bytes": 9401,
+      "sha256": "0D79775E5DF2D5A960ABF85CEF0CC5CE0D212097E6089263006E8B77C5FC721E"
+    },
+    {
+      "path": "tools/run_16029_parametric_model.mjs",
+      "bytes": 37609,
+      "sha256": "D242FEB2D903A46F9FE7092F20838D0D733ECD708FA4ED31E8189FC91C938EB5"
+    },
+    {
+      "path": "tools/verify_16029_parametric_build.test.mjs",
+      "bytes": 38314,
+      "sha256": "AF957B2106DBE617C96F91BEA051A5ACADCD254D1154236233AB9F9DFA55640D"
+    },
+    {
+      "path": "tools/verify_16029_parametric_runtime.test.mjs",
+      "bytes": 42703,
+      "sha256": "D8379495D855FA03EF9C4E18F5663E18FCF1C068733346BB15C1B213D31A3A48"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/runtime-repair-selection.json",
+      "bytes": 446,
+      "sha256": "31F34B721E8236AD6B88AC8C23F9015907B6B4EDB2280F225325B91CD16CECDC"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/build.mjs",
+      "bytes": 5245,
+      "sha256": "1244B932B86912FFCAC64B55F8577946C4AA34ED2FBCA60BD9CDB2841B903520"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricAssembly.cs",
+      "bytes": 64706,
+      "sha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricDoor.cs",
+      "bytes": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricDoorPlacement.cs",
+      "bytes": 98354,
+      "sha256": "1B3C823F1BA5E49E1EFDF04B1358658016FCFE8A1D173F43E819624B414980DC"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricEnvelope.cs",
+      "bytes": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricLockBase.cs",
+      "bytes": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricLocks.cs",
+      "bytes": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricPhysicalAudit.cs",
+      "bytes": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricVerification.cs",
+      "bytes": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/NativeParametricWidth.cs",
+      "bytes": 194130,
+      "sha256": "835332B9A0DB25E98A7AFA83FE9E55D5E548C08312CE06A303FA287EE19D6E8F"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-framecontexts1/source/ParametricContext.cs",
+      "bytes": 8988,
+      "sha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/build.mjs",
+      "bytes": 5182,
+      "sha256": "7E4C6CB716E6009A146320CCD070C10379E8FD541B8158B92B3D1507B51B25C1"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricAssembly.cs",
+      "bytes": 103865,
+      "sha256": "A9B011681CA132DEF9F94228711C53D69F33FDFB82AD6EBCAC8824E38B564287"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricDoor.cs",
+      "bytes": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricDoorPlacement.cs",
+      "bytes": 98354,
+      "sha256": "1B3C823F1BA5E49E1EFDF04B1358658016FCFE8A1D173F43E819624B414980DC"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricEnvelope.cs",
+      "bytes": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricLockBase.cs",
+      "bytes": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricLocks.cs",
+      "bytes": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricPhysicalAudit.cs",
+      "bytes": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricVerification.cs",
+      "bytes": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/NativeParametricWidth.cs",
+      "bytes": 194130,
+      "sha256": "835332B9A0DB25E98A7AFA83FE9E55D5E548C08312CE06A303FA287EE19D6E8F"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-oldroots1/source/ParametricContext.cs",
+      "bytes": 8988,
+      "sha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/build.mjs",
+      "bytes": 5184,
+      "sha256": "BD2166904DAD3BF522CC8FB274EEB144D1DEB2E79F8E09404E513A6EDB633562"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricAssembly.cs",
+      "bytes": 138243,
+      "sha256": "A0D853DBFD9B77D508BB00A088E298E1C3516E4CFC796097BC00E1374E65E7CC"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricDoor.cs",
+      "bytes": 306222,
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricDoorPlacement.cs",
+      "bytes": 98354,
+      "sha256": "1B3C823F1BA5E49E1EFDF04B1358658016FCFE8A1D173F43E819624B414980DC"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricEnvelope.cs",
+      "bytes": 146409,
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricLockBase.cs",
+      "bytes": 201489,
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricLocks.cs",
+      "bytes": 14977,
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricPhysicalAudit.cs",
+      "bytes": 27695,
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricVerification.cs",
+      "bytes": 14852,
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/NativeParametricWidth.cs",
+      "bytes": 194130,
+      "sha256": "835332B9A0DB25E98A7AFA83FE9E55D5E548C08312CE06A303FA287EE19D6E8F"
+    },
+    {
+      "path": "workers/native_model_requests/parametric_v1/repairs/readonly-open-20261111-r4-rightowner1/source/ParametricContext.cs",
+      "bytes": 8988,
+      "sha256": "DACD0941306F9C85497B3C7F120A503DDC7C3C66C38EDB458163AA4CC185C6DA"
+    }
+  ],
+  "sourceFileCount": 39,
+  "sourceBytes": 3520646
+}
