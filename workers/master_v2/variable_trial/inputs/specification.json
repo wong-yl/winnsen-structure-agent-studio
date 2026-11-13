@@ -1,0 +1,15 @@
+{
+  "doorCases": [
+    {"widthMm":437,"heightMm":471.25,"hand":"L"},
+    {"widthMm":437,"heightMm":471.25,"hand":"R"},
+    {"widthMm":287,"heightMm":200,"hand":"L"},
+    {"widthMm":287,"heightMm":200,"hand":"R"},
+    {"widthMm":537,"heightMm":1000,"hand":"L"},
+    {"widthMm":537,"heightMm":1000,"hand":"R"}
+  ],
+  "assemblyCases": [
+    {"cabinet":{"widthMm":1000,"heightMm":2000,"depthMm":500},"columns":[{"side":"L","doors":[{"heightUnits":1},{"heightUnits":1},{"heightUnits":1},{"heightUnits":1}]},{"side":"R","doors":[{"heightUnits":1},{"heightUnits":1},{"heightUnits":1},{"heightUnits":1}]}]},
+    {"cabinet":{"widthMm":1000,"heightMm":2000,"depthMm":500},"columns":[{"side":"L","doors":[{"heightUnits":1},{"heightUnits":2},{"heightUnits":1},{"heightUnits":2}]},{"side":"R","doors":[{"heightUnits":2},{"heightUnits":1},{"heightUnits":2}]}]},
+    {"cabinet":{"widthMm":900,"heightMm":2000,"depthMm":500},"columns":[{"side":"L","doors":[{"heightUnits":1},{"heightUnits":2},{"heightUnits":1},{"heightUnits":2}]},{"side":"R","doors":[{"heightUnits":2},{"heightUnits":1},{"heightUnits":2}]}]}
+  ]
+}

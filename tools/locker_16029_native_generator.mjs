@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { build16029ParametricContract } from './lib/locker_16029_parametric_contract.mjs'
+import { INDOOR_16029_PRODUCTION_PROFILE, INDOOR_16029_PROCESS_REVIEW_PROFILE } from './lib/locker_16029_production_profile.mjs'
 
 const FIXED_HEIGHT_MM = 1917
 const FIXED_COLUMNS = 2
@@ -185,14 +186,27 @@ function hasUnsupportedHardwareIntent(request) {
   return structuredElectricalRequest || promptedElectricalRequest
 }
 
+function requestProductionProfile(request) {
+  const supplied = [request.productionProfile, request.parametricRequest?.productionProfile]
+    .filter(value => value !== undefined && value !== null && value !== '')
+  if (supplied.some(value => typeof value !== 'string' || ![INDOOR_16029_PRODUCTION_PROFILE, INDOOR_16029_PROCESS_REVIEW_PROFILE].includes(text(value))) || new Set(supplied.map(text)).size > 1) {
+    return { ok: false, reason: 'unsupported_production_profile', message: '工艺版本不支持，或入口与参数中的工艺版本不一致。' }
+  }
+  return { ok: true, productionProfile: supplied.length ? text(supplied[0]) : '' }
+}
+
 function requestGeometry(request) {
+  const profileResult = requestProductionProfile(request)
+  if (!profileResult.ok) return profileResult
+  const productionProfile = profileResult.productionProfile
   if (request.parametricRequest !== undefined) {
     try {
       const supplied = request.parametricRequest
       if (!supplied || supplied.envelopeProbe) throw new Error('诊断请求不能进入模型生成任务。')
-      const canonical = { cabinet: { ...supplied.cabinet }, columns: supplied.columns }
+      const canonical = { cabinet: { ...supplied.cabinet }, columns: supplied.columns, ...(productionProfile ? { productionProfile } : {}) }
       const contract = build16029ParametricContract(canonical)
       const cabinet = contract.geometry.cabinet
+      if (productionProfile === INDOOR_16029_PROCESS_REVIEW_PROFILE && !Object.values(cabinet).every(Number.isInteger)) throw new Error('加工工艺版的柜宽、柜高、柜深须输入整数 mm；内部等分门高保留完整精度。')
       if (cabinet.widthMm < 700 || cabinet.widthMm > 1200 || cabinet.heightMm < 1700 || cabinet.heightMm > 2200 || cabinet.depthMm < 250 || cabinet.depthMm > 650) throw new Error('当前参数化任务仅开放700–1200宽、1700–2200高、250–650深；每个新规格均需原生验收。')
       const rowSequence = ['L', 'R'].map(side => side + '[' + contract.rowsByColumn[side].map(row => row.doorHeightMm.toFixed(6)).join(',') + ']').join('-')
       return { ok: true, geometry: {
@@ -201,7 +215,7 @@ function requestGeometry(request) {
         columns: 2, doorCount: contract.geometry.doorCount, columnDoorCounts: contract.geometry.columnDoorCounts,
         installedDoorPanelWidthMm: contract.geometry.doorLeafWidthMm,
         referenceDoorHeightMm: null, estimatedDoorHeightMm: Math.max(...contract.rowsByColumn.L.concat(contract.rowsByColumn.R).map(row => row.doorHeightMm)),
-        rowSequence, parametricRequest: contract.input,
+        rowSequence, parametricRequest: contract.input, ...(productionProfile ? { productionProfile } : {}),
       } }
     } catch (error) { return { ok: false, reason: 'invalid_parametric_request', message: error.message } }
   }
@@ -251,6 +265,18 @@ function requestGeometry(request) {
   if (installedDoorPanelWidthMm <= 0) {
     return { ok: false, reason: 'invalid_derived_door_width', message: '按当前两列结构换算后的门板成品外宽无效。' }
   }
+  if (productionProfile) {
+    const rowUnits = doorCount === 6 ? [[6, 4, 2], [2, 4, 6]] : [Array(doorCount / columns).fill(1), Array(doorCount / columns).fill(1)]
+    return requestGeometry({
+      ...request,
+      productionProfile,
+      parametricRequest: {
+        cabinet: { widthMm: cabinetWidthMm, heightMm: FIXED_HEIGHT_MM, depthMm: cabinetDepthMm },
+        columns: ['L', 'R'].map((side, index) => ({ side, doors: rowUnits[index].map(heightUnits => ({ heightUnits })) })),
+        productionProfile,
+      },
+    })
+  }
 
   return {
     ok: true,
@@ -281,6 +307,7 @@ function requestFingerprintForGeometry(customerRequirementReference, geometry) {
     doorCount: geometry.doorCount,
     columnDoorCounts: geometry.columnDoorCounts,
     rowSequence: geometry.rowSequence,
+    ...(geometry.productionProfile ? { productionProfile: geometry.productionProfile } : {}),
     ...(geometry.parametricRequest ? { parametricRequest: geometry.parametricRequest } : {}),
   }
   return createHash('sha256').update(JSON.stringify(canonicalRequest)).digest('hex')
@@ -333,7 +360,7 @@ export function normalize16029NativeModelRequest(request = {}) {
   if (!geometryResult.ok) return geometryResult
   const geometry = geometryResult.geometry
   const requestFingerprint = requestFingerprintForGeometry(customerRequirementReference, geometry)
-  const seed = NATIVE_16029_SEEDS.find((item) => geometryMatches(geometry, item)) || null
+  const seed = geometry.productionProfile ? null : NATIVE_16029_SEEDS.find((item) => geometryMatches(geometry, item)) || null
   if (seed) {
     return {
       ok: true,
@@ -406,6 +433,7 @@ export function normalize16029NativeModelRequest(request = {}) {
       columnDoorCounts: geometry.columnDoorCounts,
       rowSequence: geometry.rowSequence,
       cabinetWidth: geometry.cabinetWidthMm,
+      ...(geometry.productionProfile ? { productionProfile: geometry.productionProfile } : {}),
       ...(geometry.parametricRequest ? { parametricRequest: geometry.parametricRequest } : {}),
       cabinetHeight: geometry.cabinetHeightMm,
       cabinetDepth: geometry.cabinetDepthMm,
@@ -430,6 +458,7 @@ export function normalize16029NativeModelRequest(request = {}) {
 }
 
 export function is16029StructureAssistanceReady(item = {}) {
+  if (text(item.productionProfile || item.parametricRequest?.productionProfile)) return false
   const seed = native16029SeedByAssetId(item.sourceBaselineAssetId)
   if (!seed) return false
   const numericMatch = (value, expected) => Number.isFinite(Number(value)) && Number(value) === expected

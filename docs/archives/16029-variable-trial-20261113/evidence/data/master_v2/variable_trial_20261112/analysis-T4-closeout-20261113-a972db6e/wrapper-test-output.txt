@@ -1,0 +1,54 @@
+test_all_three_target_cases_require_actual_complete_readback (__main__.ResumedRelocationTests) ... ok
+test_candidate_source_evidence_hash_binding_is_retained (__main__.ResumedRelocationTests) ... ok
+test_changed_cad_without_native_relative_rewrite_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_changed_measurement_helper_outside_original_fourteen_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_changed_measurement_method_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_diagnostic_hashes_cannot_change_after_inventory_and_native_binding (__main__.ResumedRelocationTests) ... ok
+test_diagnostic_replacement_from_another_panel_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_diagnostic_stage_inspection_geometry_and_cleanup_must_match_native (__main__.ResumedRelocationTests) ... ok
+test_diagnostic_time_must_be_utc_ordered_and_inside_its_own_native_events (__main__.ResumedRelocationTests) ... ok
+test_direct_copy_baseline_path_check_is_retained (__main__.ResumedRelocationTests) ... ok
+test_duplicate_case_descriptors_are_rejected (__main__.ResumedRelocationTests) ... ok
+test_evidence_reads_detect_mutation_after_validation (__main__.ResumedRelocationTests) ... ok
+test_extra_flat_reopen_trace_is_not_implicitly_allowed (__main__.ResumedRelocationTests) ... ok
+test_flat_output_part_must_match_the_copied_manifest_sha256 (__main__.ResumedRelocationTests) ... ok
+test_frozen_checker_hash_is_required (__main__.ResumedRelocationTests) ... ok
+test_generated_case3_uses_original_checker_without_correction (__main__.ResumedRelocationTests) ... ok
+test_missing_completed_source_report_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_missing_native_diagnostic_file_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_missing_or_duplicate_native_panel_and_flat_identity_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_missing_output_recovery_report_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_missing_resume_descriptor_cannot_fall_back_to_incorrect_toolchain (__main__.ResumedRelocationTests) ... ok
+test_native_diagnostic_paths_must_be_the_exact_two_new_json_files (__main__.ResumedRelocationTests) ... ok
+test_native_event_time_indices_must_bind_the_recorded_events (__main__.ResumedRelocationTests) ... ok
+test_native_flat_model_path_cannot_reference_a_different_panel (__main__.ResumedRelocationTests) ... ok
+test_native_flat_success_and_cleanup_flags_cannot_be_changed (__main__.ResumedRelocationTests) ... ok
+test_native_panel_identity_must_match_the_copied_output_manifest (__main__.ResumedRelocationTests) ... ok
+test_original_cold_reopen_validation_is_retained (__main__.ResumedRelocationTests) ... ok
+test_original_errors_and_module_globals_are_never_replaced (__main__.ResumedRelocationTests) ... ok
+test_original_metadata_comparison_is_retained (__main__.ResumedRelocationTests) ... ok
+test_original_numeric_comparison_is_retained (__main__.ResumedRelocationTests) ... ok
+test_original_source_cad_tampering_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_original_source_evidence_hash_tampering_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_output_manifest_bytes_must_remain_the_exact_source_copy (__main__.ResumedRelocationTests) ... ok
+test_receipt_missing_member_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_receipt_other_case_index_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_receipt_rewired_hash_tampering_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_receipt_source_hash_tampering_is_rejected_even_with_updated_inventories (__main__.ResumedRelocationTests) ... ok
+test_source_with_prior_flat_reopen_diagnostics_is_outside_the_exact_contract (__main__.ResumedRelocationTests) ... ok
+test_stale_source_report_pointer_hash_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_synthetic_case2_uses_its_own_complete_descriptor (__main__.ResumedRelocationTests) ... ok
+test_synthetic_complete_chain_corrects_only_actual_toolchain_identity (__main__.ResumedRelocationTests) ... ok
+test_target_job_resume_descriptor_is_required (__main__.ResumedRelocationTests) ... ok
+test_target_pointer_provenance_cannot_contradict_actual_job (__main__.ResumedRelocationTests) ... ok
+test_target_recovery_report_requires_resume_descriptor (__main__.ResumedRelocationTests) ... ok
+test_unbound_target_file_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_unknown_json_and_cad_members_remain_rejected (__main__.ResumedRelocationTests) ... ok
+test_wrong_case_candidate_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_wrong_copy_hop_is_rejected (__main__.ResumedRelocationTests) ... ok
+test_wrong_toolchain_archive_hash_is_rejected (__main__.ResumedRelocationTests) ... ok
+
+----------------------------------------------------------------------
+Ran 49 tests in 244.554s
+
+OK

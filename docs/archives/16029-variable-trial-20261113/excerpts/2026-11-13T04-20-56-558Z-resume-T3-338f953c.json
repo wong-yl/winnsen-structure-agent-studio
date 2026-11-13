@@ -1,0 +1,56 @@
+{
+  "schema": "16029.archive.native-excerpt.v1",
+  "source": {
+    "source": "data/master_v2/variable_trial_20261112/runs/2026-11-13T04-20-56-558Z-resume-T3-338f953c/native-result.json",
+    "bytes": 20172323,
+    "sha256": "20125F3F793BBB779FDE328F71FC39DC3172E320063A9014E3AFA6CFAA27EDD2"
+  },
+  "eventCount": 364,
+  "eventTypes": {
+    "cad_owned": 1,
+    "resume_copied_bytes_verified": 1,
+    "rewrite_reference": 355,
+    "dependency_closure": 1,
+    "resume_rewired_copies_bound": 1,
+    "minimum_assembly_reused": 2,
+    "minimum_assembly": 1,
+    "owned_document_cleanup": 1,
+    "finished": 1
+  },
+  "excerpts": [
+    {
+      "selector": "events[359]",
+      "value": {
+        "inspection": "minimum_assembly_reused",
+        "index": 1,
+        "evidencePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case1\\assembly-evidence.json",
+        "evidenceSha256": "F06F21B8D561AAFB2B6AD29B1AD547C29EED46A48D1758387EB41120586A902B",
+        "oldFailurePreserved": true,
+        "acceptancePass": false,
+        "production_release": false
+      }
+    },
+    {
+      "selector": "events[360]",
+      "value": {
+        "inspection": "minimum_assembly_reused",
+        "index": 2,
+        "evidencePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case2\\assembly-evidence.json",
+        "evidenceSha256": "8E276AC57438E656E2562BC10CC09F2E88B0FA1A3CD74EE7BAEB4B0B9C765DC2",
+        "oldFailurePreserved": true,
+        "acceptancePass": false,
+        "production_release": false
+      }
+    },
+    {
+      "selector": "events[363]",
+      "value": {
+        "inspection": "finished",
+        "success": true,
+        "cadExited": true,
+        "error": null
+      }
+    }
+  ],
+  "production_release": false
+}

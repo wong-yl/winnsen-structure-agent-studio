@@ -1,0 +1,10 @@
+{
+  "schema": "16029-dxf-preservation-check/v1",
+  "baseline": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-protection-20261113T092509Z-d1bac6fc\\before.json",
+  "baselineSha256": "756716219400C331CE67BD45297BE7C39E88429FB0C474F61FDF4550253C356C",
+  "checkedAtUtc": "2026-11-13T09:50:52.541958+00:00",
+  "checkedCount": 1475,
+  "changed": [],
+  "pass": true,
+  "production_release": false
+}

@@ -1,0 +1,8 @@
+{
+  "schema": "winnsen.locker16029.native_build_selection.v1",
+  "verified": true,
+  "buildTag": "engineer-feedback-20261008-r4",
+  "executableSha256": "1D7CFDA1EDB0442E22E3BC45938AF9F6673A7D337FDF29B3DF95B6AE275FD11D",
+  "acceptanceAttempt": "PARAM-20261008084144195-6C2F71",
+  "acceptanceQualitySha256": "C78C967367B8A5F77A9F8BC90CCE8F739796EE223DD28AD10C41E8BACD159991"
+}

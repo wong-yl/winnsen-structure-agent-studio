@@ -1,0 +1,1608 @@
+{
+  "schema": "16029-variable-trial-closeout/v1",
+  "generatedAtUtc": "2026-11-13T07:28:59.370413+00:00",
+  "scope": "parts_dxf_only",
+  "drawingStatus": "deferred_by_user_20261113",
+  "production_release": false,
+  "fullPlanPass": false,
+  "t4NativeExecutionCompleted": true,
+  "t4MigrationConsistencyPass": false,
+  "t4NativeFinish": {
+    "event": {
+      "inspection": "finished",
+      "success": true,
+      "cadExited": true,
+      "error": null
+    },
+    "time": {
+      "index": 534,
+      "atUtc": "2026-11-13T07:00:05.0125032Z",
+      "elapsedMs": 6649527
+    }
+  },
+  "result": {
+    "code": 0,
+    "stderr": "",
+    "warnings": [],
+    "cadExited": true
+  },
+  "supervision": {
+    "state": "cad_exited",
+    "cad": [],
+    "nativeEnded": true,
+    "warnings": []
+  },
+  "protection": {
+    "changed": [],
+    "pass": true,
+    "nativeTaskIndex": {
+      "diagnosticPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\native-index-protection.json",
+      "mode": "recorded_bytes_and_rebuiltAt",
+      "accepted": true,
+      "rawHashChanged": true,
+      "hashChangeOnlyRebuiltAt": true,
+      "beforeSha256": "78A3A2839E5EE2D616ABACA109BD22D6D43C582092D4D1AED7A6EF8B115329F4",
+      "afterSha256": "1558D37C897EB0099745F6202CE8522D87A4CE05BDE3BE6CA5569A99B5859408",
+      "changedJsonFields": [
+        "rebuiltAt"
+      ],
+      "rejectionReasons": []
+    }
+  },
+  "recoverySourceCheck": {
+    "schema": "16029-variable-artifact-recovery/v1",
+    "recoveredArtifactsFromFailedPhase": true,
+    "oldSupervisionAccepted": false,
+    "oldFailurePreserved": true,
+    "reason": "Post-exit git PID reuse; artifacts require new supervised T3 and T4 validation",
+    "sourceRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T01-00-00-839Z-T2-outputs-dxf-e377825c",
+    "production_release": false,
+    "fullPlanPass": false,
+    "newRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9",
+    "outputsUnchanged": true,
+    "sourcesUnchanged": true
+  },
+  "nativeToolchain": {
+    "schema": "winnsen.variable_trial.toolchain.v2",
+    "exe": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\VariableTrial.exe",
+    "sha256": "0EAB5F8728711BD0EF1334F0591EAD720755ED47693BB3C6E5F7900A9BF2A1CA",
+    "sources": [
+      {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\TrialAssembly.cs",
+        "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialAssembly.cs",
+        "sha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537"
+      },
+      {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\TrialOutput.cs",
+        "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialOutput.cs",
+        "sha256": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6"
+      },
+      {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\VariableTrial.cs",
+        "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\VariableTrial.cs",
+        "sha256": "616C6B804FA6FB3C51F5D1C4ADF98CB56D5EBC22E68691DE970D7C4FCC2ACA24"
+      }
+    ],
+    "dlls": [
+      {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\SolidWorks.Interop.sldworks.dll",
+        "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+      },
+      {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\SolidWorks.Interop.swconst.dll",
+        "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+      }
+    ]
+  },
+  "recoveryPointer": {
+    "dir": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9",
+    "cadDirectory": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad",
+    "nativeResult": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\native-result.json",
+    "resumeSourceRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830",
+    "mixedProvenance": true,
+    "production_release": false
+  },
+  "sixCaseDxfAudit": {
+    "schema": "16029.variable-trial.output-audit.v2",
+    "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T01-00-00-839Z-T2-outputs-dxf-e377825c",
+    "nativeResultSha256": "7A49D6A97B7D9C1FB1B259DE672F7D6D8B541935DFEAEDAB72B11B698F1FFFCC",
+    "outputScope": "parts_dxf_only",
+    "drawingStatus": "deferred_by_user_20261113",
+    "caseCount": 6,
+    "dxfGeometryScopePass": true,
+    "nativeBatchSupervisionAccepted": false,
+    "dxfDirectionPass": false,
+    "dxfTechnicalPass": false,
+    "geometryScope": "DXF units, contour, native flat size, holes, CUT mapping and baseline historical full geometry",
+    "directionScope": "native flat-view association only; manufacturing orientation remains unverified",
+    "fullPlanPass": false,
+    "production_release": false,
+    "visualReview": "pending"
+  },
+  "panelReopenCount": 6,
+  "flatReopenCount": 6,
+  "cases": [
+    {
+      "case": 1,
+      "comparisonPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-relocation-20261113-recheck-152246-e6b6c062\\case1.json",
+      "pass": false,
+      "validationStatus": "document_metadata_difference",
+      "measurementComparisonEqual": true,
+      "sectionsEqual": {
+        "layout": true,
+        "minimumScope": true,
+        "expectedManifest": true,
+        "instances": true,
+        "hingeInterfaceMeasurements": true,
+        "interference": true
+      },
+      "numericComparison": {
+        "comparedNumbers": 472317,
+        "maximumAbsoluteDeltas": {
+          "millimetres": 0.0,
+          "exact": 0.0,
+          "transform": 2.220446049250313e-16,
+          "direction": 0.0,
+          "metres": 0.0,
+          "radians": 0.0,
+          "numeric_precision": 0.0
+        }
+      },
+      "resumeCaseProvenance": {
+        "applicable": true,
+        "verified": true,
+        "errors": [],
+        "onlyToolchainIdentityCorrected": true,
+        "caseIndex": 1,
+        "sourceRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830",
+        "resumedRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c",
+        "targetRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9",
+        "actualBuildToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\toolchain.json",
+          "toolchainSha256": "1063498B6ADCF9931816B93153B5B17CCE55D9372EA8BD325A2AD88AC33DF682",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T02-23-09-833Z-a49e393a\\sources\\TrialAssembly.cs",
+          "sourceSha256": "81817F807DE5B2065D8472ECD3C1E019D9F746964706F0D78442FB731C6FF908",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "9B55066C1C8C88C8781537F95D9525FA40EE98F052422A48270F4279E2A05D4B",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "5B82E8F8B91803508D188B888992746FD6F5D53E6B1C4DEAB713190708852398"
+          }
+        },
+        "actualBaselineMeasurementToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\toolchain.json",
+          "toolchainSha256": "1063498B6ADCF9931816B93153B5B17CCE55D9372EA8BD325A2AD88AC33DF682",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T02-23-09-833Z-a49e393a\\sources\\TrialAssembly.cs",
+          "sourceSha256": "81817F807DE5B2065D8472ECD3C1E019D9F746964706F0D78442FB731C6FF908",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "9B55066C1C8C88C8781537F95D9525FA40EE98F052422A48270F4279E2A05D4B",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "5B82E8F8B91803508D188B888992746FD6F5D53E6B1C4DEAB713190708852398"
+          }
+        },
+        "actualCandidateMeasurementToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\toolchain.json",
+          "toolchainSha256": "CC2F47512177CB4BB95FD2B494A444FA192899699EB04A0932FE1A24EC2B36A3",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialAssembly.cs",
+          "sourceSha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "D98E0EE7E0CF403AE666D9715B31C0662560A5B86B665619B90F53B0FB31465D",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "A1C9F19086FA05972534905B5397194CA65E5331549ABBA5FA9393434B66E2BA"
+          }
+        },
+        "resumedRunToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\toolchain.json",
+          "toolchainSha256": "CC2F47512177CB4BB95FD2B494A444FA192899699EB04A0932FE1A24EC2B36A3",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialAssembly.cs",
+          "sourceSha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "D98E0EE7E0CF403AE666D9715B31C0662560A5B86B665619B90F53B0FB31465D",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "A1C9F19086FA05972534905B5397194CA65E5331549ABBA5FA9393434B66E2BA"
+          }
+        },
+        "sourceCheck": {
+          "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\assembly-resume-source-check.json",
+          "sha256": "56495C9D6412350E57D21C6E7880247D1257A0A2D6EFAE35E681ED1F8A607822"
+        },
+        "originalBatchStillFailed": true,
+        "reusedCasesWereNotRegenerated": true,
+        "sourceGenerationDifferences": [
+          "PrepareStructure",
+          "RefreshNativeLinks"
+        ],
+        "inventoryFileCounts": {
+          "oldSource": 550,
+          "resumedT3": 568,
+          "targetT4": 583
+        },
+        "flatReopenDiagnostics": {
+          "verified": true,
+          "sourceHadNoFlatReopenTraces": true,
+          "addedRelativePaths": [
+            "outputs/l0/flat-reopen.trace-001.json",
+            "outputs/l0/flat-reopen.trace-002.json",
+            "outputs/l2/flat-reopen.trace-001.json",
+            "outputs/l2/flat-reopen.trace-002.json",
+            "outputs/l4/flat-reopen.trace-001.json",
+            "outputs/l4/flat-reopen.trace-002.json",
+            "outputs/r1/flat-reopen.trace-001.json",
+            "outputs/r1/flat-reopen.trace-002.json",
+            "outputs/r3/flat-reopen.trace-001.json",
+            "outputs/r3/flat-reopen.trace-002.json",
+            "outputs/r5/flat-reopen.trace-001.json",
+            "outputs/r5/flat-reopen.trace-002.json"
+          ],
+          "outputManifest": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\output-manifest.json",
+            "size": 748717,
+            "sha256": "98813AA0F8607896C41B7B420BBA45D3E87E498759965ADE1ABDF5FCEF32EB04"
+          },
+          "nativeResult": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\native-result.json",
+            "size": 62081048,
+            "sha256": "E5B471B665D39C59016545F12199EC37B75048489EA970101B208E049C45E0C6"
+          },
+          "models": [
+            {
+              "folder": "L0",
+              "hand": "L",
+              "widthMm": 437,
+              "heightMm": 471.25,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+                "size": 660289,
+                "sha256": "6B667E74F9ACBB8860E54340A28B70470A230526E4A68B8705D2EFE770A1A4F7",
+                "relativePath": "outputs/L0/door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT"
+              },
+              "panelEventIndex": 491,
+              "flatEventIndex": 492,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L0\\flat-reopen.trace-001.json",
+                  "size": 34674,
+                  "sha256": "6FF4BA77C5314F67A25CF8A3C228DA3D80C81E1D37FB4D5C28515EFC97D46B4C",
+                  "relativePath": "outputs/L0/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:12:20.3888216Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L0\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "BDC5969E6004386EE71838BEB4929698C905369C68F9AB9DE9DFE50E4B7ADBCF",
+                  "relativePath": "outputs/L0/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:12:32.2856567Z"
+                }
+              ]
+            },
+            {
+              "folder": "R1",
+              "hand": "R",
+              "widthMm": 437,
+              "heightMm": 471.25,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+                "size": 904963,
+                "sha256": "EC955B7E4C73191E9A601DD302CBCE2C8DA80D208E9312C7BCA6C43F94C19E19",
+                "relativePath": "outputs/R1/door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT"
+              },
+              "panelEventIndex": 512,
+              "flatEventIndex": 513,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R1\\flat-reopen.trace-001.json",
+                  "size": 33650,
+                  "sha256": "760E4743E4FB2F89975ABDC3F86198FF9FC9A738546FB52A6E91A33740DF7EA8",
+                  "relativePath": "outputs/R1/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:20:10.0080423Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R1\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "248E971161387279807706DBED7F3EEB744E38683E007A896DEBF6BE43563A24",
+                  "relativePath": "outputs/R1/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:20:23.5281437Z"
+                }
+              ]
+            },
+            {
+              "folder": "L2",
+              "hand": "L",
+              "widthMm": 287,
+              "heightMm": 200,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+                "size": 666555,
+                "sha256": "94EE0DF87C26D7EF79DF7CABD2E84C18088CEC7E3393DE28BC06797708E45360",
+                "relativePath": "outputs/L2/door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT"
+              },
+              "panelEventIndex": 498,
+              "flatEventIndex": 499,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L2\\flat-reopen.trace-001.json",
+                  "size": 34034,
+                  "sha256": "923A9DC6D0CF14841C98A291DBD615F3CD3A0CB2A260F500C5B69DD0601F64D5",
+                  "relativePath": "outputs/L2/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:14:50.3481380Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L2\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "7E08424F937BB96A96A2725894E16F038ED028DE3F6F814DA9244B5FD856923F",
+                  "relativePath": "outputs/L2/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:15:02.1922616Z"
+                }
+              ]
+            },
+            {
+              "folder": "R3",
+              "hand": "R",
+              "widthMm": 287,
+              "heightMm": 200,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+                "size": 908986,
+                "sha256": "4896FCB55C1746E8ECFB0DA9BD7C1415322445A90723A7C2AB06DF608156A7BC",
+                "relativePath": "outputs/R3/door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT"
+              },
+              "panelEventIndex": 519,
+              "flatEventIndex": 520,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R3\\flat-reopen.trace-001.json",
+                  "size": 32468,
+                  "sha256": "234A4CD91C8D2354B861113972A30E99B4440EA627448AE3F1EEF713262C61BC",
+                  "relativePath": "outputs/R3/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:22:52.2445590Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R3\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "0501BD1E233A205241093A53EA779EA4BD42F3A3604D7917835203FAC1C4266E",
+                  "relativePath": "outputs/R3/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:23:04.9989546Z"
+                }
+              ]
+            },
+            {
+              "folder": "L4",
+              "hand": "L",
+              "widthMm": 537,
+              "heightMm": 1000,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+                "size": 653150,
+                "sha256": "408E55DA93F3AA67F007ACF046B875E47FFB7FC1DF8604FB59191502A6CE452C",
+                "relativePath": "outputs/L4/door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT"
+              },
+              "panelEventIndex": 505,
+              "flatEventIndex": 506,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L4\\flat-reopen.trace-001.json",
+                  "size": 32214,
+                  "sha256": "3999D144FA53EBE0A3EBFE168F370CDC494F0329EDC10EEE69FFBB418378ABF3",
+                  "relativePath": "outputs/L4/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:17:23.2664406Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L4\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "B5523FC27EE2E17288151544667E3DDA5D4D662BC6000B49A3CF0EC76688A18B",
+                  "relativePath": "outputs/L4/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:17:36.4055319Z"
+                }
+              ]
+            },
+            {
+              "folder": "R5",
+              "hand": "R",
+              "widthMm": 537,
+              "heightMm": 1000,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+                "size": 893080,
+                "sha256": "3F0F6F77B7D85462DB68F1511235C2A9396BF47C63F0897D42B0633AEE35C95C",
+                "relativePath": "outputs/R5/door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT"
+              },
+              "panelEventIndex": 526,
+              "flatEventIndex": 527,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R5\\flat-reopen.trace-001.json",
+                  "size": 31584,
+                  "sha256": "50BC456EE15F71193966E2C88C1CD56A02BA5916451C4D154F7FE365A749834A",
+                  "relativePath": "outputs/R5/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:25:30.7345226Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R5\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "26837BE4485669C3AB23E71E0ACF0D2B93F32DE7888AC743D50D2D2A138A2014",
+                  "relativePath": "outputs/R5/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:25:43.7191674Z"
+                }
+              ]
+            }
+          ]
+        },
+        "exactSourceCopyAndRewireReceiptVerified": true,
+        "allThreeTargetCasesColdReadbackVerified": true
+      },
+      "documentMetadataEqual": false,
+      "propertyDifferences": [
+        {
+          "identity": "crossbar_R_3",
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "changedFields": [
+            "resolved"
+          ],
+          "baselineProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+            "resolved": "0.00",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "candidateProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+            "resolved": "208.30",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "baselineFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\门框 横隔板R.SLDPRT",
+            "sha256": "9055976AADB0D1A397E97F6215EFDF4F4411422B8C45AA55E63CCB957A85D00E",
+            "evidenceInstanceIdentity": "crossbar_R_3",
+            "referencedConfiguration": "Default"
+          },
+          "candidateFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\structure\\门框 横隔板R.SLDPRT",
+            "sha256": "8C57BBC7E1546F95946ED6667B217021350595E4B3647FE434016053EEEC34DE",
+            "evidenceInstanceIdentity": "crossbar_R_3",
+            "referencedConfiguration": "Default"
+          },
+          "crossRunFileBytesEqual": false
+        },
+        {
+          "identity": "shelf_R_2",
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "changedFields": [
+            "resolved"
+          ],
+          "baselineProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@箱体横层板R.SLDPRT\"",
+            "resolved": "0.00",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "candidateProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@箱体横层板R.SLDPRT\"",
+            "resolved": "1457.78",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "baselineFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\箱体横层板R.SLDPRT",
+            "sha256": "D5D95001A760E5F04C8DACBB0CBDFE2428992E515C9B3717B82657223651E988",
+            "evidenceInstanceIdentity": "shelf_R_2",
+            "referencedConfiguration": "Default"
+          },
+          "candidateFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\structure\\箱体横层板R.SLDPRT",
+            "sha256": "6A5B9801E7EE31FA4013A57D17FFABF0DF08B3F1B3EBC00B68436BA843581B3C",
+            "evidenceInstanceIdentity": "shelf_R_2",
+            "referencedConfiguration": "Default"
+          },
+          "crossRunFileBytesEqual": false
+        },
+        {
+          "identity": "structure_1000_2",
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "changedFields": [
+            "resolved"
+          ],
+          "baselineProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@门框 右.SLDPRT\"",
+            "resolved": "1913.32",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "candidateProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@门框 右.SLDPRT\"",
+            "resolved": "0.00",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "baselineFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\门框 右.sldprt",
+            "sha256": "5B846E89ECE76DC0DA5CDE163D56569C80DB651664CEC6790E9E8DE75A73ACC8",
+            "evidenceInstanceIdentity": "structure_1000_2",
+            "referencedConfiguration": "Default"
+          },
+          "candidateFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\structure\\门框 右.sldprt",
+            "sha256": "B97587AB503061BCB0669A3ACCDF563E4D90D343C872216E5F1C21D86B9FE7B4",
+            "evidenceInstanceIdentity": "structure_1000_2",
+            "referencedConfiguration": "Default"
+          },
+          "crossRunFileBytesEqual": false
+        }
+      ],
+      "baselineInternalPropertyInconsistencies": [
+        {
+          "file": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\门框 横隔板R.SLDPRT",
+            "sha256": "9055976AADB0D1A397E97F6215EFDF4F4411422B8C45AA55E63CCB957A85D00E",
+            "evidenceInstanceIdentity": "crossbar_R_3",
+            "referencedConfiguration": "Default"
+          },
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "reads": [
+            {
+              "identity": "crossbar_R_3",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+                "resolved": "0.00",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            },
+            {
+              "identity": "crossbar_R_2",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+                "resolved": "208.30",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            },
+            {
+              "identity": "crossbar_R_1",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+                "resolved": "208.30",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            }
+          ]
+        },
+        {
+          "file": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\箱体横层板R.SLDPRT",
+            "sha256": "D5D95001A760E5F04C8DACBB0CBDFE2428992E515C9B3717B82657223651E988",
+            "evidenceInstanceIdentity": "shelf_R_2",
+            "referencedConfiguration": "Default"
+          },
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "reads": [
+            {
+              "identity": "shelf_R_2",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@箱体横层板R.SLDPRT\"",
+                "resolved": "0.00",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            },
+            {
+              "identity": "shelf_R_3",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@箱体横层板R.SLDPRT\"",
+                "resolved": "1457.78",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            },
+            {
+              "identity": "shelf_R_1",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@箱体横层板R.SLDPRT\"",
+                "resolved": "1457.78",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            }
+          ]
+        }
+      ],
+      "candidateInternalPropertyInconsistencies": [],
+      "candidateReadback": {
+        "success": true,
+        "nativeReadbackPass": true,
+        "componentIdentityReadbackPass": true,
+        "documentMetadataReadbackPass": true,
+        "inputFilesUnchanged": true,
+        "reopen": {
+          "pass": true,
+          "coldSession": true,
+          "assemblySha256": "9B05A1F9D0CDE2E8A778607B67689BC4D6DFC1CDD9702B7C928197869BC97913",
+          "componentCount": 108
+        }
+      },
+      "candidateMeasurementPerformance": {
+        "elapsedMilliseconds": 1921540.2986,
+        "phaseMilliseconds": {
+          "assembly_reopen_rebuild": 23632.753500000003,
+          "component_identity_pass_including_event_writes": 10207.7723,
+          "evidence_write": 84870.02560000028,
+          "component_state_and_transform_readback": 7757.242100001313,
+          "instance_source_hash_and_configuration": 880.1579000004567,
+          "native_component_bodies_and_info": 3507.7425999988336,
+          "native_world_copy_transform_and_six_direction_bounds": 15108.710999999894,
+          "topology_cache_identity_bounds_and_translation": 3260.8061000003945,
+          "native_surface_and_boundary_scan": 1675937.5163000012,
+          "topology_cache_source_retention": 3683.3148999996483,
+          "instance_evidence_materialization": 33.97050000028685,
+          "hinge_interface_measurements": 206.94949999987148,
+          "full_native_interference": 11946.433500000043,
+          "document_metadata_readback_and_configuration_restore": 70417.87400000007,
+          "native_document_and_cache_cleanup": 5296.790399999823
+        },
+        "nativeSurfaceScans": 108,
+        "topologyCacheHits": 0,
+        "topologyCacheEntries": 108,
+        "normalBodiesConfirmed": 108,
+        "cacheFallbackReasons": {
+          "no_same_key_template": 26,
+          "native_source_identity_different_or_unverified": 82
+        },
+        "nativeBoundsCounterexamples": [],
+        "cacheScope": "one ReopenAndMeasure invocation only",
+        "cachePolicy": "same actual file SHA256, referenced configuration, bit-identical rotation and scale, confirmed normal body, ISldWorks.IsSame and retained IUnknown identity; native six-direction body bounds corroborate translation only",
+        "timingsCoverCompletedOperationsOnly": true
+      },
+      "structuralAcceptancePass": false
+    },
+    {
+      "case": 2,
+      "comparisonPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-relocation-20261113-recheck-152246-e6b6c062\\case2.json",
+      "pass": true,
+      "validationStatus": "relocation_measurements_and_document_metadata_equal",
+      "measurementComparisonEqual": true,
+      "sectionsEqual": {
+        "layout": true,
+        "minimumScope": true,
+        "expectedManifest": true,
+        "instances": true,
+        "hingeInterfaceMeasurements": true,
+        "interference": true
+      },
+      "numericComparison": {
+        "comparedNumbers": 407918,
+        "maximumAbsoluteDeltas": {
+          "millimetres": 0.0,
+          "exact": 0.0,
+          "transform": 2.220446049250313e-16,
+          "direction": 0.0,
+          "metres": 0.0,
+          "radians": 0.0,
+          "numeric_precision": 0.0
+        }
+      },
+      "resumeCaseProvenance": {
+        "applicable": true,
+        "verified": true,
+        "errors": [],
+        "onlyToolchainIdentityCorrected": true,
+        "caseIndex": 2,
+        "sourceRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830",
+        "resumedRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c",
+        "targetRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9",
+        "actualBuildToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\toolchain.json",
+          "toolchainSha256": "1063498B6ADCF9931816B93153B5B17CCE55D9372EA8BD325A2AD88AC33DF682",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T02-23-09-833Z-a49e393a\\sources\\TrialAssembly.cs",
+          "sourceSha256": "81817F807DE5B2065D8472ECD3C1E019D9F746964706F0D78442FB731C6FF908",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "9B55066C1C8C88C8781537F95D9525FA40EE98F052422A48270F4279E2A05D4B",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "5B82E8F8B91803508D188B888992746FD6F5D53E6B1C4DEAB713190708852398"
+          }
+        },
+        "actualBaselineMeasurementToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\toolchain.json",
+          "toolchainSha256": "1063498B6ADCF9931816B93153B5B17CCE55D9372EA8BD325A2AD88AC33DF682",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T02-23-09-833Z-a49e393a\\sources\\TrialAssembly.cs",
+          "sourceSha256": "81817F807DE5B2065D8472ECD3C1E019D9F746964706F0D78442FB731C6FF908",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "9B55066C1C8C88C8781537F95D9525FA40EE98F052422A48270F4279E2A05D4B",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "5B82E8F8B91803508D188B888992746FD6F5D53E6B1C4DEAB713190708852398"
+          }
+        },
+        "actualCandidateMeasurementToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\toolchain.json",
+          "toolchainSha256": "CC2F47512177CB4BB95FD2B494A444FA192899699EB04A0932FE1A24EC2B36A3",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialAssembly.cs",
+          "sourceSha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "D98E0EE7E0CF403AE666D9715B31C0662560A5B86B665619B90F53B0FB31465D",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "A1C9F19086FA05972534905B5397194CA65E5331549ABBA5FA9393434B66E2BA"
+          }
+        },
+        "resumedRunToolchain": {
+          "toolchainPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\toolchain.json",
+          "toolchainSha256": "CC2F47512177CB4BB95FD2B494A444FA192899699EB04A0932FE1A24EC2B36A3",
+          "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialAssembly.cs",
+          "sourceSha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537",
+          "engineeringMethodSha256": {
+            "Build": "CB8927263796E56A2678CB8D45246C5A5D10E382367DB246E605107EFB4D4D6F",
+            "ValidateLayout": "04FD054871E083D3F40F25B20808068F0A06EFF48E5CC273F56B15D9AEECE780",
+            "PrepareStructure": "D98E0EE7E0CF403AE666D9715B31C0662560A5B86B665619B90F53B0FB31465D",
+            "PrepareHardware": "583D82FFE75554890F1FB23620B8EB7E8B7F76BEA18105A59984167319BB8C07",
+            "PreparePlacements": "C74462CA6809DE3A7FB06E22C1132D45C8A0F55AD3705F41F0F07D6E581F96BD",
+            "BuildNativeAssembly": "3AC8323BF9733FF81DA69EC5ADA558662B2B8D70DCB7FF876F171C7ADC93B4E2",
+            "ValidateWorldPanel": "5A32FC15D455A5384DDD59D0CE1E2E5EB7A920BC08FF4EE72F9D0D4C322215D5",
+            "ValidateWorldBoundary": "5EAC5DE63BAAC8054191FB0520FD4102B80B7139ED10D4E60C64B011BE85C399",
+            "MeasureHingeInterfaces": "DCD9B7E5A663AEB9D77FD78F2F7177DF66F67DD530947F85E300FE07B8E8F991",
+            "MeasureHingeSupportChains": "F86EA3211EE1D1F7D22D51D4260BEE4668B106F6E724A162EC5B28E5F5CECEDA",
+            "MeasureInterference": "74C80E21F919BBE1B4178D9B18114234DE3BF22A2F6200F22EAB1A61405FD5FC",
+            "Bounds": "F43BC08A83DD7110FF20FA1DE2A4B0A24360F4D975F3E27493BD6D1511944780",
+            "CaptureBoundaryCircle": "C8725B8901A8665AB33F7DCD8EA76D30FBDC9275FF883FD713821720F8257265",
+            "CheckFeatureHealth": "8BB097A8989C4E7D0ED9F0AE5E6EF1C3E3965E922DE452E6806B105558E418E7"
+          },
+          "measurementHelperSha256": {
+            "ReopenExisting": "E073254CFDE662871E7E2BBE0D0AE888AEDC96C63A4672A80B66B2921522EA20",
+            "ReopenAndMeasure": "31B0037AA13E83EB2103EAC38F325D2C8B8D54DACAEFC08B5D99169A8191BF60",
+            "MeasureBuiltCase": "709E7197E3232DA66A32DCCDA3E363185CA8AB3DB5C64255E242D7519C164426",
+            "ReadDocumentMetadata": "0C5D559F91FC9075B5EAD729A46299BBE707A67716C4AEA0CCF25E491D79E832",
+            "RequireCompleteInterference": "9D0A6AC95DA16E245707AE72BB25D72A9D5E29CA74CAB0D4F29849425EE8C2AD",
+            "SameTransform": "96D113D3C549914D392C78FAD89E39FE5969B4B44895007451AAD7E398EF8139",
+            "Transform": "FFE600CF27DE9B11975F239D7DE5603C0A9838AF75038BC08AB0E73DE7FC04BE",
+            "BodyBounds": "5AA80F7842B36B66FAD8A9F0CEE598F38B8FA552F2C66DF949AB142F0B010B5B",
+            "CylinderRelation": "61C8405DBE78676E25ED17A3A14CF1614C8E856FD926AD86A31555EE6051A120"
+          },
+          "generationAuxiliarySha256": {
+            "RefreshNativeLinks": "A1C9F19086FA05972534905B5397194CA65E5331549ABBA5FA9393434B66E2BA"
+          }
+        },
+        "sourceCheck": {
+          "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\assembly-resume-source-check.json",
+          "sha256": "56495C9D6412350E57D21C6E7880247D1257A0A2D6EFAE35E681ED1F8A607822"
+        },
+        "originalBatchStillFailed": true,
+        "reusedCasesWereNotRegenerated": true,
+        "sourceGenerationDifferences": [
+          "PrepareStructure",
+          "RefreshNativeLinks"
+        ],
+        "inventoryFileCounts": {
+          "oldSource": 550,
+          "resumedT3": 568,
+          "targetT4": 583
+        },
+        "flatReopenDiagnostics": {
+          "verified": true,
+          "sourceHadNoFlatReopenTraces": true,
+          "addedRelativePaths": [
+            "outputs/l0/flat-reopen.trace-001.json",
+            "outputs/l0/flat-reopen.trace-002.json",
+            "outputs/l2/flat-reopen.trace-001.json",
+            "outputs/l2/flat-reopen.trace-002.json",
+            "outputs/l4/flat-reopen.trace-001.json",
+            "outputs/l4/flat-reopen.trace-002.json",
+            "outputs/r1/flat-reopen.trace-001.json",
+            "outputs/r1/flat-reopen.trace-002.json",
+            "outputs/r3/flat-reopen.trace-001.json",
+            "outputs/r3/flat-reopen.trace-002.json",
+            "outputs/r5/flat-reopen.trace-001.json",
+            "outputs/r5/flat-reopen.trace-002.json"
+          ],
+          "outputManifest": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\output-manifest.json",
+            "size": 748717,
+            "sha256": "98813AA0F8607896C41B7B420BBA45D3E87E498759965ADE1ABDF5FCEF32EB04"
+          },
+          "nativeResult": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\native-result.json",
+            "size": 62081048,
+            "sha256": "E5B471B665D39C59016545F12199EC37B75048489EA970101B208E049C45E0C6"
+          },
+          "models": [
+            {
+              "folder": "L0",
+              "hand": "L",
+              "widthMm": 437,
+              "heightMm": 471.25,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+                "size": 660289,
+                "sha256": "6B667E74F9ACBB8860E54340A28B70470A230526E4A68B8705D2EFE770A1A4F7",
+                "relativePath": "outputs/L0/door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT"
+              },
+              "panelEventIndex": 491,
+              "flatEventIndex": 492,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L0\\flat-reopen.trace-001.json",
+                  "size": 34674,
+                  "sha256": "6FF4BA77C5314F67A25CF8A3C228DA3D80C81E1D37FB4D5C28515EFC97D46B4C",
+                  "relativePath": "outputs/L0/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:12:20.3888216Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L0\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "BDC5969E6004386EE71838BEB4929698C905369C68F9AB9DE9DFE50E4B7ADBCF",
+                  "relativePath": "outputs/L0/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:12:32.2856567Z"
+                }
+              ]
+            },
+            {
+              "folder": "R1",
+              "hand": "R",
+              "widthMm": 437,
+              "heightMm": 471.25,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+                "size": 904963,
+                "sha256": "EC955B7E4C73191E9A601DD302CBCE2C8DA80D208E9312C7BCA6C43F94C19E19",
+                "relativePath": "outputs/R1/door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT"
+              },
+              "panelEventIndex": 512,
+              "flatEventIndex": 513,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R1\\flat-reopen.trace-001.json",
+                  "size": 33650,
+                  "sha256": "760E4743E4FB2F89975ABDC3F86198FF9FC9A738546FB52A6E91A33740DF7EA8",
+                  "relativePath": "outputs/R1/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:20:10.0080423Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R1\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "248E971161387279807706DBED7F3EEB744E38683E007A896DEBF6BE43563A24",
+                  "relativePath": "outputs/R1/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:20:23.5281437Z"
+                }
+              ]
+            },
+            {
+              "folder": "L2",
+              "hand": "L",
+              "widthMm": 287,
+              "heightMm": 200,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+                "size": 666555,
+                "sha256": "94EE0DF87C26D7EF79DF7CABD2E84C18088CEC7E3393DE28BC06797708E45360",
+                "relativePath": "outputs/L2/door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT"
+              },
+              "panelEventIndex": 498,
+              "flatEventIndex": 499,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L2\\flat-reopen.trace-001.json",
+                  "size": 34034,
+                  "sha256": "923A9DC6D0CF14841C98A291DBD615F3CD3A0CB2A260F500C5B69DD0601F64D5",
+                  "relativePath": "outputs/L2/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:14:50.3481380Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L2\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "7E08424F937BB96A96A2725894E16F038ED028DE3F6F814DA9244B5FD856923F",
+                  "relativePath": "outputs/L2/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:15:02.1922616Z"
+                }
+              ]
+            },
+            {
+              "folder": "R3",
+              "hand": "R",
+              "widthMm": 287,
+              "heightMm": 200,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+                "size": 908986,
+                "sha256": "4896FCB55C1746E8ECFB0DA9BD7C1415322445A90723A7C2AB06DF608156A7BC",
+                "relativePath": "outputs/R3/door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT"
+              },
+              "panelEventIndex": 519,
+              "flatEventIndex": 520,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R3\\flat-reopen.trace-001.json",
+                  "size": 32468,
+                  "sha256": "234A4CD91C8D2354B861113972A30E99B4440EA627448AE3F1EEF713262C61BC",
+                  "relativePath": "outputs/R3/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:22:52.2445590Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R3\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "0501BD1E233A205241093A53EA779EA4BD42F3A3604D7917835203FAC1C4266E",
+                  "relativePath": "outputs/R3/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:23:04.9989546Z"
+                }
+              ]
+            },
+            {
+              "folder": "L4",
+              "hand": "L",
+              "widthMm": 537,
+              "heightMm": 1000,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+                "size": 653150,
+                "sha256": "408E55DA93F3AA67F007ACF046B875E47FFB7FC1DF8604FB59191502A6CE452C",
+                "relativePath": "outputs/L4/door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT"
+              },
+              "panelEventIndex": 505,
+              "flatEventIndex": 506,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L4\\flat-reopen.trace-001.json",
+                  "size": 32214,
+                  "sha256": "3999D144FA53EBE0A3EBFE168F370CDC494F0329EDC10EEE69FFBB418378ABF3",
+                  "relativePath": "outputs/L4/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:17:23.2664406Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\L4\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "B5523FC27EE2E17288151544667E3DDA5D4D662BC6000B49A3CF0EC76688A18B",
+                  "relativePath": "outputs/L4/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:17:36.4055319Z"
+                }
+              ]
+            },
+            {
+              "folder": "R5",
+              "hand": "R",
+              "widthMm": 537,
+              "heightMm": 1000,
+              "model": {
+                "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+                "size": 893080,
+                "sha256": "3F0F6F77B7D85462DB68F1511235C2A9396BF47C63F0897D42B0633AEE35C95C",
+                "relativePath": "outputs/R5/door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT"
+              },
+              "panelEventIndex": 526,
+              "flatEventIndex": 527,
+              "diagnostics": [
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R5\\flat-reopen.trace-001.json",
+                  "size": 31584,
+                  "sha256": "50BC456EE15F71193966E2C88C1CD56A02BA5916451C4D154F7FE365A749834A",
+                  "relativePath": "outputs/R5/flat-reopen.trace-001.json",
+                  "stage": "native_flat_body",
+                  "atUtc": "2026-11-13T05:25:30.7345226Z"
+                },
+                {
+                  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\outputs\\R5\\flat-reopen.trace-002.json",
+                  "size": 278,
+                  "sha256": "26837BE4485669C3AB23E71E0ACF0D2B93F32DE7888AC743D50D2D2A138A2014",
+                  "relativePath": "outputs/R5/flat-reopen.trace-002.json",
+                  "stage": "reopened_flat_cleanup",
+                  "atUtc": "2026-11-13T05:25:43.7191674Z"
+                }
+              ]
+            }
+          ]
+        },
+        "exactSourceCopyAndRewireReceiptVerified": true,
+        "allThreeTargetCasesColdReadbackVerified": true
+      },
+      "documentMetadataEqual": true,
+      "propertyDifferences": [],
+      "baselineInternalPropertyInconsistencies": [],
+      "candidateInternalPropertyInconsistencies": [],
+      "candidateReadback": {
+        "success": true,
+        "nativeReadbackPass": true,
+        "componentIdentityReadbackPass": true,
+        "documentMetadataReadbackPass": true,
+        "inputFilesUnchanged": true,
+        "reopen": {
+          "pass": true,
+          "coldSession": true,
+          "assemblySha256": "F9AAC39797AC315A63C6DA91A6117AFAA196AB6DFD64A17910DF8034065AFC3A",
+          "componentCount": 95
+        }
+      },
+      "candidateMeasurementPerformance": {
+        "elapsedMilliseconds": 1729986.5236000002,
+        "phaseMilliseconds": {
+          "assembly_reopen_rebuild": 25993.9809,
+          "component_identity_pass_including_event_writes": 9404.934200000003,
+          "evidence_write": 61649.555799999274,
+          "component_state_and_transform_readback": 6758.04079999961,
+          "instance_source_hash_and_configuration": 801.5546999988146,
+          "native_component_bodies_and_info": 2993.8499999996275,
+          "native_world_copy_transform_and_six_direction_bounds": 13158.708699999377,
+          "topology_cache_identity_bounds_and_translation": 2481.8084999988787,
+          "native_surface_and_boundary_scan": 1516971.4850000024,
+          "topology_cache_source_retention": 3174.210899999598,
+          "instance_evidence_materialization": 17.61750000040047,
+          "hinge_interface_measurements": 133.92969999997877,
+          "full_native_interference": 14603.921699999832,
+          "document_metadata_readback_and_configuration_restore": 62462.231099999975,
+          "native_document_and_cache_cleanup": 4623.347400000086
+        },
+        "nativeSurfaceScans": 95,
+        "topologyCacheHits": 0,
+        "topologyCacheEntries": 95,
+        "normalBodiesConfirmed": 95,
+        "cacheFallbackReasons": {
+          "no_same_key_template": 30,
+          "native_source_identity_different_or_unverified": 65
+        },
+        "nativeBoundsCounterexamples": [],
+        "cacheScope": "one ReopenAndMeasure invocation only",
+        "cachePolicy": "same actual file SHA256, referenced configuration, bit-identical rotation and scale, confirmed normal body, ISldWorks.IsSame and retained IUnknown identity; native six-direction body bounds corroborate translation only",
+        "timingsCoverCompletedOperationsOnly": true
+      },
+      "structuralAcceptancePass": false
+    },
+    {
+      "case": 3,
+      "comparisonPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-relocation-20261113-recheck-152246-e6b6c062\\case3.json",
+      "pass": false,
+      "validationStatus": "document_metadata_difference",
+      "measurementComparisonEqual": true,
+      "sectionsEqual": {
+        "layout": true,
+        "minimumScope": true,
+        "expectedManifest": true,
+        "instances": true,
+        "hingeInterfaceMeasurements": true,
+        "interference": true
+      },
+      "numericComparison": {
+        "comparedNumbers": 407756,
+        "maximumAbsoluteDeltas": {
+          "millimetres": 0.0,
+          "exact": 0.0,
+          "transform": 2.220446049250313e-16,
+          "direction": 0.0,
+          "metres": 0.0,
+          "radians": 0.0,
+          "numeric_precision": 0.0
+        }
+      },
+      "resumeCaseProvenance": {
+        "applicable": false,
+        "verified": true,
+        "errors": [],
+        "onlyToolchainIdentityCorrected": true,
+        "reason": "case3_was_generated_and_uses_original_checker"
+      },
+      "documentMetadataEqual": false,
+      "propertyDifferences": [
+        {
+          "identity": "crossbar_R_2",
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "changedFields": [
+            "resolved"
+          ],
+          "baselineProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+            "resolved": "184.23",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "candidateProperty": {
+            "name": "重量",
+            "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+            "resolved": "0.00",
+            "status": 2,
+            "wasResolved": true,
+            "linked": false
+          },
+          "baselineFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case3\\structure\\门框 横隔板R.SLDPRT",
+            "sha256": "980AC1DAC1748B5BA4747F3B5F0EA59A55BC58C2050B8EB682FA9C153443C108",
+            "evidenceInstanceIdentity": "crossbar_R_2",
+            "referencedConfiguration": "Default"
+          },
+          "candidateFile": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case3\\structure\\门框 横隔板R.SLDPRT",
+            "sha256": "0F1EA6F285F555AFC8FBB92E5A1ED3F2BECA9581FB717EACF1766BB92C025986",
+            "evidenceInstanceIdentity": "crossbar_R_2",
+            "referencedConfiguration": "Default"
+          },
+          "crossRunFileBytesEqual": false
+        }
+      ],
+      "baselineInternalPropertyInconsistencies": [],
+      "candidateInternalPropertyInconsistencies": [
+        {
+          "file": {
+            "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case3\\structure\\门框 横隔板R.SLDPRT",
+            "sha256": "0F1EA6F285F555AFC8FBB92E5A1ED3F2BECA9581FB717EACF1766BB92C025986",
+            "evidenceInstanceIdentity": "crossbar_R_2",
+            "referencedConfiguration": "Default"
+          },
+          "propertyConfiguration": "Default",
+          "propertyName": "重量",
+          "reads": [
+            {
+              "identity": "crossbar_R_2",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+                "resolved": "0.00",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            },
+            {
+              "identity": "crossbar_R_1",
+              "property": {
+                "name": "重量",
+                "value": "\"SW-Mass@@Default@门框 横隔板R.SLDPRT\"",
+                "resolved": "184.23",
+                "status": 2,
+                "wasResolved": true,
+                "linked": false
+              }
+            }
+          ]
+        }
+      ],
+      "candidateReadback": {
+        "success": true,
+        "nativeReadbackPass": true,
+        "componentIdentityReadbackPass": true,
+        "documentMetadataReadbackPass": true,
+        "inputFilesUnchanged": true,
+        "reopen": {
+          "pass": true,
+          "coldSession": true,
+          "assemblySha256": "19EA6A5E5F9B6791DA01B43C18DE675FD2C457404FAF5B6F5924EBFE1F9B33BA",
+          "componentCount": 95
+        }
+      },
+      "candidateMeasurementPerformance": {
+        "elapsedMilliseconds": 1692144.5707,
+        "phaseMilliseconds": {
+          "assembly_reopen_rebuild": 26583.5723,
+          "component_identity_pass_including_event_writes": 9863.565700000003,
+          "evidence_write": 67568.30509999953,
+          "component_state_and_transform_readback": 6484.899299999932,
+          "instance_source_hash_and_configuration": 757.1093999994919,
+          "native_component_bodies_and_info": 2889.16240000003,
+          "native_world_copy_transform_and_six_direction_bounds": 12964.15660000057,
+          "topology_cache_identity_bounds_and_translation": 2208.4866999997757,
+          "native_surface_and_boundary_scan": 1475498.1213000026,
+          "topology_cache_source_retention": 3094.8852000001352,
+          "instance_evidence_materialization": 32.94990000035614,
+          "hinge_interface_measurements": 136.03779999981634,
+          "full_native_interference": 13453.740500000073,
+          "document_metadata_readback_and_configuration_restore": 61581.50170000014,
+          "native_document_and_cache_cleanup": 4260.752400000114
+        },
+        "nativeSurfaceScans": 95,
+        "topologyCacheHits": 0,
+        "topologyCacheEntries": 95,
+        "normalBodiesConfirmed": 95,
+        "cacheFallbackReasons": {
+          "no_same_key_template": 30,
+          "native_source_identity_different_or_unverified": 65
+        },
+        "nativeBoundsCounterexamples": [],
+        "cacheScope": "one ReopenAndMeasure invocation only",
+        "cachePolicy": "same actual file SHA256, referenced configuration, bit-identical rotation and scale, confirmed normal body, ISldWorks.IsSame and retained IUnknown identity; native six-direction body bounds corroborate translation only",
+        "timingsCoverCompletedOperationsOnly": true
+      },
+      "structuralAcceptancePass": false
+    }
+  ],
+  "unverified": [
+    "cause of four resolved weight differences",
+    "controlled repeated cold property reads",
+    "independent mass measurements",
+    "manufacturing direction",
+    "factory DFM thresholds"
+  ],
+  "expertReviewRecords": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\expert-review.md",
+      "sha256": "8E2A3D8686696D01ED02CEEA4A3A2249347E4A9C4D57FD7120084EF85BFAE675",
+      "provenance": "Primary agent saved the independent expert's read-only message"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\wrapper-review.md",
+      "sha256": "DFFF658D1D7C01975B1730B894C95680EC468F52DC35593322DE1EE3EF78D23A",
+      "provenance": "Primary agent saved the independent expert's read-only message"
+    }
+  ],
+  "wrapperTestVerification": {
+    "schema": "16029-wrapper-test-verification/v1",
+    "executedBy": "/root/case3_resume_contract",
+    "command": "python -B workers/master_v2/variable_trial/test_compare_resumed_relocation.py -v",
+    "workingDirectory": "D:\\Winnsen_Structure_Agent_Studio",
+    "executionSessionId": 68083,
+    "exitCode": 0,
+    "testsRun": 49,
+    "testsPassed": 49,
+    "testsFailed": 0,
+    "durationSeconds": 244.554,
+    "artifactVersions": {
+      "compare_resumed_relocation.py": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\compare_resumed_relocation.py",
+        "sha256": "5E65DD3DA6DADDAC39333CD89ECF0510CE937CE875A2D0B79EE1F453CC4BBE2E"
+      },
+      "test_compare_resumed_relocation.py": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\test_compare_resumed_relocation.py",
+        "sha256": "6DDDD613A4FA25E230B651F19DE3B157D4F1E9986D915E7F758671E9355D6225"
+      },
+      "compare_assembly_measurements.py": {
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\compare_assembly_measurements.py",
+        "sha256": "0920CDD6E3EEACE21ED36F40D4A0D64EBC2CD73B4DED063AF0FE2F55C1B57B27"
+      }
+    },
+    "log": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\wrapper-test-output.txt",
+      "sha256": "0D66CFABC45B4CCD7C730C3950D622B5616A57F9482F7D6E6C71020EFFC5FD05",
+      "size": 4881,
+      "captureMethod": "Reassembled by concatenating the complete, untruncated output text returned by the existing exec_command and write_stdin calls. Original stdout and stderr were returned as one combined tool output; streams cannot be separated. No test rerun was performed.",
+      "sourceChunkIds": [
+        "44c102",
+        "36e8ba",
+        "b7a70d",
+        "02ed57",
+        "048e11"
+      ],
+      "lineEndings": "CRLF",
+      "containsObservedPerTestResults": 49
+    },
+    "evidenceSavedAtUtc": "2026-11-13T07:26:56.467862+00:00",
+    "scope": "Synthetic filesystem wrapper tests only. No CAD execution, engineering acceptance, or production release."
+  },
+  "wrapperTestLog": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\wrapper-test-output.txt",
+    "sha256": "0D66CFABC45B4CCD7C730C3950D622B5616A57F9482F7D6E6C71020EFFC5FD05"
+  },
+  "evidenceReads": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\wrapper-test-verification.json",
+      "sha256": "D98CCA10FDD9A25504B91F38B77C56A0D1AD934DB7A8FE3F769B1D82819DD0B5"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-relocation-20261113-recheck-152246-e6b6c062\\case1.json",
+      "sha256": "AAF39F30A142863B8446F5018E67DA1B9292C13664BBC0708D4DB8FF0F99EEF6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-relocation-20261113-recheck-152246-e6b6c062\\case2.json",
+      "sha256": "945592C9D58818630978E0D32804DFC532DBCD19DF49088EA7C6891BEDB1A093"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-relocation-20261113-recheck-152246-e6b6c062\\case3.json",
+      "sha256": "D4254334BDF53DA655C3DA2AE0C2C8F19BFE2D789A9E3F8DD7BF6E8B7BED4A89"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-native-readback-20261113-095112-65e2af10\\six-case-audit\\output-audit.json",
+      "sha256": "42423622D7770B8EBF28A0B07E41E949DA6E7A281E689C4E73A6AF88C1040852"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\recovery-T4-current.json",
+      "sha256": "A3CD3358F2772779C06E4EDAA2994C9BFE54AD1A8A058BD283B59FBDF72EA7FA"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\箱体横层板R.SLDPRT",
+      "sha256": "D5D95001A760E5F04C8DACBB0CBDFE2428992E515C9B3717B82657223651E988"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\门框 右.sldprt",
+      "sha256": "5B846E89ECE76DC0DA5CDE163D56569C80DB651664CEC6790E9E8DE75A73ACC8"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad\\assemblies\\case1\\structure\\门框 横隔板R.SLDPRT",
+      "sha256": "9055976AADB0D1A397E97F6215EFDF4F4411422B8C45AA55E63CCB957A85D00E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case1\\assembly-evidence.json",
+      "sha256": "F06F21B8D561AAFB2B6AD29B1AD547C29EED46A48D1758387EB41120586A902B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case2\\assembly-evidence.json",
+      "sha256": "8E276AC57438E656E2562BC10CC09F2E88B0FA1A3CD74EE7BAEB4B0B9C765DC2"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case3\\assembly-evidence.json",
+      "sha256": "34ADC277558CD89F3C5160F38C27B8B595C791BC38ED599D987DF67DF79579B0"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad\\assemblies\\case3\\structure\\门框 横隔板R.SLDPRT",
+      "sha256": "980AC1DAC1748B5BA4747F3B5F0EA59A55BC58C2050B8EB682FA9C153443C108"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\relocation-evidence.json",
+      "sha256": "EAADDD90DF0120661DC0869B08BEFFD1CA31A8701B84D4CF7AEB3B988E96A086"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\structure\\箱体横层板R.SLDPRT",
+      "sha256": "6A5B9801E7EE31FA4013A57D17FFABF0DF08B3F1B3EBC00B68436BA843581B3C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\structure\\门框 右.sldprt",
+      "sha256": "B97587AB503061BCB0669A3ACCDF563E4D90D343C872216E5F1C21D86B9FE7B4"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case1\\structure\\门框 横隔板R.SLDPRT",
+      "sha256": "8C57BBC7E1546F95946ED6667B217021350595E4B3647FE434016053EEEC34DE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case2\\relocation-evidence.json",
+      "sha256": "FFD8C47AB45869A63B76F3BAA01385105FDA4919D6EA8F66A692A50616E7BF8C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case3\\relocation-evidence.json",
+      "sha256": "D4454329D0956D8D9DFD756BBFE566F026E0D5D4F3EA58AECA90126104A6F227"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\cad\\assemblies\\case3\\structure\\门框 横隔板R.SLDPRT",
+      "sha256": "0F1EA6F285F555AFC8FBB92E5A1ED3F2BECA9581FB717EACF1766BB92C025986"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\native-result.json",
+      "sha256": "E5B471B665D39C59016545F12199EC37B75048489EA970101B208E049C45E0C6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\protection-result.json",
+      "sha256": "07078AEDD4D9CD90AD10344918F5D72F927AE3D3C1E34651C603E20C7FF742B5"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\recovery-source-check.json",
+      "sha256": "2873B171EF05AD252C4E5D3E1369FB8A45AAD078167CD9D2FBA542FDA760D6EA"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\result.json",
+      "sha256": "EB9BBC7CA3B5D3AD4F663E02845AA67D55B0CEC5F60C0C23321C8A34639AB3AD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\supervision.json",
+      "sha256": "F84F0A21E340197032590EEA5DA7FCE83C28A80B76F5A18ABF489A47112AAA25"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T05-08-41-897Z-recovery-T4-f58333e9\\toolchain.json",
+      "sha256": "CC2F47512177CB4BB95FD2B494A444FA192899699EB04A0932FE1A24EC2B36A3"
+    }
+  ],
+  "analysisScriptSha256": "7F054A82186B8F64FC0A0C8A1F5D7AEAAF6DEA1CA50B21BA6F6BF2F55FB8D131",
+  "currentFrozenToolHashes": {
+    "TrialAssembly.cs": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537",
+    "VariableTrial.cs": "616C6B804FA6FB3C51F5D1C4ADF98CB56D5EBC22E68691DE970D7C4FCC2ACA24",
+    "TrialOutput.cs": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6",
+    "recover.mjs": "595B09EC3DCAA28E4FAF478992C907269E84DCF53D3C6BB0BE6AADEDBFF844FD",
+    "common.mjs": "8AAB873773116DDF77FBD51116F9BACA9D5A960397824329A0BDBDE1FB2110E5",
+    "run.mjs": "83975374604B08DC2DF7B5381840C6B6596B305B6200D40DB2D57459CF35030A"
+  },
+  "fixedComparatorSha256": "0920CDD6E3EEACE21ED36F40D4A0D64EBC2CD73B4DED063AF0FE2F55C1B57B27"
+}

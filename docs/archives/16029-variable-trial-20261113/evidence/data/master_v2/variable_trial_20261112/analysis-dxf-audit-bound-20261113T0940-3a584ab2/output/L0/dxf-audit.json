@@ -1,0 +1,1596 @@
+{
+  "success": true,
+  "auditPassed": false,
+  "manufacturingAccepted": false,
+  "sha256": "220FD41CB57597B30829BFF0095762C31E565ED5F05F22E40453F01DEAED5EBE",
+  "units": {
+    "insunits": 4,
+    "name": "millimetre",
+    "verified": true,
+    "factorToMm": 1.0
+  },
+  "entityTypeCounts": {
+    "LINE": 77,
+    "CIRCLE": 2,
+    "ARC": 1
+  },
+  "layers": {
+    "declared": [
+      "0",
+      "CUT",
+      "BEND",
+      "MARK"
+    ],
+    "used": {
+      "BEND": 12,
+      "CUT": 68
+    }
+  },
+  "cuts": {
+    "entityCount": 68,
+    "lineSegmentCount": 65,
+    "arcSegmentCount": 1,
+    "circleCount": 2,
+    "primitives": [
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          -126.275
+        ],
+        "b": [
+          356.8,
+          -127.675
+        ],
+        "layer": "CUT",
+        "entity": 15
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.0585786438,
+          -127.675
+        ],
+        "b": [
+          356.8,
+          -127.675
+        ],
+        "layer": "CUT",
+        "entity": 16
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          362.8,
+          -132.4164213562
+        ],
+        "b": [
+          358.0585786438,
+          -127.675
+        ],
+        "layer": "CUT",
+        "entity": 17
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          362.8,
+          -141.275
+        ],
+        "b": [
+          362.8,
+          -132.4164213562
+        ],
+        "layer": "CUT",
+        "entity": 18
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          362.8,
+          -141.275
+        ],
+        "b": [
+          358.2,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 19
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.2,
+          -139.875
+        ],
+        "b": [
+          358.2,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 20
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.2,
+          -139.875
+        ],
+        "b": [
+          356.8,
+          -139.875
+        ],
+        "layer": "CUT",
+        "entity": 21
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          -141.275
+        ],
+        "b": [
+          356.8,
+          -139.875
+        ],
+        "layer": "CUT",
+        "entity": 22
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          357.2,
+          -141.275
+        ],
+        "b": [
+          356.8,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 23
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          357.2,
+          -141.275
+        ],
+        "b": [
+          357.2,
+          -145.875
+        ],
+        "layer": "CUT",
+        "entity": 24
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          357.2,
+          -145.875
+        ],
+        "b": [
+          164.7,
+          -145.875
+        ],
+        "layer": "CUT",
+        "entity": 25
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          164.7,
+          -144.875
+        ],
+        "b": [
+          164.7,
+          -145.875
+        ],
+        "layer": "CUT",
+        "entity": 26
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          114.7,
+          -144.875
+        ],
+        "b": [
+          164.7,
+          -144.875
+        ],
+        "layer": "CUT",
+        "entity": 27
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          114.7,
+          -145.875
+        ],
+        "b": [
+          114.7,
+          -144.875
+        ],
+        "layer": "CUT",
+        "entity": 28
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          114.7,
+          -145.875
+        ],
+        "b": [
+          -77.8,
+          -145.875
+        ],
+        "layer": "CUT",
+        "entity": 29
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.8,
+          -145.875
+        ],
+        "b": [
+          -77.8,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 30
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          -141.275
+        ],
+        "b": [
+          -77.8,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 31
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          -141.275
+        ],
+        "b": [
+          -77.4,
+          -139.875
+        ],
+        "layer": "CUT",
+        "entity": 32
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.8,
+          -139.875
+        ],
+        "b": [
+          -77.4,
+          -139.875
+        ],
+        "layer": "CUT",
+        "entity": 33
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.8,
+          -141.275
+        ],
+        "b": [
+          -78.8,
+          -139.875
+        ],
+        "layer": "CUT",
+        "entity": 34
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.8,
+          -141.275
+        ],
+        "b": [
+          -83.4,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 35
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -83.4,
+          -132.4164213562
+        ],
+        "b": [
+          -83.4,
+          -141.275
+        ],
+        "layer": "CUT",
+        "entity": 36
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.6585786438,
+          -127.675
+        ],
+        "b": [
+          -83.4,
+          -132.4164213562
+        ],
+        "layer": "CUT",
+        "entity": 37
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          -127.675
+        ],
+        "b": [
+          -78.6585786438,
+          -127.675
+        ],
+        "layer": "CUT",
+        "entity": 38
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          -127.675
+        ],
+        "b": [
+          -77.4,
+          -126.275
+        ],
+        "layer": "CUT",
+        "entity": 39
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          -126.275
+        ],
+        "b": [
+          -78.6585786438,
+          -126.275
+        ],
+        "layer": "CUT",
+        "entity": 40
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -83.4585786438,
+          -121.475
+        ],
+        "b": [
+          -78.6585786438,
+          -126.275
+        ],
+        "layer": "CUT",
+        "entity": 41
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -97.0,
+          -121.475
+        ],
+        "b": [
+          -83.4585786438,
+          -121.475
+        ],
+        "layer": "CUT",
+        "entity": 42
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -97.0,
+          -121.475
+        ],
+        "b": [
+          -97.0,
+          105.95
+        ],
+        "layer": "CUT",
+        "entity": 43
+      },
+      {
+        "kind": "ARC",
+        "c": [
+          -97.0,
+          107.95
+        ],
+        "r": 2.0,
+        "start": 4.71238898038469,
+        "sweep": 3.141592653589793,
+        "layer": "CUT",
+        "entity": 44
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -97.0,
+          109.95
+        ],
+        "b": [
+          -97.0,
+          337.375
+        ],
+        "layer": "CUT",
+        "entity": 45
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -97.0,
+          337.375
+        ],
+        "b": [
+          -83.4585786438,
+          337.375
+        ],
+        "layer": "CUT",
+        "entity": 46
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.6585786438,
+          342.175
+        ],
+        "b": [
+          -83.4585786438,
+          337.375
+        ],
+        "layer": "CUT",
+        "entity": 47
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.6585786438,
+          342.175
+        ],
+        "b": [
+          -77.4,
+          342.175
+        ],
+        "layer": "CUT",
+        "entity": 48
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          342.175
+        ],
+        "b": [
+          -77.4,
+          343.575
+        ],
+        "layer": "CUT",
+        "entity": 49
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.6585786438,
+          343.575
+        ],
+        "b": [
+          -77.4,
+          343.575
+        ],
+        "layer": "CUT",
+        "entity": 50
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -83.4,
+          348.3164213562
+        ],
+        "b": [
+          -78.6585786438,
+          343.575
+        ],
+        "layer": "CUT",
+        "entity": 51
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -83.4,
+          357.175
+        ],
+        "b": [
+          -83.4,
+          348.3164213562
+        ],
+        "layer": "CUT",
+        "entity": 52
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -83.4,
+          357.175
+        ],
+        "b": [
+          -78.8,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 53
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.8,
+          355.775
+        ],
+        "b": [
+          -78.8,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 54
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -78.8,
+          355.775
+        ],
+        "b": [
+          -77.4,
+          355.775
+        ],
+        "layer": "CUT",
+        "entity": 55
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.4,
+          357.175
+        ],
+        "b": [
+          -77.4,
+          355.775
+        ],
+        "layer": "CUT",
+        "entity": 56
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.8,
+          357.175
+        ],
+        "b": [
+          -77.4,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 57
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.8,
+          357.175
+        ],
+        "b": [
+          -77.8,
+          361.775
+        ],
+        "layer": "CUT",
+        "entity": 58
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          -77.8,
+          361.775
+        ],
+        "b": [
+          114.7,
+          361.775
+        ],
+        "layer": "CUT",
+        "entity": 59
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          114.7,
+          360.775
+        ],
+        "b": [
+          114.7,
+          361.775
+        ],
+        "layer": "CUT",
+        "entity": 60
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          164.7,
+          360.775
+        ],
+        "b": [
+          114.7,
+          360.775
+        ],
+        "layer": "CUT",
+        "entity": 61
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          164.7,
+          361.775
+        ],
+        "b": [
+          164.7,
+          360.775
+        ],
+        "layer": "CUT",
+        "entity": 62
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          164.7,
+          361.775
+        ],
+        "b": [
+          357.2,
+          361.775
+        ],
+        "layer": "CUT",
+        "entity": 63
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          357.2,
+          361.775
+        ],
+        "b": [
+          357.2,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 64
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          357.175
+        ],
+        "b": [
+          357.2,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 65
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          357.175
+        ],
+        "b": [
+          356.8,
+          355.775
+        ],
+        "layer": "CUT",
+        "entity": 66
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.2,
+          355.775
+        ],
+        "b": [
+          356.8,
+          355.775
+        ],
+        "layer": "CUT",
+        "entity": 67
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.2,
+          357.175
+        ],
+        "b": [
+          358.2,
+          355.775
+        ],
+        "layer": "CUT",
+        "entity": 68
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.2,
+          357.175
+        ],
+        "b": [
+          362.8,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 69
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          362.8,
+          348.3164213562
+        ],
+        "b": [
+          362.8,
+          357.175
+        ],
+        "layer": "CUT",
+        "entity": 70
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.0585786438,
+          343.575
+        ],
+        "b": [
+          362.8,
+          348.3164213562
+        ],
+        "layer": "CUT",
+        "entity": 71
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          343.575
+        ],
+        "b": [
+          358.0585786438,
+          343.575
+        ],
+        "layer": "CUT",
+        "entity": 72
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          343.575
+        ],
+        "b": [
+          356.8,
+          342.175
+        ],
+        "layer": "CUT",
+        "entity": 73
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          356.8,
+          342.175
+        ],
+        "b": [
+          358.0585786438,
+          342.175
+        ],
+        "layer": "CUT",
+        "entity": 74
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          362.8585786438,
+          337.375
+        ],
+        "b": [
+          358.0585786438,
+          342.175
+        ],
+        "layer": "CUT",
+        "entity": 75
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          362.8585786438,
+          337.375
+        ],
+        "b": [
+          376.4,
+          337.375
+        ],
+        "layer": "CUT",
+        "entity": 76
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          376.4,
+          337.375
+        ],
+        "b": [
+          376.4,
+          -121.475
+        ],
+        "layer": "CUT",
+        "entity": 77
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          376.4,
+          -121.475
+        ],
+        "b": [
+          362.8585786438,
+          -121.475
+        ],
+        "layer": "CUT",
+        "entity": 78
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.0585786438,
+          -126.275
+        ],
+        "b": [
+          362.8585786438,
+          -121.475
+        ],
+        "layer": "CUT",
+        "entity": 79
+      },
+      {
+        "kind": "LINE",
+        "a": [
+          358.0585786438,
+          -126.275
+        ],
+        "b": [
+          356.8,
+          -126.275
+        ],
+        "layer": "CUT",
+        "entity": 80
+      },
+      {
+        "c": [
+          348.2,
+          349.175
+        ],
+        "r": 5.099999999999966,
+        "layer": "CUT",
+        "entity": 13,
+        "kind": "CIRCLE"
+      },
+      {
+        "c": [
+          348.2,
+          -133.275
+        ],
+        "r": 5.099999999999994,
+        "layer": "CUT",
+        "entity": 14,
+        "kind": "CIRCLE"
+      }
+    ]
+  },
+  "bends": {
+    "segmentCount": 12,
+    "direction": "UNKNOWN",
+    "lines": [
+      {
+        "entity": 1,
+        "start": [
+          356.8,
+          -140.575
+        ],
+        "end": [
+          -77.4,
+          -140.575
+        ]
+      },
+      {
+        "entity": 2,
+        "start": [
+          -77.4,
+          356.475
+        ],
+        "end": [
+          356.8,
+          356.475
+        ]
+      },
+      {
+        "entity": 3,
+        "start": [
+          371.1,
+          337.375
+        ],
+        "end": [
+          371.1,
+          -121.475
+        ]
+      },
+      {
+        "entity": 4,
+        "start": [
+          -91.7,
+          -121.475
+        ],
+        "end": [
+          -91.7,
+          337.375
+        ]
+      },
+      {
+        "entity": 5,
+        "start": [
+          357.5,
+          342.175
+        ],
+        "end": [
+          357.5,
+          -126.275
+        ]
+      },
+      {
+        "entity": 6,
+        "start": [
+          356.8,
+          -126.975
+        ],
+        "end": [
+          -77.4,
+          -126.975
+        ]
+      },
+      {
+        "entity": 7,
+        "start": [
+          -78.1,
+          -126.275
+        ],
+        "end": [
+          -78.1,
+          342.175
+        ]
+      },
+      {
+        "entity": 8,
+        "start": [
+          -77.4,
+          342.875
+        ],
+        "end": [
+          356.8,
+          342.875
+        ]
+      },
+      {
+        "entity": 9,
+        "start": [
+          357.5,
+          -127.675
+        ],
+        "end": [
+          357.5,
+          -139.875
+        ]
+      },
+      {
+        "entity": 10,
+        "start": [
+          -78.1,
+          -139.875
+        ],
+        "end": [
+          -78.1,
+          -127.675
+        ]
+      },
+      {
+        "entity": 11,
+        "start": [
+          -78.1,
+          343.575
+        ],
+        "end": [
+          -78.1,
+          355.775
+        ]
+      },
+      {
+        "entity": 12,
+        "start": [
+          357.5,
+          355.775
+        ],
+        "end": [
+          357.5,
+          343.575
+        ]
+      }
+    ]
+  },
+  "marks": {
+    "entityCount": 0
+  },
+  "measurements": {
+    "units": "mm",
+    "cutExtents": {
+      "min": [
+        -97.0,
+        -145.875
+      ],
+      "max": [
+        376.4,
+        361.775
+      ],
+      "width": 473.4,
+      "height": 507.65
+    },
+    "allExtents": {
+      "min": [
+        -97.0,
+        -145.875
+      ],
+      "max": [
+        376.4,
+        361.775
+      ],
+      "width": 473.4,
+      "height": 507.65
+    }
+  },
+  "roundHoleCount": 2,
+  "roundHoles": [
+    {
+      "id": "H1",
+      "entities": [
+        14
+      ],
+      "center": [
+        348.2,
+        -133.275
+      ],
+      "xFromCutMin": 445.2,
+      "yFromCutMin": 12.599999999999994,
+      "diameter": 10.199999999999989,
+      "source": "native CIRCLE",
+      "units": "mm"
+    },
+    {
+      "id": "H2",
+      "entities": [
+        13
+      ],
+      "center": [
+        348.2,
+        349.175
+      ],
+      "xFromCutMin": 445.2,
+      "yFromCutMin": 495.05,
+      "diameter": 10.199999999999932,
+      "source": "native CIRCLE",
+      "units": "mm"
+    }
+  ],
+  "closedContours": {
+    "closedContourCount": 3,
+    "outerContourCount": 1,
+    "holeContourCount": 2,
+    "closedContours": [
+      {
+        "segmentCount": 66,
+        "nodeCount": 66,
+        "closed": true,
+        "entities": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80
+        ],
+        "area": 238653.46969068947,
+        "nestingDepth": 0,
+        "hole": false
+      },
+      {
+        "segmentCount": 1,
+        "nodeCount": 0,
+        "closed": true,
+        "entities": [
+          13
+        ],
+        "circle": true,
+        "area": 81.71282491986943,
+        "roundCircle": {
+          "center": [
+            348.2,
+            349.175
+          ],
+          "radius": 5.099999999999966,
+          "source": "native CIRCLE"
+        },
+        "nestingDepth": 1,
+        "hole": true
+      },
+      {
+        "segmentCount": 1,
+        "nodeCount": 0,
+        "closed": true,
+        "entities": [
+          14
+        ],
+        "circle": true,
+        "area": 81.71282491987033,
+        "roundCircle": {
+          "center": [
+            348.2,
+            -133.275
+          ],
+          "radius": 5.099999999999994,
+          "source": "native CIRCLE"
+        },
+        "nestingDepth": 1,
+        "hole": true
+      }
+    ],
+    "components": [
+      {
+        "segmentCount": 66,
+        "nodeCount": 66,
+        "closed": true,
+        "entities": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80
+        ],
+        "area": 238653.46969068947,
+        "nestingDepth": 0,
+        "hole": false
+      }
+    ],
+    "openChainCount": 0,
+    "openNodes": [],
+    "branchNodes": [],
+    "nestingMethod": "even-odd containment of analytic circles and arcs sampled at <=1 degree; area/nesting are approximate"
+  },
+  "duplicateSegments": [],
+  "cutIntersections": [],
+  "zeroLengthSegments": [],
+  "unsupportedEntities": [],
+  "expectedChecks": {
+    "width": {
+      "expectedMm": 473.4,
+      "actualMm": 473.4,
+      "toleranceMm": 0.01,
+      "pass": true
+    },
+    "height": {
+      "expectedMm": 507.65,
+      "actualMm": 507.65,
+      "toleranceMm": 0.01,
+      "pass": true
+    },
+    "bends": {
+      "expected": 12,
+      "actual": 12,
+      "pass": true
+    }
+  },
+  "endpointTolerance": 0.01,
+  "errors": [],
+  "warnings": [
+    "Bend direction is UNKNOWN; canonical BEND has no up/down claim.",
+    "Layer provenance requires TrialOutput native API/option differential evidence; this audit checks the supplied geometry.",
+    "Endpoint tolerance and approximate contour nesting require dimensional review; manufacturing clearances and process allowances are not certified."
+  ],
+  "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L0\\flat.dxf",
+  "nativeBendComparison": {
+    "positionsAndDirectionsVerified": false,
+    "nativeViewDirectionAssociationVerified": false,
+    "manufacturingOrientationVerified": false,
+    "directionConvention": "UNKNOWN",
+    "errors": [
+      "NATIVE_BEND_DIRECTION_EVIDENCE_REQUIRED"
+    ],
+    "reason": "Native flat-view direction proof was not generated while drawings are deferred."
+  },
+  "outputScope": "parts_dxf_only",
+  "drawingStatus": "deferred_by_user_20261113",
+  "fullPlanPass": false,
+  "geometryAuditPassed": true,
+  "nativeFlatSizeComparison": {
+    "nativeWidthHeightThicknessMm": [
+      473.40000000000003,
+      507.64999999999986,
+      0.7999999999999674
+    ],
+    "actualDxfWidthHeightMm": [
+      473.4,
+      507.65
+    ],
+    "toleranceMm": 0.01,
+    "pass": true,
+    "constantAllowanceUsedAsSoleEvidence": false
+  },
+  "nativeFlatCutComparison": {
+    "verified": false,
+    "completeCutGeometryEquivalent": true,
+    "coordinateMappingUniqueInSearchedFamily": false,
+    "candidateCount": 2,
+    "searchedTransformFamily": "Eight unit-scale axis-aligned mappings, including reflections",
+    "errors": [
+      "UNIQUE_COMPLETE_NATIVE_FLAT_CUT_MAPPING_REQUIRED"
+    ],
+    "candidates": [
+      {
+        "matrix": [
+          [
+            -1,
+            0
+          ],
+          [
+            0,
+            -1
+          ]
+        ],
+        "translationMm": [
+          139.7,
+          107.94999999999992
+        ],
+        "determinant": 1,
+        "matchedPrimitiveCount": 68
+      },
+      {
+        "matrix": [
+          [
+            -1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "translationMm": [
+          139.7,
+          107.95000000000006
+        ],
+        "determinant": -1,
+        "matchedPrimitiveCount": 68
+      }
+    ],
+    "source": "native flat geometry.cutGeometry",
+    "handednessProvenByThisComparison": false,
+    "manufacturingOrientationVerified": false,
+    "dxfGeometryChanged": false,
+    "scale": 1,
+    "toleranceMm": 0.01,
+    "wholeDictionaryEqual": true,
+    "identityExact": true,
+    "nativeReadbackEquivalent": true,
+    "readbackDifferences": [],
+    "readbackErrors": [],
+    "readbackNumericFieldsCompared": 644,
+    "readbackToleranceMm": 1e-09,
+    "readbackCurveParameterTolerance": 1e-12,
+    "readbackToleranceIsManufacturingTolerance": false,
+    "sourceIdentityChecks": {
+      "modelPath": true,
+      "modelHand": true,
+      "configuration": true
+    }
+  },
+  "nativeHoleGeometryComparison": {
+    "source": "complete native flat top-Z CIRCLE primitives",
+    "nativeHoleCount": 2,
+    "dxfHoleCount": 2,
+    "expectedHoleCount": 2,
+    "uniqueCentersAndDiametersMatchInFullCutMapping": false,
+    "holesEquivalentUnderAllCandidates": true,
+    "candidateComparisons": [
+      {
+        "candidateIndex": 0,
+        "determinant": 1,
+        "holes": [
+          {
+            "nativePrimitiveIndex": 13,
+            "mappedNativeCenterMm": [
+              348.19999999999993,
+              349.17499999999984
+            ],
+            "matchingDxfIndices": [
+              1
+            ]
+          },
+          {
+            "nativePrimitiveIndex": 44,
+            "mappedNativeCenterMm": [
+              348.2,
+              -133.27499999999998
+            ],
+            "matchingDxfIndices": [
+              0
+            ]
+          }
+        ],
+        "uniqueCentersAndDiametersMatch": true
+      },
+      {
+        "candidateIndex": 1,
+        "determinant": -1,
+        "holes": [
+          {
+            "nativePrimitiveIndex": 13,
+            "mappedNativeCenterMm": [
+              348.19999999999993,
+              -133.27499999999986
+            ],
+            "matchingDxfIndices": [
+              0
+            ]
+          },
+          {
+            "nativePrimitiveIndex": 44,
+            "mappedNativeCenterMm": [
+              348.2,
+              349.17499999999995
+            ],
+            "matchingDxfIndices": [
+              1
+            ]
+          }
+        ],
+        "uniqueCentersAndDiametersMatch": true
+      }
+    ],
+    "coordinateMapping": {
+      "verified": false,
+      "completeCutGeometryEquivalent": true,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "candidateCount": 2,
+      "searchedTransformFamily": "Eight unit-scale axis-aligned mappings, including reflections",
+      "errors": [
+        "UNIQUE_COMPLETE_NATIVE_FLAT_CUT_MAPPING_REQUIRED"
+      ],
+      "candidates": [
+        {
+          "matrix": [
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              -1
+            ]
+          ],
+          "translationMm": [
+            139.7,
+            107.94999999999992
+          ],
+          "determinant": 1,
+          "matchedPrimitiveCount": 68
+        },
+        {
+          "matrix": [
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "translationMm": [
+            139.7,
+            107.95000000000006
+          ],
+          "determinant": -1,
+          "matchedPrimitiveCount": 68
+        }
+      ],
+      "source": "native flat geometry.cutGeometry",
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "dxfGeometryChanged": false,
+      "scale": 1,
+      "toleranceMm": 0.01,
+      "wholeDictionaryEqual": true,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "readbackDifferences": [],
+      "readbackErrors": [],
+      "readbackNumericFieldsCompared": 644,
+      "readbackToleranceMm": 1e-09,
+      "readbackCurveParameterTolerance": 1e-12,
+      "readbackToleranceIsManufacturingTolerance": false,
+      "sourceIdentityChecks": {
+        "modelPath": true,
+        "modelHand": true,
+        "configuration": true
+      }
+    },
+    "holes": [],
+    "toleranceMm": 0.01,
+    "handednessProvenByThisComparison": false,
+    "manufacturingOrientationVerified": false
+  },
+  "production_release": false,
+  "historicalGeometry": {
+    "certificate": "D:\\Winnsen_Structure_Agent_Studio\\data\\review_portal_runtime\\readonly_open_repair_20261105_1920\\continue20_door_export_20261108\\door_dxf_certificate20_door_panel_left_W437_H471p25.json",
+    "certificateSha256": "179EB9752967EA6020A7026D1F5C8185B4DD9833D2DAEC2F5883A256564E29F1",
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\review_portal_runtime\\readonly_open_repair_20261105_1920\\continue20_door_export_20261108\\door_tool\\native_door_export_run_20261108195711_8d0bc171\\door_left_legacy_none_option0.dxf",
+    "sha256": "3C2904AC706E28D1982A63AFB0ADBB5E623EC80F567B301EBDFA6BBE28D81DC2",
+    "recordedSha256Matches": true,
+    "translationOnlyFullGeometryEqual": true,
+    "missingPrimitiveCount": 0,
+    "extraPrimitiveCount": 0,
+    "coordinateRoundingMm": 1e-05,
+    "rotationMirrorScaleUsed": false
+  }
+}

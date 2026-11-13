@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { randomBytes } from 'node:crypto'
 import { spawn } from 'node:child_process'
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:net'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -11,7 +11,9 @@ mkdirSync(resolve(root, 'tmp'), { recursive: true })
 const fixture = mkdtempSync(resolve(root, 'tmp/verify-native-portal-session-'))
 const dataDir = resolve(fixture, 'data')
 mkdirSync(dataDir)
-writeFileSync(resolve(dataDir, 'review_download_invite_code.txt'), 'session-fixture', 'utf8')
+const inviteCodePath = resolve(dataDir, 'review_download_invite_code.txt')
+const userDbPath = resolve(dataDir, 'review_download_users.json')
+writeFileSync(inviteCodePath, 'session-fixture', 'utf8')
 const portProbe = createServer()
 await new Promise((yes, no) => { portProbe.once('error', no); portProbe.listen(0, '127.0.0.1', yes) })
 const port = portProbe.address().port
@@ -42,6 +44,31 @@ try {
   }
   assert.ok(ready, 'isolated portal did not start')
   const password = randomBytes(24).toString('base64url')
+  await check('incorrect_invite_does_not_create_user_or_session', async () => {
+    const response = await fetch(base + '/register', { method: 'POST', redirect: 'manual',
+      body: new URLSearchParams({ username: 'wrong-invite', password, inviteCode: 'incorrect-fixture' }) })
+    assert.equal(response.status, 403)
+    assert.equal(response.headers.get('set-cookie'), null)
+    assert.equal(existsSync(userDbPath), false)
+  })
+  for (const scenario of ['missing', 'empty', 'unreadable']) {
+    await check(scenario + '_invite_does_not_create_user_or_session', async () => {
+      rmSync(inviteCodePath)
+      if (scenario === 'empty') writeFileSync(inviteCodePath, ' \r\n ', 'utf8')
+      if (scenario === 'unreadable') mkdirSync(inviteCodePath)
+      try {
+        const response = await fetch(base + '/register', { method: 'POST', redirect: 'manual',
+          body: new URLSearchParams({ username: scenario + '-invite', password, inviteCode: 'session-fixture' }) })
+        assert.equal(response.status, 503)
+        assert.match(await response.text(), /邀请码配置缺失或无法读取/)
+        assert.equal(response.headers.get('set-cookie'), null)
+        assert.equal(existsSync(userDbPath), false)
+      } finally {
+        rmSync(inviteCodePath, { recursive: scenario === 'unreadable', force: true })
+        writeFileSync(inviteCodePath, 'session-fixture', 'utf8')
+      }
+    })
+  }
   const register = async username => {
     const response = await fetch(base + '/register', { method: 'POST', redirect: 'manual',
       body: new URLSearchParams({ username, password, inviteCode: 'session-fixture' }) })

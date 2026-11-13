@@ -1,0 +1,17 @@
+{
+  "changed": [],
+  "pass": true,
+  "nativeTaskIndex": {
+    "diagnosticPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\native-index-protection.json",
+    "mode": "recorded_bytes_and_rebuiltAt",
+    "accepted": true,
+    "rawHashChanged": true,
+    "hashChangeOnlyRebuiltAt": true,
+    "beforeSha256": "CBEBEC5F0D83479D0AB30CD66F9BA041854C3364ABE514FA619F87F380C7F94B",
+    "afterSha256": "EB231BEFD49EEF89FA6EA1A3EC84150D93AE97815A7A81572E6EAD72DDD17EC3",
+    "changedJsonFields": [
+      "rebuiltAt"
+    ],
+    "rejectionReasons": []
+  }
+}

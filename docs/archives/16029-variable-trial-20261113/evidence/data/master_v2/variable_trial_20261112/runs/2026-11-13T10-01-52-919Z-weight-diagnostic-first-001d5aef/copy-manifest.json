@@ -1,0 +1,107 @@
+{
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-51-237Z-weight-seed-1fe1b7c5\\cad",
+  "target": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\cad",
+  "excludedRelativeDirectories": [],
+  "files": [
+    {
+      "relativePath": "T3\\case1\\标准寄存柜 模型.SLDPRT",
+      "size": 2688174,
+      "sha256": "8512496623BD8DAA230CE2F91FA232F4DF3C44CADA9C95AB8C9857D9544BA33C"
+    },
+    {
+      "relativePath": "T3\\case1\\箱体横层板L.sldprt",
+      "size": 513826,
+      "sha256": "00CA904AE56366BED92641DE7573C75C75FFFA38982BF7DA6542ECBDEBC4652C"
+    },
+    {
+      "relativePath": "T3\\case1\\箱体横层板R.SLDPRT",
+      "size": 523566,
+      "sha256": "5FA990E4801A0D481AD456DC3C10CD63E4C3968F1859ACE6B8F9C4F8E26DC345"
+    },
+    {
+      "relativePath": "T3\\case1\\门框 右.sldprt",
+      "size": 366063,
+      "sha256": "D106C5E8DCF08B5E5B5F2CF84DE3FEA78A61B5B4DE7090FD056E8F9643486B9D"
+    },
+    {
+      "relativePath": "T3\\case1\\门框 左.sldprt",
+      "size": 378566,
+      "sha256": "33CA2B19C65F95FCAFEA4F4596325BBC42B9D5A2722832CFBC9FFA9669CF7F66"
+    },
+    {
+      "relativePath": "T3\\case1\\门框 横隔板.sldprt",
+      "size": 227903,
+      "sha256": "DEED4EC4B9EE47C77F71413AC15911CA1BFACA6E2492EE4941E6EAFEA77FC279"
+    },
+    {
+      "relativePath": "T3\\case1\\门框 横隔板R.SLDPRT",
+      "size": 241037,
+      "sha256": "52F5F1AEE426CDC601B46AA38C0B02EBB6DA07930FF15A1931FF71CFF75F5341"
+    },
+    {
+      "relativePath": "T3\\case3\\标准寄存柜 模型.SLDPRT",
+      "size": 2653502,
+      "sha256": "B11AF16DFF22CC817D5C92BBDFF31B391B0E4BE8315A7058E8B40B80030238C5"
+    },
+    {
+      "relativePath": "T3\\case3\\门框 横隔板.sldprt",
+      "size": 226939,
+      "sha256": "575943A0E6C21C5C0248A4D45399AB81CA2532BE29EE9AD1ACE6FCFAEFCC7F7C"
+    },
+    {
+      "relativePath": "T3\\case3\\门框 横隔板R.SLDPRT",
+      "size": 240124,
+      "sha256": "980AC1DAC1748B5BA4747F3B5F0EA59A55BC58C2050B8EB682FA9C153443C108"
+    },
+    {
+      "relativePath": "T4\\case1\\标准寄存柜 模型.SLDPRT",
+      "size": 2688174,
+      "sha256": "8512496623BD8DAA230CE2F91FA232F4DF3C44CADA9C95AB8C9857D9544BA33C"
+    },
+    {
+      "relativePath": "T4\\case1\\箱体横层板L.sldprt",
+      "size": 512579,
+      "sha256": "AEC0037118B1B1CA6C8C56DA096F027AE8267A0C6391B0C0785459F181EEFF2C"
+    },
+    {
+      "relativePath": "T4\\case1\\箱体横层板R.SLDPRT",
+      "size": 522434,
+      "sha256": "6A5B9801E7EE31FA4013A57D17FFABF0DF08B3F1B3EBC00B68436BA843581B3C"
+    },
+    {
+      "relativePath": "T4\\case1\\门框 右.sldprt",
+      "size": 366503,
+      "sha256": "B97587AB503061BCB0669A3ACCDF563E4D90D343C872216E5F1C21D86B9FE7B4"
+    },
+    {
+      "relativePath": "T4\\case1\\门框 左.sldprt",
+      "size": 378543,
+      "sha256": "2BF61841FD8AD1E37A2A45CA4522D81DC3F2AD337C156B227E833EC488EC2534"
+    },
+    {
+      "relativePath": "T4\\case1\\门框 横隔板.sldprt",
+      "size": 227428,
+      "sha256": "05C33850F8D77621AEE3740EE868E86AD27C0BB8AA0F786C38E027174099B434"
+    },
+    {
+      "relativePath": "T4\\case1\\门框 横隔板R.SLDPRT",
+      "size": 241205,
+      "sha256": "8C57BBC7E1546F95946ED6667B217021350595E4B3647FE434016053EEEC34DE"
+    },
+    {
+      "relativePath": "T4\\case3\\标准寄存柜 模型.SLDPRT",
+      "size": 2653502,
+      "sha256": "B11AF16DFF22CC817D5C92BBDFF31B391B0E4BE8315A7058E8B40B80030238C5"
+    },
+    {
+      "relativePath": "T4\\case3\\门框 横隔板.sldprt",
+      "size": 227753,
+      "sha256": "55A35E3363899C8302D7A7329CE7D9523303C209F5E74D1A3086E3B0E095CEEE"
+    },
+    {
+      "relativePath": "T4\\case3\\门框 横隔板R.SLDPRT",
+      "size": 241047,
+      "sha256": "0F1EA6F285F555AFC8FBB92E5A1ED3F2BECA9581FB717EACF1766BB92C025986"
+    }
+  ]
+}

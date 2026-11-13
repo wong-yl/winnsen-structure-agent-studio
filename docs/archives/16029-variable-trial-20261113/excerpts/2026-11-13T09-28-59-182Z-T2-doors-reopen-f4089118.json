@@ -1,0 +1,38 @@
+{
+  "schema": "16029.archive.native-excerpt.v1",
+  "source": {
+    "source": "data/master_v2/variable_trial_20261112/runs/2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118/native-result.json",
+    "bytes": 439176,
+    "sha256": "1D1AFE84C203F7EF68AD252C53323A99645577C979F66B59FDB88367B93D6437"
+  },
+  "eventCount": 60,
+  "eventTypes": {
+    "cad_owned": 1,
+    "door_readonly_dependencies": 6,
+    "open": 6,
+    "equations_evaluated": 6,
+    "panel_size": 6,
+    "sheet_parameters": 6,
+    "panel_health": 6,
+    "relocated_panel": 6,
+    "relocated_process_readback": 6,
+    "relocated_flat": 6,
+    "relocated_drawing_deferred": 1,
+    "relocated_hash_comparison": 1,
+    "door_reopen_full_action_hashes": 1,
+    "owned_document_cleanup": 1,
+    "finished": 1
+  },
+  "excerpts": [
+    {
+      "selector": "events[59]",
+      "value": {
+        "inspection": "finished",
+        "success": true,
+        "cadExited": true,
+        "error": null
+      }
+    }
+  ],
+  "production_release": false
+}

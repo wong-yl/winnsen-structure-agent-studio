@@ -1,0 +1,17 @@
+{
+  "changed": [],
+  "pass": true,
+  "nativeTaskIndex": {
+    "diagnosticPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\native-index-protection.json",
+    "mode": "recorded_bytes_and_rebuiltAt",
+    "accepted": true,
+    "rawHashChanged": true,
+    "hashChangeOnlyRebuiltAt": true,
+    "beforeSha256": "B1576A63CD4F565CF9A280D27882A517C24BA6433146D81D64A261692FE23BE1",
+    "afterSha256": "E05FF0986C006CE8BDC9D87788AF307DC634D45D954A46916C47C0963512215E",
+    "changedJsonFields": [
+      "rebuiltAt"
+    ],
+    "rejectionReasons": []
+  }
+}

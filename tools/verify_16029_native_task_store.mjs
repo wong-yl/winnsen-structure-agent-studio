@@ -515,6 +515,68 @@ await check('revision_lease_transition_and_idempotency_cas', async () => {
   assert.equal(repeatedComplete.revision, completed.revision)
 })
 
+await check('completion_checks_abort_after_waiting_for_lock_and_preserves_committed_idempotency', async () => {
+  const dataDir = caseDir('complete-abort-lock')
+  const store = createNativeTaskStore({ dataDir, lockRetryMs: 5 })
+  const workerId = 'worker-complete-abort'
+  await store.createOrImport(pendingTask('NATIVE-COMPLETE-ABORT'))
+  let task = await store.claimNext({ workerId })
+  const leaseId = task.nativeBuild.lease.id
+  for (const toState of ['planning', 'building', 'validating']) {
+    task = await store.transition({ taskId: task.id, workerId, leaseId, expectedRevision: task.revision,
+      transitionId: 'complete-abort-' + toState, toState })
+  }
+  const completeArgs = { taskId: task.id, workerId, leaseId, expectedRevision: task.revision,
+    transitionId: 'complete-abort-ready', result: { sha256: 'B'.repeat(64) } }
+  const stop = new AbortController()
+  writeFileSync(store.lockPath, JSON.stringify({ token: 'test-completion-blocker', pid: process.pid }), 'utf8')
+  let settled = false
+  const completion = store.complete({ ...completeArgs, signal: stop.signal })
+  completion.then(() => { settled = true }, () => { settled = true })
+  try {
+    await new Promise(resolveDelay => setTimeout(resolveDelay, 20))
+    assert.equal(settled, false, 'complete must wait for the held task store lock')
+    stop.abort()
+  } finally { rmSync(store.lockPath, { force: true }) }
+  await rejectsCode(() => completion, 'COMPLETE_ABORTED')
+  const uncommitted = await store.read(task.id)
+  assert.equal(uncommitted.revision, task.revision)
+  assert.equal(uncommitted.nativeBuild.state, 'validating')
+  assert.equal(uncommitted.nativeBuild.modelReady, false)
+  assert.equal(uncommitted.nativeBuild.result, task.nativeBuild.result)
+  assert.equal(uncommitted.nativeBuild.statusHistory.some(entry => entry.to === 'ready'), false)
+
+  const completed = await store.complete(completeArgs)
+  assert.equal(completed.nativeBuild.state, 'ready')
+  const repeated = await store.complete({ ...completeArgs, signal: AbortSignal.abort() })
+  assert.equal(repeated.revision, completed.revision)
+  assert.equal(repeated.nativeBuild.state, 'ready')
+  assert.deepEqual(repeated.nativeBuild.result, completed.nativeBuild.result)
+})
+
+await check('candidate_completion_reuses_guards_and_cannot_inject_publication_acceptance', async () => {
+  const store = createNativeTaskStore({ dataDir: caseDir('candidate-completion') }), workerId = 'candidate-worker'
+  const candidateAttempt = caseDir('unaccepted-candidate'), expectedArchiveSha256 = 'C'.repeat(64)
+  await rejectsCode(() => store.completeParametricCandidate({}), 'CANDIDATE_REUSE_INPUT_REQUIRED')
+  await rejectsCode(() => store.completeParametricCandidate({ candidateAttempt, expectedArchiveSha256: 'not-a-sha' }), 'CANDIDATE_REUSE_INPUT_REQUIRED')
+  await store.createOrImport(pendingTask('NATIVE-CANDIDATE-COMPLETE', { parametricRequest: { cabinet: { widthMm: 850 }, columns: [] } }))
+  let task = await store.claimTask({ taskId: 'NATIVE-CANDIDATE-COMPLETE', workerId })
+  const leaseId = task.nativeBuild.lease.id
+  const args = () => ({ taskId: task.id, workerId, leaseId, expectedRevision: task.revision, transitionId: 'candidate-complete', candidateAttempt, expectedArchiveSha256 })
+  await rejectsCode(() => store.completeParametricCandidate(args()), 'INVALID_TRANSITION')
+  for (const toState of ['planning', 'building', 'validating']) task = await store.transition({ ...args(), transitionId: 'candidate-' + toState, toState })
+  await rejectsCode(() => store.completeParametricCandidate({ ...args(), expectedRevision: task.revision - 1 }), 'REVISION_CONFLICT')
+  await rejectsCode(() => store.completeParametricCandidate({ ...args(), leaseId: 'another-lease' }), 'LEASE_MISMATCH')
+  await rejectsCode(() => store.completeParametricCandidate({ ...args(), workerId: 'another-worker' }), 'LEASE_WORKER_MISMATCH')
+  await rejectsCode(() => store.completeParametricCandidate({ ...args(), now: Date.now() + 600000 }), 'LEASE_EXPIRED')
+  await rejectsCode(() => store.completeParametricCandidate({ ...args(), signal: AbortSignal.abort() }), 'COMPLETE_ABORTED')
+  await rejectsCode(() => store.completeParametricCandidate({ ...args(), validate: () => ({ ok: true, coverageVerified: true }), result: { ok: true, coverageVerified: true } }), 'CANDIDATE_REUSE_NOT_ACCEPTED')
+  assert.deepEqual(await store.read(task.id), task, 'rejected candidate completion cannot modify task state')
+  task = await store.cancel({ taskId: task.id, expectedRevision: task.revision, transitionId: 'candidate-user-cancel', reason: 'test cancellation' })
+  await rejectsCode(() => store.completeParametricCandidate(args()), 'INVALID_TRANSITION')
+  assert.equal((await store.read(task.id)).nativeBuild.modelReady, false)
+})
+
 await check('failure_and_cancel_are_cas_and_idempotent', async () => {
   const dataDir = caseDir('failure-cancel')
   const store = createNativeTaskStore({ dataDir })
@@ -909,6 +971,67 @@ await check('stale_lock_requires_verified_dead_owner_and_live_owner_fails_closed
   await rejectsCode(() => liveStore.list(), 'STORE_LOCK_TIMEOUT')
   assert.equal(existsSync(liveStore.lockPath), true)
   rmSync(liveStore.lockPath, { force: true })
+})
+
+async function failedParametricTask(store, id) {
+  const parametricRequest = { cabinet: { widthMm: 888, heightMm: 1917, depthMm: 550 },
+    columns: ['L', 'R'].map(side => ({ side, doors: Array.from({ length: 7 }, () => ({ heightMm: 254.429 })) })) }
+  await store.createOrImport(pendingTask(id, { parametricRequest }))
+  let task = await store.claimTask({ taskId: id, workerId: 'retry-test-worker', leaseMs: 120000 })
+  for (const state of ['planning', 'building']) task = await store.transition({ taskId: id,
+    workerId: 'retry-test-worker', leaseId: task.nativeBuild.lease.id, expectedRevision: task.revision,
+    transitionId: id + '-' + state, toState: state })
+  return store.fail({ taskId: id, workerId: 'retry-test-worker', leaseId: task.nativeBuild.lease.id,
+    expectedRevision: task.revision, transitionId: id + '-failed', code: 'parametric_generation_failed',
+    message: 'Sketch external reference failed', retryable: false })
+}
+
+await check('failed_task_retry_keeps_identity_request_and_failure_evidence', async () => {
+  const store = createNativeTaskStore({ dataDir: caseDir('failed-task-retry') })
+  const failed = await failedParametricTask(store, 'NATIVE-RETRY-1')
+  const args = { taskId: failed.id, username: failed.username, expectedRevision: failed.revision,
+    transitionId: 'repair-foot-reference', expectedErrorCode: 'parametric_generation_failed',
+    executorRevision: 'A'.repeat(64), reason: 'Rebind sketch support after inherited solid refresh' }
+  const queued = await store.retryFailedTask(args)
+  assert.equal(queued.id, failed.id)
+  assert.equal(queued.username, failed.username)
+  assert.equal(queued.createdAt, failed.createdAt)
+  assert.equal(queued.requestFingerprint, failed.requestFingerprint)
+  assert.deepEqual(queued.parametricRequest, failed.parametricRequest)
+  assert.equal(queued.nativeBuild.state, 'created')
+  assert.equal(queued.engineeringAssistanceReady, false)
+  assert.equal(queued.downloadUrl, '')
+  assert.deepEqual(queued.nativeBuild.retryHistory[0].error, failed.nativeBuild.error)
+  assert.deepEqual(queued.nativeBuild.statusHistory.slice(0, -1), failed.nativeBuild.statusHistory)
+  const claimed = await store.claimTask({ taskId: failed.id, workerId: 'repaired-executor', leaseMs: 120000 })
+  assert.equal(claimed.nativeBuild.attempt, failed.nativeBuild.attempt + 1)
+  assert.deepEqual(await store.retryFailedTask(args), claimed)
+  await rejectsCode(() => store.retryFailedTask({ ...args, reason: 'Different repair' }), 'TRANSITION_ID_REUSED')
+})
+
+await check('failed_task_retry_rejects_stale_revision_wrong_owner_and_changed_error', async () => {
+  const store = createNativeTaskStore({ dataDir: caseDir('failed-task-retry-guards') })
+  const failed = await failedParametricTask(store, 'NATIVE-RETRY-2')
+  const args = { taskId: failed.id, username: failed.username, expectedRevision: failed.revision,
+    transitionId: 'guarded-retry', expectedErrorCode: 'parametric_generation_failed',
+    executorRevision: 'B'.repeat(64), reason: 'Verified repair' }
+  await rejectsCode(() => store.retryFailedTask({ ...args, expectedRevision: failed.revision - 1 }), 'REVISION_CONFLICT')
+  await rejectsCode(() => store.retryFailedTask({ ...args, username: 'other-user' }), 'TASK_NOT_FOUND')
+  await rejectsCode(() => store.retryFailedTask({ ...args, expectedErrorCode: 'unrelated_failure' }), 'ERROR_CODE_MISMATCH')
+  assert.deepEqual(await store.read(failed.id), failed)
+  await store.archive({ taskId: failed.id, username: failed.username, expectedRevision: failed.revision,
+    transitionId: 'archive-failed-retry', reason: 'History only' })
+  const archived = await store.read(failed.id)
+  await rejectsCode(() => store.retryFailedTask({ ...args, expectedRevision: archived.revision }), 'TASK_NOT_RETRYABLE')
+})
+
+await check('failed_task_retry_does_not_restart_an_unfailed_task', async () => {
+  const store = createNativeTaskStore({ dataDir: caseDir('failed-task-retry-created') })
+  const task = await store.createOrImport(pendingTask('NATIVE-RETRY-3', { parametricRequest: { cabinet: {} } }))
+  await rejectsCode(() => store.retryFailedTask({ taskId: task.id, username: task.username,
+    expectedRevision: task.revision, transitionId: 'invalid-retry', expectedErrorCode: 'parametric_generation_failed',
+    executorRevision: 'C'.repeat(64), reason: 'Repair' }), 'TASK_NOT_RETRYABLE')
+  assert.deepEqual(await store.read(task.id), task)
 })
 
 let exitCode = 0

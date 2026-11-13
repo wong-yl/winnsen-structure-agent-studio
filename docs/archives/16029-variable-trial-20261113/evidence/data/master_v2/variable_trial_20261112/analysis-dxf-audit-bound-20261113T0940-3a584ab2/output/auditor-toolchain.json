@@ -1,0 +1,24 @@
+{
+  "schema": "16029-dxf-auditor-evidence/v1",
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153",
+  "outputAuditSha256": "D351359946925D222D907650E2E4E36EE54CE61B309177F29C1B9FEFBEE49C58",
+  "sources": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\audit_outputs.py",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\auditor-sources\\audit_outputs.py",
+      "sha256": "F2B5DBEFF8C48B88EAB9E62F1E4AEDA156A630B88C6D0D86D1842343C4BF9219"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\dxf_check.py",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\auditor-sources\\dxf_check.py",
+      "sha256": "0DD5B72D1A0B6D4BAE8C6EE258215833E3EF5C8EB6AA5A00BC41CE1460C1021B"
+    }
+  ],
+  "libraries": {
+    "pdfplumber": "0.11.9",
+    "pypdfium2": "5.13.0"
+  },
+  "sourceBytesStableDuringAudit": true,
+  "drawingAndPdfActionsExecuted": false,
+  "production_release": false
+}

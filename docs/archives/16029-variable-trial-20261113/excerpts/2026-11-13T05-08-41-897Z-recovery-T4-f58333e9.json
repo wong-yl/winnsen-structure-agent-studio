@@ -1,0 +1,38 @@
+{
+  "schema": "16029.archive.native-excerpt.v1",
+  "source": {
+    "source": "data/master_v2/variable_trial_20261112/runs/2026-11-13T05-08-41-897Z-recovery-T4-f58333e9/native-result.json",
+    "bytes": 62081048,
+    "sha256": "E5B471B665D39C59016545F12199EC37B75048489EA970101B208E049C45E0C6"
+  },
+  "eventCount": 535,
+  "eventTypes": {
+    "cad_owned": 1,
+    "rewrite_reference": 484,
+    "dependency_closure": 1,
+    "open": 6,
+    "equations_evaluated": 6,
+    "panel_size": 6,
+    "sheet_parameters": 6,
+    "panel_health": 6,
+    "relocated_panel": 6,
+    "relocated_flat": 6,
+    "relocated_drawing_deferred": 1,
+    "relocated_assembly": 3,
+    "relocated_hash_comparison": 1,
+    "owned_document_cleanup": 1,
+    "finished": 1
+  },
+  "excerpts": [
+    {
+      "selector": "events[534]",
+      "value": {
+        "inspection": "finished",
+        "success": true,
+        "cadExited": true,
+        "error": null
+      }
+    }
+  ],
+  "production_release": false
+}

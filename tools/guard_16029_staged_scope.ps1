@@ -4,6 +4,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+& (Join-Path $PSScriptRoot 'check_project_file_scope.ps1') -Root $Root
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 function Normalize-PathText {
     param([string]$PathText)
     return $PathText.Replace("\", "/")

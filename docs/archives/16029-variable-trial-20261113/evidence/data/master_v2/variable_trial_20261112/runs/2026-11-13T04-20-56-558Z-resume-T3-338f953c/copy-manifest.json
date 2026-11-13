@@ -1,0 +1,2454 @@
+{
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T02-23-24-205Z-recovery-T3-bdcf8830\\cad",
+  "target": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T04-20-56-558Z-resume-T3-338f953c\\cad",
+  "excludedRelativeDirectories": [
+    "assemblies/case3"
+  ],
+  "files": [
+    {
+      "relativePath": "16029_1000W_2000H_500D.SLDASM",
+      "size": 2064393,
+      "sha256": "7EEE4B75F652D6807AA20F7D5B533A8F31DA8F0C60C90D9971CD68DD6D99F86E"
+    },
+    {
+      "relativePath": "assemblies\\case1\\16029_variable_minimum.SLDASM",
+      "size": 871816,
+      "sha256": "28E305FAE0D05DC9C2A14534E26391A37112AE838A88D9F77C051B1643214F50"
+    },
+    {
+      "relativePath": "assemblies\\case1\\assembly-evidence.json",
+      "size": 22779949,
+      "sha256": "F06F21B8D561AAFB2B6AD29B1AD547C29EED46A48D1758387EB41120586A902B"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\L_W437_H471p25_panel.SLDPRT",
+      "size": 390996,
+      "sha256": "4B542B95EF45C1DDF19A5EFC624C083A662722453D8FC5FC50231DEAB358887B"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\L_W437_H471p25_stiffener.SLDPRT",
+      "size": 122251,
+      "sha256": "E3FBDAA00D33FF1FF939A325A0E0956F0E829DFB9990340AC2EA2CD6D8A23F5E"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\R_W437_H471p25_panel.SLDPRT",
+      "size": 518389,
+      "sha256": "2CDC2B609AC53DA52A7D6706E9DFF3AE0B59E94AEEEF5BC33F41CC43083BF37E"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\R_W437_H471p25_stiffener.SLDPRT",
+      "size": 122644,
+      "sha256": "9783527C1B96497CF44FB3F8896B9060DBADAC4B16A9EC20BBF1CFF0F6D85EA7"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_circlip.SLDPRT",
+      "size": 82737,
+      "sha256": "B19385DD4B3569F0394FF4C40AEEA8D3753AA6B6051A7C88602981E0CE0E68BA"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_door_hinge_pin.SLDPRT",
+      "size": 71568,
+      "sha256": "0DFDB3DB5A6A07A344FD81DB3DCAC6AC31498AFFA901FF5A7D30297759333D26"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_hinge_latch_plate.SLDPRT",
+      "size": 169078,
+      "sha256": "544707AA1991410E3B8EBBC365C11F188BA322FF28012557C5720B1B7E230B7F"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_mechanical_lock_tongue.SLDPRT",
+      "size": 95930,
+      "sha256": "684F4543446B9013289905992B163CEEA86F7AA9987AC84B7A37918485E8C298"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_plastic_bushing.SLDPRT",
+      "size": 70030,
+      "sha256": "2DFC2F9720CEA6149A8C744AE43F428AAE95A3DA98FE6F400CB14FD9D32C51E4"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_top_latch_left.SLDPRT",
+      "size": 67724,
+      "sha256": "850EBA44122BDE4E7D6E7FE095197EE6ACB98E0CC165B44BED8B988599317132"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_top_latch_right.SLDPRT",
+      "size": 68108,
+      "sha256": "832965155F29ACE28E49D672B22D9DE85A00E5FCCCB9F653485EAD7B24B30E38"
+    },
+    {
+      "relativePath": "assemblies\\case1\\parts\\trial_u_hook_pad.SLDPRT",
+      "size": 171117,
+      "sha256": "00AFBEF1F9D820018928D8484C66314E14E12C33933E487DDF3470F078A839B7"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\16029_1000W_2000H_500D.SLDASM",
+      "size": 2064100,
+      "sha256": "8A5D6614288ECF44156155DD3FF3508DCF249C1B61D32970120984911E99BDCB"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\circlip_W437_H471p25.SLDPRT",
+      "size": 83536,
+      "sha256": "73F21840CEA9916709C9D77EA8D13DE94A36FCEAD9B744056FEADB3E1688C9F4"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\door_hinge_pin_W437_H471p25.SLDPRT",
+      "size": 71222,
+      "sha256": "BC7BD32EA5F4C4259367B56816D8517BDC6108394CD8CE58BC38D044480FAE30"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\door_panel_left_W437_H471p25.SLDPRT",
+      "size": 398897,
+      "sha256": "9C4B6083F0EDCB1B2BBB670266D7E942E7207B889EA540678E1C0E4B68BACC6D"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\door_panel_right_W437_H471p25.SLDPRT",
+      "size": 518516,
+      "sha256": "811EB6B956C5E7651B0FE1D5E85F45F402B8DB42604310979F7FEC64AB4688C5"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\door_stiffener_W437_H471p25.SLDPRT",
+      "size": 122091,
+      "sha256": "6B48201626DC342996F53B4E7473CC95E68FF7F2D3F8436AD0AEDC88B891F2A9"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\door_weld_left_W437_H471p25.SLDASM",
+      "size": 129586,
+      "sha256": "A5C2A7CBC8679EB318AB27FAD4A8FBFEEBB5AEABCE376B680C8DEB48C9D0751F"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\door_weld_right_W437_H471p25.SLDASM",
+      "size": 131260,
+      "sha256": "FFBFF0086D1A8D1085B0DE7BB1098CB86341599DA0A0CD3A0FBF7EE6411FD2B7"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\hinge_latch_plate_W437_H471p25.SLDPRT",
+      "size": 168506,
+      "sha256": "C54235D39F401011013B12C809ADFEEEB1C53EB10A59C2EEC5C88BA4C603A8FA"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\mechanical_lock_tongue_W437_H471p25.SLDPRT",
+      "size": 95595,
+      "sha256": "0BC8361FE25361C0A1D8B1EE69AA625E766141B22486A3A9BFCB94D697A521D9"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\ordinary_door_left_W437_H471p25.SLDASM",
+      "size": 177844,
+      "sha256": "FE61D9A8FA315BF6C6014BB04A10E28F55861153E2C9E250E034639E07FE7B88"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\ordinary_door_right_W437_H471p25.SLDASM",
+      "size": 180759,
+      "sha256": "7FB8A78A3376FA4887604DFBA35BC36E2F7823D4AAE2E861963EF7C6A2F840EA"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\plastic_bushing_W437_H471p25.SLDPRT",
+      "size": 68745,
+      "sha256": "01B4DCCAF0CAF0EDB3EC433EC98D7A4889805C4D42D994FA0EFCD69C2C6425BE"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\top_latch_left_W437_H471p25.SLDPRT",
+      "size": 67768,
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\top_latch_right_W437_H471p25.SLDPRT",
+      "size": 69024,
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\u_hook_pad_W437_H471p25.SLDPRT",
+      "size": 169919,
+      "sha256": "FDF6AF27B181C461F2CCAA290A733419E954C78D7224C7FB2A6DAE1529C814A8"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖 模型.sldprt",
+      "size": 650238,
+      "sha256": "8850842C5AABA7064AE5EC04412D6FB94769F3AEDEBED4989342917A7BB9D3BA"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖壳体前侧板.sldprt",
+      "size": 258364,
+      "sha256": "19B6B877437C6EE2FBBA51544F04D09FC8D4350C47ED239E9385A7A25AE9F482"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖壳体右侧板.SLDPRT",
+      "size": 484207,
+      "sha256": "B9DFD3CE4C5C2D5BB7A693A9A3443A67E62403E39E5E79E863D1155A1ADB2BAD"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖壳体后侧板.sldprt",
+      "size": 395255,
+      "sha256": "F32305C424A1716604BE84D9DD74D569BD37A7553D5D58DA0843A88CA313B6D4"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖壳体左侧板.sldprt",
+      "size": 364960,
+      "sha256": "D95EB7F600671F44FCD4B1646764C1FA6EE01AFDEC0B3BEF253D249188C0A600"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖壳体底板.sldprt",
+      "size": 437641,
+      "sha256": "5FA3A858CBB9FB48C1573A9FEAC7051FF344CCA1661E7DD09322F2E7F141532A"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\上盖焊接.SLDASM",
+      "size": 389579,
+      "sha256": "9FA67EE8B9662A5E24D2F3DD06C6D5E4BCCB27BC91AEB60DA0E937FFD11740D3"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\应急维护门焊接_参数化.SLDASM",
+      "size": 94262,
+      "sha256": "AA07941BEC64C44060EE2D40F985E3398654E9E1FB5EAC4C60F49468595AF18B"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\底座 模型.sldprt",
+      "size": 381361,
+      "sha256": "57197656BE625881293BF7D48920480114C024373C2DC263098D567ECB4E8A5A"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\底座加强筋.sldprt",
+      "size": 204761,
+      "sha256": "9F2CBA1804B86388317F6E9FC48694C4414AAA9A118836636CFBE05112FC9040"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\底座外框.sldprt",
+      "size": 371708,
+      "sha256": "EE436B69924A89462F645CCFA45E2702A0CFBAD308B846CFD6C388B5A0BDD929"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\底座底板.sldprt",
+      "size": 572437,
+      "sha256": "C6D1FA398F2980A84CC39E53569C30A1F612EF3B5104A840BFACEC4AC91B436F"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\底座焊接.SLDASM",
+      "size": 289000,
+      "sha256": "D3F341077C5A7AC2B5BE83646D4629CF2B4B95BB415F9C8E46F93D95A53B6534"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\标准寄存柜 模型.SLDPRT",
+      "size": 2688174,
+      "sha256": "8512496623BD8DAA230CE2F91FA232F4DF3C44CADA9C95AB8C9857D9544BA33C"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体侧板加强筋1.sldprt",
+      "size": 338849,
+      "sha256": "C09AC5B65F969BE93906AD03A09783A2C451F43CB48CF0B354943CF318A68453"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体侧板加强筋2.sldprt",
+      "size": 223743,
+      "sha256": "D45275C0147E694550A5CBF82114B6C256813111716604F99591EE33AB4D59D2"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体右侧板.sldprt",
+      "size": 535202,
+      "sha256": "2185190F2CD701F34161872ED6690A3AA9D538FEAFC6ED6A84BDBD38E19AEB96"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体右侧板焊接.SLDASM",
+      "size": 466708,
+      "sha256": "CFDD19EFADA961D806AB8532406CA1118F158CBA9477CC330C039D754D68A50A"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体左侧板.sldprt",
+      "size": 554031,
+      "sha256": "13986EE5A74E2E9BE2DFFDA2E41EE2499B3EA3B86C72794E959B7B63223CAD79"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体左侧板焊接.sldasm",
+      "size": 400039,
+      "sha256": "7565D1C793EAD4B001EA937FC079D431AA3E6D59BB2AD17ECF6546824C8BA90E"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体横层板L.sldprt",
+      "size": 512214,
+      "sha256": "C715DF8149451C109CFE3085502FB8CD3469B36A95BADEA965D802ED6C270B3A"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体横层板L焊接.SLDASM",
+      "size": 119284,
+      "sha256": "FA3119ECBC84976E067C5C1EF7D9C4CE249506B849A860E71239589D0F5E702C"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体横层板R.SLDPRT",
+      "size": 522036,
+      "sha256": "D5D95001A760E5F04C8DACBB0CBDFE2428992E515C9B3717B82657223651E988"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体横层板R焊接.SLDASM",
+      "size": 115398,
+      "sha256": "EFE559E21025FB665A5071F85378DBE0BED0E3F4979832042A0E8638A11D72F1"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体横层板加强筋.SLDPRT",
+      "size": 182977,
+      "sha256": "8E85213F689BDC37E11292EBFD2FFDBDE616537ED2EAD616A7E19D4DE450F242"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体竖隔板L.sldprt",
+      "size": 962343,
+      "sha256": "0A46753F0075B6EC65CE5F1E6893C68CE16AB05FBCDDEA5F74A8657836F08C62"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体竖隔板L焊接.SLDASM",
+      "size": 420882,
+      "sha256": "1FCB21C1ED33EBE6E2D70AB8BFDD462C78B902C0FB12A1DFB2786728E2D2A0B5"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体竖隔板R_parametric.SLDPRT",
+      "size": 902683,
+      "sha256": "C03CF41D58A5DD2F4A235D4ABC80394E49659ECBB5EC8E399040A8BB16701AB0"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体竖隔板R参数源.SLDPRT",
+      "size": 961434,
+      "sha256": "78C8B94B68C91C0A64BFFB51DDA535A058964B2668305AE00BBCDBB70C80E222"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体竖隔板R焊接.SLDASM",
+      "size": 269427,
+      "sha256": "EE2932FDBC29DC6D24FA6E60817267171EF810DB1E786C8F2E6A655391E236A8"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\箱体竖隔板加强件.sldprt",
+      "size": 275521,
+      "sha256": "9251E36B605DE6F5BB5280E715A87F8788601F67E3B9EED741DCAD84F20EDEB8"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\维护门锁支架_原生.SLDPRT",
+      "size": 175991,
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\螺母M12.SLDPRT",
+      "size": 166179,
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\调整脚 M12X60(模型).SLDPRT",
+      "size": 100245,
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\锁控维护条_源钣金.SLDPRT",
+      "size": 257836,
+      "sha256": "FEB818FC23B72AA9A68C1F6C7C4CAB3283BCE0824338601E54D60C669E7F7BDB"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 上.sldprt",
+      "size": 341099,
+      "sha256": "FB0D5501D9BDADAB5F9E0059365B335D94D42C6C9BBDA8420D64B61BF3AAC364"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 下.sldprt",
+      "size": 342371,
+      "sha256": "0FFD35D11EEA0C178E470E3F6F0E882652CC954FC0E505A7448A15494F0D2E07"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 右.sldprt",
+      "size": 365661,
+      "sha256": "5B846E89ECE76DC0DA5CDE163D56569C80DB651664CEC6790E9E8DE75A73ACC8"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 左.sldprt",
+      "size": 378063,
+      "sha256": "1A301BD226B3524A4CC340630447603044E4971BD3391B84A1B0014512C10119"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 横隔板.sldprt",
+      "size": 226158,
+      "sha256": "BDD31F9D5A1B3AE76CF62D94198E438C666DDCBB236C778F50B69FF4C9143011"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 横隔板R.SLDPRT",
+      "size": 240712,
+      "sha256": "9055976AADB0D1A397E97F6215EFDF4F4411422B8C45AA55E63CCB957A85D00E"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 竖隔板L.sldprt",
+      "size": 513765,
+      "sha256": "353685A94B838DAD6B84C6681C5C32E4200E322D93135F4396B0605A590D06CE"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框 竖隔板R.SLDPRT",
+      "size": 443850,
+      "sha256": "62A87069D9636918CABAE10281B15BC8D1EF72CA68EC74B2582773D02934BC23"
+    },
+    {
+      "relativePath": "assemblies\\case1\\structure\\门框焊接.sldasm",
+      "size": 378313,
+      "sha256": "F1176D3E360630EADDAFB6D89021E769D3137FE24F8F8E4827EA8847043C6B99"
+    },
+    {
+      "relativePath": "assemblies\\case2\\16029_variable_minimum.SLDASM",
+      "size": 963748,
+      "sha256": "62F3D089825AF44F70FC1B5DA8D878F340F1758E3722014FE3B7E4FB4C409C4B"
+    },
+    {
+      "relativePath": "assemblies\\case2\\assembly-evidence.json",
+      "size": 19769927,
+      "sha256": "8E276AC57438E656E2562BC10CC09F2E88B0FA1A3CD74EE7BAEB4B0B9C765DC2"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\L_W437_H311p83333333333331_panel.SLDPRT",
+      "size": 389878,
+      "sha256": "BF07422C361085CE4258C06F47B182F1EE54350FEF83DC4B99D85A470E40C37D"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\L_W437_H311p83333333333331_stiffener.SLDPRT",
+      "size": 124115,
+      "sha256": "D8F004CB7C4B5323CDC5EB2A48DA2B023542EA9C26D07CC1C87B44E521366A39"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\L_W437_H630p66666666666663_panel.SLDPRT",
+      "size": 389686,
+      "sha256": "1DCB5E1DE77580AB1E95B63090EB1031C265A8AFDCF0D04AE83FBEF83BAAA71C"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\L_W437_H630p66666666666663_stiffener.SLDPRT",
+      "size": 123492,
+      "sha256": "6BA1333766169EB01BE86EB715247DE4543951BF5EA99D970B8CAB782988C3F3"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\R_W437_H375p6_panel.SLDPRT",
+      "size": 518000,
+      "sha256": "A215C92124BAA0A5AD406CA4348EB3678A828F829DEB9F4CAC9E3BC6EA60A431"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\R_W437_H375p6_stiffener.SLDPRT",
+      "size": 123475,
+      "sha256": "A3D33438CA7DE4F43A7E646E38227F46630E02B480AA0BDF4DCB1445F12228AE"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\R_W437_H758p2_panel.SLDPRT",
+      "size": 519130,
+      "sha256": "A6DEDBA57B7B8A277D184091BFBB6B53A59C6EED9704BDA0A8919938795E0629"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\R_W437_H758p2_stiffener.SLDPRT",
+      "size": 123570,
+      "sha256": "0D6725AD3EC5AEF410C8459ED2B7B4E2146A0EF2376EFD82AF65AE3AC1BA24AA"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_circlip.SLDPRT",
+      "size": 83635,
+      "sha256": "F4E3BDB1280AEC1D68D25D8CF8CEE3D43F1C103C8D68F08A51CF450907B8B46C"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_door_hinge_pin.SLDPRT",
+      "size": 71115,
+      "sha256": "23179BD503020476B23C8FB8839FAAA57461D8BE59242736B40E632391EBB7A0"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_hinge_latch_plate.SLDPRT",
+      "size": 169107,
+      "sha256": "C8133D66C8E6EC2643B920176710DDC1F34ADE350FC10E9F632D9F315C1AE770"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_mechanical_lock_tongue.SLDPRT",
+      "size": 95497,
+      "sha256": "759001071D2DC787AB5BE53FE48BE91BD3D974C391E41AACE824F187987CB271"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_plastic_bushing.SLDPRT",
+      "size": 69268,
+      "sha256": "771D623AF6FAABD01F0D31C8A522D01055C7328A054DE498DCA8A3EDDD93044F"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_top_latch_left.SLDPRT",
+      "size": 69248,
+      "sha256": "282C4DF882C0E041588A85B5C0F9463054740FAD3AA71B8DC91C54457C594BBB"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_top_latch_right.SLDPRT",
+      "size": 68455,
+      "sha256": "ACDE0ADAAF2FCCEBA3669FD8755F63BA0A5BB8B89FFBEE56A3DA8BC0147541C4"
+    },
+    {
+      "relativePath": "assemblies\\case2\\parts\\trial_u_hook_pad.SLDPRT",
+      "size": 170999,
+      "sha256": "C8B947DB21F2378AF2EC3C91FF7151C44F0B5EFD3A8473BCB48D522DD0FF3D7B"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\16029_1000W_2000H_500D.SLDASM",
+      "size": 2065212,
+      "sha256": "EE0B066A69DB41297495D87061E56C77DDCF5EE3D018008940055F174D2570EC"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\circlip_W437_H471p25.SLDPRT",
+      "size": 83536,
+      "sha256": "73F21840CEA9916709C9D77EA8D13DE94A36FCEAD9B744056FEADB3E1688C9F4"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\door_hinge_pin_W437_H471p25.SLDPRT",
+      "size": 71222,
+      "sha256": "BC7BD32EA5F4C4259367B56816D8517BDC6108394CD8CE58BC38D044480FAE30"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\door_panel_left_W437_H471p25.SLDPRT",
+      "size": 398897,
+      "sha256": "9C4B6083F0EDCB1B2BBB670266D7E942E7207B889EA540678E1C0E4B68BACC6D"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\door_panel_right_W437_H471p25.SLDPRT",
+      "size": 518516,
+      "sha256": "811EB6B956C5E7651B0FE1D5E85F45F402B8DB42604310979F7FEC64AB4688C5"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\door_stiffener_W437_H471p25.SLDPRT",
+      "size": 122091,
+      "sha256": "6B48201626DC342996F53B4E7473CC95E68FF7F2D3F8436AD0AEDC88B891F2A9"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\door_weld_left_W437_H471p25.SLDASM",
+      "size": 129013,
+      "sha256": "7F2790C6A5E1394F5F339FEE5084D95CF0A81D11DFD90CDC0931760CB5066FAA"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\door_weld_right_W437_H471p25.SLDASM",
+      "size": 131579,
+      "sha256": "EDCEA8B134E118D80569846BF5CECAFC630EBD6A88726CAC509EF8D720A9135B"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\hinge_latch_plate_W437_H471p25.SLDPRT",
+      "size": 168506,
+      "sha256": "C54235D39F401011013B12C809ADFEEEB1C53EB10A59C2EEC5C88BA4C603A8FA"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\mechanical_lock_tongue_W437_H471p25.SLDPRT",
+      "size": 95595,
+      "sha256": "0BC8361FE25361C0A1D8B1EE69AA625E766141B22486A3A9BFCB94D697A521D9"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\ordinary_door_left_W437_H471p25.SLDASM",
+      "size": 178227,
+      "sha256": "E15FA3AE6AA2FCE14601E504E5C8270565151FE44524BB1B2FD795DFD55D1F66"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\ordinary_door_right_W437_H471p25.SLDASM",
+      "size": 180469,
+      "sha256": "6557603FF5BC6730725BB79026CAF607FD686E2DB9B402784E96FC845A6E72CD"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\plastic_bushing_W437_H471p25.SLDPRT",
+      "size": 68745,
+      "sha256": "01B4DCCAF0CAF0EDB3EC433EC98D7A4889805C4D42D994FA0EFCD69C2C6425BE"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\top_latch_left_W437_H471p25.SLDPRT",
+      "size": 67768,
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\top_latch_right_W437_H471p25.SLDPRT",
+      "size": 69024,
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\u_hook_pad_W437_H471p25.SLDPRT",
+      "size": 169919,
+      "sha256": "FDF6AF27B181C461F2CCAA290A733419E954C78D7224C7FB2A6DAE1529C814A8"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖 模型.sldprt",
+      "size": 650219,
+      "sha256": "71D5DDC5EF43954291ED98AA3C8B445A951BFA15AED59BB7970064BF06F11809"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖壳体前侧板.sldprt",
+      "size": 257927,
+      "sha256": "B5B8C4498C4F885D5A4632005BF27B64FBDD0C5DE45C9E5D96868ADD9E6AE855"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖壳体右侧板.SLDPRT",
+      "size": 483541,
+      "sha256": "A1A63D60EB6DCE598EE405B5F02BCA437DAD197350835B747BE344586B069A17"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖壳体后侧板.sldprt",
+      "size": 394555,
+      "sha256": "34E813878A7AEF350694ADEFF43844D770102436A5A18ED5B170A0B179EE6DAC"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖壳体左侧板.sldprt",
+      "size": 364809,
+      "sha256": "0D4718659870ECD17B153E564ADCC5EBBA5EBD84FC722DF395E8DD90385500DC"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖壳体底板.sldprt",
+      "size": 437713,
+      "sha256": "3315DB931FF5B1A7F27904C1C79073F954C8B0372307CFA0399AA8EE5B38F78B"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\上盖焊接.SLDASM",
+      "size": 389722,
+      "sha256": "345BD65F761E34CD4A030942B3599A7892C9D5668A7573BD95F6B0DEB7554910"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\应急维护门焊接_参数化.SLDASM",
+      "size": 94267,
+      "sha256": "965C42A591C2D28E858A69982A47CE6CE36837F977956C5B24D7716630DA8352"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\底座 模型.sldprt",
+      "size": 380641,
+      "sha256": "A247640445CE657F9396C269EDB817EA1D32B4C4E81E2638D30DCE6DF82D4A34"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\底座加强筋.sldprt",
+      "size": 205534,
+      "sha256": "71E46984E923719952CACE115B164C03B6AA3DF7EBDABF1CB76BAC0EF4AF95A7"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\底座外框.sldprt",
+      "size": 371957,
+      "sha256": "C7F493A04F3B3C7A181F997DD4B433CC404C54A4591C6F595E939FFD0B08CE19"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\底座底板.sldprt",
+      "size": 572434,
+      "sha256": "EE8B51031AEDD6B640BBE4DC80E6F994541C83C87E59572B2EC14612127B2816"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\底座焊接.SLDASM",
+      "size": 289331,
+      "sha256": "AF887322A482C026AE0933B097606D75B1C2E0F42F1A5787CDCFEA317EA1936F"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\标准寄存柜 模型.SLDPRT",
+      "size": 2662337,
+      "sha256": "1F5F6ECB096805BD02B8AF9F6FD6A53964DED21CCEF1E029B052AD2B0D2C9EE0"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体侧板加强筋1.sldprt",
+      "size": 338891,
+      "sha256": "227D0043B8477918FBFF0501C12285C0D98BC24CFEA520DD83F18FFC0D76B80E"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体侧板加强筋2.sldprt",
+      "size": 224071,
+      "sha256": "F27EC921CB8201BF4CAD61362F39335DD41FA6CD451836229490E216D84C16F4"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体右侧板.sldprt",
+      "size": 535348,
+      "sha256": "682E45499FD38BFB60DED61E47D3476902A62A2321C320F744F2AAA50EE324AC"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体右侧板焊接.SLDASM",
+      "size": 466229,
+      "sha256": "02D221AD56E144C800BFFFD56613A9A57F043B7E3770F147EA3B7AF2C3173D1F"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体左侧板.sldprt",
+      "size": 553460,
+      "sha256": "27357B3004AEF5C7AC0CBFAE14C2476C9CC2E4276A922D9B2F2CD6C157FEE4C4"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体左侧板焊接.sldasm",
+      "size": 400152,
+      "sha256": "64AAFEB8482FA759DE8E90AF072D64DCD047831F08200FC03DD2164AB994A980"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体横层板L.sldprt",
+      "size": 513094,
+      "sha256": "F927892EEF0FF8E9AAE4FC3A462D2C963FCB9CFC86B8DBD984517358FB959388"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体横层板L焊接.SLDASM",
+      "size": 118741,
+      "sha256": "72881D0D11EBC9DC70317BB43D873317C4FC492309ECCF5CEBAC9DD29A45463D"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体横层板R.SLDPRT",
+      "size": 522567,
+      "sha256": "02A2B8733D6F8B2C006258295BE62E2165161FC163551AF547E25F6EDC9A59BA"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体横层板R焊接.SLDASM",
+      "size": 114561,
+      "sha256": "ABC768B21363E76E91403879E579F13AE9F07059AD276877A3FF29CED42389BB"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体横层板加强筋.SLDPRT",
+      "size": 182977,
+      "sha256": "8E85213F689BDC37E11292EBFD2FFDBDE616537ED2EAD616A7E19D4DE450F242"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体竖隔板L.sldprt",
+      "size": 962396,
+      "sha256": "85CEED7DFF706F2C206A807FDC4ED00DCE9745E940653419EBC3E45EAE164DA8"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体竖隔板L焊接.SLDASM",
+      "size": 419730,
+      "sha256": "342691A38A90763DEC6DDA4015B2977BB33BC0727E9EF07AE05E892239454E11"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体竖隔板R_parametric.SLDPRT",
+      "size": 902788,
+      "sha256": "0B4C29654B4B7DEE059C5B266D523148625540867B4141A6AC9B52F7EDC12FCD"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体竖隔板R参数源.SLDPRT",
+      "size": 961996,
+      "sha256": "D2630D9C002A4ED850662CF907518BCDF3F9CF76F433C5028C1344FD9E5C18AC"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体竖隔板R焊接.SLDASM",
+      "size": 269104,
+      "sha256": "F873657646ECAC9E7EE0C70AE3A7ACB8693230B72E6CCE7603FBF6BAB3A23824"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\箱体竖隔板加强件.sldprt",
+      "size": 274824,
+      "sha256": "9738545CA9E3F3437B497F969178353EA5F878D35B614E8DE2A58ECDA9C2F81F"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\维护门锁支架_原生.SLDPRT",
+      "size": 175991,
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\螺母M12.SLDPRT",
+      "size": 166179,
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\调整脚 M12X60(模型).SLDPRT",
+      "size": 100245,
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\锁控维护条_源钣金.SLDPRT",
+      "size": 257836,
+      "sha256": "FEB818FC23B72AA9A68C1F6C7C4CAB3283BCE0824338601E54D60C669E7F7BDB"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 上.sldprt",
+      "size": 341442,
+      "sha256": "3CEA5D5E1D957C3672C0AEBEEE9CA4E741C05E5B90D836E9B85E060577970849"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 下.sldprt",
+      "size": 341460,
+      "sha256": "1054D54EBFC1AE90E300E97902928B70D2547B3DE25C31A49B4038785FD37599"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 右.sldprt",
+      "size": 366253,
+      "sha256": "FD2DBA26B7B827978A6AA070552F91C990322A0BA417E6A8FA27681E07CD8433"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 左.sldprt",
+      "size": 379496,
+      "sha256": "8DB70BD31E931A1887973B964ADD0AA700E5D778846F22ABFB67E2C094560A0B"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 横隔板.sldprt",
+      "size": 226201,
+      "sha256": "2CBD6D738A9E04E4F655E3AF2ABEC97144229EC2656A5C938534FAE280339ADF"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 横隔板R.SLDPRT",
+      "size": 240845,
+      "sha256": "3ADAE0CC2C8472ABC0EA0182E3FBB5EA415F93CC4C6668816341708D4E2CDAAE"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 竖隔板L.sldprt",
+      "size": 514442,
+      "sha256": "F5949C8925EAB7A44D8C9562825683E03C77CA787C7FD66142364296E7771CDC"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框 竖隔板R.SLDPRT",
+      "size": 442825,
+      "sha256": "EE8B51B6FE30C8555ED5A4161D5A48520754F044F26016C13FE4698784039AB3"
+    },
+    {
+      "relativePath": "assemblies\\case2\\structure\\门框焊接.sldasm",
+      "size": 377555,
+      "sha256": "1ADA8EDDC7F814340EA2964B74903086B5A8869E0D69AED2E29B725B731960FD"
+    },
+    {
+      "relativePath": "circlip_W437_H471p25.SLDPRT",
+      "size": 83536,
+      "sha256": "73F21840CEA9916709C9D77EA8D13DE94A36FCEAD9B744056FEADB3E1688C9F4"
+    },
+    {
+      "relativePath": "door_hinge_pin_W437_H471p25.SLDPRT",
+      "size": 71222,
+      "sha256": "BC7BD32EA5F4C4259367B56816D8517BDC6108394CD8CE58BC38D044480FAE30"
+    },
+    {
+      "relativePath": "door_panel_left_W437_H471p25.SLDPRT",
+      "size": 398897,
+      "sha256": "9C4B6083F0EDCB1B2BBB670266D7E942E7207B889EA540678E1C0E4B68BACC6D"
+    },
+    {
+      "relativePath": "door_panel_right_W437_H471p25.SLDPRT",
+      "size": 518516,
+      "sha256": "811EB6B956C5E7651B0FE1D5E85F45F402B8DB42604310979F7FEC64AB4688C5"
+    },
+    {
+      "relativePath": "door_stiffener_W437_H471p25.SLDPRT",
+      "size": 122091,
+      "sha256": "6B48201626DC342996F53B4E7473CC95E68FF7F2D3F8436AD0AEDC88B891F2A9"
+    },
+    {
+      "relativePath": "door_weld_left_W437_H471p25.SLDASM",
+      "size": 128816,
+      "sha256": "92337D63E740F2DECE4BF55D3B355600816993ACDC5F6A78427E22249FDBE81A"
+    },
+    {
+      "relativePath": "door_weld_right_W437_H471p25.SLDASM",
+      "size": 130799,
+      "sha256": "D6D408E8AD29D15EE04D71EA50DCDECD2CDEC888D691D7B058DBA419E8B4EB02"
+    },
+    {
+      "relativePath": "hinge_latch_plate_W437_H471p25.SLDPRT",
+      "size": 168506,
+      "sha256": "C54235D39F401011013B12C809ADFEEEB1C53EB10A59C2EEC5C88BA4C603A8FA"
+    },
+    {
+      "relativePath": "mechanical_lock_tongue_W437_H471p25.SLDPRT",
+      "size": 95595,
+      "sha256": "0BC8361FE25361C0A1D8B1EE69AA625E766141B22486A3A9BFCB94D697A521D9"
+    },
+    {
+      "relativePath": "ordinary_door_left_W437_H471p25.SLDASM",
+      "size": 177666,
+      "sha256": "8CDF769C1118AA90EB001D4EB13F75283C7C1018937EB7D316B133D218ED0B67"
+    },
+    {
+      "relativePath": "ordinary_door_right_W437_H471p25.SLDASM",
+      "size": 180770,
+      "sha256": "17611C26442C3AD3B7DEA2F182634C4E4A8D09A3B87707DBB047967E8C2CE4AE"
+    },
+    {
+      "relativePath": "outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "size": 660289,
+      "sha256": "6B667E74F9ACBB8860E54340A28B70470A230526E4A68B8705D2EFE770A1A4F7"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-001.json",
+      "size": 598,
+      "sha256": "7303478E862FB5B7AB91281C2B87305BB4E481976B15F45087AF4CE1E3643656"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-002.json",
+      "size": 539,
+      "sha256": "BC29C097F281D0C5D9C3624C49F59B78D09C8066BB79BDA38ED03C3BE0C82AA4"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-003.json",
+      "size": 13810,
+      "sha256": "73D9E432EB04C6E23D11084501A7D0E4F2460895E2902074F4F282F6029D8127"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-004.json",
+      "size": 34650,
+      "sha256": "AFB5559DDC9878F8A484366ACC121827AD4C264C673BA8E40A2EA17F7FDBDDCE"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-005.json",
+      "size": 820,
+      "sha256": "F55C7FCAEA449C3C739298CA9BD9B93BB4094C9DB9E7806311876343E84E1FA5"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-006.json",
+      "size": 910,
+      "sha256": "1351A306B8B5735C337E2D6F186C1EA0CE1A8C82AFADEC0452DFFDE0F2602BA0"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-007.json",
+      "size": 357,
+      "sha256": "51296728DF6B2E7E56CE75A80268D15F51B87E0D9AB028B82552CF088D2FD3EC"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-008.json",
+      "size": 188,
+      "sha256": "A140F4451283B22E2872AD9B1A2B600527D40C4156C59CA26664B1E10FB6BFD6"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-009.json",
+      "size": 193,
+      "sha256": "C342306CC3C0DD809E21D9DAF5D9B4120877BCD4E6E891951CA52596712612B4"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-010.json",
+      "size": 473,
+      "sha256": "CB8E0B83D4AFF35EE8ACC2480C4BAF9C55B6884387DCAAB5C63C029F87A50678"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-011.json",
+      "size": 191,
+      "sha256": "E176E23536FB26FD221BFBAE852EFB9DAEB3F0A53A4E4DDE2F477F78A27C64F4"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-012.json",
+      "size": 447,
+      "sha256": "36EFDF1827DA4639E1DA6693AD1AD345079CE5CF9659DAA945AAC393CC497F02"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-013.json",
+      "size": 537,
+      "sha256": "F4023D9D77BB73E226AB2CC29BC4542A0AA62FF2A2D5B8D5F64A73358E51DB6C"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-014.json",
+      "size": 13810,
+      "sha256": "92A0A059CE72A826B54C3DF517DC712FB8D9D34F8C55D432EE169379D680D515"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-015.json",
+      "size": 34650,
+      "sha256": "0BA0D16EB857EEDA8C4B651037FC9D995FF62FB21A0BC3C828A803797DA56767"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-016.json",
+      "size": 825,
+      "sha256": "B10AA9BA9218B272D5821FB99F6499E3A1257D91D387DF0AC8BA9C5EC71EBC80"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-017.json",
+      "size": 915,
+      "sha256": "43877573756494CA3794E3E988CA59DB044C03551D6578221FC30235D012B9C3"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-018.json",
+      "size": 363,
+      "sha256": "66660F2AAE4D40B19A7C696B2B472C9A9AB3640455E268A0F8CA175B266B5B4C"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-019.json",
+      "size": 194,
+      "sha256": "B684FB943EBCFC4A0732E5F20FFB32639E3A98E8FC099037968DAF14AB0AFEF7"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-020.json",
+      "size": 199,
+      "sha256": "ACD9AB97A56C4F2F5EB14BD63357D17F8761972C4602F68B8B17A352B6224B89"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-021.json",
+      "size": 479,
+      "sha256": "BAEA7E5D234CAAA232AE2F14A0E20AE2F4D88774B6A2226AC7887554FDA5B55B"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-022.json",
+      "size": 197,
+      "sha256": "7D76D90742129DCAD95BF0390D086E53BA5B195F581AE64238B13A54137B8183"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-export.trace-023.json",
+      "size": 453,
+      "sha256": "DF098EEAE6A84D92EFBB77CD5CDFFDE5655245BF3080E94A9A3C9B58DD14B11A"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-001.json",
+      "size": 13986,
+      "sha256": "536D6BBF2C0168C1D941974D06E0B746FD651ECFA9F8D2850C269FF0FDE74DB7"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-002.json",
+      "size": 16425,
+      "sha256": "A653E075556018CDB5B200298D833350DE9C6FC3D6335BB9FEE3AC9512A3FCA6"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-003.json",
+      "size": 302,
+      "sha256": "DBCC88064E070C5521395261CFDBE853F75372BC48FA0F4E89F5A630BE017624"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-004.json",
+      "size": 315,
+      "sha256": "138D5D07BA330481ED4D7D7C8EFEA43C765E0171531A7119F87FC87D58124213"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-005.json",
+      "size": 315,
+      "sha256": "BA8D57188DFC02CD368630DE7AC148AE2BDA90AFF01039D72A11C23B8B28B34B"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-006.json",
+      "size": 315,
+      "sha256": "B5DB993656D0A2EBE2AAC25D75A0E57A04084EFF32D9BA3C320AB1A967837E11"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-007.json",
+      "size": 315,
+      "sha256": "B296BED34C130437C558ED278328A3107337A29F6B4592BBD5857BE1025152D4"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-008.json",
+      "size": 315,
+      "sha256": "061D56C95E182D87256E7F720800F3CCC31799665A09C71CB361C32173133A3A"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-009.json",
+      "size": 315,
+      "sha256": "F1F21086A38E4310D30A39DC8F84A1E8E6CE64B3CD28B131B6C970EACBEA05B2"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-010.json",
+      "size": 315,
+      "sha256": "BC07ADAF6174052738D6BB03B6CF2962186871E3CEDD2CDC094798BFEE216892"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-011.json",
+      "size": 315,
+      "sha256": "581E6314181D9D5B5271F9C39237D8E043AA6B34156A5FEA5CFAAA338092A9C9"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-012.json",
+      "size": 315,
+      "sha256": "50961133B41D556C64D17D9044CECCF2E45F63369EE0575023434BD29095332A"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-013.json",
+      "size": 316,
+      "sha256": "962098FC9CC5C3B1843812EEC5BF2FAF833897C231372659C98377E2E4D8B2EF"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-014.json",
+      "size": 316,
+      "sha256": "94D7214E52B72C29C6A2B7692A754B32DE3A3B930D23E4C2EE975B21D02FFC0A"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-015.json",
+      "size": 316,
+      "sha256": "2396FA502BF390DD5DEDAA84B442591A2DEF49065022EDC2C35F5BA5F4878E7A"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-016.json",
+      "size": 13778,
+      "sha256": "149DF05BD2831375617A2A2C57D4B2206CAF368F0C6E13A151AF7FC6B15D7EF9"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-017.json",
+      "size": 34650,
+      "sha256": "2984211BBEDDE24F8931AC0D864FD7F0EC815B048A66381A57C87F7D0A623C77"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-018.json",
+      "size": 13780,
+      "sha256": "5971171969791B1B6252E058E7C8ED96610EF1A38C32956390E2B99B7170133D"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat-prepare.trace-019.json",
+      "size": 180,
+      "sha256": "DF755A35BC1C5D0C71AB6D8A583F7E91071175FED1608EF5B859617E6C937B7D"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat.dxf",
+      "size": 34758,
+      "sha256": "372B3AB48F0DF18803C82D2FD96FD078C53DCC376EC7136DF23A8D4117E952D5"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat.native-bends.dxf",
+      "size": 37045,
+      "sha256": "1C5B277239097CD2EE8FCCF12830BD63C2AECAE368DCA932444B20BBA3DBE960"
+    },
+    {
+      "relativePath": "outputs\\L0\\flat.native-cut.dxf",
+      "size": 35007,
+      "sha256": "DC6589754BD5087BCA9A749E8CC83F5A56BEF930E6ECCFE4C4811D3F80019E83"
+    },
+    {
+      "relativePath": "outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "size": 666555,
+      "sha256": "94EE0DF87C26D7EF79DF7CABD2E84C18088CEC7E3393DE28BC06797708E45360"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-001.json",
+      "size": 595,
+      "sha256": "B8F42ECF903CAFAED09989A1ADAB18BD7C7425E0B2B4DC82BAB11C3B84ECAC97"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-002.json",
+      "size": 536,
+      "sha256": "2F3C8FCCC7D2CB27FA564EB4BE6C26E082CAB921AB30AD385CDCC13DE6C17FAB"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-003.json",
+      "size": 13810,
+      "sha256": "595351F58D75570363C97317CEB93DDCA7FB7B960F83F748A246BE1C95093491"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-004.json",
+      "size": 34008,
+      "sha256": "37F217EC9FE1C437BE37772A85B0A7448C0E0F6E8A74D391A629E18D2BA72D0C"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-005.json",
+      "size": 817,
+      "sha256": "DD24A4DDE8ABFB59BAFF93AC25E8A7642BD2974D36E737FBEAF12A248187E905"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-006.json",
+      "size": 907,
+      "sha256": "5BC582D084B43FA5D874961296FED5BCD624D6F33C0266AAFDE888704705EC22"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-007.json",
+      "size": 354,
+      "sha256": "83157B3BB5C17D0FF433B15353B3B783BAC6CF5C92FB900FA2675C260ECBE346"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-008.json",
+      "size": 188,
+      "sha256": "18D64232CF6A35DF054D9FE39E992CD6B29FB2E52651DCD7D42C54198ED2B40B"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-009.json",
+      "size": 193,
+      "sha256": "768D49C1A7AAB386245E81169068054C44F4F0E52E93CC2373E1B61A20B789FA"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-010.json",
+      "size": 470,
+      "sha256": "2D4482934D470AEAAB79A23E2E1C5E8FAFC63576987D49BBE29C03890F998B0C"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-011.json",
+      "size": 191,
+      "sha256": "5B5499A60D7951D61F6E420CA4B64615726A26647E7BFADCE586C13FA35AC061"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-012.json",
+      "size": 444,
+      "sha256": "AA51009576E0C7B2D127C458913150D206E49BA024B1073BC0B56FC62F84B421"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-013.json",
+      "size": 534,
+      "sha256": "2C1F78979E068DFA9349C59EB96147BD9623080CC76217611BD94E1C37BFFB40"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-014.json",
+      "size": 13810,
+      "sha256": "7100646AB45690505041F4766FE45D3122FF3DDC2149A902853FAF2DDADDBF36"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-015.json",
+      "size": 34008,
+      "sha256": "DEC5053667258CBCF553F25ED1E57A5D26ACFB9BC55EFD2EB786C3D6D9D2AEC3"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-016.json",
+      "size": 822,
+      "sha256": "3F980707624142B67402788EB719089AED90BD324F0417D714D06BD736EB9E61"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-017.json",
+      "size": 912,
+      "sha256": "C3C5B21E8BE8402BCF1B8DEA1273F67931C117C11DDD44C6C28E3ECDAF70D78D"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-018.json",
+      "size": 360,
+      "sha256": "1CBD65F385899505AD85A4FFE25DC120C0623CEB27096570C6494C56F51188D8"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-019.json",
+      "size": 194,
+      "sha256": "33304C3D379252777A87F7C4B34B5B0882F3BA16E390D822D620B1FDFB2081E2"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-020.json",
+      "size": 199,
+      "sha256": "69D9969B9F9F448E606802CDADE1E40A47871BDD8FD1A10390B6353AA5911A99"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-021.json",
+      "size": 476,
+      "sha256": "13C80168FBB498B55D507A7773A784E5B28F5518D07A31A41A2ED4BE64E3A36D"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-022.json",
+      "size": 197,
+      "sha256": "4ED6FA6C3473273375B400ECB847CD3E1657092434C22CB3C8E95BCCC6BE20A9"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-export.trace-023.json",
+      "size": 450,
+      "sha256": "C44AF49643D4683BC4F6648FC748C7EDA15ECD79647404C65E2AE1BE33781C95"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-001.json",
+      "size": 13983,
+      "sha256": "7F00A5B2C753BC0849D9E9B9A58391BA75EE59F8E039397E90D6EF0A36195109"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-002.json",
+      "size": 16425,
+      "sha256": "7BCDE8CE6A9720587608D1AB3C4AF8A9ACD8403100C5AD15577D0CA798DD0045"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-003.json",
+      "size": 302,
+      "sha256": "E2D9031675A80C086C18581EC46A3244F8F33B4A18FF5F8132BA17B8FEB8416E"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-004.json",
+      "size": 315,
+      "sha256": "4984A59BCC749A31C7859771C8E65C7F1D2ED6835370110B8A9853816C1F405F"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-005.json",
+      "size": 315,
+      "sha256": "9AB539E8B480183CCF5B322308425AC97AB6F84EC28F378CFDCDD8E4AFB086E4"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-006.json",
+      "size": 315,
+      "sha256": "BAC524AE4ED359C00D5B2DED3D2230DB5DD9C07147B7EDA716CB7D0B6DEBD18E"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-007.json",
+      "size": 315,
+      "sha256": "BB31992AAB63771591837C9B9B2578BE32AE5151145A76554230053EA65B9890"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-008.json",
+      "size": 315,
+      "sha256": "F54F9F75AC4CD6679F92A782F206655B9196D6872E4C2BE1C078D57F80FE4247"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-009.json",
+      "size": 315,
+      "sha256": "47934C4478CE83D8A85F71D090FC173F35EDC2050F00B60647B237178D3CD243"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-010.json",
+      "size": 315,
+      "sha256": "6B50B46E9FEF1DC796955E9A1251F9A7F6323B86E0EC80B597AEFFF25C1F9581"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-011.json",
+      "size": 315,
+      "sha256": "326A94AE20D9ED64719FF0C7EC743291B19C635A6FB4409D861C5564B803CEFF"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-012.json",
+      "size": 315,
+      "sha256": "A04B174A9883E9B74024C90B9C0EB7A6C57B2890B147A31B8A17C0D1B63BB165"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-013.json",
+      "size": 316,
+      "sha256": "F5527FBCB9A2F6E71FD9C5D529C484425CA6CEF6002C01F36A9F5535F8FC3B74"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-014.json",
+      "size": 316,
+      "sha256": "A5E9F2B09A76666058A67D6753ACFCB6B163CB1C99ABD71EE18AF21282288515"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-015.json",
+      "size": 316,
+      "sha256": "042308CD3FACE34BA5CC833DC077826A84C14FB24BBA1EBA297649F0325F2756"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-016.json",
+      "size": 13778,
+      "sha256": "C0766A6D33CA3156C110F553F1BED94CC484AFD12E60FDBCE4FFF709F50F5B06"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-017.json",
+      "size": 34008,
+      "sha256": "A7A69DAFCC681B9ABA2CC9F627A98AD82E25A657655845C51FF734045384F8B1"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-018.json",
+      "size": 13780,
+      "sha256": "41ED76A195B45BE7FB0130EC36EE582C0EAB83C809DB903A003F2CF03073990F"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat-prepare.trace-019.json",
+      "size": 180,
+      "sha256": "2E01CD9F3DBEB33AEC3D606B15B5C94C8B8A5F99EB64A11A0754C5541C1E9612"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat.dxf",
+      "size": 34379,
+      "sha256": "F1A74941990D8EC5A7C1F61EC1DC23E31B329F6D0F9F10FABE5B93EB8E9099D3"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat.native-bends.dxf",
+      "size": 36666,
+      "sha256": "85DA617A40968C241D5BED2A37A62C2A04846C183CB37EA59CAAF66A678DC015"
+    },
+    {
+      "relativePath": "outputs\\L2\\flat.native-cut.dxf",
+      "size": 34689,
+      "sha256": "B6992544551F2844686B74695F3E3AD9BA6056F75A04648BF6A0B4C5876E0309"
+    },
+    {
+      "relativePath": "outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "size": 653150,
+      "sha256": "408E55DA93F3AA67F007ACF046B875E47FFB7FC1DF8604FB59191502A6CE452C"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-001.json",
+      "size": 596,
+      "sha256": "943D39C0950E47FDAEBC84B5B4D0F4605C1C4869F4E5D80ECEC09E80FDF11EDE"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-002.json",
+      "size": 537,
+      "sha256": "4E290D9B4769C039683C9371D278A1D16B0532662180AC0695C4F9FCE92A99FE"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-003.json",
+      "size": 13810,
+      "sha256": "F88D365E0274A4A67E8FBC8F383C26CE4F4758E59A6FB5B045C7985BA2AF3D72"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-004.json",
+      "size": 32186,
+      "sha256": "5D2039251872C12A0279ECAB396BAB8C8469E4BC5409FD4573DC06AF4084A17B"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-005.json",
+      "size": 818,
+      "sha256": "BAD1B0AC3EC1FA6420B46B71DFE207715CBE62FFA0BFDC80017DEC34D7D27072"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-006.json",
+      "size": 908,
+      "sha256": "D045A318CDFF8B680F6082A5B44EDEB8C31F343730235B435D6F8F052CE0B056"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-007.json",
+      "size": 355,
+      "sha256": "6F408248ED767E64F6A35BEB86C314F440A439964B0355F89E8EF34C8C1FF8A7"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-008.json",
+      "size": 188,
+      "sha256": "D96FE100D4FAA017BE84EA619022C95A141300BA5416FFC8C744855E80D17E5B"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-009.json",
+      "size": 193,
+      "sha256": "2FE707D55E0249FCE54307D43FBC9974F75D14BC2061AD13F4CFFA22630EF042"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-010.json",
+      "size": 471,
+      "sha256": "FA85FE256652EC9B8308AA3C9FABF5B6FC8080065411CEC1E0F60EE37D03D634"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-011.json",
+      "size": 191,
+      "sha256": "FAAC36B27E3166FF9CF672C8255390EFBCAA09D6BDEA2CCCB7E7CCBD9F0B7A83"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-012.json",
+      "size": 445,
+      "sha256": "0680157E7CC6E640BF1C42BFC952DC3EB9A4AD7AFB16518BD386C3332A3A422D"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-013.json",
+      "size": 535,
+      "sha256": "7E9E7230B32F8F12B634502A795413A49784583CF48AE75FA2D6954AE122D1D5"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-014.json",
+      "size": 13810,
+      "sha256": "97F71AD0C70C245ECFC5BFF6704E4597092300E14AD74E41AF81BFEEBF868447"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-015.json",
+      "size": 32186,
+      "sha256": "4D63B4566817D3301E47F00BB69746517D173293121C013EFFA059993EB9A433"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-016.json",
+      "size": 823,
+      "sha256": "0E15A6B6B9F901209DDB2B8A799FCD8F9BEBA48744C95943AC31C51CDF1C5488"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-017.json",
+      "size": 913,
+      "sha256": "DF7A6277D1DBF816CE6E049779E94E9D8BE1E65E22D4C952ED8115C8ACAB1563"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-018.json",
+      "size": 361,
+      "sha256": "FBE36FF00DFFB0C80D58019342E412A8C308E2CE54A7C4995B113F1F47ACF639"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-019.json",
+      "size": 194,
+      "sha256": "0D6924463A97F76873CE26C193DF4F041B541C6086689EBC02B2779D75B0772C"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-020.json",
+      "size": 199,
+      "sha256": "7F9503A7CB1B29BD5A187899DB3F79FA4241337A45B1D914FBCA70E9D4242F9D"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-021.json",
+      "size": 477,
+      "sha256": "17AE34C0EF158923E3D91DD56BCCA9D30482DA19721CF81D8F0721CF12F3D60B"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-022.json",
+      "size": 197,
+      "sha256": "595D4CAF5E5903743173DE78434D2581CB2D620C0DD1DB812E162259E5BF6298"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-export.trace-023.json",
+      "size": 451,
+      "sha256": "F4B230D509F4077DBDAF60077AD269CA90AD1FE305CF89C1FE68403C1760D1A9"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-001.json",
+      "size": 13984,
+      "sha256": "146274225A6E5344FD3DF877236086A4F2E441BD13B0CEDB22DE26F25F73B43E"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-002.json",
+      "size": 16425,
+      "sha256": "19CC14A4AA51D13DD0493AD7A0009D49BD676791558B87A7F9784BE0DE8E0EE8"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-003.json",
+      "size": 302,
+      "sha256": "8CFE2086EAB8C2703BAF62D6402D40C7AF166B686E12F14E2F80C340CC73265B"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-004.json",
+      "size": 315,
+      "sha256": "C17C1E4BC5BEBE9E9E906ED0A289B2C6906B77571FF02ED037CD6E3DAB8E73CD"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-005.json",
+      "size": 315,
+      "sha256": "4EE82821226280B8712B0A0C8211E52D17B3C3BAD6A05D885886793D809C130A"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-006.json",
+      "size": 315,
+      "sha256": "46843D68A7608234BECEB5A1BDBB449101BDED9A1C4D243004779EAEF2C4D0FC"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-007.json",
+      "size": 315,
+      "sha256": "64B03387DD2581B7C77CECDE495712876FB3DCDC0D3A3DE8DC8FE456E9CC9EB8"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-008.json",
+      "size": 315,
+      "sha256": "F5C262A97FC9AD729DACC7598FBF0FEC96C58AD6F189F3C2E0BF4517968FFFD7"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-009.json",
+      "size": 315,
+      "sha256": "B1A3077C207AB6A2EEC26577155D6F44473571FFF2398CBBC9B5CEB6005D3C54"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-010.json",
+      "size": 315,
+      "sha256": "9F87E25D086E8C088D0E56A08272E0E8AAF8F92D1B70F36523661DA408703CAE"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-011.json",
+      "size": 315,
+      "sha256": "02A90F8CEE16C98DFF60CBB982F5DC4A9664AFB477639B89380C426FEE6AC8B4"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-012.json",
+      "size": 315,
+      "sha256": "FAB08E60A2D85D3116D3B605758EF44FFD65611A93C201CB9287C60A9AC4A7FE"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-013.json",
+      "size": 316,
+      "sha256": "EEA5F5786477231D6EAEB68FFD2A1911F385761390D7273E40499C879527ACF2"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-014.json",
+      "size": 316,
+      "sha256": "35A5EB0071737D880249BCF5B4CDE33623C7F8065CED023FA28DC7BF73980BAE"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-015.json",
+      "size": 316,
+      "sha256": "9ABB9007C018441F308CEDB06CF589EBD0239E93F97932901D8B36B2CE820D05"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-016.json",
+      "size": 13778,
+      "sha256": "6BFB5A08416215ADE2B2CA7C091531598A50463CC22BA9C6DBE66938BA5B46D7"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-017.json",
+      "size": 32174,
+      "sha256": "F0269D8D8CE0B1CD9136BCEB5A95FD23AB27CD0EE5407B3E485540A7C7162943"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-018.json",
+      "size": 13780,
+      "sha256": "9BBEE7C289BC03268CAAD5A1C1899E373185134C1288C801652129F63FD95F0F"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat-prepare.trace-019.json",
+      "size": 180,
+      "sha256": "14FC215ADF3E3341136336D39A379D6353D2980372A8132763E2A255F135BC98"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat.dxf",
+      "size": 34685,
+      "sha256": "484A49A72FD558F122D9C00BC883775B1089C7275380F3BF5AD8ABAADE32EF67"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat.native-bends.dxf",
+      "size": 36972,
+      "sha256": "782A3B7306AA605E9439DA0E69A19B578300986F70D9462BA3536E4AA7C9C819"
+    },
+    {
+      "relativePath": "outputs\\L4\\flat.native-cut.dxf",
+      "size": 34944,
+      "sha256": "5E8C0FAA170DCD0F13927B703C9BDA3C5D5B111C5BEAD263341DCF34665E15EF"
+    },
+    {
+      "relativePath": "outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "size": 904963,
+      "sha256": "EC955B7E4C73191E9A601DD302CBCE2C8DA80D208E9312C7BCA6C43F94C19E19"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-001.json",
+      "size": 598,
+      "sha256": "A67CBD20E0FD75A0A729FAAD5E5AF02BB8F90C06F9B0687265C7B30194A8F1EA"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-002.json",
+      "size": 539,
+      "sha256": "6C6375C9DCF68D81E9B8898AD5DE8D184D73595195A8FFAAF7B10F899416E9C2"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-003.json",
+      "size": 15006,
+      "sha256": "FF629203AC9F971C05C49A01BE8BF1EEACAEF0FB74DE2416CE1B583A0EB7136F"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-004.json",
+      "size": 33637,
+      "sha256": "3369ADFE569F4026D01975DF3016A4E1B25E9E5FC1CE590755156EC700F88DF1"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-005.json",
+      "size": 820,
+      "sha256": "4188447ECACDE3D9426516CEFD6B5A08A7F33457E696D41D2E9C9FC42E40987D"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-006.json",
+      "size": 910,
+      "sha256": "E25DB5CA674503BFA0F50D9D08E88099D9D95EEA660EB2DEE2BC78CB8FD3E933"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-007.json",
+      "size": 357,
+      "sha256": "34D6A211D1F8F7AFEC6E7A70CBAF695758D76F3B5BFFF04AE9739B1CE7BEF32D"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-008.json",
+      "size": 188,
+      "sha256": "9032011670F7D85E547AA5D823FD3EA0D1E32270DC4C3E13C169E5ED640FF12B"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-009.json",
+      "size": 193,
+      "sha256": "961A2602D90ECB950C6623EE5EBD5A607BCDC49938D2DF28E288B9DAF33EAB37"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-010.json",
+      "size": 473,
+      "sha256": "988E2A31D9A7D9F5FA31D4A5829956ADDFBB130CC557CD4DDE7D8A6B705E254E"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-011.json",
+      "size": 191,
+      "sha256": "B814D9C27F0D30B7D5BCF91801F6352F23437A82E2CCEE16A69515DE9AC7142B"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-012.json",
+      "size": 447,
+      "sha256": "A3F9B1583309D8DE1A37433507F4E12F72B3647888512EA19680CB5A0E7646D0"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-013.json",
+      "size": 537,
+      "sha256": "8FA48F127FDD71559482FED95950CE41A2C05CA296F40098E68B881BC1F353A2"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-014.json",
+      "size": 15006,
+      "sha256": "1CA8FE173B4F320414B9ACB2BC47A026E9137EF29BAECC93DA19DDF1FE45E8AF"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-015.json",
+      "size": 33637,
+      "sha256": "C358CEBC0B80E6DB8D6CB72E43B87D59ABAB3B812F834A4F883303C23C3E5BEE"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-016.json",
+      "size": 825,
+      "sha256": "51EFFDB2758BB2C62707857D8AC1EF0DA08A1D1417C0F2564DEF4B80211CD602"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-017.json",
+      "size": 915,
+      "sha256": "23AC2544C4131DC1191D0FE4B998D387D1FB19BFF966FCDCAA88032A569D30D6"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-018.json",
+      "size": 363,
+      "sha256": "5DDF3FF1D78990B50095DD7E9E9A4400F36E46B0E7E9F4EB6A6731422936B662"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-019.json",
+      "size": 194,
+      "sha256": "A3A520DEE70F094161EC1DDBDBF836AF728EF0DF672D7C318DB20056092292D2"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-020.json",
+      "size": 199,
+      "sha256": "B90581C73ED75D2499C0B530F5577C38BD1C3D0BE0493A6FE42F06E356C41C2B"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-021.json",
+      "size": 479,
+      "sha256": "DD4DDC07BEC5A67AC3E4AD948789C0E7A2921645F441F6044876772481B97605"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-022.json",
+      "size": 197,
+      "sha256": "5F2C7A1FD4BE0CB1B1C4004040FDC17CBBD6291A4105E812AC57CEBF6574F253"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-export.trace-023.json",
+      "size": 453,
+      "sha256": "CE9CCCE3C0D28E3727EEA1A2146DACBFDE8CB074F2242D7CDA22F1374A748461"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-001.json",
+      "size": 15182,
+      "sha256": "3008B38C15AD277EF84DB2F89AF5734859AA410314B8344DA0FE5A72B59908E3"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-002.json",
+      "size": 17623,
+      "sha256": "629E5998158394FA74A3598DB34B0C99F81DF105AF462B7334906B7AEAFBF1EA"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-003.json",
+      "size": 302,
+      "sha256": "9BE605038ABF1385B6868870B9D5A2BB47025989AF1DD1E57C161BCEBF8EAF29"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-004.json",
+      "size": 316,
+      "sha256": "B862758511C136DFCB92A8B3D28D1B6FE13D1469E505AA5F6A10382D7B9AC9FB"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-005.json",
+      "size": 316,
+      "sha256": "216ED1B37A36511F1BD7802295005F416AD78DB1491F3B2742789BEC857A00E6"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-006.json",
+      "size": 316,
+      "sha256": "8381960F84820915E7E009774725B7CF1ACC5A40F1067B336122CA4F5BBC85EB"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-007.json",
+      "size": 316,
+      "sha256": "4F6EF223ABB1F30B4BFDEC6898EB741F97300C25976AE81980C6AFDF023BA1D9"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-008.json",
+      "size": 316,
+      "sha256": "92DACE408DA7B05B0451479F31F0D53D6D1D89F9CD9365A78A3105622228DB61"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-009.json",
+      "size": 316,
+      "sha256": "329AE7AA755CD297377EFD20D9EEA467389CB14DE7A3D79324169B8B711957DC"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-010.json",
+      "size": 316,
+      "sha256": "D1A6632BBBC380CA401CDFE7F5495533DAA1173FDF0FB8D75BCB9D6886CA07D1"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-011.json",
+      "size": 316,
+      "sha256": "DBA5B9C812362F47A9AB0512096898E1547DB5F6687873F633F3BFA3AA8F7BDF"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-012.json",
+      "size": 316,
+      "sha256": "4E5380A9705692FCCF11BFDD503DCCBB6F6161153AB4C836207347D64E945835"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-013.json",
+      "size": 316,
+      "sha256": "E27A1447B0DEE6A74D5FD81186BD35FEB2593F63E07D41F908EABEFB37526DC4"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-014.json",
+      "size": 316,
+      "sha256": "2215034526CFB45D25BBCD168619FA8FFC1FF9536AE42EC1C8661FB0C1DFE28D"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-015.json",
+      "size": 316,
+      "sha256": "7928650B155878F2813B7267B30CBB69986C24539AAAABF9E8BDB51B6FCA6CFE"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-016.json",
+      "size": 14974,
+      "sha256": "E0430DB032C8AF92EAFCB916528E3186EE7A2F107CDB5C0C9B3171FC9B2E3854"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-017.json",
+      "size": 33631,
+      "sha256": "ED65E107D02CE7E4794CB1637C895D66CF79AB37F37C501D8E093E2E1CBB0E97"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-018.json",
+      "size": 14976,
+      "sha256": "638F31789C4B2F9C5D430E6FAED314F66F96D6D09E74F66797D20E3F67D045D4"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat-prepare.trace-019.json",
+      "size": 180,
+      "sha256": "A2A1DEE7ACAE4F367BD96D3373AF322933447A7AC94277FB34E1DA0D5F897F28"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat.dxf",
+      "size": 34760,
+      "sha256": "7DCB9C52B11C8724A35F1E621A22005CF04736EBF104E9A670DBB20C15BD4390"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat.native-bends.dxf",
+      "size": 37047,
+      "sha256": "F635D88E4391018D83835F0D47856201170C32454DC3E69CD3601F832A782E79"
+    },
+    {
+      "relativePath": "outputs\\R1\\flat.native-cut.dxf",
+      "size": 35007,
+      "sha256": "051039B60B23FE84F7E7DAA1C6AE5BF7A8605ACA0D67264FC9E832FDE82A8767"
+    },
+    {
+      "relativePath": "outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "size": 908986,
+      "sha256": "4896FCB55C1746E8ECFB0DA9BD7C1415322445A90723A7C2AB06DF608156A7BC"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-001.json",
+      "size": 595,
+      "sha256": "EA305C8C1841D529453CB8B7CB74CBF3A42FF9B1C97916ED389334D84906810F"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-002.json",
+      "size": 536,
+      "sha256": "C14AF97AB384D9A5E82BFD903BACB44BB90CE380E819E6EC5A60A134EA639DA8"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-003.json",
+      "size": 15006,
+      "sha256": "CC3696130667B1B1E823747CCEAB0A8B735420DD109008D28AE1F66D14D1CE07"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-004.json",
+      "size": 32441,
+      "sha256": "8348BFC0BE3DA791C4D450137DC030903C44DDD6BEBE27E15A8A2C7354199732"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-005.json",
+      "size": 817,
+      "sha256": "1F1B0B3B843B36806340755885EA3806BDC976945B7CF7013FAD2FFA96BB8D7C"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-006.json",
+      "size": 907,
+      "sha256": "D0F0FE880DE1DC99CA494057C879EF3C56E9FC55D7AEA0F6185373F63DF799AC"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-007.json",
+      "size": 354,
+      "sha256": "00A01D485854D5588C12FCF77900A1E9B6FBEC3FFADD96D4984F34FC0E7E8269"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-008.json",
+      "size": 188,
+      "sha256": "0A989796587DEADC166DC1AEF793C59EDB55B50DD7B7B11809BEFD2B5AE62841"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-009.json",
+      "size": 193,
+      "sha256": "D81ED50F2579362036D3A889C53D838EA2C1EA436618E9ED50D630863F0C9A8D"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-010.json",
+      "size": 470,
+      "sha256": "197E3855C87E83B2DB40E0F5DEB01E385B3C05094CFBB0930B1600C1B5D6BBC1"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-011.json",
+      "size": 191,
+      "sha256": "723700C1E1B05E77C5CDB297553ACB0D0497EC2E04D37658A4AE062BB9C454C8"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-012.json",
+      "size": 444,
+      "sha256": "343604FC64B12A2634DFF34F14EBEC62C15EAF1662A9BE137C4BD4D7C4B2AA1F"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-013.json",
+      "size": 534,
+      "sha256": "9A4BE4A1424B393F6C979938C4F17B36BFCFDFAF5D1CABF24E6322B538C92EE1"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-014.json",
+      "size": 15006,
+      "sha256": "EAF63A75BEDB2B5E31ABFFA1E4F5B61504620798C38DA0B0C249689D85C1A0CC"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-015.json",
+      "size": 32441,
+      "sha256": "637A00AA429C9326AE5DC54DFC1BFACC39A4867C49EF1FA08571C64D7D220CEA"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-016.json",
+      "size": 822,
+      "sha256": "82A777BA270A412BAC216BA8337F2510235489EB31375F5E7FB86CA698C436A0"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-017.json",
+      "size": 912,
+      "sha256": "3A9BE6CC5DF3CFA5923E44F717E6526CBBD9029FB3B79D25107B1E40DBA53425"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-018.json",
+      "size": 360,
+      "sha256": "C7C50A015E52ADA353FF79DDCC84FF7A9EFAFE529726782BE838372120D809EA"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-019.json",
+      "size": 194,
+      "sha256": "4EF1003C25BDFA46F00FC20864C96CB5CA153B696DA2DDAF2325E9F231CC2AB9"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-020.json",
+      "size": 199,
+      "sha256": "5413C06070F6F4472C79782AAA491BF1AF5777A5F519FA128C52C81F5C25575F"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-021.json",
+      "size": 476,
+      "sha256": "D8DB30FC8393AB2EB552E13F7A26D7CE15203D132E89A8ED4E301A2F4DCC4C4B"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-022.json",
+      "size": 197,
+      "sha256": "061B4AB893FB713EF9D3348467DC5E7AF5F476FA2BA878074E7011A66F74E3C0"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-export.trace-023.json",
+      "size": 450,
+      "sha256": "5A80171D99F27C3BA00248B8B0F63E488A50BC5BCBF81F2A743D2ECEA13BD139"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-001.json",
+      "size": 15179,
+      "sha256": "3955FBA206DB0FB86E876AA5B2827170FFB4A0BE44E1613ABB14837BEFD8B857"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-002.json",
+      "size": 17623,
+      "sha256": "C800A086A4B9884F014EC9B679A225A3AF23AFC81FB2970217F5FF4819281F37"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-003.json",
+      "size": 302,
+      "sha256": "093BE5CDC8B92CDD7BFCFD8BFD4AB618037DAF39F65ADF9B11EDAD01D9B0A9C3"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-004.json",
+      "size": 316,
+      "sha256": "995C271F86B8341767B84C06626FC8EC9AF891561478BCDEB9C771FE29489BF9"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-005.json",
+      "size": 316,
+      "sha256": "D811C48DC40254EFA690D7CC51085D579D69AAB12ED49FF23A9BA9D7EE37A91B"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-006.json",
+      "size": 316,
+      "sha256": "AECEEB9CF9F10612E86ACB2E3CAB73C488D59D1E2D3774A8014F10825247CB09"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-007.json",
+      "size": 316,
+      "sha256": "4B8B0BF0637F7D518D718D817CE7EF2801BF5ADB6F35400A65CA1ACEA17EC3E4"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-008.json",
+      "size": 316,
+      "sha256": "E4EB88B37EC04FC48B6BCC4C0263243FE8C590D2B333A3D3BDE0A89C645336BF"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-009.json",
+      "size": 316,
+      "sha256": "8A25631392F2AC1712A868CE842FDA2404579C1A29347B8A304E7A5574130254"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-010.json",
+      "size": 316,
+      "sha256": "662B58C756489C95B4A92851ADFE72C8A5BBE2E6C502E0B8665664DA1A78B690"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-011.json",
+      "size": 316,
+      "sha256": "71DB56D185591E5E4F502DE5CA554A9E7185E24432858F64E39595690A462A6A"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-012.json",
+      "size": 316,
+      "sha256": "2BFC8A096B868E9A464A58DE8A9D6BB18E35A80719B08AC0AB133EC7AC4684A9"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-013.json",
+      "size": 316,
+      "sha256": "AEB456D26411BAB7D9647A8F895985941951E7872F6BC7F6F8040B38E117D40E"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-014.json",
+      "size": 316,
+      "sha256": "BC16A4B2B0DCDE4388CE479D80CBB34FC6DE3F35C2F9B39D7310B7E01344AE62"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-015.json",
+      "size": 316,
+      "sha256": "BE6DE3740BEA4530BDF0502554DA73959ED88957F509C1AB60E9D8D6440B1D17"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-016.json",
+      "size": 14974,
+      "sha256": "F98625E8863914EEC5237AA1C4CE729564968014EBF884046B10F8AC9F19C7C4"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-017.json",
+      "size": 32439,
+      "sha256": "8CB88D947B136F3D852384A72D9BFED5E054B4752BA2058032AAAF09E6087715"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-018.json",
+      "size": 14976,
+      "sha256": "F7A27BACCFC8D8C1A8953AF03FA059FC095160D30DCC8A2A3158B3B9247E8D09"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat-prepare.trace-019.json",
+      "size": 180,
+      "sha256": "7CAB334955B023E177C770661CEBF6A6C5BFD8F245976AC0880D93B737EC32B5"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat.dxf",
+      "size": 34379,
+      "sha256": "EF567ACCA84228BA6D5C6DFD860B129BEA642A07432A919270452248B63012D0"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat.native-bends.dxf",
+      "size": 36666,
+      "sha256": "24DB8BC269A46AA9E20EFDAFE5EFAECE59B8E51993AC7300B847D0533334E4A4"
+    },
+    {
+      "relativePath": "outputs\\R3\\flat.native-cut.dxf",
+      "size": 34690,
+      "sha256": "A27CC32F0A439E38730BA5E9ABE068D9B0DDE1552AEC0D430E0DDBFD41528748"
+    },
+    {
+      "relativePath": "outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "size": 893080,
+      "sha256": "3F0F6F77B7D85462DB68F1511235C2A9396BF47C63F0897D42B0633AEE35C95C"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-001.json",
+      "size": 596,
+      "sha256": "EBE5878BD525E12B8AF4F9755B5D26D0B056D652FE80225354544C77A1A104F7"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-002.json",
+      "size": 537,
+      "sha256": "7C1B65B6CEA49A94F56A21E863D75CC215D1F0D8B1C2F58B869F3F28771285F1"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-003.json",
+      "size": 15006,
+      "sha256": "F6A87B3719E32C5E222DD4523AE2E08AE9158998200327A188051A95C5A6A196"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-004.json",
+      "size": 31556,
+      "sha256": "FA8915A5C003A85E4109A4862F50E864980F800865CD04A9139FF13022657873"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-005.json",
+      "size": 818,
+      "sha256": "71BE408B3FCA23238BC5DC739B0BCF58EC3C6D4223494B5B1165265734F4CE0C"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-006.json",
+      "size": 908,
+      "sha256": "121D10A7EFF1887AEC747692510AB1B948584D7CD9078A39775CE1719853FD99"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-007.json",
+      "size": 355,
+      "sha256": "F10171E6F7DBB5CF3289149B7C9AB3D86D30FEF4DD8760EF4203639C373A5A18"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-008.json",
+      "size": 188,
+      "sha256": "9A2529AA839D3643F8ADB11A459048D3FB0CCA1262914310D8C5506F3B4F0185"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-009.json",
+      "size": 193,
+      "sha256": "1E44209DE64325978C9D5AFD63EBFEDCF3C1199F76DAE01D13E62B7BEF2F44E1"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-010.json",
+      "size": 471,
+      "sha256": "D511096049AD841886B367E8F38CF3B564B2A33C907C6C6F0F2641BE3991EFA9"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-011.json",
+      "size": 191,
+      "sha256": "F27C9FB15D8EA6C28098056AF5043276DD3EB5CD3DF057F8CBF09D132102689C"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-012.json",
+      "size": 445,
+      "sha256": "53193538DF7B46ECF83A98CAA9B66677A7ED4AE23D3BBE499918DAF3853D53F6"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-013.json",
+      "size": 535,
+      "sha256": "BA36E93ABBBC0E0CA5451F52F431212EB1DCA9A5F83FA360BAE8B3D71DE2369F"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-014.json",
+      "size": 15006,
+      "sha256": "6E2AD2892853CE854D7E25620D85263FB0EA5B3A4B4390C6CB4166AA5D501D6B"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-015.json",
+      "size": 31556,
+      "sha256": "4DA27FD6F390534766970734E8D56A54EFAC95DFA24BD245A03B1A669D74F7D8"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-016.json",
+      "size": 823,
+      "sha256": "238282DCAF9D04D4AC45FAC49873AA83723920C0C3B97FA75A0F102B09734511"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-017.json",
+      "size": 913,
+      "sha256": "0A4B307A8454778FAE379DB86883B2D90C6957B1AF12F00B99E57F7F6D682E9F"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-018.json",
+      "size": 361,
+      "sha256": "2C6A0D998E77C7A651D5100BF8F88098741BB7892179FDBFD26F5D160FE2A670"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-019.json",
+      "size": 194,
+      "sha256": "9E4E0DA4B795CA5E8DCCEE68C898F3E5181623D5A83914D73A3FEF444BFEAA83"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-020.json",
+      "size": 199,
+      "sha256": "FBD11E41EF49BE15410CA4BB540FAA278DF3FE6AE79B5BF667E50ED5B9F98B07"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-021.json",
+      "size": 477,
+      "sha256": "4FC407D7B0A80FB7AA8E1A2DE3C5F8A068740E0C7C95C66DD5AEAAE9AB6CADF5"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-022.json",
+      "size": 197,
+      "sha256": "1E2660A3973D188193842839668488261CC41A57D6175650E371C6808B7B3445"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-export.trace-023.json",
+      "size": 451,
+      "sha256": "C900BCD645B998F51EB70737AC1ED71E0549A2275267A4BF43FA26A4468163D3"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-001.json",
+      "size": 15180,
+      "sha256": "C8B51D1DFEDFED2362158CB3200F5D2CC9EB7C7514ADEA160B7387A891E7B8C3"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-002.json",
+      "size": 17623,
+      "sha256": "E79B79FE13827C667F1FB1FF68AC49952C21450E7CD4E3DA0B9AD07BE51E5C84"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-003.json",
+      "size": 302,
+      "sha256": "C9D949FCA61D09E384542EC18F6153F27BCDD664C072EBD8DE78088582030CB3"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-004.json",
+      "size": 316,
+      "sha256": "FCAFCEBE6013E69A6AB8E8AB9BE5973A6B54EDF7202BA29FC9AAB72A012B21DB"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-005.json",
+      "size": 316,
+      "sha256": "234A1EA5B43AA4E2562E32A5764F973940BCA7F1A0DD6AD54E35EECB97C89494"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-006.json",
+      "size": 316,
+      "sha256": "7F2ABC1295128F4B407778873B8A7BF0DDB8ECE9493512E2106B5FB3C85AF641"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-007.json",
+      "size": 316,
+      "sha256": "8BC81701EC5D899C2CD65E66672F9366F1B19E28EF927B9307CD83DEAF0F214B"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-008.json",
+      "size": 316,
+      "sha256": "1DF55F6C41D53608FD09FDBC16EC3A2D20C2C1923127D75B010143ECE79A5015"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-009.json",
+      "size": 316,
+      "sha256": "ADE0338527500C9A904CAF9A72B77046B51B8429D02CFDDD3F1D0218410BA72D"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-010.json",
+      "size": 316,
+      "sha256": "D74F3CD21021D82721EA1E689B7A35E0E8CCE685C2999DD7BEF9F57FB0981592"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-011.json",
+      "size": 316,
+      "sha256": "ABF3A4D6B8B83806C49425E935DAE83632789E6718C20AF27107DAE515B30A1F"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-012.json",
+      "size": 316,
+      "sha256": "C4E41B313D0BA6AA90BAA72DEB68A03D90A1849990A5DB31520A04FB2133BCCA"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-013.json",
+      "size": 316,
+      "sha256": "3B5F26E33E99B96562EF055BB1C0BB77D61DF38538A97725BF684E6FA746DB8E"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-014.json",
+      "size": 316,
+      "sha256": "711F72844C596FAF0FB19776DCFC3EC1A6FD9B01A93184B22329A0CABC6C24B3"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-015.json",
+      "size": 316,
+      "sha256": "6D295462B48D24AC7DD114FB68EFCC80293CA456C028F4BFC5A855CD8D2817B9"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-016.json",
+      "size": 14974,
+      "sha256": "1A156C768427F1725B7767F9CE6E03E3234F1226BC5EF100722B0D71BFEE80CB"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-017.json",
+      "size": 31562,
+      "sha256": "A2E1087D83785FED03E255021FA4E9BA2D81939A79AA3D026BF1A5EDD2D924A3"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-018.json",
+      "size": 14976,
+      "sha256": "D045016A2D7539364CB9519F6FB956596C8C6903022BCFF1D23FE46E01AD2DCC"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat-prepare.trace-019.json",
+      "size": 180,
+      "sha256": "6747EAA11CF0EA667D1FA0BB106E8482692E4CCB76B4553AA7F78D48ABE37F13"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat.dxf",
+      "size": 34699,
+      "sha256": "831EA420D555F38A95CB6BB55ABC176805ECFB210CB56A18FE45FE41DE34B21A"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat.native-bends.dxf",
+      "size": 36986,
+      "sha256": "0B43A3F3E84C5FFD74889B35176611604CDDF0D23A97848A4D4DFBAD0FAEED1B"
+    },
+    {
+      "relativePath": "outputs\\R5\\flat.native-cut.dxf",
+      "size": 34956,
+      "sha256": "63CCF348024A7862DFC695FB6C220324039CE4041FFD143CC3235C75048C97FB"
+    },
+    {
+      "relativePath": "outputs\\output-manifest.json",
+      "size": 748717,
+      "sha256": "98813AA0F8607896C41B7B420BBA45D3E87E498759965ADE1ABDF5FCEF32EB04"
+    },
+    {
+      "relativePath": "plastic_bushing_W437_H471p25.SLDPRT",
+      "size": 68745,
+      "sha256": "01B4DCCAF0CAF0EDB3EC433EC98D7A4889805C4D42D994FA0EFCD69C2C6425BE"
+    },
+    {
+      "relativePath": "top_latch_left_W437_H471p25.SLDPRT",
+      "size": 67768,
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847"
+    },
+    {
+      "relativePath": "top_latch_right_W437_H471p25.SLDPRT",
+      "size": 69024,
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97"
+    },
+    {
+      "relativePath": "u_hook_pad_W437_H471p25.SLDPRT",
+      "size": 169919,
+      "sha256": "FDF6AF27B181C461F2CCAA290A733419E954C78D7224C7FB2A6DAE1529C814A8"
+    },
+    {
+      "relativePath": "上盖 模型.sldprt",
+      "size": 649932,
+      "sha256": "8A07BBC031B901567BCEB9378A97D61146ECA456A49662E6990B8DD8369AA328"
+    },
+    {
+      "relativePath": "上盖壳体前侧板.sldprt",
+      "size": 257942,
+      "sha256": "C5D80B12C00F2270D8862C321EC86B1AAF75800215C40C70B03584931FD6680F"
+    },
+    {
+      "relativePath": "上盖壳体右侧板.SLDPRT",
+      "size": 483570,
+      "sha256": "42EE30D2A47652F3F846A1325937B798E21948BBD34CEF3CD4447F8BF722A49C"
+    },
+    {
+      "relativePath": "上盖壳体后侧板.sldprt",
+      "size": 394947,
+      "sha256": "3D696DC3E1FC54FFCDA0223BF0DC666122FDEBFB12F5FF272A25AA464FCCFAE0"
+    },
+    {
+      "relativePath": "上盖壳体左侧板.sldprt",
+      "size": 364416,
+      "sha256": "72BA5A2759C84F4F7050C8D00B8979D8C299B4A90726DD392122E21C1F88932F"
+    },
+    {
+      "relativePath": "上盖壳体底板.sldprt",
+      "size": 437274,
+      "sha256": "B4B7BD75EE719F6364D8B628B54E903F4D65CF5DBE148C417B04FE7BF4E508BC"
+    },
+    {
+      "relativePath": "上盖焊接.SLDASM",
+      "size": 389910,
+      "sha256": "6B8482119E02525B5F170F00EBC2CF588167EC2632D6E4CB4F19B1828E706E4F"
+    },
+    {
+      "relativePath": "应急维护门焊接_参数化.SLDASM",
+      "size": 93504,
+      "sha256": "E35E906F82562DD1D3AFD7C1B6EEE0A6BC8D4E14FF66134D6118F8245C96B400"
+    },
+    {
+      "relativePath": "底座 模型.sldprt",
+      "size": 381122,
+      "sha256": "5906DE63BE697333B1EC9ABE76431226DC8EFE3D93A20C8919B2BB65F8DDDCCF"
+    },
+    {
+      "relativePath": "底座加强筋.sldprt",
+      "size": 205641,
+      "sha256": "F482AD64422B325130CE722A45D8D594E3E14FEE419FDD5EC6E56DA5C9C1DE64"
+    },
+    {
+      "relativePath": "底座外框.sldprt",
+      "size": 372253,
+      "sha256": "01635D1AD69FA0D9A6B891CA92DE1D4B764F2ECC5DF26B8BF7EB0D636A91658E"
+    },
+    {
+      "relativePath": "底座底板.sldprt",
+      "size": 572329,
+      "sha256": "08D53C486CCC7B4327E920FB743E7791E41E0705222DB21E376856626901DA8A"
+    },
+    {
+      "relativePath": "底座焊接.SLDASM",
+      "size": 288957,
+      "sha256": "CA727DD7ABD61B73E60B9CF7A8419682D652238E428F37C9A0BD4F1BF8643804"
+    },
+    {
+      "relativePath": "标准寄存柜 模型.SLDPRT",
+      "size": 2660654,
+      "sha256": "BE6405660623CCF262B4DAE3D5D7FB120751EEF7E4A4ACAFA450DC6C891B34A2"
+    },
+    {
+      "relativePath": "箱体侧板加强筋1.sldprt",
+      "size": 338949,
+      "sha256": "9D62BA2D593746899C263AA2E02CDBB59F3FC9B7468D9D769FC073CC4141314F"
+    },
+    {
+      "relativePath": "箱体侧板加强筋2.sldprt",
+      "size": 223996,
+      "sha256": "9DC83F35F61D9633568D631B84CA37EB6F6638A5E099C72CF78CFEF2A877385E"
+    },
+    {
+      "relativePath": "箱体右侧板.sldprt",
+      "size": 534691,
+      "sha256": "DBD899DD80F78584B5B29CCCDA1B0BE1BE3BD1F0639C1C59198C50EB348133E4"
+    },
+    {
+      "relativePath": "箱体右侧板焊接.SLDASM",
+      "size": 466136,
+      "sha256": "010C145727F72AEE85C3F13CBC8524B699208299A53AD6F36F0B89332BA7C845"
+    },
+    {
+      "relativePath": "箱体左侧板.sldprt",
+      "size": 553778,
+      "sha256": "A7EDD717A79841CA225DD9F9D16FB41A3A175551D16B631CD7C2B1F2481876C0"
+    },
+    {
+      "relativePath": "箱体左侧板焊接.sldasm",
+      "size": 399493,
+      "sha256": "4FD841819DE1F03B70645D81842164B5A4A412E0DF39968DCA46057CD9110DC9"
+    },
+    {
+      "relativePath": "箱体横层板L.sldprt",
+      "size": 512816,
+      "sha256": "85A71182C56735268C7FD19AF06936AFD98742910298C1B531DAC346E8E98F36"
+    },
+    {
+      "relativePath": "箱体横层板L焊接.SLDASM",
+      "size": 118108,
+      "sha256": "F86D0F8BA049D532187213D9FA903CBE129223954283FE4A377D89322469AA7F"
+    },
+    {
+      "relativePath": "箱体横层板R.SLDPRT",
+      "size": 522972,
+      "sha256": "0266FB7E31207A81EB7F668C9435C6218FDD1473CB4EE96A8C560677B768AC89"
+    },
+    {
+      "relativePath": "箱体横层板R焊接.SLDASM",
+      "size": 114896,
+      "sha256": "D04B9255088D37305514D44CE082B1696F6129EDCE3ABE2637533CB068017F53"
+    },
+    {
+      "relativePath": "箱体横层板加强筋.SLDPRT",
+      "size": 182977,
+      "sha256": "8E85213F689BDC37E11292EBFD2FFDBDE616537ED2EAD616A7E19D4DE450F242"
+    },
+    {
+      "relativePath": "箱体竖隔板L.sldprt",
+      "size": 959593,
+      "sha256": "644A9DD5BB3856277D802B1C8B7D10F0338D32CBCFEB67B6D379B6DC0565C83A"
+    },
+    {
+      "relativePath": "箱体竖隔板L焊接.SLDASM",
+      "size": 420259,
+      "sha256": "9378F6BB060F8207ABEA22AFAEA6AC55E826F5BD770E302876DE8796FF29D326"
+    },
+    {
+      "relativePath": "箱体竖隔板R_parametric.SLDPRT",
+      "size": 900230,
+      "sha256": "781E19A9D1FCB77E7EE5D95D3A7DB02F0F08B966E5BD7D3C821CC30059614ACB"
+    },
+    {
+      "relativePath": "箱体竖隔板R参数源.SLDPRT",
+      "size": 958677,
+      "sha256": "1D112988D40D5DB6757EF74DD11D4F3231232353068923CD93543A073EA80A8F"
+    },
+    {
+      "relativePath": "箱体竖隔板R焊接.SLDASM",
+      "size": 269093,
+      "sha256": "A9550DB33FB49B6F7C52A9CB3E9F8B91AC7997395F1DC92C20F955F7BD2282BA"
+    },
+    {
+      "relativePath": "箱体竖隔板加强件.sldprt",
+      "size": 274140,
+      "sha256": "DE08D07A7DF8E52F5486B666DE1F4678650D176564CE19955D238E798332476F"
+    },
+    {
+      "relativePath": "维护门锁支架_原生.SLDPRT",
+      "size": 175991,
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9"
+    },
+    {
+      "relativePath": "螺母M12.SLDPRT",
+      "size": 166179,
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD"
+    },
+    {
+      "relativePath": "调整脚 M12X60(模型).SLDPRT",
+      "size": 100245,
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344"
+    },
+    {
+      "relativePath": "锁控维护条_源钣金.SLDPRT",
+      "size": 257836,
+      "sha256": "FEB818FC23B72AA9A68C1F6C7C4CAB3283BCE0824338601E54D60C669E7F7BDB"
+    },
+    {
+      "relativePath": "门框 上.sldprt",
+      "size": 341273,
+      "sha256": "0F1CFE1D41EB2C676FC439D5811ACD5C58FC61F82FD27BBD373DDB3B1CF7816C"
+    },
+    {
+      "relativePath": "门框 下.sldprt",
+      "size": 342662,
+      "sha256": "310473166B4C60BCC3AEE5B0D584A66FB85EF7208D106385397CD34D1CD0F48C"
+    },
+    {
+      "relativePath": "门框 右.sldprt",
+      "size": 365037,
+      "sha256": "DC9DAFE98426E0D184BC5EF43FC9A25B4D84E615041920FA9DBE94719B90F580"
+    },
+    {
+      "relativePath": "门框 左.sldprt",
+      "size": 379116,
+      "sha256": "74841A21AFBE6C6C15869B24FBC40AC7CA3C008E8712D720ECDCE81FD15154C0"
+    },
+    {
+      "relativePath": "门框 横隔板.sldprt",
+      "size": 226470,
+      "sha256": "D041150E9A4900AA43ED505BC7B2DDCB09D50293B573DD0F2DDAA324E9EFEDB6"
+    },
+    {
+      "relativePath": "门框 横隔板R.SLDPRT",
+      "size": 240362,
+      "sha256": "066D05C1D7D70A698B6439D312478EBA213EBB2683D20A64A604EF646392794A"
+    },
+    {
+      "relativePath": "门框 竖隔板L.sldprt",
+      "size": 514074,
+      "sha256": "97B9A4F634EF1921E7B89BAA73BC21CCC9EF8B909C5B17B7C5FC991BF07BB1BE"
+    },
+    {
+      "relativePath": "门框 竖隔板R.SLDPRT",
+      "size": 444452,
+      "sha256": "3D9981D9A8D838EEABC4EC3383A062F3312508A087483FBE750CBECAAC9A60A8"
+    },
+    {
+      "relativePath": "门框焊接.sldasm",
+      "size": 377889,
+      "sha256": "81757C27A9C5FF5A9CA67E952FF6E36C2BCE5CC7DF9E384B0571BE9960E2EDEA"
+    }
+  ]
+}

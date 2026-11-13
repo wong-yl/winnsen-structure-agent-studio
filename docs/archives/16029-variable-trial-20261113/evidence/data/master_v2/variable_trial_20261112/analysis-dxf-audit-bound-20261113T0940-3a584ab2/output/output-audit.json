@@ -1,0 +1,316 @@
+{
+  "schema": "16029.variable-trial.output-audit.v2",
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153",
+  "nativeResultSha256": "4B7EEF734035173438CB3A90B2D01706BA13F0525E81BD72D8919097FFC7B4BD",
+  "outputScope": "parts_dxf_only",
+  "drawingStatus": "deferred_by_user_20261113",
+  "scopeEvidence": {
+    "jobSha256": "0B14C97692E6E22F8CBCCF12C4486BB571D4BB7C03F2AC7E17D36D5320EB3B68",
+    "manifestPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\output-manifest.json",
+    "manifestSha256": "3BDEE6AB3657717CE04DF04143A3882DE3CBAD92E928F6F1F637B7A8DABE113A"
+  },
+  "caseCount": 6,
+  "cases": [
+    {
+      "case": "L0",
+      "part": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "hand": "L",
+      "widthMm": 437,
+      "heightMm": 471.25,
+      "dxfGeometryPass": true,
+      "dxfDirectionPass": false,
+      "extents": {
+        "min": [
+          -97.0,
+          -145.875
+        ],
+        "max": [
+          376.4,
+          361.775
+        ],
+        "width": 473.4,
+        "height": 507.65
+      },
+      "bendCount": 12,
+      "dxfErrors": [],
+      "pdfStructuralPass": null,
+      "pdfFramePass": null,
+      "drawingStatus": "deferred_by_user_20261113",
+      "pdfCheckSkipped": true,
+      "nativeHoleGeometryPass": true,
+      "completeCutGeometryEquivalent": true,
+      "wholeDictionaryEqual": true,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "nativeReadbackDifferenceCount": 0,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "cutMappingCandidateCount": 2,
+      "cutMappingDeterminants": [
+        1,
+        -1
+      ],
+      "holesEquivalentUnderAllCandidates": true,
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "historicalGeometry": {
+        "certificate": "D:\\Winnsen_Structure_Agent_Studio\\data\\review_portal_runtime\\readonly_open_repair_20261105_1920\\continue20_door_export_20261108\\door_dxf_certificate20_door_panel_left_W437_H471p25.json",
+        "certificateSha256": "179EB9752967EA6020A7026D1F5C8185B4DD9833D2DAEC2F5883A256564E29F1",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\review_portal_runtime\\readonly_open_repair_20261105_1920\\continue20_door_export_20261108\\door_tool\\native_door_export_run_20261108195711_8d0bc171\\door_left_legacy_none_option0.dxf",
+        "sha256": "3C2904AC706E28D1982A63AFB0ADBB5E623EC80F567B301EBDFA6BBE28D81DC2",
+        "recordedSha256Matches": true,
+        "translationOnlyFullGeometryEqual": true,
+        "missingPrimitiveCount": 0,
+        "extraPrimitiveCount": 0,
+        "coordinateRoundingMm": 1e-05,
+        "rotationMirrorScaleUsed": false
+      },
+      "visualReview": "pending"
+    },
+    {
+      "case": "R1",
+      "part": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "hand": "R",
+      "widthMm": 437,
+      "heightMm": 471.25,
+      "dxfGeometryPass": true,
+      "dxfDirectionPass": false,
+      "extents": {
+        "min": [
+          -97.0,
+          -145.875
+        ],
+        "max": [
+          376.4,
+          361.775
+        ],
+        "width": 473.4,
+        "height": 507.65
+      },
+      "bendCount": 12,
+      "dxfErrors": [],
+      "pdfStructuralPass": null,
+      "pdfFramePass": null,
+      "drawingStatus": "deferred_by_user_20261113",
+      "pdfCheckSkipped": true,
+      "nativeHoleGeometryPass": true,
+      "completeCutGeometryEquivalent": true,
+      "wholeDictionaryEqual": false,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "nativeReadbackDifferenceCount": 12,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "cutMappingCandidateCount": 2,
+      "cutMappingDeterminants": [
+        -1,
+        1
+      ],
+      "holesEquivalentUnderAllCandidates": true,
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "historicalGeometry": {
+        "certificate": "D:\\Winnsen_Structure_Agent_Studio\\data\\review_portal_runtime\\readonly_open_repair_20261105_1920\\continue20_door_export_20261108\\door_dxf_certificate20_door_panel_right_W437_H471p25.json",
+        "certificateSha256": "0E3DB5225F2841570FE39E20B931BA98139E01A1ACADEFA3C9BF86051FDAE4B7",
+        "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\review_portal_runtime\\readonly_open_repair_20261105_1920\\continue20_door_export_20261108\\door_tool\\native_door_export_run_20261108200255_4ec2c22a\\door_right_legacy_none_option0.dxf",
+        "sha256": "F69C9D6307F7D735C16E19F5261FFBB3BAF74EE889258A18283247E5D2F66109",
+        "recordedSha256Matches": true,
+        "translationOnlyFullGeometryEqual": true,
+        "missingPrimitiveCount": 0,
+        "extraPrimitiveCount": 0,
+        "coordinateRoundingMm": 1e-05,
+        "rotationMirrorScaleUsed": false
+      },
+      "visualReview": "pending"
+    },
+    {
+      "case": "L2",
+      "part": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "hand": "L",
+      "widthMm": 287,
+      "heightMm": 200,
+      "dxfGeometryPass": true,
+      "dxfDirectionPass": false,
+      "extents": {
+        "min": [
+          -22.0,
+          -10.25
+        ],
+        "max": [
+          301.4,
+          226.15
+        ],
+        "width": 323.4,
+        "height": 236.4
+      },
+      "bendCount": 12,
+      "dxfErrors": [],
+      "pdfStructuralPass": null,
+      "pdfFramePass": null,
+      "drawingStatus": "deferred_by_user_20261113",
+      "pdfCheckSkipped": true,
+      "nativeHoleGeometryPass": true,
+      "completeCutGeometryEquivalent": true,
+      "wholeDictionaryEqual": false,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "nativeReadbackDifferenceCount": 2,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "cutMappingCandidateCount": 2,
+      "cutMappingDeterminants": [
+        1,
+        -1
+      ],
+      "holesEquivalentUnderAllCandidates": true,
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "historicalGeometry": null,
+      "visualReview": "pending"
+    },
+    {
+      "case": "R3",
+      "part": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "hand": "R",
+      "widthMm": 287,
+      "heightMm": 200,
+      "dxfGeometryPass": true,
+      "dxfDirectionPass": false,
+      "extents": {
+        "min": [
+          -22.0,
+          -10.25
+        ],
+        "max": [
+          301.4,
+          226.15
+        ],
+        "width": 323.4,
+        "height": 236.4
+      },
+      "bendCount": 12,
+      "dxfErrors": [],
+      "pdfStructuralPass": null,
+      "pdfFramePass": null,
+      "drawingStatus": "deferred_by_user_20261113",
+      "pdfCheckSkipped": true,
+      "nativeHoleGeometryPass": true,
+      "completeCutGeometryEquivalent": true,
+      "wholeDictionaryEqual": false,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "nativeReadbackDifferenceCount": 4,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "cutMappingCandidateCount": 2,
+      "cutMappingDeterminants": [
+        -1,
+        1
+      ],
+      "holesEquivalentUnderAllCandidates": true,
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "historicalGeometry": null,
+      "visualReview": "pending"
+    },
+    {
+      "case": "L4",
+      "part": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "hand": "L",
+      "widthMm": 537,
+      "heightMm": 1000,
+      "dxfGeometryPass": true,
+      "dxfDirectionPass": false,
+      "extents": {
+        "min": [
+          -147.0,
+          -410.25
+        ],
+        "max": [
+          426.4,
+          626.15
+        ],
+        "width": 573.4,
+        "height": 1036.4
+      },
+      "bendCount": 12,
+      "dxfErrors": [],
+      "pdfStructuralPass": null,
+      "pdfFramePass": null,
+      "drawingStatus": "deferred_by_user_20261113",
+      "pdfCheckSkipped": true,
+      "nativeHoleGeometryPass": true,
+      "completeCutGeometryEquivalent": true,
+      "wholeDictionaryEqual": false,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "nativeReadbackDifferenceCount": 17,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "cutMappingCandidateCount": 2,
+      "cutMappingDeterminants": [
+        1,
+        -1
+      ],
+      "holesEquivalentUnderAllCandidates": true,
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "historicalGeometry": null,
+      "visualReview": "pending"
+    },
+    {
+      "case": "R5",
+      "part": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "hand": "R",
+      "widthMm": 537,
+      "heightMm": 1000,
+      "dxfGeometryPass": true,
+      "dxfDirectionPass": false,
+      "extents": {
+        "min": [
+          -147.0,
+          -410.25
+        ],
+        "max": [
+          426.4,
+          626.15
+        ],
+        "width": 573.4,
+        "height": 1036.4
+      },
+      "bendCount": 12,
+      "dxfErrors": [],
+      "pdfStructuralPass": null,
+      "pdfFramePass": null,
+      "drawingStatus": "deferred_by_user_20261113",
+      "pdfCheckSkipped": true,
+      "nativeHoleGeometryPass": true,
+      "completeCutGeometryEquivalent": true,
+      "wholeDictionaryEqual": false,
+      "identityExact": true,
+      "nativeReadbackEquivalent": true,
+      "nativeReadbackDifferenceCount": 4,
+      "coordinateMappingUniqueInSearchedFamily": false,
+      "cutMappingCandidateCount": 2,
+      "cutMappingDeterminants": [
+        -1,
+        1
+      ],
+      "holesEquivalentUnderAllCandidates": true,
+      "handednessProvenByThisComparison": false,
+      "manufacturingOrientationVerified": false,
+      "historicalGeometry": null,
+      "visualReview": "pending"
+    }
+  ],
+  "dxfGeometryScopePass": true,
+  "nativeBatchSupervisionAccepted": true,
+  "runnerSuccessRecord": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\result.json",
+    "exists": true,
+    "sha256": "EB9BBC7CA3B5D3AD4F663E02845AA67D55B0CEC5F60C0C23321C8A34639AB3AD",
+    "reason": "RUNNER_SUCCESS_RECORD_PRESENT"
+  },
+  "dxfDirectionPass": false,
+  "dxfTechnicalPass": false,
+  "geometryScope": "DXF units, contour, native flat size, holes, CUT mapping and baseline historical full geometry",
+  "directionScope": "native flat-view association only; manufacturing orientation remains unverified",
+  "fullPlanPass": false,
+  "production_release": false,
+  "visualReview": "pending"
+}

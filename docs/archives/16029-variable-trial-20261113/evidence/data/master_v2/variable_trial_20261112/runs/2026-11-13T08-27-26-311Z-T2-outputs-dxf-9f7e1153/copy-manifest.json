@@ -1,0 +1,307 @@
+{
+  "source": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-12T06-16-10-718Z-T1-matrix\\cad",
+  "target": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad",
+  "excludedRelativeDirectories": [],
+  "files": [
+    {
+      "relativePath": "16029_1000W_2000H_500D.SLDASM",
+      "size": 2063522,
+      "sha256": "52BC9A094D72A54CEE7BD4BD38949F7EA567D252FCA0DE91C41DA757735F3FFC"
+    },
+    {
+      "relativePath": "circlip_W437_H471p25.SLDPRT",
+      "size": 83536,
+      "sha256": "73F21840CEA9916709C9D77EA8D13DE94A36FCEAD9B744056FEADB3E1688C9F4"
+    },
+    {
+      "relativePath": "door_hinge_pin_W437_H471p25.SLDPRT",
+      "size": 71222,
+      "sha256": "BC7BD32EA5F4C4259367B56816D8517BDC6108394CD8CE58BC38D044480FAE30"
+    },
+    {
+      "relativePath": "door_panel_left_W437_H471p25.SLDPRT",
+      "size": 398897,
+      "sha256": "9C4B6083F0EDCB1B2BBB670266D7E942E7207B889EA540678E1C0E4B68BACC6D"
+    },
+    {
+      "relativePath": "door_panel_right_W437_H471p25.SLDPRT",
+      "size": 518516,
+      "sha256": "811EB6B956C5E7651B0FE1D5E85F45F402B8DB42604310979F7FEC64AB4688C5"
+    },
+    {
+      "relativePath": "door_stiffener_W437_H471p25.SLDPRT",
+      "size": 122091,
+      "sha256": "6B48201626DC342996F53B4E7473CC95E68FF7F2D3F8436AD0AEDC88B891F2A9"
+    },
+    {
+      "relativePath": "door_weld_left_W437_H471p25.SLDASM",
+      "size": 129055,
+      "sha256": "A454C0DB7B9394DA98145740D87212167814258CC989A8898C6D9B3B59163F22"
+    },
+    {
+      "relativePath": "door_weld_right_W437_H471p25.SLDASM",
+      "size": 130343,
+      "sha256": "36A3D66CF858B207B73C59B3976CEE55F92752BC7970BD3A13583EF3CE2153F9"
+    },
+    {
+      "relativePath": "hinge_latch_plate_W437_H471p25.SLDPRT",
+      "size": 168506,
+      "sha256": "C54235D39F401011013B12C809ADFEEEB1C53EB10A59C2EEC5C88BA4C603A8FA"
+    },
+    {
+      "relativePath": "mechanical_lock_tongue_W437_H471p25.SLDPRT",
+      "size": 95595,
+      "sha256": "0BC8361FE25361C0A1D8B1EE69AA625E766141B22486A3A9BFCB94D697A521D9"
+    },
+    {
+      "relativePath": "ordinary_door_left_W437_H471p25.SLDASM",
+      "size": 177950,
+      "sha256": "912A67327592903DC0B285B39AAF08469B38F0A8A326F02E365D201B017F5656"
+    },
+    {
+      "relativePath": "ordinary_door_right_W437_H471p25.SLDASM",
+      "size": 179633,
+      "sha256": "4AB21EB1E7D68F3F4C9FFBBF84EC856516A0886D3B2B7957DCD1615A6A5E0FF9"
+    },
+    {
+      "relativePath": "plastic_bushing_W437_H471p25.SLDPRT",
+      "size": 68745,
+      "sha256": "01B4DCCAF0CAF0EDB3EC433EC98D7A4889805C4D42D994FA0EFCD69C2C6425BE"
+    },
+    {
+      "relativePath": "top_latch_left_W437_H471p25.SLDPRT",
+      "size": 67768,
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847"
+    },
+    {
+      "relativePath": "top_latch_right_W437_H471p25.SLDPRT",
+      "size": 69024,
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97"
+    },
+    {
+      "relativePath": "u_hook_pad_W437_H471p25.SLDPRT",
+      "size": 169919,
+      "sha256": "FDF6AF27B181C461F2CCAA290A733419E954C78D7224C7FB2A6DAE1529C814A8"
+    },
+    {
+      "relativePath": "上盖 模型.sldprt",
+      "size": 649284,
+      "sha256": "1708A7EE2B374141B996ABBA8910AA7972C490D53DF6DAF048B5BD4B2274134F"
+    },
+    {
+      "relativePath": "上盖壳体前侧板.sldprt",
+      "size": 258171,
+      "sha256": "5BE54399BE545831E16165906FD3ADDF6E5D79086CB890CD438EB80B776E79B8"
+    },
+    {
+      "relativePath": "上盖壳体右侧板.SLDPRT",
+      "size": 483101,
+      "sha256": "9704401C7E70755348D8B4BB1F2DDF9A8D0DAB5106A20816E0D497B15200B47F"
+    },
+    {
+      "relativePath": "上盖壳体后侧板.sldprt",
+      "size": 394693,
+      "sha256": "57BDC0EEC5B4EEC92D67422D1609CD489B7DF4FA77144350A2BA207289BF3AEC"
+    },
+    {
+      "relativePath": "上盖壳体左侧板.sldprt",
+      "size": 364493,
+      "sha256": "490B8A5DCCFDEDE05D7AD9C3D589061EBBE77169BF656338D8DBA71EFFED6C71"
+    },
+    {
+      "relativePath": "上盖壳体底板.sldprt",
+      "size": 437474,
+      "sha256": "C4B5CB14F1D172B0261D9B9E1168CDE3381DF8064C9CA51EE2B9EA116D35C84A"
+    },
+    {
+      "relativePath": "上盖焊接.SLDASM",
+      "size": 389338,
+      "sha256": "D906E68A5A4334D8C8BAB32266D2AE3A6964E6B2AF1DED31DAFD07ACEB056917"
+    },
+    {
+      "relativePath": "应急维护门焊接_参数化.SLDASM",
+      "size": 93803,
+      "sha256": "D1AB356A3C7400D10480D8F146A32AACEFE9ADC114F6D7D433EDE0B8EBA53E77"
+    },
+    {
+      "relativePath": "底座 模型.sldprt",
+      "size": 380732,
+      "sha256": "6C474B621B5F3D86C56EE112328DA4A0886A31303734EA9445050F92AD0B46F4"
+    },
+    {
+      "relativePath": "底座加强筋.sldprt",
+      "size": 205175,
+      "sha256": "60F79988CB7C4C11827619AE41327E9F9864E88654E071E4E1BD222D67F29CD5"
+    },
+    {
+      "relativePath": "底座外框.sldprt",
+      "size": 372601,
+      "sha256": "7E52C031D564EDA62C06AC9AA5F790247E3DD22F13C448881DFFDE3F8CD61FAF"
+    },
+    {
+      "relativePath": "底座底板.sldprt",
+      "size": 572124,
+      "sha256": "E134085ACBE4BCE7F83A60252A91EB3C4BB80C99723E588BA8CF940FCA2F5BD6"
+    },
+    {
+      "relativePath": "底座焊接.SLDASM",
+      "size": 289717,
+      "sha256": "7FBEE14EC0B25C3723CDB5B01E28BD44E1DBECC0C4E978591C20F118E12ACCDA"
+    },
+    {
+      "relativePath": "标准寄存柜 模型.SLDPRT",
+      "size": 2660654,
+      "sha256": "BE6405660623CCF262B4DAE3D5D7FB120751EEF7E4A4ACAFA450DC6C891B34A2"
+    },
+    {
+      "relativePath": "箱体侧板加强筋1.sldprt",
+      "size": 338604,
+      "sha256": "8A4836E0A0A926902B07E39EFC1BC7890D01CAA6C19D589EE0E12FB9CB6CF1BF"
+    },
+    {
+      "relativePath": "箱体侧板加强筋2.sldprt",
+      "size": 223323,
+      "sha256": "B7CC9C3451BF439439AE9DD838241A8BB947ACE622700A555BD4E2E2C3B8DB4C"
+    },
+    {
+      "relativePath": "箱体右侧板.sldprt",
+      "size": 534674,
+      "sha256": "493E33D77F56CB4CB50B109C6BC0E9711BD309EC67C47E6055F2D3CDC98A5EA6"
+    },
+    {
+      "relativePath": "箱体右侧板焊接.SLDASM",
+      "size": 466051,
+      "sha256": "9FAC1A0758CF272171E3AE910041F90799ED70032C8ABE9B47C5AE36BEC5D016"
+    },
+    {
+      "relativePath": "箱体左侧板.sldprt",
+      "size": 552978,
+      "sha256": "CD82022E1226A17F1E23D33EE45B5A646CA2A2E24BD3CC5EF5B10B6487B54178"
+    },
+    {
+      "relativePath": "箱体左侧板焊接.sldasm",
+      "size": 399405,
+      "sha256": "0CD1B17448BDB54B6F0DDC6BD1D7013FE9BF79E95E2156D90CE0E9CD2BC5027F"
+    },
+    {
+      "relativePath": "箱体横层板L.sldprt",
+      "size": 512164,
+      "sha256": "0D7C064AA9805A81CB15123836EFD7B7FA77EB14313E2B9DDD9B57C4EA85446A"
+    },
+    {
+      "relativePath": "箱体横层板L焊接.SLDASM",
+      "size": 118293,
+      "sha256": "E4347C1722901745745ED4C5D2AA1EB73F345115AC9C3D665DB76DA367DF12AB"
+    },
+    {
+      "relativePath": "箱体横层板R.SLDPRT",
+      "size": 522230,
+      "sha256": "3F12C71C49C31749DAAE1FDA1ABDE088C70B318F3E9623CE556B0D81AB1A3645"
+    },
+    {
+      "relativePath": "箱体横层板R焊接.SLDASM",
+      "size": 115210,
+      "sha256": "75BDA8D184F15C3E07EA0966290BAD79E76075F7DFC5DEDB747DB5AC9DBE62B7"
+    },
+    {
+      "relativePath": "箱体横层板加强筋.SLDPRT",
+      "size": 182977,
+      "sha256": "8E85213F689BDC37E11292EBFD2FFDBDE616537ED2EAD616A7E19D4DE450F242"
+    },
+    {
+      "relativePath": "箱体竖隔板L.sldprt",
+      "size": 959018,
+      "sha256": "E1E3D3D46E28F2F56A10C57D737F244DB7B768792F2D2DEA98C83FCB0968AB5A"
+    },
+    {
+      "relativePath": "箱体竖隔板L焊接.SLDASM",
+      "size": 419354,
+      "sha256": "CA05458E9E1FC2BFF5F7A1627C3902D67D21A454302CED09FE4C6EE5610E5C32"
+    },
+    {
+      "relativePath": "箱体竖隔板R_parametric.SLDPRT",
+      "size": 901578,
+      "sha256": "BDACD2F18A7BCF1ED671AE95286AD230C430755468FA7DC929DC1D4639DF8F58"
+    },
+    {
+      "relativePath": "箱体竖隔板R参数源.SLDPRT",
+      "size": 959108,
+      "sha256": "FDE1267F71D2972AF15E3185D839C598CDB0104279A9AA17965039C33246A2BC"
+    },
+    {
+      "relativePath": "箱体竖隔板R焊接.SLDASM",
+      "size": 269116,
+      "sha256": "E9C542CBF138C71DE675EE8D1834634BAAF87954EF533A47D22C1B8BA568B64C"
+    },
+    {
+      "relativePath": "箱体竖隔板加强件.sldprt",
+      "size": 274683,
+      "sha256": "ACCFD0FA6AB32AB3A5ACFF5A7F73591165866F58CBC73FDFDF872CF2770A0FF2"
+    },
+    {
+      "relativePath": "维护门锁支架_原生.SLDPRT",
+      "size": 175991,
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9"
+    },
+    {
+      "relativePath": "螺母M12.SLDPRT",
+      "size": 166179,
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD"
+    },
+    {
+      "relativePath": "调整脚 M12X60(模型).SLDPRT",
+      "size": 100245,
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344"
+    },
+    {
+      "relativePath": "锁控维护条_源钣金.SLDPRT",
+      "size": 257836,
+      "sha256": "FEB818FC23B72AA9A68C1F6C7C4CAB3283BCE0824338601E54D60C669E7F7BDB"
+    },
+    {
+      "relativePath": "门框 上.sldprt",
+      "size": 341288,
+      "sha256": "87F891A57347F831A15A895C7B3072D3A90698F6DEE13599633BB61F44A9E49A"
+    },
+    {
+      "relativePath": "门框 下.sldprt",
+      "size": 342433,
+      "sha256": "C7E0A7FCED63DC81D859618878893312076F1768981A7869F9AA009F8D24E7D1"
+    },
+    {
+      "relativePath": "门框 右.sldprt",
+      "size": 365289,
+      "sha256": "D07833AB966ADC716F487444DFABDA06E367705984036836CF3F75B6860074BA"
+    },
+    {
+      "relativePath": "门框 左.sldprt",
+      "size": 378712,
+      "sha256": "95819525A848A73D1EB59E25DB4FBA1D9D81793DEC64D49DA4C4EC50F9B0898C"
+    },
+    {
+      "relativePath": "门框 横隔板.sldprt",
+      "size": 226738,
+      "sha256": "6B9B9834E82DAB9967D5154BD6273D60EA5A1C6D7BD4889D0B099B673FA5F346"
+    },
+    {
+      "relativePath": "门框 横隔板R.SLDPRT",
+      "size": 240399,
+      "sha256": "8A6467B79F6C3EB5F794FE6DAA610968A46C03EF8AB5C53547384A830EEF0748"
+    },
+    {
+      "relativePath": "门框 竖隔板L.sldprt",
+      "size": 513902,
+      "sha256": "D1A84A1C45B333D640F34350B3FC9BF59B0DD64B67E0B8DC9C6CBBD9E0414D6D"
+    },
+    {
+      "relativePath": "门框 竖隔板R.SLDPRT",
+      "size": 443944,
+      "sha256": "FF55DE107A59DCD97394611BDB548336108780389D10C2656475A43F51591991"
+    },
+    {
+      "relativePath": "门框焊接.sldasm",
+      "size": 377921,
+      "sha256": "DFC9BA9D103D73C616FA5AFD8AEC6CE99FD533547F53225113CE83D19150B430"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "winnsen.variable_trial.toolchain.v2",
+  "exe": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\VariableTrial.exe",
+  "sha256": "0EAB5F8728711BD0EF1334F0591EAD720755ED47693BB3C6E5F7900A9BF2A1CA",
+  "sources": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\TrialAssembly.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialAssembly.cs",
+      "sha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\TrialOutput.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\TrialOutput.cs",
+      "sha256": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\VariableTrial.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\sources\\VariableTrial.cs",
+      "sha256": "616C6B804FA6FB3C51F5D1C4ADF98CB56D5EBC22E68691DE970D7C4FCC2ACA24"
+    }
+  ],
+  "dlls": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T04-13-36-922Z-541abbf9\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+    }
+  ]
+}

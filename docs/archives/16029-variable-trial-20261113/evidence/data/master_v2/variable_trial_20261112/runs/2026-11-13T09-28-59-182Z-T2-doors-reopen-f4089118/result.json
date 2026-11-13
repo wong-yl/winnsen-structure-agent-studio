@@ -1,0 +1,16 @@
+{
+  "code": 0,
+  "stderr": "",
+  "warnings": [
+    {
+      "code": "PROCESS_QUERY_UNAVAILABLE",
+      "error": "PROCESS_QUERY_FAILED System.Management.Automation.RuntimeException: PROCESS_IDENTITY_UNAVAILABLE\r\n",
+      "lastError": "PROCESS_QUERY_FAILED System.Management.Automation.RuntimeException: PROCESS_IDENTITY_UNAVAILABLE\r\n",
+      "firstObservedAt": "2026-11-13T09:45:47.951Z",
+      "lastObservedAt": "2026-11-13T09:45:47.951Z",
+      "attempts": 1,
+      "recoveredAt": "2026-11-13T09:45:49.364Z"
+    }
+  ],
+  "cadExited": true
+}

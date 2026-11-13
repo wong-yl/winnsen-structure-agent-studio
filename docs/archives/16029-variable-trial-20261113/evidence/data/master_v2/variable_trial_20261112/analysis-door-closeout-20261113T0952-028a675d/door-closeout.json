@@ -1,0 +1,918 @@
+{
+  "schema": "16029-door-geometry-closure/v2",
+  "generation": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153",
+  "reopen": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118",
+  "cases": [
+    {
+      "hand": "L",
+      "widthMm": 437,
+      "heightMm": 471.25,
+      "part": "door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "artifacts": [
+        [
+          "door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+          "81305D41CFFCDC5D2729632D68BB8FE36BA1CFFCD4874FF82BCF2185B1176A35"
+        ],
+        [
+          "flat.dxf",
+          "220FD41CB57597B30829BFF0095762C31E565ED5F05F22E40453F01DEAED5EBE"
+        ],
+        [
+          "flat.native-cut.dxf",
+          "C570B477B46A91FE81367E0D28FF2C697065D588BDDB4DD4DEA79CFD1CA5A268"
+        ],
+        [
+          "flat.native-bends.dxf",
+          "AF551C9184A3E7373ED28350A01A8BB225AABD4360383D2D3D162D5BA7DB261D"
+        ]
+      ],
+      "flatSizeMm": [
+        473.40000000000003,
+        507.64999999999986,
+        0.7999999999999674
+      ],
+      "materials": [
+        {
+          "configuration": "Default",
+          "materialName": "冷轧钢板",
+          "materialDatabase": "云绅材料库"
+        },
+        {
+          "configuration": "DefaultSM-FLAT-PATTERN",
+          "materialName": "冷轧钢板",
+          "materialDatabase": "云绅材料库"
+        }
+      ]
+    },
+    {
+      "hand": "R",
+      "widthMm": 437,
+      "heightMm": 471.25,
+      "part": "door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "artifacts": [
+        [
+          "door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+          "C4F05BE23A56D13597071D917A45BDD0D787E17C4D45E9CA37189E95D5284555"
+        ],
+        [
+          "flat.dxf",
+          "9E285AFE7535C1C4F33E22500AB8684CDD08A1AF6158D7DA119592628A5D0712"
+        ],
+        [
+          "flat.native-cut.dxf",
+          "6027FB19409DC988149887FF63A14F152396FFA5B3088F90F4E541367772E806"
+        ],
+        [
+          "flat.native-bends.dxf",
+          "65845CF2EF694D89BC9F59221B42AE4EBBAC4BF5B905148C6BC37461B40BA99A"
+        ]
+      ],
+      "flatSizeMm": [
+        473.4,
+        507.65,
+        0.7999999999999952
+      ],
+      "materials": [
+        {
+          "configuration": "Default",
+          "materialName": "",
+          "materialDatabase": ""
+        },
+        {
+          "configuration": "DefaultSM-FLAT-PATTERN",
+          "materialName": "",
+          "materialDatabase": ""
+        }
+      ]
+    },
+    {
+      "hand": "L",
+      "widthMm": 287,
+      "heightMm": 200,
+      "part": "door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "artifacts": [
+        [
+          "door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+          "72394C732A13CF01BD858BD66B269F47B3CE845671E50FE5049B5458A4A499A1"
+        ],
+        [
+          "flat.dxf",
+          "6BDF4FC934425EB216DD94179B534F1BEF450B56C9506D5A07A40533C024B87B"
+        ],
+        [
+          "flat.native-cut.dxf",
+          "C4187314300B90D08802683981CBC3A83DB811561AE89AC73F526B5937B24011"
+        ],
+        [
+          "flat.native-bends.dxf",
+          "F8E567AC106B29D6BFB70B2D0130B6B04263691DE2C99F3301988A59477A4557"
+        ]
+      ],
+      "flatSizeMm": [
+        323.4,
+        236.40000000000012,
+        0.7999999999999674
+      ],
+      "materials": [
+        {
+          "configuration": "Default",
+          "materialName": "冷轧钢板",
+          "materialDatabase": "云绅材料库"
+        },
+        {
+          "configuration": "DefaultSM-FLAT-PATTERN",
+          "materialName": "冷轧钢板",
+          "materialDatabase": "云绅材料库"
+        }
+      ]
+    },
+    {
+      "hand": "R",
+      "widthMm": 287,
+      "heightMm": 200,
+      "part": "door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "artifacts": [
+        [
+          "door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+          "21257BA36648DD36271A1957FC350AE9B2A8864A9C7193FEF646F94C192C69A7"
+        ],
+        [
+          "flat.dxf",
+          "E9EAC28981082EABA1B59CF1763A84B7981D0B6FD1AFC73C4594EF3E7211CE01"
+        ],
+        [
+          "flat.native-cut.dxf",
+          "B7187C72ADB9279B24F7005F0E3E21BDC94E2C98FB4F3E911D068EB43FC3813F"
+        ],
+        [
+          "flat.native-bends.dxf",
+          "7B0C26214E306AC5489FE0DA7B744CC631EF6A37216692B7A596DADC8DDDEB4C"
+        ]
+      ],
+      "flatSizeMm": [
+        323.4,
+        236.40000000000018,
+        0.8000000000000229
+      ],
+      "materials": [
+        {
+          "configuration": "Default",
+          "materialName": "",
+          "materialDatabase": ""
+        },
+        {
+          "configuration": "DefaultSM-FLAT-PATTERN",
+          "materialName": "",
+          "materialDatabase": ""
+        }
+      ]
+    },
+    {
+      "hand": "L",
+      "widthMm": 537,
+      "heightMm": 1000,
+      "part": "door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "artifacts": [
+        [
+          "door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+          "3B3594468D8209676DBCEC233554CDFF51B5BBCC8A4BAFEB9A87014144207E1D"
+        ],
+        [
+          "flat.dxf",
+          "0665C1A45EBDDBB0C1EA31852C82565BE56C357EB7D44B38DED22085D86B9E0E"
+        ],
+        [
+          "flat.native-cut.dxf",
+          "97C0191AD59372336011BF72530C32800778484949679CA9065A039B0815074C"
+        ],
+        [
+          "flat.native-bends.dxf",
+          "AE7D80560741FED84BE2815825929BA77A390CB4C44948C846C758600FB7249D"
+        ]
+      ],
+      "flatSizeMm": [
+        573.4000000000003,
+        1036.4,
+        0.8000000000000229
+      ],
+      "materials": [
+        {
+          "configuration": "Default",
+          "materialName": "冷轧钢板",
+          "materialDatabase": "云绅材料库"
+        },
+        {
+          "configuration": "DefaultSM-FLAT-PATTERN",
+          "materialName": "冷轧钢板",
+          "materialDatabase": "云绅材料库"
+        }
+      ]
+    },
+    {
+      "hand": "R",
+      "widthMm": 537,
+      "heightMm": 1000,
+      "part": "door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "artifacts": [
+        [
+          "door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+          "3ECE340427A24AD8E11F37A58ECCE44E344175B53F10E119D6C598661055F64A"
+        ],
+        [
+          "flat.dxf",
+          "A0A3392D78657BE44D414925C9D474078C603E1FAECB8783C7DC6166C4FE2B2E"
+        ],
+        [
+          "flat.native-cut.dxf",
+          "962B31176C89E5FFB05FAD6899D3A0914DDBDCD07990DB2939BEBFEA64C6B9B2"
+        ],
+        [
+          "flat.native-bends.dxf",
+          "E95F2BAD7F147EC2BEEFA4AE9DC53639206494363B2C45AECF65CA6C22FDA77E"
+        ]
+      ],
+      "flatSizeMm": [
+        573.4000000000001,
+        1036.4,
+        0.8000000000000229
+      ],
+      "materials": [
+        {
+          "configuration": "Default",
+          "materialName": "",
+          "materialDatabase": ""
+        },
+        {
+          "configuration": "DefaultSM-FLAT-PATTERN",
+          "materialName": "",
+          "materialDatabase": ""
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\job.json",
+      "sha256": "0B14C97692E6E22F8CBCCF12C4486BB571D4BB7C03F2AC7E17D36D5320EB3B68"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\native-result.json",
+      "sha256": "4B7EEF734035173438CB3A90B2D01706BA13F0525E81BD72D8919097FFC7B4BD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\result.json",
+      "sha256": "EB9BBC7CA3B5D3AD4F663E02845AA67D55B0CEC5F60C0C23321C8A34639AB3AD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\supervision.json",
+      "sha256": "F84F0A21E340197032590EEA5DA7FCE83C28A80B76F5A18ABF489A47112AAA25"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\protection-result.json",
+      "sha256": "08A2C6A09645EE533BB827219D9CC0925F2F559B49201E7A1CA492C40DEFC056"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\toolchain.json",
+      "sha256": "223D3F17E9B96EE5A5FE8A311EBEF933F0D0E492FB1B25C08F5093D750EAD3D5"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\sources\\TrialAssembly.cs",
+      "sha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\sources\\TrialOutput.cs",
+      "sha256": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\sources\\VariableTrial.cs",
+      "sha256": "E69EE1221A1D85BD2068E70A60C6E646D30E21DB98C2074928062C985C00414A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\VariableTrial.exe",
+      "sha256": "660EC4837BB32C25681E9F65C3FAAAB8B39FC1946FF5D89B9BCFB26D3BCC16BB"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\inputs\\specification.json",
+      "sha256": "365D6E42F38C0DA2AF040B0932C89BDC76C93FB6C3D28569E8A320C3B8271A21"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\inputs\\process.json",
+      "sha256": "0D9515187389F05FDB38113A2D5992D55F2915EC8AD5E6CB858AA7F1295E36DE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\job.json",
+      "sha256": "BC36C1FCA6B281057A4B6950D9F1A650975FE902F3B133B855413FA8E1168CD3"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\native-result.json",
+      "sha256": "1D1AFE84C203F7EF68AD252C53323A99645577C979F66B59FDB88367B93D6437"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\result.json",
+      "sha256": "FE2D2BA7DA4B4520954AEB3829404F468E5789662013E6AC29C0C9B615534923"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\supervision.json",
+      "sha256": "CD69A340D878A322DDE82C0DBB71E35C6F5BB444CF9F8A54063FE60B7D941BC2"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\protection-result.json",
+      "sha256": "ECCF870E809BF326E62E48216E0598EB69E49B1757600DB1D2ABB55493EB7779"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\toolchain.json",
+      "sha256": "223D3F17E9B96EE5A5FE8A311EBEF933F0D0E492FB1B25C08F5093D750EAD3D5"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\sources\\TrialAssembly.cs",
+      "sha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\sources\\TrialOutput.cs",
+      "sha256": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\sources\\VariableTrial.cs",
+      "sha256": "E69EE1221A1D85BD2068E70A60C6E646D30E21DB98C2074928062C985C00414A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\2026-11-13T08-27-22-673Z-00650c16\\VariableTrial.exe",
+      "sha256": "660EC4837BB32C25681E9F65C3FAAAB8B39FC1946FF5D89B9BCFB26D3BCC16BB"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\inputs\\specification.json",
+      "sha256": "365D6E42F38C0DA2AF040B0932C89BDC76C93FB6C3D28569E8A320C3B8271A21"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\inputs\\process.json",
+      "sha256": "0D9515187389F05FDB38113A2D5992D55F2915EC8AD5E6CB858AA7F1295E36DE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\outputs-dxf-current.json",
+      "sha256": "8D685C34856F5F96B3910C23C95F552384E90C2F910FB5F2D86EC66C2B7252CB"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\job.json",
+      "sha256": "0B14C97692E6E22F8CBCCF12C4486BB571D4BB7C03F2AC7E17D36D5320EB3B68"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\native-result.json",
+      "sha256": "4B7EEF734035173438CB3A90B2D01706BA13F0525E81BD72D8919097FFC7B4BD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\result.json",
+      "sha256": "EB9BBC7CA3B5D3AD4F663E02845AA67D55B0CEC5F60C0C23321C8A34639AB3AD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\supervision.json",
+      "sha256": "F84F0A21E340197032590EEA5DA7FCE83C28A80B76F5A18ABF489A47112AAA25"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\protection-result.json",
+      "sha256": "08A2C6A09645EE533BB827219D9CC0925F2F559B49201E7A1CA492C40DEFC056"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\output-manifest.json",
+      "sha256": "3BDEE6AB3657717CE04DF04143A3882DE3CBAD92E928F6F1F637B7A8DABE113A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\output-audit.json",
+      "sha256": "D351359946925D222D907650E2E4E36EE54CE61B309177F29C1B9FEFBEE49C58"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\auditor-toolchain.json",
+      "sha256": "5EB6A73E29701EBE1B0FF4299FC3517252341E8F363CAF26F0194E963B1DD3A0"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\auditor-sources\\audit_outputs.py",
+      "sha256": "F2B5DBEFF8C48B88EAB9E62F1E4AEDA156A630B88C6D0D86D1842343C4BF9219"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\auditor-sources\\dxf_check.py",
+      "sha256": "0DD5B72D1A0B6D4BAE8C6EE258215833E3EF5C8EB6AA5A00BC41CE1460C1021B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\output-manifest.json",
+      "sha256": "3BDEE6AB3657717CE04DF04143A3882DE3CBAD92E928F6F1F637B7A8DABE113A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\output-manifest.json",
+      "sha256": "3BDEE6AB3657717CE04DF04143A3882DE3CBAD92E928F6F1F637B7A8DABE113A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\16029_1000W_2000H_500D.SLDASM",
+      "sha256": "BF64644D36B31A9063218DB78228B4A4FFD4F33B066C4660B9BA360030CAB9E3"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\circlip_W437_H471p25.SLDPRT",
+      "sha256": "73F21840CEA9916709C9D77EA8D13DE94A36FCEAD9B744056FEADB3E1688C9F4"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\door_hinge_pin_W437_H471p25.SLDPRT",
+      "sha256": "BC7BD32EA5F4C4259367B56816D8517BDC6108394CD8CE58BC38D044480FAE30"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\door_panel_left_W437_H471p25.SLDPRT",
+      "sha256": "9C4B6083F0EDCB1B2BBB670266D7E942E7207B889EA540678E1C0E4B68BACC6D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\door_panel_right_W437_H471p25.SLDPRT",
+      "sha256": "811EB6B956C5E7651B0FE1D5E85F45F402B8DB42604310979F7FEC64AB4688C5"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\door_stiffener_W437_H471p25.SLDPRT",
+      "sha256": "6B48201626DC342996F53B4E7473CC95E68FF7F2D3F8436AD0AEDC88B891F2A9"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\door_weld_left_W437_H471p25.SLDASM",
+      "sha256": "4BA04E83B99B0C1D166CEE90BEBD098C67D77BBB72838655C9F5AC70E03E9EAA"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\door_weld_right_W437_H471p25.SLDASM",
+      "sha256": "50220E9A949666B6C66AB06CDEF56EF164EB233D73D863AC3679D69A7F9C4237"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\hinge_latch_plate_W437_H471p25.SLDPRT",
+      "sha256": "C54235D39F401011013B12C809ADFEEEB1C53EB10A59C2EEC5C88BA4C603A8FA"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\mechanical_lock_tongue_W437_H471p25.SLDPRT",
+      "sha256": "0BC8361FE25361C0A1D8B1EE69AA625E766141B22486A3A9BFCB94D697A521D9"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\ordinary_door_left_W437_H471p25.SLDASM",
+      "sha256": "0862226FB466F1C369207A2D43381423737C6910F806268427967E49CCDE470F"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\ordinary_door_right_W437_H471p25.SLDASM",
+      "sha256": "594891FE00BAB991BE8EAB0C563A42463F2C602D3EF5A98661A8F674F7A092E4"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\plastic_bushing_W437_H471p25.SLDPRT",
+      "sha256": "01B4DCCAF0CAF0EDB3EC433EC98D7A4889805C4D42D994FA0EFCD69C2C6425BE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\top_latch_left_W437_H471p25.SLDPRT",
+      "sha256": "BC48FAC6E6D83F93E82E67AF0F71180C4733C5F0C9F695A079648972BD5DE847"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\top_latch_right_W437_H471p25.SLDPRT",
+      "sha256": "B9EFC9E1F65A15922A8887A2BE2F7B8B8B5A76D4648DC74DB3983C79F44C7A97"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\u_hook_pad_W437_H471p25.SLDPRT",
+      "sha256": "FDF6AF27B181C461F2CCAA290A733419E954C78D7224C7FB2A6DAE1529C814A8"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖 模型.sldprt",
+      "sha256": "F6FB7B4607B4AD97378A037BEC0F49D2456E73F28989F93B9344F62892C83DDC"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖壳体前侧板.sldprt",
+      "sha256": "6B66F043F7686F5F0C01492266989D01156C1416621C3BFF4F38D5801EA5B982"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖壳体右侧板.SLDPRT",
+      "sha256": "EB7A9FEB064F13463CC4FC661E411C6A4F471B3791C7EBCC887FB7DE69B0403C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖壳体后侧板.sldprt",
+      "sha256": "073F3694B7E3AD3CA1778858FF76F463E3E73569A726F7C13A096A6C00D308D5"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖壳体左侧板.sldprt",
+      "sha256": "E1F00DA8F054D1C2185DB4E3E2007B3B39304619F5E9F5F4FD49B383AFCFFCB1"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖壳体底板.sldprt",
+      "sha256": "B44939CA06A06185216BB617DAC144C76508854FF9797E3895B80616442F9BB6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\上盖焊接.SLDASM",
+      "sha256": "9830019ABB70F31E881F2BE5E529FD4513C9FF72702B4E5D424C270047DCA26A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\应急维护门焊接_参数化.SLDASM",
+      "sha256": "F492167D6A5FA7571F11B247D14C1DCDE0AEF6380C70B5E6D48A2A10FD6875AE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\底座 模型.sldprt",
+      "sha256": "760E5549689D4A2DC580369CFBBC13BC94C69A99A85212F675F4BECBF6BB3293"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\底座加强筋.sldprt",
+      "sha256": "D6B976DCB9F4A0FF8D1E3CDADA2EA555D7224FFE309D8692FF7B5D9E6515B98B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\底座外框.sldprt",
+      "sha256": "24EE85A89BFC68B8BA7EC1CB200C66BD251A395DD26B04FA6E68E00A47147695"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\底座底板.sldprt",
+      "sha256": "0BACCB423B80B462A4ECE6A017C211B77924C92DC6E8441FFCEC319DBA20865D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\底座焊接.SLDASM",
+      "sha256": "FA2A7D0456FC7846A104A0EB78733A4E6882393A96CC5CA1765EBBF9C8F043A1"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\标准寄存柜 模型.SLDPRT",
+      "sha256": "BE6405660623CCF262B4DAE3D5D7FB120751EEF7E4A4ACAFA450DC6C891B34A2"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体侧板加强筋1.sldprt",
+      "sha256": "FD715A0119F1E0E736DBBBEAE203268C23DB312D6912A20AE6F2E81277A1ADB3"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体侧板加强筋2.sldprt",
+      "sha256": "D41A8BE8C69A6BAD1FD1301BC06C8033BEEF25E8E3D4EDA7820A040E49E1B188"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体右侧板.sldprt",
+      "sha256": "3401F5B0A2A4F20B07DF20094700C5B1B4E002F85EC208ECF67664BA6369E652"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体右侧板焊接.SLDASM",
+      "sha256": "764CE9B2BAF349ED2E24724B67278E638986230B6E7FB8D0133989BE4FC21A6E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体左侧板.sldprt",
+      "sha256": "0357D5BF22D52E8A8A38DE1D2965CAAE3B235C89F5AC8A86137545ACD5885BE7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体左侧板焊接.sldasm",
+      "sha256": "319BDF831CA1ED9B2B73E6D383FF4B8DFBCEA5A4B6C36857EA6D02BF0CE97E4D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体横层板L.sldprt",
+      "sha256": "6BB81F1C494FFCBF4091F83BE87D300516AD68056F0052989EAEE5362FCF3EB0"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体横层板L焊接.SLDASM",
+      "sha256": "6C6ED8355F6443D2F11E84780A60314FB9F89AC7C7763A016B77CEDCA191947F"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体横层板R.SLDPRT",
+      "sha256": "50132C17BE5D9A931319C5A01922EA9A66C90E7CDCB4BF22A8333EBB7FCEB9BF"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体横层板R焊接.SLDASM",
+      "sha256": "16F51996621902A3879F488D81E92BC4E7A2A2E29C043769BBF51534748B8363"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体横层板加强筋.SLDPRT",
+      "sha256": "8E85213F689BDC37E11292EBFD2FFDBDE616537ED2EAD616A7E19D4DE450F242"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体竖隔板L.sldprt",
+      "sha256": "436FB8E9D084C9EAC1D8DD2C1C16AF34DE40F171852E7C01EFCAB195ACC14A75"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体竖隔板L焊接.SLDASM",
+      "sha256": "FB07108EA83C093C6BC210FCBC1DA0C02E1A8632B010A6DBCAE2853C91687219"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体竖隔板R_parametric.SLDPRT",
+      "sha256": "19BC1F66FF9D3C9C57ACE3811C10C175C3A8960D7FF5396BF80C6CA18CCBC3F7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体竖隔板R参数源.SLDPRT",
+      "sha256": "DB732EE3794C935D0BF0B8E619AD4F5043632AA6020335974B8E932931536056"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体竖隔板R焊接.SLDASM",
+      "sha256": "935BA60BD9AAF995EC52232D12620134E327D74C6642CC8155B1ED9E300C6E60"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\箱体竖隔板加强件.sldprt",
+      "sha256": "C53B65A1303F6FC2AD42753AF4DEBE14BD5BDF462F7FFB752E25189C9732718C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\维护门锁支架_原生.SLDPRT",
+      "sha256": "2A5724BFCB31E468A55A9DB04943C8D65C28BFB59795835395E8EBCE515403A9"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\螺母M12.SLDPRT",
+      "sha256": "AD189C4AAFFDFDCE2E19DCFCC55DEB4BA80C88B16EF74F23AB635E13E7FB10DD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\调整脚 M12X60(模型).SLDPRT",
+      "sha256": "24FC77C1205C48873B964D3707D23F7644BE7934D796B52BFB79116A7ACEE344"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\锁控维护条_源钣金.SLDPRT",
+      "sha256": "FEB818FC23B72AA9A68C1F6C7C4CAB3283BCE0824338601E54D60C669E7F7BDB"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 上.sldprt",
+      "sha256": "BE5A6ED5866F09E1E90CFEE278CF54030AA65E4E65BF76B91AA66B9B3ADE3B32"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 下.sldprt",
+      "sha256": "267BA6474C9E50E22FFA340F2D50F4443B44435CBBD7ABD50B123DFDADCA2828"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 右.sldprt",
+      "sha256": "10B09B173E9335F4373A340075177CAC6E035ABEFBEDAA0D47B25B54524783DC"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 左.sldprt",
+      "sha256": "081E06FBBE8A38968DC47A8BCD616D348172171176EB76AA19141D65AA389F52"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 横隔板.sldprt",
+      "sha256": "7BF294C4A6000E7E9898E08F95457408BCE3180CBC2E8356AEC0E89D41BE163B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 横隔板R.SLDPRT",
+      "sha256": "FC2BB03791B0A989F384A1FDEF3CE5330279C4A6C921562D327B72F2FA7FE44D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 竖隔板L.sldprt",
+      "sha256": "5FEB99A430C5F820CF5D9AE5CE6593145F49022401A721ACC0E8D834E0457FD0"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框 竖隔板R.SLDPRT",
+      "sha256": "BBF16649EEB05C692725F73B9DEB1E96F3B8D071AFC549ED25419E6532C7C191"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\门框焊接.sldasm",
+      "sha256": "F184FB16D375BA4C4A52D9D397D761493E1F2D0E73AE6B7578BB72E29B960177"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "81305D41CFFCDC5D2729632D68BB8FE36BA1CFFCD4874FF82BCF2185B1176A35"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "72394C732A13CF01BD858BD66B269F47B3CE845671E50FE5049B5458A4A499A1"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "3B3594468D8209676DBCEC233554CDFF51B5BBCC8A4BAFEB9A87014144207E1D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "C4F05BE23A56D13597071D917A45BDD0D787E17C4D45E9CA37189E95D5284555"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "21257BA36648DD36271A1957FC350AE9B2A8864A9C7193FEF646F94C192C69A7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "3ECE340427A24AD8E11F37A58ECCE44E344175B53F10E119D6C598661055F64A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\L0\\dxf-audit.json",
+      "sha256": "4F54FFC96B5168320A7ED5CAA90CF3965F9665CF16987AEEDBE9468BDB1731A9"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "81305D41CFFCDC5D2729632D68BB8FE36BA1CFFCD4874FF82BCF2185B1176A35"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L0\\door_L_W437_H471p25_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "81305D41CFFCDC5D2729632D68BB8FE36BA1CFFCD4874FF82BCF2185B1176A35"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L0\\flat.dxf",
+      "sha256": "220FD41CB57597B30829BFF0095762C31E565ED5F05F22E40453F01DEAED5EBE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L0\\flat.dxf",
+      "sha256": "220FD41CB57597B30829BFF0095762C31E565ED5F05F22E40453F01DEAED5EBE"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L0\\flat.native-cut.dxf",
+      "sha256": "C570B477B46A91FE81367E0D28FF2C697065D588BDDB4DD4DEA79CFD1CA5A268"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L0\\flat.native-cut.dxf",
+      "sha256": "C570B477B46A91FE81367E0D28FF2C697065D588BDDB4DD4DEA79CFD1CA5A268"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L0\\flat.native-bends.dxf",
+      "sha256": "AF551C9184A3E7373ED28350A01A8BB225AABD4360383D2D3D162D5BA7DB261D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L0\\flat.native-bends.dxf",
+      "sha256": "AF551C9184A3E7373ED28350A01A8BB225AABD4360383D2D3D162D5BA7DB261D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\R1\\dxf-audit.json",
+      "sha256": "F0DCFFB602F5A078B65A117F2EA6D7862878D90D473A905BB4508C3D96CB5B8B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "C4F05BE23A56D13597071D917A45BDD0D787E17C4D45E9CA37189E95D5284555"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R1\\door_R_W437_H471p25_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "C4F05BE23A56D13597071D917A45BDD0D787E17C4D45E9CA37189E95D5284555"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R1\\flat.dxf",
+      "sha256": "9E285AFE7535C1C4F33E22500AB8684CDD08A1AF6158D7DA119592628A5D0712"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R1\\flat.dxf",
+      "sha256": "9E285AFE7535C1C4F33E22500AB8684CDD08A1AF6158D7DA119592628A5D0712"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R1\\flat.native-cut.dxf",
+      "sha256": "6027FB19409DC988149887FF63A14F152396FFA5B3088F90F4E541367772E806"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R1\\flat.native-cut.dxf",
+      "sha256": "6027FB19409DC988149887FF63A14F152396FFA5B3088F90F4E541367772E806"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R1\\flat.native-bends.dxf",
+      "sha256": "65845CF2EF694D89BC9F59221B42AE4EBBAC4BF5B905148C6BC37461B40BA99A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R1\\flat.native-bends.dxf",
+      "sha256": "65845CF2EF694D89BC9F59221B42AE4EBBAC4BF5B905148C6BC37461B40BA99A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\L2\\dxf-audit.json",
+      "sha256": "6F87813B92CA45E742622D9CE36EF903CCA34A3D373450C75059EB13BD4055D7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "72394C732A13CF01BD858BD66B269F47B3CE845671E50FE5049B5458A4A499A1"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L2\\door_L_W287_H200_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "72394C732A13CF01BD858BD66B269F47B3CE845671E50FE5049B5458A4A499A1"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L2\\flat.dxf",
+      "sha256": "6BDF4FC934425EB216DD94179B534F1BEF450B56C9506D5A07A40533C024B87B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L2\\flat.dxf",
+      "sha256": "6BDF4FC934425EB216DD94179B534F1BEF450B56C9506D5A07A40533C024B87B"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L2\\flat.native-cut.dxf",
+      "sha256": "C4187314300B90D08802683981CBC3A83DB811561AE89AC73F526B5937B24011"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L2\\flat.native-cut.dxf",
+      "sha256": "C4187314300B90D08802683981CBC3A83DB811561AE89AC73F526B5937B24011"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L2\\flat.native-bends.dxf",
+      "sha256": "F8E567AC106B29D6BFB70B2D0130B6B04263691DE2C99F3301988A59477A4557"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L2\\flat.native-bends.dxf",
+      "sha256": "F8E567AC106B29D6BFB70B2D0130B6B04263691DE2C99F3301988A59477A4557"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\R3\\dxf-audit.json",
+      "sha256": "19A14CF954F29796AB66068B4796691B65ACF660871EBEF81347930EAD8718B9"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "21257BA36648DD36271A1957FC350AE9B2A8864A9C7193FEF646F94C192C69A7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R3\\door_R_W287_H200_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "21257BA36648DD36271A1957FC350AE9B2A8864A9C7193FEF646F94C192C69A7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R3\\flat.dxf",
+      "sha256": "E9EAC28981082EABA1B59CF1763A84B7981D0B6FD1AFC73C4594EF3E7211CE01"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R3\\flat.dxf",
+      "sha256": "E9EAC28981082EABA1B59CF1763A84B7981D0B6FD1AFC73C4594EF3E7211CE01"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R3\\flat.native-cut.dxf",
+      "sha256": "B7187C72ADB9279B24F7005F0E3E21BDC94E2C98FB4F3E911D068EB43FC3813F"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R3\\flat.native-cut.dxf",
+      "sha256": "B7187C72ADB9279B24F7005F0E3E21BDC94E2C98FB4F3E911D068EB43FC3813F"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R3\\flat.native-bends.dxf",
+      "sha256": "7B0C26214E306AC5489FE0DA7B744CC631EF6A37216692B7A596DADC8DDDEB4C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R3\\flat.native-bends.dxf",
+      "sha256": "7B0C26214E306AC5489FE0DA7B744CC631EF6A37216692B7A596DADC8DDDEB4C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\L4\\dxf-audit.json",
+      "sha256": "349B573475DB873B0569E6C79A9B6B5544A7FC50A3B945A8D7ED7FB9E067DB78"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "3B3594468D8209676DBCEC233554CDFF51B5BBCC8A4BAFEB9A87014144207E1D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L4\\door_L_W537_H1000_t0p8_mat4B58FDAD6E_pv1.SLDPRT",
+      "sha256": "3B3594468D8209676DBCEC233554CDFF51B5BBCC8A4BAFEB9A87014144207E1D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L4\\flat.dxf",
+      "sha256": "0665C1A45EBDDBB0C1EA31852C82565BE56C357EB7D44B38DED22085D86B9E0E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L4\\flat.dxf",
+      "sha256": "0665C1A45EBDDBB0C1EA31852C82565BE56C357EB7D44B38DED22085D86B9E0E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L4\\flat.native-cut.dxf",
+      "sha256": "97C0191AD59372336011BF72530C32800778484949679CA9065A039B0815074C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L4\\flat.native-cut.dxf",
+      "sha256": "97C0191AD59372336011BF72530C32800778484949679CA9065A039B0815074C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\L4\\flat.native-bends.dxf",
+      "sha256": "AE7D80560741FED84BE2815825929BA77A390CB4C44948C846C758600FB7249D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\L4\\flat.native-bends.dxf",
+      "sha256": "AE7D80560741FED84BE2815825929BA77A390CB4C44948C846C758600FB7249D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-dxf-audit-bound-20261113T0940-3a584ab2\\output\\R5\\dxf-audit.json",
+      "sha256": "8442039B33279AC22400348D802AAB699997FF99D83DC2E2184992C6AF85BEED"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "3ECE340427A24AD8E11F37A58ECCE44E344175B53F10E119D6C598661055F64A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R5\\door_R_W537_H1000_t0p8_mat7876EF810B_pv1.SLDPRT",
+      "sha256": "3ECE340427A24AD8E11F37A58ECCE44E344175B53F10E119D6C598661055F64A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R5\\flat.dxf",
+      "sha256": "A0A3392D78657BE44D414925C9D474078C603E1FAECB8783C7DC6166C4FE2B2E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R5\\flat.dxf",
+      "sha256": "A0A3392D78657BE44D414925C9D474078C603E1FAECB8783C7DC6166C4FE2B2E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R5\\flat.native-cut.dxf",
+      "sha256": "962B31176C89E5FFB05FAD6899D3A0914DDBDCD07990DB2939BEBFEA64C6B9B2"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R5\\flat.native-cut.dxf",
+      "sha256": "962B31176C89E5FFB05FAD6899D3A0914DDBDCD07990DB2939BEBFEA64C6B9B2"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T08-27-26-311Z-T2-outputs-dxf-9f7e1153\\cad\\outputs\\R5\\flat.native-bends.dxf",
+      "sha256": "E95F2BAD7F147EC2BEEFA4AE9DC53639206494363B2C45AECF65CA6C22FDA77E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-28-59-182Z-T2-doors-reopen-f4089118\\cad\\outputs\\R5\\flat.native-bends.dxf",
+      "sha256": "E95F2BAD7F147EC2BEEFA4AE9DC53639206494363B2C45AECF65CA6C22FDA77E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\door_closeout.py",
+      "sha256": "4204A452355D347D79A7E575992AF855201E5237D2E35BCC90BB0C586AF4A15A"
+    }
+  ],
+  "generationFlatGeometryReopenPass": true,
+  "acceptanceScope": "six native door samples, dimensions, hand-specific folded holes, fixed-process readback, DXF geometry and independent read-only reopen",
+  "effectiveInheritanceVerified": false,
+  "manufacturingOrientationVerified": false,
+  "factoryMaterialConfirmed": false,
+  "drawingStatus": "deferred_by_user_20261113",
+  "engineeringAcceptancePass": false,
+  "fullPlanPass": false,
+  "production_release": false,
+  "remaining": [
+    "factory material confirmation (right panel unspecified)",
+    "independent effective inheritance semantics",
+    "DXF manufacturing face and bend directions",
+    "assembly weight metadata stability and structural corrections"
+  ]
+}

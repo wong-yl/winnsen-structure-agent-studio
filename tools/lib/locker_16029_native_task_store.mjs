@@ -15,6 +15,7 @@ import {
 } from 'node:fs'
 import { basename, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { validate16029ParametricPublication, validate16029ParametricCandidateReuse } from './locker_16029_parametric_publication.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
@@ -86,7 +87,7 @@ const ALLOWED_TRANSITIONS = Object.freeze({
   planning: new Set(['building', 'needs_input', 'blocked', 'failed', 'cancelled']),
   building: new Set(['validating', 'needs_input', 'blocked', 'failed', 'cancelled']),
   validating: new Set(['ready', 'needs_input', 'blocked', 'failed', 'cancelled']),
-  cancel_requested: new Set(['cancelled']),
+  cancel_requested: new Set(['cancelled', 'blocked']),
 })
 
 const LEASED_STATES = new Set(['claimed', 'planning', 'building', 'validating', 'cancel_requested'])
@@ -886,6 +887,14 @@ export function createNativeTaskStore(options = {}) {
     return cloneJson(records)
   }
 
+  async function recoverExpiredLeases({ now } = {}) {
+    return withLock(lockConfig, async () => {
+      const recovered = await recoverExpiredLeasesUnlocked(dataDir, scanTaskFilesUnlocked(dataDir), mutationNow(clock, now), maxAttempts, processProbe)
+      rebuildIndexBestEffort()
+      return cloneJson(recovered)
+    })
+  }
+
   async function read(taskId) {
     return cloneJson(readTaskUnlocked(dataDir, taskId))
   }
@@ -1196,6 +1205,7 @@ export function createNativeTaskStore(options = {}) {
     now,
     operation = 'transition',
     operationPayload = null,
+    signal,
   }) {
     const transitionId = requireTransitionId(suppliedTransitionId)
     const toState = String(suppliedToState || '').trim().toLowerCase()
@@ -1214,12 +1224,22 @@ export function createNativeTaskStore(options = {}) {
       requireRevision(task, expectedRevision)
       const lease = requireLease(task, leaseId, workerId, nowMs)
       assertAllowedTransition(task, toState)
+      const completing = operation === 'complete' || operation === 'complete_parametric_candidate'
+      if (completing && signal?.aborted) fail('COMPLETE_ABORTED', 'native task completion was cancelled before commit')
+      let result = operationPayload
+      if (operation === 'complete_parametric_candidate') {
+        const checked = validate16029ParametricCandidateReuse(operationPayload.candidateAttempt, { task, expectedArchiveSha256: operationPayload.expectedArchiveSha256 })
+        if (!checked.ok) fail('CANDIDATE_REUSE_NOT_ACCEPTED', checked.reason, 422)
+        result = { schema: 'winnsen.locker16029.parametric_publication.v1', ...checked }
+        if (signal?.aborted) fail('COMPLETE_ABORTED', 'native task completion was cancelled before commit')
+      }
       const fromState = task.nativeBuild.state
       for (const [key, value] of Object.entries(nativeBuildPatch)) task.nativeBuild[key] = value
       task.nativeBuild.lease = renewedLease(lease, nowMs)
-      if (operation === 'complete') {
-        task.nativeBuild.result = cloneJson(operationPayload, 'result manifest')
+      if (completing) {
+        task.nativeBuild.result = cloneJson(result, 'result manifest')
         task.nativeBuild.error = null
+        if (operation === 'complete_parametric_candidate') task.nativeBuild.execution = { started: true, cadStarted: false, modelGenerated: false, modelReady: true, legacyFallbackUsed: false }
       } else if (operation === 'fail') {
         task.nativeBuild.error = {
           ...cloneJson(operationPayload, 'failure'),
@@ -1257,6 +1277,14 @@ export function createNativeTaskStore(options = {}) {
     })
   }
 
+  async function completeParametricCandidate({ candidateAttempt, expectedArchiveSha256, ...args } = {}) {
+    if (typeof candidateAttempt !== 'string' || !candidateAttempt.trim() || typeof expectedArchiveSha256 !== 'string' || !/^[A-F0-9]{64}$/i.test(expectedArchiveSha256)) {
+      fail('CANDIDATE_REUSE_INPUT_REQUIRED', 'candidate reuse requires an explicit attempt and accepted archive SHA-256', 422)
+    }
+    return performTransition({ ...args, toState: 'ready', operation: 'complete_parametric_candidate',
+      operationPayload: { candidateAttempt: resolve(candidateAttempt), expectedArchiveSha256: expectedArchiveSha256.toUpperCase() } })
+  }
+
   async function failTask(args = {}) {
     const code = String(args.code || '').trim()
     const message = String(args.message || '').trim()
@@ -1270,6 +1298,158 @@ export function createNativeTaskStore(options = {}) {
         message,
         retryable: args.retryable === true,
       },
+    })
+  }
+
+  async function publishParametricRevision({
+    taskId, username, expectedRevision, transitionId: suppliedTransitionId,
+    expectedArchiveSha256, candidateAttempt, reason, now,
+  } = {}) {
+    const transitionId = requireTransitionId(suppliedTransitionId)
+    const scopedUsername = String(username || '').trim()
+    const previousHash = String(expectedArchiveSha256 || '').toUpperCase()
+    const normalizedReason = String(reason || '').trim().slice(0, 1000)
+    if (!scopedUsername || !normalizedReason || !/^[A-F0-9]{64}$/.test(previousHash) || !candidateAttempt) {
+      fail('REVISION_PUBLICATION_INPUT_REQUIRED', 'revision publication requires owner, previous archive hash, candidate and reason', 422)
+    }
+    const candidate = resolve(String(candidateAttempt))
+    const payloadDigest = digest({ username: scopedUsername, previousHash, candidate, reason: normalizedReason })
+    return withLock(lockConfig, async () => {
+      const nowMs = mutationNow(clock, now)
+      const task = readTaskUnlocked(dataDir, taskId)
+      if (String(task.username || '') !== scopedUsername) fail('TASK_NOT_FOUND', 'native task not found', 404)
+      const repeated = idempotentTransition(task, transitionId, 'parametric_revision_publication', 'ready', payloadDigest)
+      if (repeated) return cloneJson(repeated)
+      requireRevision(task, expectedRevision)
+      if (!task.parametricRequest || task.nativeBuild.state !== 'ready' || task.nativeBuild.modelReady !== true ||
+          task.nativeBuild.lease || task.nativeBuild.archived === true || task.nativeBuild.result?.archiveSha256 !== previousHash) {
+        fail('REVISION_PUBLICATION_STATE_CHANGED', 'ready task or previous archive no longer matches', 409)
+      }
+      const checked = validate16029ParametricPublication(candidate, { expectedRequest: task.parametricRequest })
+      if (!checked.ok || !checked.coverageVerified) fail('REVISION_PUBLICATION_NOT_ACCEPTED', checked.reason || 'candidate physical coverage is incomplete', 422)
+      if (checked.archiveSha256 === previousHash) fail('REVISION_PUBLICATION_IDENTICAL', 'candidate is the already published archive', 409)
+      const at = new Date(nowMs).toISOString()
+      task.nativeBuild.deliveryRevisionHistory = [...(task.nativeBuild.deliveryRevisionHistory || []), {
+        at, reason: normalizedReason, result: cloneJson(task.nativeBuild.result),
+      }]
+      task.nativeBuild.result = { schema: 'winnsen.locker16029.parametric_publication.v1', ...checked }
+      task.nativeBuild.message = '结构反馈修正版已完成模型检查，待工程师复核。'
+      appendTransition(task, { transitionId, operation: 'parametric_revision_publication', fromState: 'ready',
+        toState: 'ready', payloadDigest, at, leaseId: null })
+      bumpRevision(task, nowMs)
+      const saved = writeTaskUnlocked(dataDir, task)
+      rebuildIndexBestEffort()
+      return cloneJson(saved)
+    })
+  }
+
+  async function retryFailedTask({
+    taskId, username, expectedRevision, transitionId: suppliedTransitionId,
+    expectedErrorCode, executorRevision, reason, now,
+  } = {}) {
+    const transitionId = requireTransitionId(suppliedTransitionId)
+    const scopedUsername = String(username || '').trim()
+    const errorCode = String(expectedErrorCode || '').trim()
+    const revisionDigest = String(executorRevision || '').trim().toUpperCase()
+    const normalizedReason = String(reason || '').trim().slice(0, 1000)
+    if (!scopedUsername) fail('USERNAME_REQUIRED', 'username is required to retry a failed native task', 422)
+    if (!errorCode || !normalizedReason) fail('RETRY_REASON_REQUIRED', 'retry must identify the previous error and its repair', 422)
+    if (!/^[A-F0-9]{64}$/.test(revisionDigest)) fail('EXECUTOR_REVISION_REQUIRED', 'executorRevision must be a trusted SHA-256', 422)
+    const payloadDigest = digest({ username: scopedUsername, errorCode, executorRevision: revisionDigest, reason: normalizedReason })
+    return withLock(lockConfig, async () => {
+      const nowMs = mutationNow(clock, now)
+      const task = readTaskUnlocked(dataDir, taskId)
+      if (String(task.username || '') !== scopedUsername) fail('TASK_NOT_FOUND', 'native task not found', 404)
+      const repeated = idempotentTransition(task, transitionId, 'failed_task_retry', 'created', payloadDigest)
+      if (repeated) return cloneJson(repeated)
+      requireRevision(task, expectedRevision)
+      if (!task.parametricRequest || task.nativeBuild.state !== 'failed' || task.nativeBuild.lease ||
+          task.nativeBuild.archived === true || task.modelReady === true || task.nativeBuild.modelReady === true || task.nativeBuild.result) {
+        fail('TASK_NOT_RETRYABLE', `cannot retry native task in state ${task.nativeBuild.state}`, 409)
+      }
+      if (String(task.nativeBuild.error?.code || '') !== errorCode) fail('ERROR_CODE_MISMATCH', 'native task error no longer matches the retry request', 409)
+      const at = new Date(nowMs).toISOString()
+      task.nativeBuild.retryHistory = [...(task.nativeBuild.retryHistory || []), {
+        at, failedAttempt: task.nativeBuild.attempt, error: cloneJson(task.nativeBuild.error),
+        executorRevision: revisionDigest, reason: normalizedReason,
+      }]
+      Object.assign(task.nativeBuild, {
+        error: null, blocker: null, planArtifact: null, validation: null, result: null,
+        executionStarted: false, modelReady: false, executorRevision: revisionDigest,
+        execution: { started: false, cadStarted: false, modelGenerated: false, modelReady: false, legacyFallbackUsed: false },
+        progress: { stage: 'created', percent: 0 },
+      })
+      task.modelReady = false
+      task.engineeringAssistanceReady = false
+      task.downloadUrl = ''
+      task.deliveryMode = 'native_task_pending'
+      setTaskState(task, 'created')
+      appendTransition(task, { transitionId, operation: 'failed_task_retry', fromState: 'failed',
+        toState: 'created', payloadDigest, at, leaseId: null })
+      bumpRevision(task, nowMs)
+      const saved = writeTaskUnlocked(dataDir, task)
+      rebuildIndexBestEffort()
+      return cloneJson(saved)
+    })
+  }
+
+  async function retryCancelledParametricTask({
+    taskId, username, expectedRevision, transitionId: suppliedTransitionId,
+    expectedCancellationTransitionId, executorRevision, reason, now,
+  } = {}) {
+    const transitionId = requireTransitionId(suppliedTransitionId)
+    const scopedUsername = String(username || '').trim()
+    const cancellationTransitionId = String(expectedCancellationTransitionId || '').trim()
+    const revisionDigest = String(executorRevision || '').trim().toUpperCase()
+    const normalizedReason = String(reason || '').trim()
+    if (!scopedUsername) fail('USERNAME_REQUIRED', 'username is required to retry a cancelled parametric task', 422)
+    if (!cancellationTransitionId || cancellationTransitionId.length > 200) {
+      fail('CANCELLATION_TRANSITION_ID_REQUIRED', 'retry must identify the terminal cancellation transition', 422)
+    }
+    if (!normalizedReason) fail('RETRY_REASON_REQUIRED', 'retry must identify why the cancelled task can continue', 422)
+    if (!/^[A-F0-9]{64}$/.test(revisionDigest)) fail('EXECUTOR_REVISION_REQUIRED', 'executorRevision must be a trusted SHA-256', 422)
+    const payloadDigest = digest({ username: scopedUsername, cancellationTransitionId, executorRevision: revisionDigest, reason: normalizedReason })
+    return withLock(lockConfig, async () => {
+      const nowMs = mutationNow(clock, now)
+      const task = readTaskUnlocked(dataDir, taskId)
+      if (String(task.username || '') !== scopedUsername) fail('TASK_NOT_FOUND', 'native task not found', 404)
+      const repeated = idempotentTransition(task, transitionId, 'cancelled_parametric_retry', 'created', payloadDigest)
+      if (repeated) return cloneJson(repeated)
+      requireRevision(task, expectedRevision)
+      if (!task.parametricRequest || task.nativeBuild.state !== 'cancelled' || task.nativeBuild.lease !== null ||
+          task.archived === true || task.nativeBuild.archived === true ||
+          task.modelReady === true || task.nativeBuild.modelReady === true ||
+          (task.result !== undefined && task.result !== null) ||
+          (task.nativeBuild.result !== undefined && task.nativeBuild.result !== null)) {
+        fail('TASK_NOT_RETRYABLE', `cannot retry native task in state ${task.nativeBuild.state}`, 409)
+      }
+      const cancellationTransition = [...task.nativeBuild.statusHistory].reverse().find(entry => entry.to === 'cancelled')
+      if (!cancellationTransition || cancellationTransition.transitionId !== cancellationTransitionId) {
+        fail('CANCELLATION_TRANSITION_MISMATCH', 'native task terminal cancellation no longer matches the retry request', 409)
+      }
+      const at = new Date(nowMs).toISOString()
+      task.nativeBuild.cancelledRetryHistory = [...(task.nativeBuild.cancelledRetryHistory || []), {
+        at, cancelledAttempt: task.nativeBuild.attempt, cancel: cloneJson(task.nativeBuild.cancel ?? null),
+        cancellationTransition: cloneJson(cancellationTransition), executorRevision: revisionDigest, reason: normalizedReason,
+      }]
+      Object.assign(task.nativeBuild, {
+        cancel: null, error: null, blocker: null, planArtifact: null, validation: null, result: null,
+        checkpoint: null, checkpointDigest: null, message: '',
+        executionStarted: false, modelReady: false, executorRevision: revisionDigest,
+        execution: { started: false, cadStarted: false, modelGenerated: false, modelReady: false, legacyFallbackUsed: false },
+        progress: { stage: 'created', percent: 0 },
+      })
+      task.modelReady = false
+      task.engineeringAssistanceReady = false
+      task.downloadUrl = ''
+      task.deliveryMode = 'native_task_pending'
+      setTaskState(task, 'created')
+      appendTransition(task, { transitionId, operation: 'cancelled_parametric_retry', fromState: 'cancelled',
+        toState: 'created', payloadDigest, at, leaseId: null })
+      bumpRevision(task, nowMs)
+      const saved = writeTaskUnlocked(dataDir, task)
+      rebuildIndexBestEffort()
+      return cloneJson(saved)
     })
   }
 
@@ -1440,6 +1620,7 @@ export function createNativeTaskStore(options = {}) {
     lockPath,
     list,
     listSnapshot,
+    recoverExpiredLeases,
     read,
     createOrImport,
     createOrReuseByFingerprint,
@@ -1449,7 +1630,11 @@ export function createNativeTaskStore(options = {}) {
     heartbeat,
     transition,
     complete,
+    completeParametricCandidate,
+    publishParametricRevision,
     fail: failTask,
+    retryFailedTask,
+    retryCancelledParametricTask,
     requeueBlockedForExecutor,
     cancel,
     archive,

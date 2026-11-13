@@ -1,0 +1,661 @@
+{
+  "schema": "16029-weight-comparison/v1",
+  "createdAtUtc": "2026-11-13T10:25:55.076248+00:00",
+  "firstRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef",
+  "secondRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-08-53-418Z-weight-diagnostic-second-e8e2e517",
+  "supersededFailedPreparationRun": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T09-50-10-967Z-weight-diagnostic-first-22844767",
+  "targetCount": 16,
+  "allTargetsStable": true,
+  "allCachedAndColdStable": true,
+  "maxDeltas": {
+    "massKg": 1.7763568394002505e-15,
+    "volumeM3": 2.439454888092385e-19,
+    "densityKgPerM3": 1.8189894035458565e-12
+  },
+  "rows": [
+    {
+      "key": "T3/crossbar_R_2/Default",
+      "first": {
+        "origin": "T3",
+        "identity": "crossbar_R_2",
+        "configuration": "Default",
+        "cached": "184.23",
+        "cold": "184.23",
+        "repeatCold": "184.23",
+        "massKg": 0.18423126075035515,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 7869.999999999999,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "crossbar_R_2",
+        "configuration": "Default",
+        "cached": "184.23",
+        "cold": "184.23",
+        "repeatCold": "184.23",
+        "massKg": 0.18423126075035515,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 7869.999999999999,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 0.0,
+        "volumeM3": 0.0,
+        "densityKgPerM3": 0.0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/crossbar_R_2/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T3",
+        "identity": "crossbar_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "23.41",
+        "cold": "23.41",
+        "repeatCold": "23.41",
+        "massKg": 0.023409308862815142,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "crossbar_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "23.41",
+        "cold": "23.41",
+        "repeatCold": "23.41",
+        "massKg": 0.023409308862815142,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 0.0,
+        "volumeM3": 0.0,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/crossbar_R_3/Default",
+      "first": {
+        "origin": "T3",
+        "identity": "crossbar_R_3",
+        "configuration": "Default",
+        "cached": "208.30",
+        "cold": "208.30",
+        "repeatCold": "208.30",
+        "massKg": 0.20829925281158473,
+        "volumeM3": 2.6467503533873535e-05,
+        "densityKgPerM3": 7870.000000000001,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "crossbar_R_3",
+        "configuration": "Default",
+        "cached": "208.30",
+        "cold": "208.30",
+        "repeatCold": "208.30",
+        "massKg": 0.2082992528115847,
+        "volumeM3": 2.6467503533873532e-05,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 2.7755575615628914e-17,
+        "volumeM3": 3.3881317890172014e-21,
+        "densityKgPerM3": 9.094947017729282e-13
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/crossbar_R_3/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T3",
+        "identity": "crossbar_R_3",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "26.47",
+        "cold": "26.47",
+        "repeatCold": "26.47",
+        "massKg": 0.026467503533873536,
+        "volumeM3": 2.6467503533873535e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "crossbar_R_3",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "26.47",
+        "cold": "26.47",
+        "repeatCold": "26.47",
+        "massKg": 0.026467503533873536,
+        "volumeM3": 2.6467503533873535e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 0.0,
+        "volumeM3": 0.0,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/shelf_R_2/Default",
+      "first": {
+        "origin": "T3",
+        "identity": "shelf_R_2",
+        "configuration": "Default",
+        "cached": "1457.78",
+        "cold": "1457.78",
+        "repeatCold": "1457.78",
+        "massKg": 1.4577756118329261,
+        "volumeM3": 0.0001852319710079957,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "shelf_R_2",
+        "configuration": "Default",
+        "cached": "1457.78",
+        "cold": "1457.78",
+        "repeatCold": "1457.78",
+        "massKg": 1.457775611832925,
+        "volumeM3": 0.00018523197100799556,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 1.1102230246251565e-15,
+        "volumeM3": 1.3552527156068805e-19,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/shelf_R_2/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T3",
+        "identity": "shelf_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "185.23",
+        "cold": "185.23",
+        "repeatCold": "185.23",
+        "massKg": 0.1852319710079956,
+        "volumeM3": 0.0001852319710079956,
+        "densityKgPerM3": 999.9999999999999,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "shelf_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "185.23",
+        "cold": "185.23",
+        "repeatCold": "185.23",
+        "massKg": 0.1852319710079958,
+        "volumeM3": 0.0001852319710079958,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 1.942890293094024e-16,
+        "volumeM3": 1.8973538018496328e-19,
+        "densityKgPerM3": 1.1368683772161603e-13
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/structure_1000_2/Default",
+      "first": {
+        "origin": "T3",
+        "identity": "structure_1000_2",
+        "configuration": "Default",
+        "cached": "1913.32",
+        "cold": "1913.32",
+        "repeatCold": "1913.32",
+        "massKg": 1.9133248465425328,
+        "volumeM3": 0.00024311624479574748,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "structure_1000_2",
+        "configuration": "Default",
+        "cached": "1913.32",
+        "cold": "1913.32",
+        "repeatCold": "1913.32",
+        "massKg": 1.9133248465425332,
+        "volumeM3": 0.00024311624479574754,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 4.440892098500626e-16,
+        "volumeM3": 5.421010862427522e-20,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T3/structure_1000_2/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T3",
+        "identity": "structure_1000_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "243.12",
+        "cold": "243.12",
+        "repeatCold": "243.12",
+        "massKg": 0.24311624479574745,
+        "volumeM3": 0.00024311624479574746,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T3",
+        "identity": "structure_1000_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "243.12",
+        "cold": "243.12",
+        "repeatCold": "243.12",
+        "massKg": 0.24311624479574753,
+        "volumeM3": 0.00024311624479574754,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 8.326672684688674e-17,
+        "volumeM3": 8.131516293641283e-20,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/crossbar_R_2/Default",
+      "first": {
+        "origin": "T4",
+        "identity": "crossbar_R_2",
+        "configuration": "Default",
+        "cached": "184.23",
+        "cold": "184.23",
+        "repeatCold": "184.23",
+        "massKg": 0.18423126075035515,
+        "volumeM3": 2.3409308862815138e-05,
+        "densityKgPerM3": 7870.000000000001,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "crossbar_R_2",
+        "configuration": "Default",
+        "cached": "184.23",
+        "cold": "184.23",
+        "repeatCold": "184.23",
+        "massKg": 0.18423126075035515,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 7869.999999999999,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 0.0,
+        "volumeM3": 3.3881317890172014e-21,
+        "densityKgPerM3": 1.8189894035458565e-12
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/crossbar_R_2/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T4",
+        "identity": "crossbar_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "23.41",
+        "cold": "23.41",
+        "repeatCold": "23.41",
+        "massKg": 0.023409308862815142,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "crossbar_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "23.41",
+        "cold": "23.41",
+        "repeatCold": "23.41",
+        "massKg": 0.023409308862815142,
+        "volumeM3": 2.340930886281514e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 0.0,
+        "volumeM3": 0.0,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/crossbar_R_3/Default",
+      "first": {
+        "origin": "T4",
+        "identity": "crossbar_R_3",
+        "configuration": "Default",
+        "cached": "208.30",
+        "cold": "208.30",
+        "repeatCold": "208.30",
+        "massKg": 0.20829925281158473,
+        "volumeM3": 2.6467503533873535e-05,
+        "densityKgPerM3": 7870.000000000001,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "crossbar_R_3",
+        "configuration": "Default",
+        "cached": "208.30",
+        "cold": "208.30",
+        "repeatCold": "208.30",
+        "massKg": 0.20829925281158468,
+        "volumeM3": 2.646750353387353e-05,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 5.551115123125783e-17,
+        "volumeM3": 6.776263578034403e-21,
+        "densityKgPerM3": 9.094947017729282e-13
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/crossbar_R_3/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T4",
+        "identity": "crossbar_R_3",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "26.47",
+        "cold": "26.47",
+        "repeatCold": "26.47",
+        "massKg": 0.026467503533873536,
+        "volumeM3": 2.6467503533873535e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "crossbar_R_3",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "26.47",
+        "cold": "26.47",
+        "repeatCold": "26.47",
+        "massKg": 0.02646750353387353,
+        "volumeM3": 2.646750353387353e-05,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 6.938893903907228e-18,
+        "volumeM3": 6.776263578034403e-21,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/shelf_R_2/Default",
+      "first": {
+        "origin": "T4",
+        "identity": "shelf_R_2",
+        "configuration": "Default",
+        "cached": "1457.78",
+        "cold": "1457.78",
+        "repeatCold": "1457.78",
+        "massKg": 1.457775611832928,
+        "volumeM3": 0.00018523197100799594,
+        "densityKgPerM3": 7869.999999999999,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "shelf_R_2",
+        "configuration": "Default",
+        "cached": "1457.78",
+        "cold": "1457.78",
+        "repeatCold": "1457.78",
+        "massKg": 1.4577756118329261,
+        "volumeM3": 0.0001852319710079957,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 1.7763568394002505e-15,
+        "volumeM3": 2.439454888092385e-19,
+        "densityKgPerM3": 9.094947017729282e-13
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/shelf_R_2/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T4",
+        "identity": "shelf_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "185.23",
+        "cold": "185.23",
+        "repeatCold": "185.23",
+        "massKg": 0.18523197100799563,
+        "volumeM3": 0.00018523197100799564,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "shelf_R_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "185.23",
+        "cold": "185.23",
+        "repeatCold": "185.23",
+        "massKg": 0.18523197100799577,
+        "volumeM3": 0.00018523197100799577,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 1.3877787807814457e-16,
+        "volumeM3": 1.3552527156068805e-19,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/structure_1000_2/Default",
+      "first": {
+        "origin": "T4",
+        "identity": "structure_1000_2",
+        "configuration": "Default",
+        "cached": "1913.32",
+        "cold": "1913.32",
+        "repeatCold": "1913.32",
+        "massKg": 1.9133248465425325,
+        "volumeM3": 0.00024311624479574746,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "structure_1000_2",
+        "configuration": "Default",
+        "cached": "1913.32",
+        "cold": "1913.32",
+        "repeatCold": "1913.32",
+        "massKg": 1.913324846542532,
+        "volumeM3": 0.0002431162447957474,
+        "densityKgPerM3": 7870,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 4.440892098500626e-16,
+        "volumeM3": 5.421010862427522e-20,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    },
+    {
+      "key": "T4/structure_1000_2/DefaultSM-FLAT-PATTERN",
+      "first": {
+        "origin": "T4",
+        "identity": "structure_1000_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "243.12",
+        "cold": "243.12",
+        "repeatCold": "243.12",
+        "massKg": 0.24311624479574717,
+        "volumeM3": 0.00024311624479574718,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "second": {
+        "origin": "T4",
+        "identity": "structure_1000_2",
+        "configuration": "DefaultSM-FLAT-PATTERN",
+        "cached": "243.12",
+        "cold": "243.12",
+        "repeatCold": "243.12",
+        "massKg": 0.24311624479574742,
+        "volumeM3": 0.00024311624479574743,
+        "densityKgPerM3": 1000,
+        "massConsistency": true,
+        "volumeConsistency": true,
+        "overrideMass": false,
+        "equationLinked": false
+      },
+      "deltas": {
+        "massKg": 2.498001805406602e-16,
+        "volumeM3": 2.439454888092385e-19,
+        "densityKgPerM3": 0
+      },
+      "allStable": true,
+      "cachedEqualsColdBothRounds": true
+    }
+  ],
+  "offlineToolchain": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119",
+  "production_release": false,
+  "fullPlanPass": false,
+  "acceptancePass": false
+}

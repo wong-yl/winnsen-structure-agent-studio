@@ -1,0 +1,113 @@
+{
+  "status": "ready_for_primary_review",
+  "recordedAt": "2026-11-10T03:16:38.038Z",
+  "source": [
+    {
+      "name": "NativeParametricAssembly.cs",
+      "sha256": "751C2BF8718AA087CB527E99834042E82D87A5F027D6A23AA04703FB7B52E937",
+      "baselineSha256": "712EE78C0BD67B3E6CAAED463EF79D6B00E29958053047ADB3D35FD807554392"
+    },
+    {
+      "name": "NativeParametricDoor.cs",
+      "sha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B",
+      "baselineSha256": "B09DBDDED09CA11F0DA0A3F0114D9105AD838202105E7D77CEB25B3DB8FBC57B"
+    },
+    {
+      "name": "NativeParametricDoorPlacement.cs",
+      "sha256": "16E341840333631768263F393E00DB811D7CC60ED68EA2C0BA5DC78E7A6A0D75",
+      "baselineSha256": "4F05153A65A86D0708F33D1EE10202B7C11B25E0B0E7ED553E60031226254F27"
+    },
+    {
+      "name": "NativeParametricEnvelope.cs",
+      "sha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9",
+      "baselineSha256": "540B8F6CECCF43BC3F1313DF77455392C3B26638EB281A51AA765D1F6BA1B3A9"
+    },
+    {
+      "name": "NativeParametricLockBase.cs",
+      "sha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586",
+      "baselineSha256": "C3EC81564C536E341053A97FDAD6088E6BC8256FAF16A78933733E630AD09586"
+    },
+    {
+      "name": "NativeParametricLocks.cs",
+      "sha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6",
+      "baselineSha256": "467D217D798F02ACB9FE5CFA8584DD272444E7F210F1B58A03D933FE0CB56EC6"
+    },
+    {
+      "name": "NativeParametricPhysicalAudit.cs",
+      "sha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F",
+      "baselineSha256": "85E8B7089D9D6E94B5D23E9E5C123ADB1D2ED6892DDA5697C27B42A92281365F"
+    },
+    {
+      "name": "NativeParametricVerification.cs",
+      "sha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF",
+      "baselineSha256": "F8D5EED097503A5AEC68B83769A4957F8C9FC7227240565526E2E91ABB4B92CF"
+    },
+    {
+      "name": "NativeParametricWidth.cs",
+      "sha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2",
+      "baselineSha256": "8777F58A4149E6997D3D97674617CA2D80327713348A3C0CABCFD481F2D4A2D2"
+    },
+    {
+      "name": "ParametricContext.cs",
+      "sha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732",
+      "baselineSha256": "CB49DFB1E5545FEAEB38C270BAB9025D489B541A1D482F44C35BCA3A78F37732"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\tools\\lib\\locker_16029_parametric_runtime.mjs",
+      "sha256": "7B416BDA9DD6E452350150B9A55722A930CD8B7F5E48418C53431A2308B3F853"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\tools\\verify_16029_parametric_runtime.test.mjs",
+      "sha256": "C01A053A75BE7351C4EA6CBBD3B5607E539D4904D41E4649F7F84993D9641D03"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\test_door_precision.mjs",
+      "sha256": "ED375D8489C41C20FE30D629CCC1B0D75C5335829748727E40417EEEEBFB0F9D"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\tests\\DoorPrecisionHarness.cs",
+      "sha256": "E3F7620D107AA89E3F27973E047D466F022FC4F93C84C14A29E58555E8A3F3F7"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\DOOR_PRECISION.md",
+      "sha256": "763558BD9B6CEFC68F47039A3A35DFDC7D5CF8B201492E866C85F4413B4A8772"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\tests\\runs\\door-precision-lc9eiO\\report.json",
+      "sha256": "D2B344189EFC736150792CB7FCD94CF767A9451071855A262AA88260D525F8D3"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\native_model_requests\\parametric_v1\\repairs\\readonly-open-20261110-r4-doorprecision1\\tests\\runtime-tests-20261110.log",
+      "sha256": "8829C50E189980979A1C198A1DC92A0D02AB3864585C5CF6CBC8128BFB08B188"
+    }
+  ],
+  "checks": [
+    {
+      "command": "node --check tools/lib/locker_16029_parametric_runtime.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node --check tools/verify_16029_parametric_runtime.test.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node --test --test-reporter=spec tools/verify_16029_parametric_runtime.test.mjs",
+      "result": "PASS",
+      "tests": 297,
+      "failed": 0,
+      "durationMs": 63725.1811
+    },
+    {
+      "command": "node workers/native_model_requests/parametric_v1/repairs/readonly-open-20261110-r4-doorprecision1/test_door_precision.mjs",
+      "result": "PASS",
+      "tests": 74,
+      "failed": 0
+    }
+  ],
+  "unverified": [
+    "Full candidate native build, real CAD generation, physical interference, package acceptance and runtime profile activation remain with the primary agent."
+  ],
+  "scope": "Only candidate source copies (two modified files), runtime bridge, runtime tests, and candidate-local test artifacts/documentation. No old source, historical CAD, CAD collision tolerance, UI, runner, build registry, or selection JSON edited by this worker."
+}

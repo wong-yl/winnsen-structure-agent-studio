@@ -1,0 +1,7 @@
+{
+  "version": "16029-variable-trial-process-v1",
+  "thicknessMm": 0.8,
+  "innerRadiusMm": 0.2,
+  "bendDeductionMm": 1.4,
+  "status": "draft_pending_factory_confirmation"
+}

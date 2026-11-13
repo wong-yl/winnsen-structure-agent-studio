@@ -1,0 +1,193 @@
+{
+  "schema": "16029.archive.checks.v1",
+  "checks": [
+    {
+      "path": "workers/master_v2/variable_trial/audit_outputs.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/audit_outputs.test.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/audit_pdf_probe.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/build.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/common.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/compare_assembly_measurements.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/compare_resumed_relocation.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/door_closeout.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/dxf_check.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/execute.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/execute.test.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/layout.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/layout.test.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/mass_readback/build.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/mass_readback/build.test.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/mass_readback/run.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/mass_readback/run.test.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/preview_dxf.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/probe_structure.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/recover.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/recover.test.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/run.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/safety.test.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/status.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    },
+    {
+      "path": "workers/master_v2/variable_trial/test_compare_resumed_relocation.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/test_door_closeout.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/test_native_door_gate.py",
+      "check": "ast.parse (no execution)",
+      "code": 0
+    },
+    {
+      "path": "workers/master_v2/variable_trial/verify.mjs",
+      "check": "node --check",
+      "code": 0,
+      "stderr": ""
+    }
+  ],
+  "allSyntaxChecksPass": true,
+  "originalHeadAndIndexUnchanged": true,
+  "sourceFilesUnchanged": true,
+  "cadExecuted": false,
+  "projectTestsExecuted": false,
+  "engineeringAcceptancePerformed": false,
+  "production_release": false,
+  "finalizedAtUtc": "2026-11-13T12:50:18.467927+00:00",
+  "sourceCopyHashesVerified": true,
+  "sourceFilesUnchangedAtFinalization": true,
+  "secretScan": {
+    "rules": [
+      "github_token",
+      "private_key",
+      "api_token",
+      "aws_access_key",
+      "credential_url",
+      "jwt",
+      "literal_secret_assignment"
+    ],
+    "findings": [],
+    "scope": "all newly uploaded snapshot files; historical base tree not rescanned"
+  },
+  "correctionEvidenceAssertionsPass": true,
+  "relativeMjsImportFindings": [
+    {
+      "path": "tools/verify_16029_part_first_pilot.mjs",
+      "target": "./locker_16029_template_rules.mjs"
+    }
+  ],
+  "note": "Import findings in old scripts are recorded as archive limitations; no archived source is repaired."
+}

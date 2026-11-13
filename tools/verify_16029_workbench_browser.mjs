@@ -168,6 +168,34 @@ try {
 
   await page.locator('[data-task-row][data-task-state=failed]').waitFor({ timeout: 12000 })
 
+  assert.match(await page.locator('[data-task-row][data-task-state=failed]').innerText(), /本次模型未通过交付检查/)
+
+  const blockedId = 'BLOCKED-PROCESS-BASELINE'
+
+  await pollingStore.createOrImport({ ...stored, id: blockedId, requestFingerprint: blockedId,
+    nativeBuild: { state: 'created', attempt: 0, modelReady: false } })
+
+  let blockedTask = await pollingStore.claimTask({ taskId: blockedId, workerId: 'ui-blocker-test' })
+
+  blockedTask = await pollingStore.transition({ taskId: blockedId, workerId: 'ui-blocker-test',
+    leaseId: blockedTask.nativeBuild.lease.id, expectedRevision: blockedTask.revision,
+    transitionId: 'poll-blocked-processes', toState: 'blocked',
+    patch: { blocker: { code: 'OWNED_PROCESS_CLEANUP_UNVERIFIED', message: 'PRIVATE_DIAGNOSTIC_PATH' } } })
+
+  const blockedRow = page.locator('[data-task-row]').filter({ has: page.locator('code', { hasText: blockedId }) })
+
+  await blockedRow.getByText('生成已暂停：SOLIDWORKS 或其监控程序的退出状态未确认，需后台处理后重试。', { exact: true }).waitFor({ timeout: 12000 })
+
+  assert.equal(await blockedRow.getByRole('button', { name: '本次未生成可下载模型' }).isDisabled(), true)
+
+  assert.doesNotMatch(await page.locator('body').innerText(), /PRIVATE_DIAGNOSTIC_PATH/)
+
+  const serverHtml = await (await page.request.get(base + '/')).text()
+
+  assert.match(serverHtml, /生成已暂停：SOLIDWORKS 或其监控程序的退出状态未确认/)
+
+  assert.doesNotMatch(serverHtml, /PRIVATE_DIAGNOSTIC_PATH/)
+
   await page.screenshot({ path: resolve(output, 'submitted-state.png'), fullPage: true })
 
   const completed = JSON.parse(readFileSync(readyTaskPath, 'utf8'))

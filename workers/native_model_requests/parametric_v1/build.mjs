@@ -43,5 +43,8 @@ const result = spawnSync('C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.ex
 if (result.status !== 0) throw new Error(result.stdout + result.stderr)
 const hash = (path) => createHash('sha256').update(readFileSync(path)).digest('hex').toUpperCase()
 const manifest = { executable, executableSha256: hash(executable), sources: [...sources.map(([path]) => path), ...['ParametricContext.cs','NativeParametricAssembly.cs','NativeParametricVerification.cs','NativeParametricLocks.cs','NativeParametricPhysicalAudit.cs','NativeParametricDoorPlacement.cs','NativeParametricEnvelope.cs'].map(file => resolve(folder,file))].map(path => ({ path, sha256: hash(path) })) }
+const normalizedHash = path => createHash('sha256').update(readFileSync(path, 'utf8').replace(/^\uFEFF/, '').replaceAll('\r\n', '\n')).digest('hex').toUpperCase()
+manifest.sourceHashes = manifest.sources.map(source => ({ name: source.path.split(/[\\/]/).at(-1), normalizedSha256: normalizedHash(source.path) }))
+for (const source of manifest.sources) source.normalizedSha256 = normalizedHash(source.path)
 writeFileSync(resolve(bin, 'build.json'), JSON.stringify(manifest, null, 2) + '\n')
 process.stdout.write(JSON.stringify({ compiled: true, ...manifest }) + '\n')

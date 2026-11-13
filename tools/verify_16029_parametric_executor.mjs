@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { adaptWidthSource, WIDTH_SOURCE_PATH } from '../workers/native_model_requests/parametric_v1/width_adapter.mjs'
 import { adaptDoorSource, DOOR_SOURCE_PATH } from '../workers/native_model_requests/parametric_v1/door_adapter.mjs'
+import { verify16029ParametricBuild } from './lib/locker_16029_parametric_build.mjs'
 
 const widthPath = WIDTH_SOURCE_PATH
 const width = readFileSync(widthPath, 'utf8')
@@ -20,10 +21,13 @@ assert.ok(doorOutput.includes('"ordinary_door_" + handedness +\n                
 assert.ok(!doorOutput.includes('"door_panel_left_parametric.SLDPRT"'))
 assert.equal(sha(readFileSync(widthPath)), widthBefore)
 assert.equal(sha(readFileSync(DOOR_SOURCE_PATH)), doorBefore)
-const buildTag = process.argv[2] || 'unique-doors'
+const buildTag = process.argv[2] || ''
+assert.ok(buildTag, 'pass the explicit native candidate build tag')
 assert.match(buildTag, /^[a-zA-Z0-9_-]+$/)
+const verifiedBuild = verify16029ParametricBuild(buildTag)
 const executable = `workers/native_model_requests/parametric_v1/bin-${buildTag}/NativeParametricAssembly.exe`
 assert.ok(existsSync(executable), 'compile the native executor first')
+assert.ok(verifiedBuild.manifest.sources.length === 10, 'all ten compiled source identities verified')
 const result = spawnSync(executable, [], { encoding: 'utf8', windowsHide: true })
 assert.equal(result.status, 1)
 assert.match(result.stderr, /Usage: NativeParametricAssembly/)

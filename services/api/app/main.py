@@ -548,15 +548,27 @@ def read_drawing_sheetmetal_intake_records() -> list[DrawingSheetMetalIntakeReco
     return [DrawingSheetMetalIntakeRecord.model_validate(record) for record in raw_records if isinstance(record, dict)]
 
 
+@contextmanager
+def drawing_sheetmetal_intake_manifest_guard() -> Iterator[None]:
+    with connect() as connection:
+        connection.execute("BEGIN IMMEDIATE")
+        yield
+
+
 def write_drawing_sheetmetal_intake_records(records: list[DrawingSheetMetalIntakeRecord]) -> None:
     DRAWING_SHEETMETAL_INTAKE_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
         "updated_at": now_iso(),
         "records": [record.model_dump(mode="json") for record in records[:100]],
     }
-    temp_path = DRAWING_SHEETMETAL_INTAKE_MANIFEST_PATH.with_suffix(".tmp")
-    temp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    temp_path.replace(DRAWING_SHEETMETAL_INTAKE_MANIFEST_PATH)
+    temp_path = DRAWING_SHEETMETAL_INTAKE_MANIFEST_PATH.with_name(
+        f"{DRAWING_SHEETMETAL_INTAKE_MANIFEST_PATH.name}.tmp-{uuid.uuid4().hex}"
+    )
+    try:
+        temp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        temp_path.replace(DRAWING_SHEETMETAL_INTAKE_MANIFEST_PATH)
+    finally:
+        temp_path.unlink(missing_ok=True)
     write_drawing_sheetmetal_evidence_catalog(records)
 
 
@@ -1194,8 +1206,9 @@ def create_drawing_sheetmetal_intake_record(payload: DrawingSheetMetalIntakeCrea
         next_action=drawing_sheetmetal_next_action(file_records),
     )
     write_drawing_sheetmetal_intake_note(record)
-    records = [record, *read_drawing_sheetmetal_intake_records()]
-    write_drawing_sheetmetal_intake_records(records)
+    with drawing_sheetmetal_intake_manifest_guard():
+        records = [record, *read_drawing_sheetmetal_intake_records()]
+        write_drawing_sheetmetal_intake_records(records)
     return record
 
 
@@ -1262,20 +1275,24 @@ def failed_dxf_extraction_result(
     )
 
 
-def update_drawing_sheetmetal_intake_record(record: DrawingSheetMetalIntakeRecord) -> DrawingSheetMetalIntakeRecord:
-    records = read_drawing_sheetmetal_intake_records()
-    updated = False
-    next_records: list[DrawingSheetMetalIntakeRecord] = []
-    for item in records:
-        if item.id == record.id:
-            next_records.append(record)
-            updated = True
-        else:
-            next_records.append(item)
-    if not updated:
-        raise HTTPException(status_code=404, detail=f"Drawing intake {record.id} was not found.")
-    write_drawing_sheetmetal_intake_records(next_records)
-    write_drawing_sheetmetal_intake_note(record)
+def update_drawing_sheetmetal_intake_record(
+    record: DrawingSheetMetalIntakeRecord, result_field: Literal["dxf_extraction", "cad_check"]
+) -> DrawingSheetMetalIntakeRecord:
+    with drawing_sheetmetal_intake_manifest_guard():
+        records = read_drawing_sheetmetal_intake_records()
+        updated = False
+        next_records: list[DrawingSheetMetalIntakeRecord] = []
+        for item in records:
+            if item.id == record.id:
+                record = item.model_copy(update={result_field: getattr(record, result_field), "next_action": record.next_action})
+                next_records.append(record)
+                updated = True
+            else:
+                next_records.append(item)
+        if not updated:
+            raise HTTPException(status_code=404, detail=f"Drawing intake {record.id} was not found.")
+        write_drawing_sheetmetal_intake_records(next_records)
+        write_drawing_sheetmetal_intake_note(record)
     return record
 
 
@@ -1301,7 +1318,7 @@ def run_drawing_sheetmetal_dxf_extraction(intake_id: str) -> DrawingSheetMetalIn
             message="该 intake 没有 DXF 文件；PDF/图片/STEP/SolidWorks 文件需要走对应识别或 CAD 检查路线。",
         )
         record.next_action = "没有可直接轻量解析的 DXF。下一步按文件类型进入图片识别、STEP/FCStd 几何检查或 SolidWorks 工程图处理。"
-        return update_drawing_sheetmetal_intake_record(record)
+        return update_drawing_sheetmetal_intake_record(record, "dxf_extraction")
 
     if not DRAWING_SHEETMETAL_DXF_EXTRACTOR.exists():
         raise HTTPException(status_code=500, detail=f"DXF extractor was not found: {DRAWING_SHEETMETAL_DXF_EXTRACTOR}")
@@ -1376,7 +1393,7 @@ def run_drawing_sheetmetal_dxf_extraction(intake_id: str) -> DrawingSheetMetalIn
         if status != "failed"
         else message
     )
-    return update_drawing_sheetmetal_intake_record(record)
+    return update_drawing_sheetmetal_intake_record(record, "dxf_extraction")
 
 
 def cad_check_result_from_summary(
@@ -1443,7 +1460,7 @@ def run_drawing_sheetmetal_freecad_check(intake_id: str) -> DrawingSheetMetalInt
             message="该 intake 没有 STEP/STP/FCStd 文件；SolidWorks 原生文件暂不交给 FreeCAD 自动打开。",
         )
         record.next_action = "没有可用 FreeCAD 轻量检查的 STEP/STP/FCStd。下一步按 DXF 解析、图片识别或 SolidWorks 原生检查路线处理。"
-        return update_drawing_sheetmetal_intake_record(record)
+        return update_drawing_sheetmetal_intake_record(record, "cad_check")
 
     if not DRAWING_SHEETMETAL_FREECAD_CHECKER.exists():
         raise HTTPException(status_code=500, detail=f"FreeCAD checker was not found: {DRAWING_SHEETMETAL_FREECAD_CHECKER}")
@@ -1515,7 +1532,7 @@ def run_drawing_sheetmetal_freecad_check(intake_id: str) -> DrawingSheetMetalInt
         if status != "failed"
         else message
     )
-    return update_drawing_sheetmetal_intake_record(record)
+    return update_drawing_sheetmetal_intake_record(record, "cad_check")
 
 
 def row_to_task(row: sqlite3.Row) -> GenerationTask:
@@ -3499,6 +3516,7 @@ def run_rule_extraction_package(run_id: str) -> RuleExtractionResult:
 
 
 def freecad_execution_command(task: GenerationTask, output_dir: Path) -> list[str]:
+    ensure_generation_route_enabled(task.capability_id, task.command)
     tokens = command_tokens(task.command)
     if not tokens:
         raise HTTPException(status_code=409, detail="Task has no executable command.")
@@ -3760,6 +3778,7 @@ def freecad_postprocess_quality(postprocess: dict[str, Any] | None) -> tuple[str
 
 
 def solidworks_manual_command(task: GenerationTask, output_dir: Path) -> list[str]:
+    ensure_generation_route_enabled(task.capability_id, task.command)
     tokens = command_tokens(task.command)
     if not tokens:
         raise HTTPException(status_code=409, detail="Task has no SolidWorks command.")
@@ -4393,8 +4412,22 @@ def open_freecad_model(payload: FreeCadOpenRequest) -> LocalActionResult:
     return LocalActionResult(status="opened", path=str(fcstd), message=f"已用 FreeCAD 打开模型，并尝试执行显示全部/适配视图。{macro_note}")
 
 
-def ensure_generation_route_enabled(capability_id: str) -> None:
-    if capability_id.startswith("locker_16029_"):
+def ensure_generation_route_enabled(capability_id: str, command: str = "") -> None:
+    retired = capability_id.startswith("locker_16029_")
+    script_token = find_script_token(command_tokens(command))
+    if script_token and not retired:
+        retired_names = {
+            "sw_build_locker_16029_direct_assembly.js",
+            "sw_clone_16029_baseline_template.js",
+            "sw_make_parametric_door_panel.js",
+            "generate_locker_16029_freecad.py",
+        }
+        retired = script_token.replace("\\", "/").rsplit("/", 1)[-1].lower() in retired_names
+        if not retired:
+            script_ok, script_detail = resolve_script(script_token)
+            if script_ok:
+                retired = Path(script_detail).resolve().name.lower() in retired_names
+    if retired:
         raise HTTPException(
             status_code=410,
             detail=(
@@ -4424,7 +4457,7 @@ def mark_generation_task_failed(task_id: str) -> None:
 
 @app.post("/api/generation-tasks", response_model=GenerationTask, status_code=201)
 def create_generation_task(payload: GenerationTaskCreate) -> GenerationTask:
-    ensure_generation_route_enabled(payload.capability_id)
+    ensure_generation_route_enabled(payload.capability_id, payload.command)
     if payload.command == "not_enabled":
         raise HTTPException(status_code=400, detail="Cannot create a worker draft for a disabled generator.")
 
@@ -4503,7 +4536,7 @@ def create_generation_task(payload: GenerationTaskCreate) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/dry-run", response_model=GenerationTask)
 def dry_run_generation_task(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
-    ensure_generation_route_enabled(task.capability_id)
+    ensure_generation_route_enabled(task.capability_id, task.command)
     if task.status == "running":
         raise HTTPException(status_code=409, detail="Cannot run dry-run while this task is running.")
     result = build_dry_run(task)
@@ -4538,7 +4571,7 @@ def dry_run_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/execute", response_model=GenerationTask)
 def execute_generation_task(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
-    ensure_generation_route_enabled(task.capability_id)
+    ensure_generation_route_enabled(task.capability_id, task.command)
     if task.status != "ready_to_run":
         raise HTTPException(status_code=409, detail="Run dry-run successfully before executing this worker task.")
     parameter_errors = validate_task_parameters(task)
@@ -4581,7 +4614,7 @@ def execute_generation_task(task_id: str) -> GenerationTask:
 @app.post("/api/generation-tasks/{task_id}/run-solidworks-package", response_model=GenerationTask)
 def run_solidworks_package(task_id: str) -> GenerationTask:
     task = row_to_task(fetch_task_or_404(task_id))
-    ensure_generation_route_enabled(task.capability_id)
+    ensure_generation_route_enabled(task.capability_id, task.command)
     if task.cad_runner != "solidworks":
         raise HTTPException(status_code=409, detail="This task is not a SolidWorks task.")
     if task.status not in {"ready_to_run", "requires_manual_run", "completed_reference", "failed_worker"}:

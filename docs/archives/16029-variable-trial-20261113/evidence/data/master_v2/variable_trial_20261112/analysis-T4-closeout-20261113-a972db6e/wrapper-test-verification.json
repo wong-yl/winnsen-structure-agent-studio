@@ -1,0 +1,43 @@
+{
+  "schema": "16029-wrapper-test-verification/v1",
+  "executedBy": "/root/case3_resume_contract",
+  "command": "python -B workers/master_v2/variable_trial/test_compare_resumed_relocation.py -v",
+  "workingDirectory": "D:\\Winnsen_Structure_Agent_Studio",
+  "executionSessionId": 68083,
+  "exitCode": 0,
+  "testsRun": 49,
+  "testsPassed": 49,
+  "testsFailed": 0,
+  "durationSeconds": 244.554,
+  "artifactVersions": {
+    "compare_resumed_relocation.py": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\compare_resumed_relocation.py",
+      "sha256": "5E65DD3DA6DADDAC39333CD89ECF0510CE937CE875A2D0B79EE1F453CC4BBE2E"
+    },
+    "test_compare_resumed_relocation.py": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\test_compare_resumed_relocation.py",
+      "sha256": "6DDDD613A4FA25E230B651F19DE3B157D4F1E9986D915E7F758671E9355D6225"
+    },
+    "compare_assembly_measurements.py": {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\compare_assembly_measurements.py",
+      "sha256": "0920CDD6E3EEACE21ED36F40D4A0D64EBC2CD73B4DED063AF0FE2F55C1B57B27"
+    }
+  },
+  "log": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\wrapper-test-output.txt",
+    "sha256": "0D66CFABC45B4CCD7C730C3950D622B5616A57F9482F7D6E6C71020EFFC5FD05",
+    "size": 4881,
+    "captureMethod": "Reassembled by concatenating the complete, untruncated output text returned by the existing exec_command and write_stdin calls. Original stdout and stderr were returned as one combined tool output; streams cannot be separated. No test rerun was performed.",
+    "sourceChunkIds": [
+      "44c102",
+      "36e8ba",
+      "b7a70d",
+      "02ed57",
+      "048e11"
+    ],
+    "lineEndings": "CRLF",
+    "containsObservedPerTestResults": 49
+  },
+  "evidenceSavedAtUtc": "2026-11-13T07:26:56.467862+00:00",
+  "scope": "Synthetic filesystem wrapper tests only. No CAD execution, engineering acceptance, or production release."
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "16029-weight-round/v1",
+  "round": "first",
+  "run": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef",
+  "pass": true,
+  "seed": {
+    "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-51-237Z-weight-seed-1fe1b7c5\\weight-seed.json",
+    "sha256": "4678DD91F8881ED44EA990DDDCA47140079AA838C90738A1ED44A2A8A926BA59"
+  },
+  "priorRound": null,
+  "cad": {
+    "inspection": "cad_owned",
+    "pid": 21544,
+    "startTicks": 639301609206033900,
+    "startedAtUtc": "2026-11-13T10:02:00.6033936Z",
+    "executable": "D:\\soildworks2020\\SOLIDWORKS\\SLDWORKS.exe",
+    "revision": "28.5.0"
+  },
+  "toolSources": [
+    {
+      "name": "TrialAssembly.cs",
+      "sha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537"
+    },
+    {
+      "name": "TrialOutput.cs",
+      "sha256": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6"
+    },
+    {
+      "name": "VariableTrial.cs",
+      "sha256": "3CD215BA74838F4996B22164D40E800100D22AEC5A62CF325C092E44E61FF802"
+    },
+    {
+      "name": "WeightReadback.cs",
+      "sha256": "1B83A0C9ADBB70A32A4C51CCBFCBD7142868F7D3255F94124259B16CE17BC024"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\job.json",
+      "sha256": "A17CBCE44A6772138A033852FE7C8A3C14B31D6292A5F467DC430A0A933D6B8E"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\native-result.json",
+      "sha256": "85F4D8A9F38EE42947136F963C2DB6FC5235AD6D2CEACC10F0DD8BACB5524F4C"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\result.json",
+      "sha256": "EB9BBC7CA3B5D3AD4F663E02845AA67D55B0CEC5F60C0C23321C8A34639AB3AD"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\supervision.json",
+      "sha256": "F84F0A21E340197032590EEA5DA7FCE83C28A80B76F5A18ABF489A47112AAA25"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\protection-result.json",
+      "sha256": "4FC458CC35D5D88107121AEA0E8116170B20F05F939971F0EE312A610A161707"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\toolchain.json",
+      "sha256": "6C2F2DA608F53B711EDF1C8759CD0F9A7E695FF91CD76ECB1A05F9B1D112BFA0"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\runs\\2026-11-13T10-01-52-919Z-weight-diagnostic-first-001d5aef\\weight-originals-first-947cac84.json",
+      "sha256": "59DD84BCA0BDF57E573DA65DC97E62BF8D616D23003B86B35D8355806161444A"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-01-51-438Z-614c31e87372\\adapter-provenance.json",
+      "sha256": "3362CEA53F891053B891E6C7F4E9DF60A9DEF95BB6589DE18707D4B844BD2AE8"
+    }
+  ],
+  "acceptancePass": false,
+  "fullPlanPass": false,
+  "production_release": false
+}

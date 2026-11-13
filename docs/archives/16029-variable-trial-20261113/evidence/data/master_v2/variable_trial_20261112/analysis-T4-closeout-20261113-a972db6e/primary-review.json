@@ -1,0 +1,39 @@
+{
+  "schema": "16029-variable-trial-primary-closeout-review/v1",
+  "reviewedAtUtc": "2026-11-13T07:36:55.612772+00:00",
+  "documents": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\REPORT_全局变量试验_20261113.md",
+      "sha256": "8852DAE4BE1D4904B5144AB6B871D75D28789E74D6FABB968CBFC70C3E899607",
+      "localMarkdownLinkCount": 78,
+      "allLocalMarkdownLinksExist": true
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\PROGRESS_全局变量试验_20261113.md",
+      "sha256": "6BBD2D9F47F85658A9AA79E17D9E18D8EEE3DFC38B43028B835F159666971992",
+      "localMarkdownLinkCount": 39,
+      "allLocalMarkdownLinksExist": true
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\workers\\master_v2\\variable_trial\\README.md",
+      "sha256": "023481807580D0C1C2B3DF105902F5DBFAD84F211BE248F9770E4A9ED12E7A21",
+      "localMarkdownLinkCount": 30,
+      "allLocalMarkdownLinksExist": true
+    }
+  ],
+  "closeoutPath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\analysis-T4-closeout-20261113-a972db6e\\closeout.json",
+  "closeoutSha256": "F302A2F9245564DA50EF80548AD60F4164F8BDEA848E4FA20D8D597E8428E4EA",
+  "reviewedScope": "Door variable and DXF geometric pilot evidence; T3 structural and T4 whole migration acceptance remain false",
+  "technicalComparisonCasePass": [
+    false,
+    true,
+    false
+  ],
+  "lastObservedIdleCheck": {
+    "command": "node workers/master_v2/variable_trial/run.mjs check",
+    "observation": "idle=true, cadFiles=60, compiler=true",
+    "source": "Primary agent observed command output in this turn; no CAD was started in closeout"
+  },
+  "production_release": false,
+  "fullPlanPass": false
+}

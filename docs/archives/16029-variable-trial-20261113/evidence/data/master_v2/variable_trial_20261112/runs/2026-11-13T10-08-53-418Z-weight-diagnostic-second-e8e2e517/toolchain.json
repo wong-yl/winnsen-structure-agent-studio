@@ -1,0 +1,37 @@
+{
+  "schema": "winnsen.variable_trial.toolchain.v2",
+  "exe": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\VariableTrial.exe",
+  "sha256": "FC613713D0ADA0510F77A84D8C54EB846D55950E1A95DAC5F6064E58249394C5",
+  "sources": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\generated-inputs\\TrialAssembly.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\sources\\TrialAssembly.cs",
+      "sha256": "167B0DD5A206954971B23848508AFAA2E128397FC0D9F77E9E9927A46EC3D537"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\generated-inputs\\TrialOutput.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\sources\\TrialOutput.cs",
+      "sha256": "98C542F72BFFE76C49E481DA1086A7BBCC946F193C050B1AC3B84247FD75C3B6"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\generated-inputs\\VariableTrial.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\sources\\VariableTrial.cs",
+      "sha256": "3CD215BA74838F4996B22164D40E800100D22AEC5A62CF325C092E44E61FF802"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\generated-inputs\\WeightReadback.cs",
+      "archivePath": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\sources\\WeightReadback.cs",
+      "sha256": "1B83A0C9ADBB70A32A4C51CCBFCBD7142868F7D3255F94124259B16CE17BC024"
+    }
+  ],
+  "dlls": [
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\SolidWorks.Interop.sldworks.dll",
+      "sha256": "EAB80E05D11A96FAB2037F072D114892DD975ED8DD7FE149D2A3B192B69E7DEC"
+    },
+    {
+      "path": "D:\\Winnsen_Structure_Agent_Studio\\data\\master_v2\\variable_trial_20261112\\toolchain\\weight-2026-11-13T10-08-51-889Z-b4c76aa03119\\SolidWorks.Interop.swconst.dll",
+      "sha256": "296C1400FEEDC82096854A41ED2B10EFF6F0ACD194FC0552B02FD48E8FE22359"
+    }
+  ]
+}
