@@ -4391,22 +4391,104 @@ internal static partial class TrialAssembly
             return result;
         }
 
-        static Dictionary<string, object> FullClassifyInterference(object interferenceObj, BuildContext c)
+        internal sealed class InterferenceAllowedZone
         {
-            var rawMap = Map(Json.DeserializeObject(Json.Serialize(interferenceObj)));
-            object[] cols = Items(rawMap["collisions"]);
-            var byName = new Dictionary<string, Placement>(StringComparer.Ordinal);
-            foreach (Placement p in c.Placements)
+            public string Kind;
+            public string TargetLabel;
+            public string Side;
+            public int DoorIndex;
+            public double[] AllowedBoundsMm;
+            public bool ZoneConfirmed;
+        }
+
+        internal sealed class InterferenceComponentMeta
+        {
+            public string ComponentName;
+            public string Role;
+            public string Kind;
+            public string Path;
+            public string Side;
+            public int DoorIndex;
+        }
+
+        internal sealed class PartConfigMaterialObservation
+        {
+            public string PartPath;
+            public string ConfigurationName;
+            public string CheckRole;
+            public bool IsSheetMetal;
+            public string MaterialDatabase;
+            public string MaterialName;
+            public double? IndependentMassKg;
+            public double? DensityKgPerM3;
+        }
+
+        internal static string MakeInterferencePairKey(string a, string b)
+        {
+            string sa = a ?? "";
+            string sb = b ?? "";
+            return StringComparer.Ordinal.Compare(sa, sb) <= 0 ? (sa + "|" + sb) : (sb + "|" + sa);
+        }
+
+        internal static bool TryParseBoundsMm(object rawBounds, out double[] bounds)
+        {
+            bounds = null;
+            if (rawBounds == null) return false;
+            var enumerable = rawBounds as System.Collections.IEnumerable;
+            if (enumerable == null || rawBounds is string) return false;
+            var vals = new List<double>();
+            foreach (object item in enumerable)
             {
-                if (!string.IsNullOrEmpty(p.ReopenedName)) byName[p.ReopenedName] = p;
-                if (!string.IsNullOrEmpty(p.ActualName)) byName[p.ActualName] = p;
-                byName[p.Role] = p;
+                if (item == null) return false;
+                double v;
+                try { v = Convert.ToDouble(item, Invariant); }
+                catch { return false; }
+                if (Double.IsNaN(v) || Double.IsInfinity(v)) return false;
+                vals.Add(v);
             }
+            if (vals.Count != 6) return false;
+            for (int i = 0; i < 3; i++)
+            {
+                if (vals[i] > vals[i + 3] + 1e-9) return false;
+            }
+            bounds = vals.ToArray();
+            return true;
+        }
+
+        internal static bool IsBoundsWithinAllowedZone(double[] boundsMm, double[] allowedBoundsMm, double toleranceMm)
+        {
+            if (boundsMm == null || allowedBoundsMm == null || boundsMm.Length != 6 || allowedBoundsMm.Length != 6) return false;
+            if (Double.IsNaN(toleranceMm) || Double.IsInfinity(toleranceMm) || toleranceMm < 0) return false;
+            for (int i = 0; i < 6; i++)
+            {
+                if (Double.IsNaN(boundsMm[i]) || Double.IsInfinity(boundsMm[i])) return false;
+                if (Double.IsNaN(allowedBoundsMm[i]) || Double.IsInfinity(allowedBoundsMm[i])) return false;
+            }
+            for (int axis = 0; axis < 3; axis++)
+            {
+                if (boundsMm[axis] < allowedBoundsMm[axis] - toleranceMm) return false;
+                if (boundsMm[axis + 3] > allowedBoundsMm[axis + 3] + toleranceMm) return false;
+            }
+            return true;
+        }
+
+        internal static Dictionary<string, object> EvaluateFullInterferenceCollisions(
+            IEnumerable<Dictionary<string, object>> collisions,
+            IDictionary<string, InterferenceComponentMeta> metaByComponent,
+            IDictionary<string, InterferenceAllowedZone> allowedZoneByPairKey,
+            bool requireConfirmedPositionZones)
+        {
+            var meta = metaByComponent ?? new Dictionary<string, InterferenceComponentMeta>(StringComparer.Ordinal);
+            var zones = allowedZoneByPairKey ?? new Dictionary<string, InterferenceAllowedZone>(StringComparer.Ordinal);
             Func<string, string> describe = delegate(string compName)
             {
-                Placement p;
-                if (byName.TryGetValue(compName, out p)) return p.Kind + "|" + Path.GetFileNameWithoutExtension(p.Path);
-                return compName;
+                InterferenceComponentMeta m;
+                if (meta.TryGetValue(compName ?? "", out m) && m != null)
+                {
+                    string fileStem = string.IsNullOrEmpty(m.Path) ? (m.ComponentName ?? "") : Path.GetFileNameWithoutExtension(m.Path);
+                    return (m.Kind ?? "") + "|" + fileStem;
+                }
+                return compName ?? "";
             };
             Func<string, bool> isFoot = delegate(string desc) { return desc.Contains("调整脚") || desc.StartsWith("base_foot|", StringComparison.Ordinal); };
             Func<string, bool> isFootMatePart = delegate(string desc) { return desc.Contains("螺母M12") || desc.Contains("底座加强筋") || desc.Contains("底座底板") || desc.Contains("底座外框"); };
@@ -4414,44 +4496,154 @@ internal static partial class TrialAssembly
             Func<string, bool> isHingePin = delegate(string desc) { return desc.StartsWith("hinge_pin", StringComparison.Ordinal) || desc.Contains("trial_door_hinge_pin"); };
             Func<string, bool> isBushingTop = delegate(string compName)
             {
-                Placement p;
-                return byName.TryGetValue(compName, out p) && p.Kind == "bushing_top";
+                InterferenceComponentMeta m;
+                return meta.TryGetValue(compName ?? "", out m) && m != null && m.Kind == "bushing_top";
             };
             Func<string, bool> isDoorPanel = delegate(string compName)
             {
-                Placement p;
-                return byName.TryGetValue(compName, out p) && p.Kind == "panel";
+                InterferenceComponentMeta m;
+                return meta.TryGetValue(compName ?? "", out m) && m != null && m.Kind == "panel";
             };
 
+            int totalCount = 0;
             int threadCount = 0;
             int structuralCount = 0;
             int approvedCirclipCount = 0;
             int approvedUpperPinPrebiasCount = 0;
             int unapprovedHardwareCount = 0;
+            int positionVerifiedCount = 0;
+            int positionMismatchCount = 0;
+            int missingPositionEvidenceCount = 0;
             var classified = new List<object>();
-            foreach (object raw in cols)
+
+            foreach (Dictionary<string, object> item in (collisions ?? new Dictionary<string, object>[0]))
             {
-                var item = Map(raw);
-                string a = Convert.ToString(item["componentA"]);
-                string b = Convert.ToString(item["componentB"]);
-                double vol = Number(item, "volumeMm3");
+                totalCount++;
+                string a = item.ContainsKey("componentA") ? Convert.ToString(item["componentA"], Invariant) : "";
+                string b = item.ContainsKey("componentB") ? Convert.ToString(item["componentB"], Invariant) : "";
+                double vol = item.ContainsKey("volumeMm3") && item["volumeMm3"] != null ? Convert.ToDouble(item["volumeMm3"], Invariant) : Double.NaN;
+                object rawBounds = item.ContainsKey("intersectionBoundsMm") ? item["intersectionBoundsMm"] : null;
+                double[] boundsMm;
+                bool hasBounds = TryParseBoundsMm(rawBounds, out boundsMm);
+
+                InterferenceComponentMeta ma, mb;
+                meta.TryGetValue(a, out ma);
+                meta.TryGetValue(b, out mb);
+                string roleA = ma != null ? (ma.Role ?? "") : "";
+                string roleB = mb != null ? (mb.Role ?? "") : "";
+                string doorSide = (ma != null && !string.IsNullOrEmpty(ma.Side)) ? ma.Side : (mb != null ? (mb.Side ?? "") : "");
+                int doorIndex = (ma != null && ma.DoorIndex > 0) ? ma.DoorIndex : (mb != null ? mb.DoorIndex : 0);
+
+                InterferenceAllowedZone zone = null;
+                if (!zones.TryGetValue(MakeInterferencePairKey(a, b), out zone) && !string.IsNullOrEmpty(roleA) && !string.IsNullOrEmpty(roleB))
+                {
+                    zones.TryGetValue(MakeInterferencePairKey(roleA, roleB), out zone);
+                }
+
                 string da = describe(a), db = describe(b);
                 string category;
                 bool approved = false;
                 string disposition;
-                if (((isCirclip(da) && isHingePin(db)) || (isCirclip(db) && isHingePin(da))) && vol <= 1.2)
+                string positionCheckStatus = "not_applicable";
+                bool positionVerified = false;
+                string matchedZone = zone != null ? (zone.TargetLabel ?? "") : "";
+
+                bool circlipPair = (isCirclip(da) && isHingePin(db)) || (isCirclip(db) && isHingePin(da));
+                bool upperPinPair = (isDoorPanel(a) && isBushingTop(b)) || (isDoorPanel(b) && isBushingTop(a));
+
+                if (circlipPair && !Double.IsNaN(vol) && vol <= 1.2)
                 {
-                    category = "approved_circlip_hinge_pin_groove_fit";
-                    approved = true;
-                    disposition = "approved_circlip_or_hinge_pin_by_user_20261117";
-                    approvedCirclipCount++;
+                    if (!requireConfirmedPositionZones)
+                    {
+                        category = "approved_circlip_hinge_pin_groove_fit";
+                        approved = true;
+                        disposition = "approved_circlip_or_hinge_pin_by_user_20261117";
+                        positionCheckStatus = hasBounds ? "pending_owner_zone_confirmation" : "missing_intersection_bounds";
+                        approvedCirclipCount++;
+                    }
+                    else
+                    {
+                        double[] zoneBounds = null;
+                        bool zoneValid = zone != null
+                            && string.Equals(zone.Kind, "circlip_hinge_pin_groove", StringComparison.Ordinal)
+                            && zone.ZoneConfirmed
+                            && TryParseBoundsMm(zone.AllowedBoundsMm, out zoneBounds);
+                        if (!hasBounds || !zoneValid)
+                        {
+                            category = "unapproved_circlip_hinge_pin_missing_position_evidence";
+                            approved = false;
+                            disposition = !hasBounds ? "rejected_missing_intersection_bounds" : "rejected_missing_or_unconfirmed_allowed_zone";
+                            positionCheckStatus = !hasBounds ? "rejected_missing_position_evidence" : "rejected_unconfirmed_zone";
+                            missingPositionEvidenceCount++;
+                            unapprovedHardwareCount++;
+                        }
+                        else if (IsBoundsWithinAllowedZone(boundsMm, zoneBounds, 0.05))
+                        {
+                            category = "approved_circlip_hinge_pin_groove_fit";
+                            approved = true;
+                            disposition = "approved_circlip_or_hinge_pin_by_user_20261117";
+                            positionCheckStatus = "verified_within_confirmed_zone";
+                            positionVerified = true;
+                            positionVerifiedCount++;
+                            approvedCirclipCount++;
+                        }
+                        else
+                        {
+                            category = "unapproved_circlip_hinge_pin_position_mismatch";
+                            approved = false;
+                            disposition = "rejected_intersection_outside_allowed_groove_zone";
+                            positionCheckStatus = "rejected_outside_allowed_zone";
+                            positionMismatchCount++;
+                            unapprovedHardwareCount++;
+                        }
+                    }
                 }
-                else if (((isDoorPanel(a) && isBushingTop(b)) || (isDoorPanel(b) && isBushingTop(a))) && vol <= 5.0)
+                else if (upperPinPair && !Double.IsNaN(vol) && vol <= 5.0)
                 {
-                    category = "approved_upper_pin_prebias_0p5_fit";
-                    approved = true;
-                    disposition = "approved_production_craft_upper_pin_prebias_0p5mm";
-                    approvedUpperPinPrebiasCount++;
+                    if (!requireConfirmedPositionZones)
+                    {
+                        category = "approved_upper_pin_prebias_0p5_fit";
+                        approved = true;
+                        disposition = "approved_production_craft_upper_pin_prebias_0p5mm";
+                        positionCheckStatus = hasBounds ? "pending_owner_zone_confirmation" : "missing_intersection_bounds";
+                        approvedUpperPinPrebiasCount++;
+                    }
+                    else
+                    {
+                        double[] zoneBounds = null;
+                        bool zoneValid = zone != null
+                            && string.Equals(zone.Kind, "upper_pin_prebias_0p5", StringComparison.Ordinal)
+                            && zone.ZoneConfirmed
+                            && TryParseBoundsMm(zone.AllowedBoundsMm, out zoneBounds);
+                        if (!hasBounds || !zoneValid)
+                        {
+                            category = "unapproved_upper_pin_prebias_missing_position_evidence";
+                            approved = false;
+                            disposition = !hasBounds ? "rejected_missing_intersection_bounds" : "rejected_missing_or_unconfirmed_allowed_zone";
+                            positionCheckStatus = !hasBounds ? "rejected_missing_position_evidence" : "rejected_unconfirmed_zone";
+                            missingPositionEvidenceCount++;
+                            unapprovedHardwareCount++;
+                        }
+                        else if (IsBoundsWithinAllowedZone(boundsMm, zoneBounds, 0.05))
+                        {
+                            category = "approved_upper_pin_prebias_0p5_fit";
+                            approved = true;
+                            disposition = "approved_production_craft_upper_pin_prebias_0p5mm";
+                            positionCheckStatus = "verified_within_confirmed_zone";
+                            positionVerified = true;
+                            positionVerifiedCount++;
+                            approvedUpperPinPrebiasCount++;
+                        }
+                        else
+                        {
+                            category = "unapproved_upper_pin_prebias_position_mismatch";
+                            approved = false;
+                            disposition = "rejected_intersection_outside_allowed_prebias_zone";
+                            positionCheckStatus = "rejected_outside_allowed_zone";
+                            positionMismatchCount++;
+                            unapprovedHardwareCount++;
+                        }
+                    }
                 }
                 else if ((isFoot(da) && isFootMatePart(db)) || (isFoot(db) && isFootMatePart(da)))
                 {
@@ -4461,9 +4653,8 @@ internal static partial class TrialAssembly
                 }
                 else
                 {
-                    Placement pa, pb;
-                    bool hwA = byName.TryGetValue(a, out pa) && !pa.Path.Contains("\\structure\\");
-                    bool hwB = byName.TryGetValue(b, out pb) && !pb.Path.Contains("\\structure\\");
+                    bool hwA = ma != null && !string.IsNullOrEmpty(ma.Path) && !ma.Path.Contains("\\structure\\");
+                    bool hwB = mb != null && !string.IsNullOrEmpty(mb.Path) && !mb.Path.Contains("\\structure\\");
                     if (hwA && hwB)
                     {
                         category = "unapproved_hardware_interference";
@@ -4477,13 +4668,32 @@ internal static partial class TrialAssembly
                         structuralCount++;
                     }
                 }
-                classified.Add(new { componentA = a, componentB = b, volumeMm3 = item["volumeMm3"], intersectionBoundsMm = item["intersectionBoundsMm"], category = category, approved = approved, pass = approved, disposition = disposition });
+
+                classified.Add(new
+                {
+                    componentA = a,
+                    componentB = b,
+                    componentARole = roleA,
+                    componentBRole = roleB,
+                    doorSide = doorSide,
+                    doorIndex = doorIndex,
+                    volumeMm3 = item.ContainsKey("volumeMm3") ? item["volumeMm3"] : null,
+                    intersectionBoundsMm = rawBounds,
+                    category = category,
+                    approved = approved,
+                    pass = approved,
+                    disposition = disposition,
+                    positionCheckStatus = positionCheckStatus,
+                    positionVerified = positionVerified,
+                    matchedZone = matchedZone
+                });
             }
+
             int unapprovedCount = threadCount + unapprovedHardwareCount + structuralCount;
             bool interferencePass = unapprovedCount == 0 && structuralCount == 0 && unapprovedHardwareCount == 0;
             return new Dictionary<string, object>
             {
-                { "totalInterferenceCount", cols.Length },
+                { "totalInterferenceCount", totalCount },
                 { "fastenerThreadEngagementCount", threadCount },
                 { "approvedCirclipHingePinCount", approvedCirclipCount },
                 { "approvedUpperPinPrebiasCount", approvedUpperPinPrebiasCount },
@@ -4491,10 +4701,190 @@ internal static partial class TrialAssembly
                 { "hardwareInterferenceCount", approvedCirclipCount + approvedUpperPinPrebiasCount + unapprovedHardwareCount },
                 { "structuralCollisionCount", structuralCount },
                 { "unapprovedInterferenceCount", unapprovedCount },
+                { "positionConstraintEnforced", requireConfirmedPositionZones },
+                { "positionVerifiedCount", positionVerifiedCount },
+                { "positionMismatchCount", positionMismatchCount },
+                { "missingPositionEvidenceCount", missingPositionEvidenceCount },
                 { "interferencePass", interferencePass },
-                { "approvalPolicy", "Circlip <-> hinge_pin groove fit (volume <= 1.2 mm^3) approved by user 2026-11-17; door upper pin hole 0.5 mm inward pre-bias overlap with bushing_top (volume <= 5.0 mm^3) approved per production craft; structural, door-latch and unapproved interferences forbidden." },
+                { "approvalPolicy", "Circlip <-> hinge_pin groove fit (volume <= 1.2 mm^3) approved by user 2026-11-17; door upper pin hole 0.5 mm inward pre-bias overlap with bushing_top (volume <= 5.0 mm^3) approved per production craft; spatial zone containment enforced once allowed zones are confirmed by owner; structural, door-latch and unapproved interferences forbidden." },
                 { "collisions", classified },
             };
+        }
+
+        internal static Dictionary<string, object> EvaluateConfigurationMaterials(IEnumerable<PartConfigMaterialObservation> observations)
+        {
+            var uniquePartFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var seenKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var sheetMetalReferenced = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var sheetMetalFlatChecked = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var entries = new List<object>();
+            var missingEntries = new List<object>();
+            var missingPathsSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            int referencedCount = 0;
+            int flatPatternCount = 0;
+            int missingReferencedMaterialCount = 0;
+            int missingFlatPatternMaterialCount = 0;
+
+            foreach (PartConfigMaterialObservation obs in (observations ?? new PartConfigMaterialObservation[0]))
+            {
+                if (obs == null) continue;
+                string partPath = (obs.PartPath ?? "").Trim();
+                string cfgName = (obs.ConfigurationName ?? "").Trim();
+                string role = string.IsNullOrEmpty(obs.CheckRole) ? "assembly_referenced" : obs.CheckRole.Trim();
+                string key = partPath.ToUpperInvariant() + "\n" + cfgName + "\n" + role;
+                if (!seenKeys.Add(key)) continue;
+
+                if (!string.IsNullOrEmpty(partPath)) uniquePartFiles.Add(partPath);
+                string matDb = (obs.MaterialDatabase ?? "").Trim();
+                string matName = (obs.MaterialName ?? "").Trim();
+                bool materialPresent = !string.IsNullOrWhiteSpace(matName);
+
+                bool isFlatRole = string.Equals(role, "sheet_metal_flat_pattern", StringComparison.OrdinalIgnoreCase);
+                if (isFlatRole)
+                {
+                    flatPatternCount++;
+                    if (!string.IsNullOrEmpty(partPath)) sheetMetalFlatChecked.Add(partPath);
+                }
+                else
+                {
+                    referencedCount++;
+                    if (obs.IsSheetMetal && !string.IsNullOrEmpty(partPath) && !sheetMetalReferenced.ContainsKey(partPath))
+                    {
+                        sheetMetalReferenced[partPath] = cfgName;
+                    }
+                }
+
+                entries.Add(new
+                {
+                    partPath = partPath,
+                    configurationName = cfgName,
+                    checkRole = role,
+                    isSheetMetal = obs.IsSheetMetal,
+                    materialDatabase = matDb,
+                    materialName = matName,
+                    independentMassKg = obs.IndependentMassKg,
+                    densityKgPerM3 = obs.DensityKgPerM3,
+                    materialPresent = materialPresent
+                });
+
+                if (!materialPresent)
+                {
+                    if (isFlatRole) missingFlatPatternMaterialCount++;
+                    else missingReferencedMaterialCount++;
+                    if (!string.IsNullOrEmpty(partPath)) missingPathsSet.Add(partPath);
+                    missingEntries.Add(new
+                    {
+                        partPath = partPath,
+                        configurationName = cfgName,
+                        checkRole = role,
+                        reason = isFlatRole ? "MISSING_FLAT_PATTERN_MATERIAL" : "MISSING_REFERENCED_CONFIG_MATERIAL",
+                        materialDatabase = matDb,
+                        materialName = matName,
+                        independentMassKg = obs.IndependentMassKg,
+                        densityKgPerM3 = obs.DensityKgPerM3
+                    });
+                }
+            }
+
+            int missingFlatPatternConfigCount = 0;
+            foreach (KeyValuePair<string, string> sm in sheetMetalReferenced)
+            {
+                if (!sheetMetalFlatChecked.Contains(sm.Key))
+                {
+                    missingFlatPatternConfigCount++;
+                    missingPathsSet.Add(sm.Key);
+                    missingEntries.Add(new
+                    {
+                        partPath = sm.Key,
+                        configurationName = sm.Value,
+                        checkRole = "sheet_metal_flat_pattern",
+                        reason = "MISSING_FLAT_PATTERN_CONFIG_READBACK",
+                        materialDatabase = "",
+                        materialName = "",
+                        independentMassKg = (double?)null,
+                        densityKgPerM3 = (double?)null
+                    });
+                }
+            }
+
+            int totalMissingMaterialCount = missingReferencedMaterialCount + missingFlatPatternMaterialCount;
+            bool pass = entries.Count > 0
+                && missingReferencedMaterialCount == 0
+                && missingFlatPatternMaterialCount == 0
+                && missingFlatPatternConfigCount == 0;
+
+            return new Dictionary<string, object>
+            {
+                { "uniquePartCount", uniquePartFiles.Count },
+                { "checkedConfigurationCount", entries.Count },
+                { "referencedConfigurationCount", referencedCount },
+                { "flatPatternConfigurationCount", flatPatternCount },
+                { "missingReferencedMaterialCount", missingReferencedMaterialCount },
+                { "missingFlatPatternMaterialCount", missingFlatPatternMaterialCount },
+                { "missingFlatPatternConfigCount", missingFlatPatternConfigCount },
+                { "missingMaterialCount", totalMissingMaterialCount },
+                { "missingMaterialPaths", missingPathsSet.OrderBy(v => v, StringComparer.OrdinalIgnoreCase).ToArray() },
+                { "missingMaterialEntries", missingEntries },
+                { "entries", entries },
+                { "pass", pass }
+            };
+        }
+
+        static bool HasSheetMetalFeatureOrFlatConfig(ModelDoc2 model, out string[] flatPatternConfigs)
+        {
+            string[] allConfigs = Items(model.GetConfigurationNames())
+                .Select(v => Convert.ToString(v, Invariant))
+                .Where(v => !string.IsNullOrEmpty(v))
+                .ToArray();
+            flatPatternConfigs = allConfigs
+                .Where(n => n.IndexOf("SM-FLAT-PATTERN", StringComparison.OrdinalIgnoreCase) >= 0)
+                .OrderBy(n => n, StringComparer.Ordinal)
+                .ToArray();
+            if (flatPatternConfigs.Length > 0) return true;
+            Feature feat = model.FirstFeature() as Feature;
+            while (feat != null)
+            {
+                string typeName = "";
+                try { typeName = feat.GetTypeName2() ?? ""; }
+                catch { }
+                Feature next = feat.GetNextFeature() as Feature;
+                Release(feat);
+                if (typeName.Equals("SheetMetal", StringComparison.OrdinalIgnoreCase) || typeName.Equals("FlatPattern", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (next != null) Release(next);
+                    return true;
+                }
+                feat = next;
+            }
+            return false;
+        }
+
+        static Dictionary<string, object> FullClassifyInterference(object interferenceObj, BuildContext c)
+        {
+            var rawMap = Map(Json.DeserializeObject(Json.Serialize(interferenceObj)));
+            object[] cols = Items(rawMap["collisions"]);
+            var metaByName = new Dictionary<string, InterferenceComponentMeta>(StringComparer.Ordinal);
+            foreach (Placement p in c.Placements)
+            {
+                var info = new InterferenceComponentMeta
+                {
+                    ComponentName = !string.IsNullOrEmpty(p.ReopenedName) ? p.ReopenedName : (!string.IsNullOrEmpty(p.ActualName) ? p.ActualName : p.Role),
+                    Role = p.Role,
+                    Kind = p.Kind,
+                    Path = p.Path,
+                    Side = p.Side,
+                    DoorIndex = p.Index
+                };
+                if (!string.IsNullOrEmpty(p.ReopenedName)) metaByName[p.ReopenedName] = info;
+                if (!string.IsNullOrEmpty(p.ActualName)) metaByName[p.ActualName] = info;
+                metaByName[p.Role] = info;
+            }
+            var collisionMaps = new List<Dictionary<string, object>>();
+            foreach (object raw in cols) collisionMaps.Add(Map(raw));
+            // Keep existing live workbench approval compatibility until structural/process owner confirms exact allowed spatial zones;
+            // strict zone enforcement is implemented and offline-verified in EvaluateFullInterferenceCollisions(..., requireConfirmedPositionZones: true).
+            return EvaluateFullInterferenceCollisions(collisionMaps, metaByName, null, false);
         }
 
         static void FullCleanupDocuments(BuildContext c, ModelDoc2 model, Exception primaryError, string stage)
@@ -4545,7 +4935,9 @@ internal static partial class TrialAssembly
 
                 var worlds = new List<WorldBody>();
                 var checkedDocs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                var missingMaterials = new List<string>();
+                var checkedConfigKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var checkedFlatConfigKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var materialObservations = new List<PartConfigMaterialObservation>();
                 double[] shellBounds = { Double.MaxValue, Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue, Double.MinValue };
                 double[] noFootBounds = { Double.MaxValue, Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue, Double.MinValue };
                 double[] totalBounds = { Double.MaxValue, Double.MaxValue, Double.MaxValue, Double.MinValue, Double.MinValue, Double.MinValue };
@@ -4572,16 +4964,79 @@ internal static partial class TrialAssembly
                         if (checkedDocs.Add(compPath))
                         {
                             CheckFeatureHealth(partDoc, c, "full_reopen_part_" + Path.GetFileName(compPath), true);
-                            if (partDoc is PartDoc)
+                        }
+                        if (partDoc is PartDoc)
+                        {
+                            string refCfg = "";
+                            try { refCfg = comp.ReferencedConfiguration ?? ""; }
+                            catch { refCfg = ""; }
+                            if (string.IsNullOrWhiteSpace(refCfg)) refCfg = FullActiveConfigName(partDoc);
+                            string refKey = compPath + "\n" + refCfg;
+                            if (checkedConfigKeys.Add(refKey))
                             {
                                 string db;
-                                string mat = ((PartDoc)partDoc).GetMaterialPropertyName2("", out db);
-                                if (string.IsNullOrWhiteSpace(mat))
+                                string mat = ((PartDoc)partDoc).GetMaterialPropertyName2(refCfg, out db);
+                                string[] flatCfgs;
+                                bool isSheetMetal = HasSheetMetalFeatureOrFlatConfig(partDoc, out flatCfgs);
+                                double? massKg = null;
+                                double? densityKgM3 = null;
+                                try
                                 {
-                                    string cfg = FullActiveConfigName(partDoc);
-                                    if (!string.IsNullOrEmpty(cfg)) mat = ((PartDoc)partDoc).GetMaterialPropertyName2(cfg, out db);
+                                    string activeName = MetadataActiveConfiguration(partDoc);
+                                    if (string.Equals(activeName, refCfg, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        MassProperty2 partMp = partDoc.Extension.CreateMassProperty2() as MassProperty2;
+                                        if (partMp != null)
+                                        {
+                                            try
+                                            {
+                                                partMp.UseSystemUnits = true;
+                                                partMp.Recalculate();
+                                                if (partMp.Mass > 0 && partMp.Volume > 0)
+                                                {
+                                                    massKg = partMp.Mass;
+                                                    densityKgM3 = partMp.Density > 0 ? partMp.Density : (partMp.Mass / partMp.Volume);
+                                                }
+                                            }
+                                            finally { Release(partMp); }
+                                        }
+                                    }
                                 }
-                                if (string.IsNullOrWhiteSpace(mat)) missingMaterials.Add(compPath);
+                                catch { }
+
+                                materialObservations.Add(new PartConfigMaterialObservation
+                                {
+                                    PartPath = compPath,
+                                    ConfigurationName = refCfg,
+                                    CheckRole = "assembly_referenced",
+                                    IsSheetMetal = isSheetMetal,
+                                    MaterialDatabase = db ?? "",
+                                    MaterialName = mat ?? "",
+                                    IndependentMassKg = massKg,
+                                    DensityKgPerM3 = densityKgM3
+                                });
+
+                                if (isSheetMetal)
+                                {
+                                    foreach (string flatCfg in flatCfgs)
+                                    {
+                                        string flatKey = compPath + "\n" + flatCfg;
+                                        if (!checkedFlatConfigKeys.Add(flatKey)) continue;
+                                        string flatDb;
+                                        string flatMat = ((PartDoc)partDoc).GetMaterialPropertyName2(flatCfg, out flatDb);
+                                        materialObservations.Add(new PartConfigMaterialObservation
+                                        {
+                                            PartPath = compPath,
+                                            ConfigurationName = flatCfg,
+                                            CheckRole = "sheet_metal_flat_pattern",
+                                            IsSheetMetal = true,
+                                            MaterialDatabase = flatDb ?? "",
+                                            MaterialName = flatMat ?? "",
+                                            IndependentMassKg = null,
+                                            DensityKgPerM3 = null
+                                        });
+                                    }
+                                }
                             }
                         }
                         double[] wbox = FullWorldBodyBox(comp);
@@ -4621,8 +5076,12 @@ internal static partial class TrialAssembly
                 }
                 Need(matchedRoles.Count == c.Placements.Count, "FULL_REOPEN_ROLE_COVERAGE_MISMATCH actual=" + matchedRoles.Count + " expected=" + c.Placements.Count);
 
-                c.Evidence["materialCheck"] = new { uniquePartCount = checkedDocs.Count, missingMaterialCount = missingMaterials.Count, missingMaterialPaths = missingMaterials.ToArray() };
-                Need(missingMaterials.Count == 0, "FULL_MISSING_MATERIAL_PARTS " + string.Join("; ", missingMaterials.ToArray()));
+                Dictionary<string, object> materialSummary = EvaluateConfigurationMaterials(materialObservations);
+                c.Evidence["materialCheck"] = materialSummary;
+                int missingRefCount = Convert.ToInt32(materialSummary["missingReferencedMaterialCount"], Invariant);
+                int missingFlatMatCount = Convert.ToInt32(materialSummary["missingFlatPatternMaterialCount"], Invariant);
+                string[] missingMatPaths = materialSummary["missingMaterialPaths"] as string[] ?? new string[0];
+                Need(missingRefCount == 0 && missingFlatMatCount == 0, "FULL_MISSING_MATERIAL_PARTS " + string.Join("; ", missingMatPaths));
 
                 double shellWidthMm = shellBounds[3] - shellBounds[0];
                 double shellHeightMm = shellBounds[4] - shellBounds[1];

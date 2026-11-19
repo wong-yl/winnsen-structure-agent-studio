@@ -10,7 +10,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs'
-import { basename, dirname, join, relative, resolve } from 'node:path'
+import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { compileLayout } from './layout.mjs'
 import { execute } from './execute.mjs'
@@ -288,6 +288,24 @@ function dxfRelToPartRelLower(dxfRelPath) {
 
 function partRelToDxfRel(partRelPath) {
   return normalizePartRelPath(String(partRelPath || '').replace(/\.sldprt$/i, '.flat.dxf'))
+}
+
+function normalizeDxfRelPath(rawRelPath) {
+  const normalized = String(rawRelPath || '').replace(/\//g, '\\').trim()
+  if (!normalized) return ''
+  return normalized.replace(/^(?:\.\\)+/, '').replace(/^\\+/, '')
+}
+
+function normalizeFlatRelFromRecord(flatPath, dxfDir) {
+  const raw = String(flatPath || '').trim()
+  if (!raw) return ''
+  if (dxfDir) {
+    const rel = relative(dxfDir, raw)
+    if (rel && !rel.startsWith('..') && !isAbsolute(rel)) {
+      return normalizeDxfRelPath(rel)
+    }
+  }
+  return normalizePartRelPath(raw)
 }
 
 function classifySubsystem(relPath) {
@@ -595,10 +613,22 @@ export function auditFlatDxfDirectory(dxfDir, expectedParts = [], { pythonExe = 
     return {
       pass: false,
       error: 'DXF_OUTPUT_DIR_MISSING',
+      identityPass: false,
+      expectedCountMatches: false,
       sheetMetalCount: 0,
+      dxfFileCount: 0,
       dxfAuditPassCount: 0,
       dxfAuditFailCount: 0,
+      identityMatchedCount: 0,
+      missingExportRecords: [],
+      missingDxfFiles: [],
+      unexpectedDxfFiles: [],
+      duplicateMappings: [],
+      pathIdentityMismatches: [],
+      shaMismatches: [],
+      identityErrors: ['DXF_OUTPUT_DIR_MISSING'],
       totalMarkEntities: 0,
+      totalProductionMarkEntities: 0,
       formToolMarkParts: 0,
       totalRemovedFastenerBores: 0,
       excludedUninstalledFiles: [],
@@ -606,33 +636,156 @@ export function auditFlatDxfDirectory(dxfDir, expectedParts = [], { pythonExe = 
     }
   }
 
-  const installedLower = installedRelPaths && [...installedRelPaths].length > 0
-    ? new Set([...installedRelPaths].map((item) => normalizePartRelPath(item).toLowerCase()))
-    : null
+  const installedByLower = new Map()
+  if (installedRelPaths) {
+    for (const item of installedRelPaths) {
+      const norm = normalizePartRelPath(item)
+      if (norm) installedByLower.set(norm.toLowerCase(), norm)
+    }
+  }
+  const installedLower = installedByLower.size > 0 ? new Set(installedByLower.keys()) : null
+
   const allDxfFiles = collectFilesRecursively(dxfDir, (p) => p.toLowerCase().endsWith('.flat.dxf'))
   const excludedUninstalledFiles = []
   const dxfFiles = installedLower
     ? allDxfFiles.filter((dxfPath) => {
-      const rel = relative(dxfDir, dxfPath)
+      const rel = normalizeDxfRelPath(relative(dxfDir, dxfPath))
       const keep = installedLower.has(dxfRelToPartRelLower(rel))
       if (!keep) excludedUninstalledFiles.push(rel)
       return keep
     })
     : allDxfFiles
 
-  const sheetMetalExpected = expectedParts
-    .filter((p) => p.classification === 'sheet_metal')
-    .filter((p) => !installedLower || installedLower.has(normalizePartRelPath(p.relPath).toLowerCase()))
-  const expectedByPath = new Map(sheetMetalExpected.map((item) => [resolve(item.flatPath).toLowerCase(), item]))
+  const missingExportRecords = []
+  const missingDxfFiles = []
+  const unexpectedDxfFiles = []
+  const duplicateMappings = []
+  const pathIdentityMismatches = []
+  const shaMismatches = []
+
+  const rawExpected = Array.isArray(expectedParts) ? expectedParts : []
+  const seenExpectedPartLower = new Set()
+  const duplicatePartLower = new Set()
+  const classifiedPartLower = new Set()
+  const sheetMetalExpected = []
+  const expectedByDxfRelLower = new Map()
+  const duplicateDxfRelLower = new Set()
+
+  for (const item of rawExpected) {
+    const normPartRel = normalizePartRelPath(item?.relPath)
+    if (!normPartRel) {
+      pathIdentityMismatches.push({
+        type: 'missing_record_rel_path',
+        relPath: '',
+        flatPath: String(item?.flatPath || ''),
+      })
+      continue
+    }
+    const partLower = normPartRel.toLowerCase()
+    if (installedLower && !installedLower.has(partLower)) continue
+
+    classifiedPartLower.add(partLower)
+    if (seenExpectedPartLower.has(partLower)) {
+      duplicatePartLower.add(partLower)
+      duplicateMappings.push({
+        type: 'duplicate_part_record',
+        relPath: normPartRel,
+        partRelLower: partLower,
+      })
+    } else {
+      seenExpectedPartLower.add(partLower)
+    }
+
+    if (item?.classification !== 'sheet_metal') continue
+
+    const expectedDxfRel = partRelToDxfRel(normPartRel)
+    const expectedDxfRelLower = expectedDxfRel.toLowerCase()
+    const recordedFlatRel = normalizeFlatRelFromRecord(item?.flatPath, dxfDir)
+    const recordedFlatRelLower = recordedFlatRel.toLowerCase()
+    const pathIdentityMatches = !recordedFlatRel || recordedFlatRelLower === expectedDxfRelLower
+    if (!pathIdentityMatches) {
+      pathIdentityMismatches.push({
+        type: 'record_flat_path_mismatch',
+        relPath: normPartRel,
+        expectedDxfRelPath: expectedDxfRel,
+        recordedFlatRelPath: recordedFlatRel,
+      })
+    }
+
+    const expectedSha256 = String(item?.sha256 || '').trim().toUpperCase()
+    const entry = {
+      raw: item,
+      relPath: normPartRel,
+      partLower,
+      expectedDxfRel,
+      expectedDxfRelLower,
+      recordedFlatRel,
+      pathIdentityMatches,
+      expectedSha256,
+    }
+    sheetMetalExpected.push(entry)
+
+    if (expectedByDxfRelLower.has(expectedDxfRelLower)) {
+      duplicateDxfRelLower.add(expectedDxfRelLower)
+      duplicateMappings.push({
+        type: 'duplicate_dxf_mapping',
+        relPath: normPartRel,
+        dxfRelPath: expectedDxfRel,
+        existingRelPath: expectedByDxfRelLower.get(expectedDxfRelLower).relPath,
+      })
+    } else {
+      expectedByDxfRelLower.set(expectedDxfRelLower, entry)
+    }
+  }
+
+  if (installedLower) {
+    for (const [partLower, normPart] of installedByLower.entries()) {
+      if (!classifiedPartLower.has(partLower)) {
+        missingExportRecords.push({
+          relPath: normPart,
+          reason: 'INSTALLED_PART_MISSING_EXPORT_RECORD',
+        })
+      }
+    }
+  }
+
+  const matchedExpectedDxfLower = new Set()
   const results = []
   let passCount = 0
   let failCount = 0
 
   for (const dxfPath of dxfFiles) {
-    const resolved = resolve(dxfPath).toLowerCase()
-    const expected = expectedByPath.get(resolved) || null
+    const dxfRel = normalizeDxfRelPath(relative(dxfDir, dxfPath))
+    const dxfRelLower = dxfRel.toLowerCase()
+    const expected = expectedByDxfRelLower.get(dxfRelLower) || null
     const actualSha = sha256File(dxfPath)
-    const shaMatches = !expected || String(expected.sha256 || '').toUpperCase() === actualSha
+    const recordMatched = Boolean(expected)
+    const isDuplicateMapping = Boolean(
+      expected && (duplicateDxfRelLower.has(dxfRelLower) || duplicatePartLower.has(expected.partLower)),
+    )
+    const pathIdentityMatches = Boolean(expected && expected.pathIdentityMatches)
+    const expectedShaValid = Boolean(expected && /^[A-F0-9]{64}$/.test(expected.expectedSha256))
+    const shaMatches = Boolean(recordMatched && expectedShaValid && expected.expectedSha256 === actualSha)
+
+    if (recordMatched) {
+      matchedExpectedDxfLower.add(dxfRelLower)
+      if (!shaMatches) {
+        shaMismatches.push({
+          relPath: expected.relPath,
+          dxfRelPath: dxfRel,
+          expectedSha256: expected.expectedSha256 || '',
+          actualSha256: actualSha,
+        })
+      }
+    } else {
+      unexpectedDxfFiles.push({
+        dxfRelPath: dxfRel,
+        derivedPartRelPath: dxfRelToPartRelLower(dxfRel),
+        flatPath: dxfPath,
+        sha256: actualSha,
+        reason: 'UNEXPECTED_OR_UNRECORDED_DXF_FILE',
+      })
+    }
 
     const proc = spawnSyncFn(pythonExe, [DXF_CHECK_SCRIPT, dxfPath], {
       cwd: ROOT,
@@ -655,10 +808,9 @@ export function auditFlatDxfDirectory(dxfDir, expectedParts = [], { pythonExe = 
     const unsupportedCount = Array.isArray(report?.unsupportedEntities) ? report.unsupportedEntities.length : -1
     const insunits = Number(report?.units?.insunits ?? -1)
 
-    const auditPass = Boolean(
+    const geometryPass = Boolean(
       proc.status === 0
       && report?.auditPassed === true
-      && shaMatches
       && insunits === 4
       && report?.units?.verified === true
       && splineCount === 0
@@ -669,15 +821,40 @@ export function auditFlatDxfDirectory(dxfDir, expectedParts = [], { pythonExe = 
       && unsupportedCount === 0,
     )
 
+    const fileErrors = []
+    if (parseError) fileErrors.push(parseError)
+    if (Array.isArray(report?.errors)) fileErrors.push(...report.errors)
+    if (!recordMatched) fileErrors.push('UNEXPECTED_OR_UNRECORDED_DXF_FILE')
+    else {
+      if (!expectedShaValid) fileErrors.push('EXPECTED_SHA256_MISSING_OR_INVALID')
+      else if (!shaMatches) fileErrors.push('SHA256_MISMATCH')
+      if (!pathIdentityMatches) fileErrors.push('RECORD_FLAT_PATH_IDENTITY_MISMATCH')
+      if (isDuplicateMapping) fileErrors.push('DUPLICATE_DXF_MAPPING')
+    }
+
+    const auditPass = Boolean(
+      geometryPass
+      && recordMatched
+      && shaMatches
+      && pathIdentityMatches
+      && !isDuplicateMapping,
+    )
+
     if (auditPass) passCount += 1
     else failCount += 1
 
     const extents = report?.measurements?.allExtents || report?.measurements?.cutExtents || {}
     results.push({
-      relPath: expected?.relPath || relative(dxfDir, dxfPath),
+      relPath: expected?.relPath || dxfRel,
+      dxfRelPath: dxfRel,
       flatPath: dxfPath,
+      recordMatched,
+      pathIdentityMatches,
+      duplicateMapping: isDuplicateMapping,
+      expectedSha256: expected?.expectedSha256 || '',
       sha256: actualSha,
       shaMatches,
+      geometryPassed: geometryPass,
       auditPassed: auditPass,
       insunits,
       flatWidthMm: round2(extents.width),
@@ -686,33 +863,70 @@ export function auditFlatDxfDirectory(dxfDir, expectedParts = [], { pythonExe = 
       closedContourCount: Number(report?.closedContours?.closedContourCount ?? 0),
       cutEntityCount: Number(report?.cuts?.entityCount ?? 0),
       bendEntityCount: Number(report?.bends?.segmentCount ?? 0),
-      markEntityCount: Number(report?.marks?.entityCount ?? expected?.markEntityCount ?? 0),
-      productionMarkEntityCount: Number(expected?.productionMarkEntityCount ?? 0),
-      removedFastenerBoresCount: Number(expected?.removedFastenerBoresCount ?? 0),
-      formTools: expected?.formTools || [],
+      markEntityCount: Number(report?.marks?.entityCount ?? expected?.raw?.markEntityCount ?? 0),
+      productionMarkEntityCount: Number(expected?.raw?.productionMarkEntityCount ?? 0),
+      removedFastenerBoresCount: Number(expected?.raw?.removedFastenerBoresCount ?? 0),
+      formTools: expected?.raw?.formTools || [],
       splineCount,
       openChainCount: openChains,
       duplicateSegmentCount: dupCount,
       cutIntersectionCount: ixCount,
       zeroLengthCount: zeroCount,
       unsupportedEntityCount: unsupportedCount,
-      errors: parseError ? [parseError] : (Array.isArray(report?.errors) ? report.errors : []),
+      errors: fileErrors,
     })
   }
 
-  const expectedCountMatches = sheetMetalExpected.length === 0 || dxfFiles.length === sheetMetalExpected.length
+  for (const entry of sheetMetalExpected) {
+    if (!matchedExpectedDxfLower.has(entry.expectedDxfRelLower)) {
+      missingDxfFiles.push({
+        relPath: entry.relPath,
+        expectedDxfRelPath: entry.expectedDxfRel,
+        expectedSha256: entry.expectedSha256,
+        reason: 'MISSING_DXF_FILE',
+      })
+    }
+  }
+
+  const identityErrors = []
+  if (sheetMetalExpected.length === 0) identityErrors.push('EXPECTED_SHEET_METAL_MANIFEST_EMPTY')
+  if (missingExportRecords.length > 0) identityErrors.push(`MISSING_EXPORT_RECORDS:${missingExportRecords.length}`)
+  if (missingDxfFiles.length > 0) identityErrors.push(`MISSING_DXF_FILES:${missingDxfFiles.length}`)
+  if (unexpectedDxfFiles.length > 0) identityErrors.push(`UNEXPECTED_DXF_FILES:${unexpectedDxfFiles.length}`)
+  if (duplicateMappings.length > 0) identityErrors.push(`DUPLICATE_MAPPINGS:${duplicateMappings.length}`)
+  if (pathIdentityMismatches.length > 0) identityErrors.push(`PATH_IDENTITY_MISMATCHES:${pathIdentityMismatches.length}`)
+  if (shaMismatches.length > 0) identityErrors.push(`SHA256_MISMATCHES:${shaMismatches.length}`)
+
+  const identityMatchedCount = matchedExpectedDxfLower.size
+  const uniqueExpectedCount = expectedByDxfRelLower.size
+  const identityPass = Boolean(
+    sheetMetalExpected.length > 0
+    && identityErrors.length === 0
+    && identityMatchedCount === uniqueExpectedCount
+    && dxfFiles.length === uniqueExpectedCount,
+  )
+  const expectedCountMatches = identityPass
   const totalMarkEntities = results.reduce((sum, item) => sum + item.markEntityCount, 0)
   const totalProductionMarkEntities = results.reduce((sum, item) => sum + item.productionMarkEntityCount, 0)
   const formToolMarkParts = results.filter((item) => item.markEntityCount > 0).length
   const totalRemovedFastenerBores = results.reduce((sum, item) => sum + item.removedFastenerBoresCount, 0)
 
   return {
-    pass: dxfFiles.length > 0 && failCount === 0 && expectedCountMatches,
+    pass: dxfFiles.length > 0 && failCount === 0 && identityPass,
+    identityPass,
     expectedCountMatches,
-    sheetMetalCount: sheetMetalExpected.length || dxfFiles.length,
+    sheetMetalCount: uniqueExpectedCount,
     dxfFileCount: dxfFiles.length,
     dxfAuditPassCount: passCount,
     dxfAuditFailCount: failCount,
+    identityMatchedCount,
+    missingExportRecords,
+    missingDxfFiles,
+    unexpectedDxfFiles,
+    duplicateMappings,
+    pathIdentityMismatches,
+    shaMismatches,
+    identityErrors,
     totalMarkEntities,
     totalProductionMarkEntities,
     formToolMarkParts,
@@ -794,11 +1008,19 @@ export function packageVariableTrialDeliverable({
     }
     writeFileSync(join(stageDir, '3D_CAD', '请打开此总装_说明.txt'), formatCadEntryGuide(), 'utf8')
 
+    const auditedDxfByLower = new Map()
+    for (const row of dxfAuditReport?.results || []) {
+      if (row?.auditPassed !== true) continue
+      const key = normalizeDxfRelPath(row.dxfRelPath || partRelToDxfRel(row.relPath)).toLowerCase()
+      if (key) auditedDxfByLower.set(key, String(row.sha256 || '').toUpperCase())
+    }
     const dxfFileCount = copyTreeFiltered(
       dxfOutputDir,
       join(stageDir, 'DXF_展开图'),
       (src, rel) => {
         if (!src.toLowerCase().endsWith('.flat.dxf')) return false
+        const normRelLower = normalizeDxfRelPath(rel).toLowerCase()
+        if (auditedDxfByLower.size > 0) return auditedDxfByLower.has(normRelLower)
         if (!installedSummary.hasManifest) return true
         return installedSummary.installedRelLower.has(dxfRelToPartRelLower(rel))
       },
@@ -830,6 +1052,18 @@ export function packageVariableTrialDeliverable({
       sha256: sha256File(path),
       sizeBytes: statSync(path).size,
     }))
+    if (auditedDxfByLower.size > 0) {
+      if (dxfInventory.length !== auditedDxfByLower.size) {
+        throw new Error(`DELIVERABLE_DXF_COUNT_MISMATCH staged=${dxfInventory.length} audited=${auditedDxfByLower.size}`)
+      }
+      for (const item of dxfInventory) {
+        const key = normalizeDxfRelPath(item.relPath).toLowerCase()
+        const expectedSha = auditedDxfByLower.get(key)
+        if (!expectedSha || expectedSha !== item.sha256) {
+          throw new Error(`DELIVERABLE_DXF_IDENTITY_MISMATCH ${item.relPath}`)
+        }
+      }
+    }
     const drawingInventory = collectFilesRecursively(join(stageDir, '2D_工程图')).map((path) => {
       if (path.toLowerCase().endsWith('.pdf')) {
         const hdr = readFileSync(path).subarray(0, 5).toString('ascii')

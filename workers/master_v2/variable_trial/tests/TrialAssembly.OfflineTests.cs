@@ -179,6 +179,243 @@ internal static class TrialAssemblyOfflineTests
         return 10;
     }
 
+    static Dictionary<string, object> FullCollision(string componentA, string componentB, double volumeMm3, object boundsMm)
+    {
+        return new Dictionary<string, object>
+        {
+            { "componentA", componentA },
+            { "componentB", componentB },
+            { "volumeMm3", volumeMm3 },
+            { "intersectionBoundsMm", boundsMm }
+        };
+    }
+
+    static int TestFullInterferencePositionZones()
+    {
+        var meta = new Dictionary<string, TrialAssembly.FullCabinetAssembly.InterferenceComponentMeta>(StringComparer.Ordinal)
+        {
+            { "trial_circlip-7", new TrialAssembly.FullCabinetAssembly.InterferenceComponentMeta { ComponentName = "trial_circlip-7", Role = "door_L_04_circlip_top", Kind = "circlip_top", Path = @"C:\case1\parts\trial_circlip.SLDPRT", Side = "L", DoorIndex = 4 } },
+            { "trial_door_hinge_pin-5", new TrialAssembly.FullCabinetAssembly.InterferenceComponentMeta { ComponentName = "trial_door_hinge_pin-5", Role = "door_L_05_hinge_pin", Kind = "hinge_pin", Path = @"C:\case1\parts\trial_door_hinge_pin.SLDPRT", Side = "L", DoorIndex = 5 } },
+            { "R_W367_H335p6_panel-4", new TrialAssembly.FullCabinetAssembly.InterferenceComponentMeta { ComponentName = "R_W367_H335p6_panel-4", Role = "door_R_04_panel", Kind = "panel", Path = @"C:\case1\parts\R_W367_H335p6_panel.SLDPRT", Side = "R", DoorIndex = 4 } },
+            { "trial_plastic_bushing-19", new TrialAssembly.FullCabinetAssembly.InterferenceComponentMeta { ComponentName = "trial_plastic_bushing-19", Role = "door_R_04_bushing_top", Kind = "bushing_top", Path = @"C:\case1\parts\trial_plastic_bushing.SLDPRT", Side = "R", DoorIndex = 4 } }
+        };
+
+        var confirmedZones = new Dictionary<string, TrialAssembly.FullCabinetAssembly.InterferenceAllowedZone>(StringComparer.Ordinal)
+        {
+            {
+                TrialAssembly.FullCabinetAssembly.MakeInterferencePairKey("door_L_04_circlip_top", "door_L_05_hinge_pin"),
+                new TrialAssembly.FullCabinetAssembly.InterferenceAllowedZone
+                {
+                    Kind = "circlip_hinge_pin_groove",
+                    TargetLabel = "door_L_04_circlip_top <-> door_L_05_hinge_pin groove",
+                    Side = "L",
+                    DoorIndex = 4,
+                    AllowedBoundsMm = new[] { -400.5, 1136.5, -10.5, -393.5, 1138.1, -4.8 },
+                    ZoneConfirmed = true
+                }
+            },
+            {
+                TrialAssembly.FullCabinetAssembly.MakeInterferencePairKey("door_R_04_panel", "door_R_04_bushing_top"),
+                new TrialAssembly.FullCabinetAssembly.InterferenceAllowedZone
+                {
+                    Kind = "upper_pin_prebias_0p5",
+                    TargetLabel = "door_R_04_panel upper_pin_prebias_0p5_hole",
+                    Side = "R",
+                    DoorIndex = 4,
+                    AllowedBoundsMm = new[] { 398.0, 1394.4, -12.0, 402.5, 1395.6, -2.0 },
+                    ZoneConfirmed = true
+                }
+            }
+        };
+
+        // Case 1: Both classes within confirmed spatial zones and within original volume limits -> APPROVED
+        var legalCollisions = new[]
+        {
+            FullCollision("trial_circlip-7", "trial_door_hinge_pin-5", 0.9284, new[] { -400.0, 1136.9, -8.01, -399.29, 1137.7, -5.35 }),
+            FullCollision("R_W367_H335p6_panel-4", "trial_plastic_bushing-19", 1.8099, new[] { 398.75, 1394.6, -11.58, 401.9, 1395.4, -2.42 })
+        };
+        var legalRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateFullInterferenceCollisions(legalCollisions, meta, confirmedZones, true));
+        Assert(Convert.ToBoolean(legalRes["interferencePass"]), "legal_both_classes_pass");
+        Assert(Convert.ToInt32(legalRes["approvedCirclipHingePinCount"]) == 1, "legal_circlip_approved");
+        Assert(Convert.ToInt32(legalRes["approvedUpperPinPrebiasCount"]) == 1, "legal_prebias_approved");
+        Assert(Convert.ToInt32(legalRes["positionVerifiedCount"]) == 2, "legal_position_verified_count");
+        Assert(Convert.ToInt32(legalRes["unapprovedInterferenceCount"]) == 0, "legal_zero_unapproved");
+
+        // Case 2: Exact same legal volumes (0.9284 and 1.8099) but shifted OUTSIDE allowed zones -> REJECTED
+        var wrongPositionCollisions = new[]
+        {
+            FullCollision("trial_circlip-7", "trial_door_hinge_pin-5", 0.9284, new[] { -400.0, 1180.0, -8.01, -399.29, 1180.8, -5.35 }),
+            FullCollision("R_W367_H335p6_panel-4", "trial_plastic_bushing-19", 1.8099, new[] { 398.75, 1320.0, -11.58, 401.9, 1320.8, -2.42 })
+        };
+        var wrongPosRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateFullInterferenceCollisions(wrongPositionCollisions, meta, confirmedZones, true));
+        Assert(!Convert.ToBoolean(wrongPosRes["interferencePass"]), "wrong_position_must_fail");
+        Assert(Convert.ToInt32(wrongPosRes["approvedCirclipHingePinCount"]) == 0, "wrong_position_circlip_rejected");
+        Assert(Convert.ToInt32(wrongPosRes["approvedUpperPinPrebiasCount"]) == 0, "wrong_position_prebias_rejected");
+        Assert(Convert.ToInt32(wrongPosRes["positionMismatchCount"]) == 2, "wrong_position_mismatch_count");
+        Assert(Convert.ToInt32(wrongPosRes["unapprovedInterferenceCount"]) == 2, "wrong_position_unapproved_count");
+
+        // Case 3a: Missing intersectionBoundsMm evidence with legal volumes -> REJECTED
+        var missingBoundsCollisions = new[]
+        {
+            FullCollision("trial_circlip-7", "trial_door_hinge_pin-5", 0.9284, null),
+            FullCollision("R_W367_H335p6_panel-4", "trial_plastic_bushing-19", 1.8099, new[] { 398.75, 1394.6 })
+        };
+        var missingBoundsRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateFullInterferenceCollisions(missingBoundsCollisions, meta, confirmedZones, true));
+        Assert(!Convert.ToBoolean(missingBoundsRes["interferencePass"]), "missing_bounds_must_fail");
+        Assert(Convert.ToInt32(missingBoundsRes["missingPositionEvidenceCount"]) == 2, "missing_bounds_count");
+        Assert(Convert.ToInt32(missingBoundsRes["unapprovedInterferenceCount"]) == 2, "missing_bounds_unapproved");
+
+        // Case 3b: Missing or unconfirmed allowed zone with legal volumes -> REJECTED
+        var unconfirmedZones = new Dictionary<string, TrialAssembly.FullCabinetAssembly.InterferenceAllowedZone>(StringComparer.Ordinal)
+        {
+            {
+                TrialAssembly.FullCabinetAssembly.MakeInterferencePairKey("door_L_04_circlip_top", "door_L_05_hinge_pin"),
+                new TrialAssembly.FullCabinetAssembly.InterferenceAllowedZone
+                {
+                    Kind = "circlip_hinge_pin_groove",
+                    TargetLabel = "unconfirmed_groove",
+                    AllowedBoundsMm = new[] { -400.5, 1136.5, -10.5, -393.5, 1138.1, -4.8 },
+                    ZoneConfirmed = false
+                }
+            }
+        };
+        var unconfirmedRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateFullInterferenceCollisions(legalCollisions, meta, unconfirmedZones, true));
+        Assert(!Convert.ToBoolean(unconfirmedRes["interferencePass"]), "unconfirmed_or_missing_zone_must_fail");
+        Assert(Convert.ToInt32(unconfirmedRes["missingPositionEvidenceCount"]) == 2, "unconfirmed_or_missing_zone_count");
+        Assert(Convert.ToInt32(unconfirmedRes["unapprovedInterferenceCount"]) == 2, "unconfirmed_or_missing_zone_unapproved");
+
+        // Case 4: Volume ceiling still enforced even when inside confirmed spatial zones -> REJECTED
+        var overVolCollisions = new[]
+        {
+            FullCollision("trial_circlip-7", "trial_door_hinge_pin-5", 1.25, new[] { -400.0, 1136.9, -8.01, -399.29, 1137.7, -5.35 }),
+            FullCollision("R_W367_H335p6_panel-4", "trial_plastic_bushing-19", 5.05, new[] { 398.75, 1394.6, -11.58, 401.9, 1395.4, -2.42 })
+        };
+        var overVolRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateFullInterferenceCollisions(overVolCollisions, meta, confirmedZones, true));
+        Assert(!Convert.ToBoolean(overVolRes["interferencePass"]), "over_volume_ceiling_must_fail");
+        Assert(Convert.ToInt32(overVolRes["unapprovedInterferenceCount"]) == 2, "over_volume_ceiling_unapproved");
+
+        return 18;
+    }
+
+    static int TestConfigurationAwareMaterials()
+    {
+        // Case 1: Same file referenced by two different configurations; second config lacks material -> MUST FAIL
+        var dualConfigObs = new[]
+        {
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\shared_bracket.SLDPRT",
+                ConfigurationName = "Cfg_Left",
+                CheckRole = "assembly_referenced",
+                IsSheetMetal = false,
+                MaterialDatabase = "云绅材料库",
+                MaterialName = "冷轧钢板",
+                IndependentMassKg = 0.42,
+                DensityKgPerM3 = 7870.0
+            },
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\shared_bracket.SLDPRT",
+                ConfigurationName = "Cfg_Right",
+                CheckRole = "assembly_referenced",
+                IsSheetMetal = false,
+                MaterialDatabase = "",
+                MaterialName = "",
+                IndependentMassKg = 0.05,
+                DensityKgPerM3 = 1000.0
+            }
+        };
+        var dualRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateConfigurationMaterials(dualConfigObs));
+        Assert(!Convert.ToBoolean(dualRes["pass"]), "dual_config_second_missing_must_fail");
+        Assert(Convert.ToInt32(dualRes["uniquePartCount"]) == 1, "dual_config_unique_part_count");
+        Assert(Convert.ToInt32(dualRes["checkedConfigurationCount"]) == 2, "dual_config_checked_count");
+        Assert(Convert.ToInt32(dualRes["missingReferencedMaterialCount"]) == 1, "dual_config_missing_ref_count");
+        Assert(Convert.ToInt32(dualRes["missingMaterialCount"]) == 1, "dual_config_missing_total");
+
+        // Case 2: Folded configuration has material (7870 kg/m3), but derived flat-pattern config lacks material (1000 kg/m3) -> MUST FAIL
+        var missingFlatMatObs = new[]
+        {
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\L_W367_H278p5_panel.SLDPRT",
+                ConfigurationName = "Default",
+                CheckRole = "assembly_referenced",
+                IsSheetMetal = true,
+                MaterialDatabase = "云绅材料库",
+                MaterialName = "冷轧钢板",
+                IndependentMassKg = 0.7938,
+                DensityKgPerM3 = 7870.0
+            },
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\L_W367_H278p5_panel.SLDPRT",
+                ConfigurationName = "DefaultSM-FLAT-PATTERN",
+                CheckRole = "sheet_metal_flat_pattern",
+                IsSheetMetal = true,
+                MaterialDatabase = "",
+                MaterialName = "",
+                IndependentMassKg = 0.1008,
+                DensityKgPerM3 = 1000.0
+            }
+        };
+        var missingFlatMatRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateConfigurationMaterials(missingFlatMatObs));
+        Assert(!Convert.ToBoolean(missingFlatMatRes["pass"]), "flat_missing_material_must_fail");
+        Assert(Convert.ToInt32(missingFlatMatRes["missingReferencedMaterialCount"]) == 0, "flat_missing_ref_ok");
+        Assert(Convert.ToInt32(missingFlatMatRes["missingFlatPatternMaterialCount"]) == 1, "flat_missing_count_1");
+        Assert(Convert.ToInt32(missingFlatMatRes["missingMaterialCount"]) == 1, "flat_missing_total_1");
+
+        // Case 2b: Sheet-metal part with NO flat-pattern configuration readback at all -> MUST FAIL
+        var missingFlatCfgRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateConfigurationMaterials(new[] { missingFlatMatObs[0] }));
+        Assert(!Convert.ToBoolean(missingFlatCfgRes["pass"]), "missing_flat_config_readback_must_fail");
+        Assert(Convert.ToInt32(missingFlatCfgRes["missingFlatPatternConfigCount"]) == 1, "missing_flat_config_count_1");
+
+        // Case 3: Complete materials on referenced config, sheet-metal flat-pattern config, and hardware config -> PASS
+        var completeObs = new[]
+        {
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\L_W367_H278p5_panel.SLDPRT",
+                ConfigurationName = "Default",
+                CheckRole = "assembly_referenced",
+                IsSheetMetal = true,
+                MaterialDatabase = "云绅材料库",
+                MaterialName = "冷轧钢板",
+                IndependentMassKg = 0.7938,
+                DensityKgPerM3 = 7870.0
+            },
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\L_W367_H278p5_panel.SLDPRT",
+                ConfigurationName = "DefaultSM-FLAT-PATTERN",
+                CheckRole = "sheet_metal_flat_pattern",
+                IsSheetMetal = true,
+                MaterialDatabase = "云绅材料库",
+                MaterialName = "冷轧钢板",
+                IndependentMassKg = 0.7938,
+                DensityKgPerM3 = 7870.0
+            },
+            new TrialAssembly.FullCabinetAssembly.PartConfigMaterialObservation
+            {
+                PartPath = @"C:\case1\parts\trial_door_hinge_pin.SLDPRT",
+                ConfigurationName = "默认",
+                CheckRole = "assembly_referenced",
+                IsSheetMetal = false,
+                MaterialDatabase = "云绅材料库",
+                MaterialName = "不锈钢201",
+                IndependentMassKg = 0.0189,
+                DensityKgPerM3 = 7930.0
+            }
+        };
+        var completeRes = AsMap(TrialAssembly.FullCabinetAssembly.EvaluateConfigurationMaterials(completeObs));
+        Assert(Convert.ToBoolean(completeRes["pass"]), "complete_materials_must_pass");
+        Assert(Convert.ToInt32(completeRes["uniquePartCount"]) == 2, "complete_unique_parts");
+        Assert(Convert.ToInt32(completeRes["checkedConfigurationCount"]) == 3, "complete_checked_configs");
+        Assert(Convert.ToInt32(completeRes["missingMaterialCount"]) == 0, "complete_zero_missing_mat");
+        Assert(Convert.ToInt32(completeRes["missingFlatPatternConfigCount"]) == 0, "complete_zero_missing_flat");
+
+        return 16;
+    }
+
     public static int Main()
     {
         try
@@ -190,6 +427,8 @@ internal static class TrialAssemblyOfflineTests
             checks += TestInterferenceClassification();
             checks += TestDerivedFlatPatternRebuildPolicy();
             checks += TestTopologyAndMetadataCacheHelpers();
+            checks += TestFullInterferencePositionZones();
+            checks += TestConfigurationAwareMaterials();
             Console.WriteLine("TRIAL_ASSEMBLY_OFFLINE_PASS " + checks);
             return 0;
         }
