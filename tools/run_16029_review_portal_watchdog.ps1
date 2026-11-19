@@ -11,6 +11,8 @@ $serverScript = Join-Path $PSScriptRoot 'serve_16029_review_downloads.mjs'
 $serverLauncher = Join-Path $PSScriptRoot 'start_16029_review_portal.mjs'
 $parametricWorkerScript = Join-Path $PSScriptRoot 'run_16029_parametric_portal_worker.mjs'
 $parametricWorkerLauncher = Join-Path $PSScriptRoot 'start_16029_parametric_portal_worker.mjs'
+$variableTrialWorkerScript = Join-Path $PSScriptRoot 'run_16029_variable_trial_portal_worker.mjs'
+$variableTrialWorkerLauncher = Join-Path $PSScriptRoot 'start_16029_variable_trial_portal_worker.mjs'
 $runtimeDir = Join-Path $repo 'data\review_portal_runtime'
 $watchdogLog = Join-Path $runtimeDir 'watchdog.log'
 $serverOutLog = Join-Path $runtimeDir 'server.stdout.log'
@@ -43,6 +45,12 @@ try {
       Select-Object -First 1
     if (-not $parametricWorker) {
       & $node $parametricWorkerLauncher 2>&1 | ForEach-Object { Add-Content -LiteralPath $watchdogLog -Encoding UTF8 -Value $_ }
+    }
+    $variableTrialWorker = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" -ErrorAction Stop |
+      Where-Object { $_.CommandLine -like "*$variableTrialWorkerScript*--watch*" } |
+      Select-Object -First 1
+    if (-not $variableTrialWorker -and (Test-Path -LiteralPath $variableTrialWorkerScript)) {
+      & $node $variableTrialWorkerLauncher 2>&1 | ForEach-Object { Add-Content -LiteralPath $watchdogLog -Encoding UTF8 -Value $_ }
     }
     $listener = [System.Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties().GetActiveTcpListeners() |
       Where-Object { $_.Port -eq $Port } | Select-Object -First 1

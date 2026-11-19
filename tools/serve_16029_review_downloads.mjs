@@ -1,4 +1,9 @@
 import { createOutdoor22057Routes } from 'file:///D:/%E6%9C%BA%E6%A2%B0%E7%BB%93%E6%9E%84%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%99%BA%E8%83%BD%E4%BD%93/outputs/outdoor_22057_preview_20261019_v17/portal/outdoor_22057_portal.mjs'
+import {
+  VARIABLE_TRIAL_PORTAL_LABEL,
+  VARIABLE_TRIAL_PORTAL_ROUTE,
+  createVariableTrialPortalRoutes,
+} from './lib/locker_16029_variable_trial_portal.mjs'
 import { closeSync, copyFileSync, createReadStream, existsSync, fstatSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { networkInterfaces } from 'node:os'
@@ -2340,6 +2345,7 @@ async function renderPage(request) {
         <nav class="portal-nav" aria-label="模型助手功能">
           <a href="/outdoor-22057"><span class="portal-nav-copy"><strong>22057 户外柜内测</strong></span></a>
           <a href="/"><span class="portal-nav-copy"><strong>室内柜·基础版</strong></span></a>
+          <a href="${VARIABLE_TRIAL_PORTAL_ROUTE}"><span class="portal-nav-copy"><strong>${VARIABLE_TRIAL_PORTAL_LABEL}</strong></span></a>
           ${processSelection.enabled ? `<a href="/indoor-process-review"><span class="portal-nav-copy"><strong>${INDOOR_16029_PROCESS_REVIEW_LABEL}</strong></span></a>` : ''}
           <a href="#new-model" data-workspace-nav="new-model" class="active"><svg class="portal-nav-icon" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4h12v12H3zM7 4v12M3 9h12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="portal-nav-copy"><strong>定义规格</strong></span></a>
           <a href="#my-models" data-workspace-nav="my-models"><svg class="portal-nav-icon" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 5h12v10H3zM6 2h6M6 8h6M6 12h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="portal-nav-copy"><strong>任务工作台</strong></span></a>
@@ -4862,6 +4868,17 @@ function localAddresses() {
 
 ensureDirs()
 const outdoor22057Routes = createOutdoor22057Routes({ dataDir: DATA_DIR, stage: resolve(DATA_DIR, 'outdoor_22057_release'), sendHtml, sendJson, parseForm, htmlEscape, readJson, writeJson })
+const variableTrialRoutes = createVariableTrialPortalRoutes({
+  rootDir: ROOT,
+  dataDir: resolve(DATA_DIR, 'variable_trial_portal_tasks'),
+  sendHtml,
+  sendJson,
+  readJsonBody,
+  htmlEscape,
+  attachmentContentDisposition,
+  processReviewEnabled: () => read16029ProcessReviewSelection(ROOT).enabled,
+  processReviewLabel: INDOOR_16029_PROCESS_REVIEW_LABEL,
+})
 syncAssetsToSharedStorage(STARTUP_PRIORITY_ASSET_IDS)
 
 const server = createServer(async (request, response) => {
@@ -5009,6 +5026,10 @@ const server = createServer(async (request, response) => {
 
     if (url.pathname === '/outdoor-22057' || url.pathname.startsWith('/outdoor-22057/')) {
       await outdoor22057Routes(request, response, url, username)
+      return
+    }
+    if (url.pathname === VARIABLE_TRIAL_PORTAL_ROUTE || url.pathname.startsWith(`${VARIABLE_TRIAL_PORTAL_ROUTE}/`)) {
+      await variableTrialRoutes(request, response, url, username)
       return
     }
 

@@ -71,13 +71,16 @@ export function write(path, value, { root = DATA, beforeCommit } = {}) {
 }
 export function writeText(path, text, { root = DATA } = {}) { atomicText(path, text, root) }
 
-export function files(folder, { excludePrefixes = [], excludeDirectoryPattern } = {}) {
+export function files(folder, { excludePrefixes = [], excludeDirectoryPattern, extensions, skipMissingUntracked = false } = {}) {
   const full = inside(folder, folder), stat = statOrMissing(full)
   if (!stat) return []
   if (!stat.isDirectory()) throw new Error('DIRECTORY_REQUIRED ' + full)
   return readdirSync(full).sort().filter(name => !excludePrefixes.some(prefix => name.startsWith(prefix))).flatMap(name => {
-    const path = inside(join(full, name), full), item = lstatSync(path)
-    if (item.isDirectory()) return excludeDirectoryPattern && new RegExp(excludeDirectoryPattern, 'i').test(name) ? [] : files(path, { excludePrefixes, excludeDirectoryPattern })
+    const path = inside(join(full, name), full)
+    const allowMissing = skipMissingUntracked && extensions && !extensions.includes(extname(name).toLowerCase())
+    const item = allowMissing ? statOrMissing(path) : lstatSync(path)
+    if (!item) return []
+    if (item.isDirectory()) return excludeDirectoryPattern && new RegExp(excludeDirectoryPattern, 'i').test(name) ? [] : files(path, { excludePrefixes, excludeDirectoryPattern, extensions, skipMissingUntracked })
     if (!item.isFile()) throw new Error('REGULAR_FILE_REQUIRED ' + path)
     return [path]
   })
@@ -119,7 +122,7 @@ export function protectionSnapshot(scopes, { root = ROOT } = {}) {
         !parts.some(part => scope.excludePrefixes?.some(prefix => part.startsWith(prefix))) &&
         !parts.slice(0, -1).some(part => scope.excludeDirectoryPattern && new RegExp(scope.excludeDirectoryPattern, 'i').test(part))
     }
-    const members = !stat ? [] : stat.isDirectory() ? files(path, scope).filter(accepted) : [path]
+    const members = !stat ? [] : stat.isDirectory() ? files(path, { ...scope, skipMissingUntracked: true }).filter(accepted) : [path]
     const recorded = inventory(members).map(member => {
       if (!samePath(member.path, indexPath)) return member
       nativeTaskIndex ||= nativeTaskIndexSnapshot(member.path)

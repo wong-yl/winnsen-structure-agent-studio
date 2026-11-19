@@ -1069,3 +1069,36 @@ test('protected phase rejects invalid index before native work and persists fail
   assert.equal(read(join(run, 'native-index-protection.json')).accepted, false)
   assert.equal(existsSync(join(run, 'result.json')), false)
 })
+
+test('protectionSnapshot skips untracked vanishing .lock files while still failing on missing tracked files', t => {
+  const folder = temporary(t)
+  const tracked = rawFile(join(folder, 'keep.json'), '{"ok":true}\n')
+  const transient = rawFile(join(folder, 'native_model_request_store.lock'), '')
+  const originalLstat = fs.lstatSync
+  t.after(() => {
+    fs.lstatSync = originalLstat
+    syncBuiltinESMExports()
+  })
+  fs.lstatSync = (target, ...rest) => {
+    if (String(target) === transient) {
+      const err = new Error('ENOENT')
+      err.code = 'ENOENT'
+      throw err
+    }
+    return originalLstat(target, ...rest)
+  }
+  syncBuiltinESMExports()
+  const snap = protectionSnapshot([{ path: folder, required: true, extensions: ['.json', '.zip'] }], { root: folder })
+  assert.deepEqual(snap.scopes[0].members.map(m => m.path), [tracked])
+
+  fs.lstatSync = (target, ...rest) => {
+    if (String(target) === tracked) {
+      const err = new Error('ENOENT')
+      err.code = 'ENOENT'
+      throw err
+    }
+    return originalLstat(target, ...rest)
+  }
+  syncBuiltinESMExports()
+  assert.throws(() => protectionSnapshot([{ path: folder, required: true, extensions: ['.json', '.zip'] }], { root: folder }), /ENOENT/)
+})

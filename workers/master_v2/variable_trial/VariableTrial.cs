@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Management;
 using System.Web.Script.Serialization;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
@@ -24,6 +26,127 @@ internal static class VariableTrial
     static bool OwnedSession;
     [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern uint GetLongPathName(string shortPath,StringBuilder longPath,uint length);
     static string CanonicalExecutable(string path) {var value=new StringBuilder(32768);uint result=GetLongPathName(path,value,(uint)value.Capacity);Need(result>0&&result<value.Capacity,"EXECUTABLE_PATH_UNRESOLVED");return value.ToString();}
+    const string ApprovedSldProcMonPath = @"D:\soildworks2020\SOLIDWORKS\sldProcMon.exe";
+    const int MonitorExitGraceMs = 3000;
+    static string TryCanonicalExecutable(string path)
+    {
+        if (String.IsNullOrWhiteSpace(path)) return null;
+        try { var value = new StringBuilder(32768); uint result = GetLongPathName(path, value, (uint)value.Capacity); return result > 0 && result < value.Capacity ? value.ToString() : null; }
+        catch { return null; }
+    }
+    sealed class MonitorProcessRow
+    {
+        internal int Pid;
+        internal int ParentPid;
+        internal string Name;
+        internal string ExecutablePath;
+        internal string CommandLine;
+    }
+    static List<MonitorProcessRow> QueryMonitorRows(string condition)
+    {
+        var rows = new List<MonitorProcessRow>();
+        try
+        {
+            using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process WHERE " + condition))
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                rows.Add(new MonitorProcessRow
+                {
+                    Pid = Convert.ToInt32(obj["ProcessId"], CultureInfo.InvariantCulture),
+                    ParentPid = Convert.ToInt32(obj["ParentProcessId"], CultureInfo.InvariantCulture),
+                    Name = Convert.ToString(obj["Name"], CultureInfo.InvariantCulture),
+                    ExecutablePath = Convert.ToString(obj["ExecutablePath"], CultureInfo.InvariantCulture),
+                    CommandLine = Convert.ToString(obj["CommandLine"], CultureInfo.InvariantCulture)
+                });
+            }
+        }
+        catch {}
+        return rows;
+    }
+    internal static bool IsOwnedMonitorIdentity(string name, int parentPid, string executablePath, string commandLine, long childStartTicks, int cadPid, long cadTicks, string approvedExecutable = ApprovedSldProcMonPath)
+    {
+        if (cadPid <= 0 || cadTicks <= 0 || parentPid != cadPid || childStartTicks < cadTicks) return false;
+        string canonicalApproved = TryCanonicalExecutable(approvedExecutable);
+        string canonicalObserved = TryCanonicalExecutable(executablePath);
+        if (canonicalApproved == null || canonicalObserved == null) return false;
+        if (!String.Equals(name, Path.GetFileName(canonicalApproved), StringComparison.OrdinalIgnoreCase)) return false;
+        if (!canonicalObserved.Equals(canonicalApproved, StringComparison.OrdinalIgnoreCase)) return false;
+        return !String.IsNullOrEmpty(commandLine) && Regex.IsMatch(commandLine, @"(?:^|\s)--ppid=" + cadPid.ToString(CultureInfo.InvariantCulture) + @"(?:\s|$)");
+    }
+    internal static bool IsCadProcessAlive(int cadPid, long cadTicks)
+    {
+        if (cadPid <= 0) return false;
+        try { using (Process p = Process.GetProcessById(cadPid)) return p.StartTime.ToUniversalTime().Ticks == cadTicks && !p.HasExited; }
+        catch { return false; }
+    }
+    static bool TryVerifyLiveMonitor(int childPid, int cadPid, long cadTicks, string approvedExecutable, out long childStartTicks, out string childExe, out string childCmd)
+    {
+        childStartTicks = 0; childExe = null; childCmd = null;
+        if (childPid <= 0) return false;
+        MonitorProcessRow row = QueryMonitorRows("ProcessId = " + childPid.ToString(CultureInfo.InvariantCulture)).FirstOrDefault();
+        if (row == null) return false;
+        try
+        {
+            using (Process child = Process.GetProcessById(childPid))
+            {
+                if (child.HasExited) return false;
+                childStartTicks = child.StartTime.ToUniversalTime().Ticks;
+                string moduleExe = TryCanonicalExecutable(child.MainModule.FileName);
+                string wmiExe = TryCanonicalExecutable(row.ExecutablePath);
+                if (moduleExe == null || wmiExe == null || !moduleExe.Equals(wmiExe, StringComparison.OrdinalIgnoreCase)) return false;
+                childExe = moduleExe;
+                childCmd = row.CommandLine;
+                return IsOwnedMonitorIdentity(row.Name, row.ParentPid, moduleExe, row.CommandLine, childStartTicks, cadPid, cadTicks, approvedExecutable);
+            }
+        }
+        catch { return false; }
+    }
+    internal static int[] FindOwnedMonitorPids(int cadPid, long cadTicks, string approvedExecutable = ApprovedSldProcMonPath)
+    {
+        if (cadPid <= 0 || cadTicks <= 0) return new int[0];
+        var result = new List<int>();
+        foreach (MonitorProcessRow row in QueryMonitorRows("ParentProcessId = " + cadPid.ToString(CultureInfo.InvariantCulture)))
+        {
+            long startTicks; string exe, cmd;
+            if (TryVerifyLiveMonitor(row.Pid, cadPid, cadTicks, approvedExecutable, out startTicks, out exe, out cmd))
+                result.Add(row.Pid);
+        }
+        return result.Distinct().OrderBy(id => id).ToArray();
+    }
+    internal static bool CleanupOwnedMonitors(int cadPid, long cadTicks, IEnumerable<int> knownPids, int graceWaitMs, string reason, Action<object> recorder = null, string approvedExecutable = ApprovedSldProcMonPath)
+    {
+        Need(!IsCadProcessAlive(cadPid, cadTicks), "MAIN_CAD_MUST_BE_ABSENT_BEFORE_MONITOR_CLEANUP");
+        var candidates = new SortedSet<int>();
+        if (knownPids != null) foreach (int pid in knownPids) if (pid > 0) candidates.Add(pid);
+        foreach (int pid in FindOwnedMonitorPids(cadPid, cadTicks, approvedExecutable)) candidates.Add(pid);
+        bool allExited = true;
+        foreach (int childPid in candidates)
+        {
+            long startTicks; string exe, cmd;
+            if (!TryVerifyLiveMonitor(childPid, cadPid, cadTicks, approvedExecutable, out startTicks, out exe, out cmd)) continue;
+            try
+            {
+                using (Process child = Process.GetProcessById(childPid))
+                {
+                    if (child.StartTime.ToUniversalTime().Ticks != startTicks || child.WaitForExit(graceWaitMs)) continue;
+                    Need(!IsCadProcessAlive(cadPid, cadTicks), "MAIN_CAD_REAPPEARED_BEFORE_MONITOR_CLEANUP");
+                    long recheckTicks; string recheckExe, recheckCmd;
+                    if (!TryVerifyLiveMonitor(childPid, cadPid, cadTicks, approvedExecutable, out recheckTicks, out recheckExe, out recheckCmd) || recheckTicks != startTicks) continue;
+                    child.Refresh();
+                    if (child.HasExited) continue;
+                    child.Kill();
+                    bool monitorExited = child.WaitForExit(10000);
+                    Action<object> emit = recorder ?? Record;
+                    emit(new { inspection = "residual_monitor_terminated", reason = reason, cadPid = cadPid, monitorPid = childPid, parentPid = cadPid, startTicks = startTicks, executable = exe, commandLine = cmd, waitedGraceMs = graceWaitMs, mainCadAlreadyExited = true, exited = monitorExited });
+                    if (!monitorExited) allExited = false;
+                }
+            }
+            catch (ArgumentException) {}
+            catch (InvalidOperationException) {}
+            catch { allExited = false; }
+        }
+        return allExited;
+    }
     static Dictionary<string, object> Job;
     static List<object> Events = new List<object>();
     static readonly Stopwatch RuntimeClock=Stopwatch.StartNew();
@@ -31,7 +154,10 @@ internal static class VariableTrial
     static string ResultPath;
     static readonly List<ModelDoc2> OwnedUnsaved = new List<ModelDoc2>();
     internal static void RegisterOwned(ModelDoc2 model) { Need(model!=null,"OWNED_MODEL_REQUIRED"); OwnedUnsaved.Add(model); }
+    internal static void ClearOwned() { foreach(ModelDoc2 model in OwnedUnsaved)Release(model); OwnedUnsaved.Clear(); }
     internal static string OutputRoot { get { return Path.Combine(Text("cadDirectory"),"outputs"); } }
+    internal static string RunDirectory { get { return Path.GetDirectoryName(Full(ResultPath)); } }
+    internal static void RewireCopy(string folder) { Rewire(folder); }
     static void Need(bool value, string error) { if (!value) throw new InvalidOperationException(error); }
     static Dictionary<string,object> SharedOwner(string directory)
     {
@@ -61,26 +187,536 @@ internal static class VariableTrial
     static void Release(object value) { if(value!=null && Marshal.IsComObject(value)) Marshal.ReleaseComObject(value); }
     static void Record(object value) { Events.Add(value);EventTimes.Add(new {index=Events.Count-1,atUtc=DateTime.UtcNow.ToString("o"),elapsedMs=RuntimeClock.ElapsedMilliseconds}); File.WriteAllText(ResultPath, Json.Serialize(new { action=Text("action"),cadPid=CadPid,cadTicks=CadTicks,cadExe=CadExe,production_release=false,events=Events,eventTimes=EventTimes }),new UTF8Encoding(false)); Console.WriteLine(Json.Serialize(value)); }
     static object[] Items(object value) { return value==null ? new object[0] : ((IEnumerable)value).Cast<object>().ToArray(); }
+    internal const int ShortComTimeoutMs = 15000;
+    internal const int DefaultComTimeoutMs = 30000;
+    internal const int IoRebuildComTimeoutMs = 60000;
+    internal const int HeavyAssemblyComTimeoutMs = 120000;
+    internal const int InterferenceComTimeoutMs = 300000;
+    internal const int CleanupComTimeoutMs = 5000;
+    internal const int CleanupExitTimeoutMs = 10000;
+    static readonly Guid IidIUnknown = new Guid("00000000-0000-0000-C000-000000000046");
+    [DllImport("ole32.dll")] static extern int CoMarshalInterThreadInterfaceInStream([In] ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] object pUnk, out IntPtr ppStm);
+    [DllImport("ole32.dll")] static extern int CoGetInterfaceAndReleaseStream(IntPtr pStm, [In] ref Guid riid, out IntPtr ppv);
+    [DllImport("ole32.dll")] static extern int CoReleaseMarshalData(IntPtr pStm);
+    [DllImport("ole32.dll")] static extern int CoWaitForMultipleHandles(uint dwFlags, uint dwTimeout, uint cHandles, IntPtr[] pHandles, out uint lpdwIndex);
+    [DllImport("kernel32.dll", SetLastError = true)] static extern IntPtr CreateEvent(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState, string lpName);
+    [DllImport("kernel32.dll", SetLastError = true)] static extern bool SetEvent(IntPtr hEvent);
+    [DllImport("kernel32.dll", SetLastError = true)] static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
+    [DllImport("kernel32.dll", SetLastError = true)] static extern bool CloseHandle(IntPtr hObject);
+    static ISldWorks SwMta;
+    internal static bool ComTimedOut;
+    static string LastComTimeoutError;
+    static int DiagnosticDelayConsumed;
+    internal static Action<Dictionary<string, object>> ComTimeoutObserver;
+    sealed class ComCallState<T>
+    {
+        internal int Refs = 2;
+        internal IntPtr Handle;
+        internal T Result;
+        internal Exception Error;
+        internal bool Completed;
+    }
+    static void ReleaseEventRef<T>(ComCallState<T> state)
+    {
+        if (Interlocked.Decrement(ref state.Refs) == 0 && state.Handle != IntPtr.Zero)
+        {
+            CloseHandle(state.Handle);
+            state.Handle = IntPtr.Zero;
+        }
+    }
+    static void ReleaseMarshalStream(IntPtr stm, ref int consumed)
+    {
+        if (stm != IntPtr.Zero && Interlocked.Exchange(ref consumed, 1) == 0)
+        {
+            try { CoReleaseMarshalData(stm); } catch {}
+            try { Marshal.Release(stm); } catch {}
+        }
+    }
+    static double? CurrentCadWorkingSetMb()
+    {
+        if (CadPid == 0) return null;
+        try { using (Process p = Process.GetProcessById(CadPid)) return Math.Round(p.WorkingSet64 / 1048576.0, 1); }
+        catch { return null; }
+    }
+    static void InitMtaProxy(ISldWorks sw)
+    {
+        SwMta = null; ComTimedOut = false; LastComTimeoutError = null; DiagnosticDelayConsumed = 0; ComTimeoutObserver = null;
+        if (sw == null) return;
+        Guid iid = IidIUnknown;
+        IntPtr stm = IntPtr.Zero;
+        int stmConsumed = 0;
+        Marshal.ThrowExceptionForHR(CoMarshalInterThreadInterfaceInStream(ref iid, sw, out stm));
+        Exception initError = null;
+        ISldWorks mtaProxy = null;
+        var thread = new Thread(() =>
+        {
+            IntPtr pUnk = IntPtr.Zero;
+            try
+            {
+                if (Interlocked.Exchange(ref stmConsumed, 1) == 0)
+                {
+                    Marshal.ThrowExceptionForHR(CoGetInterfaceAndReleaseStream(stm, ref iid, out pUnk));
+                    object obj = Marshal.GetUniqueObjectForIUnknown(pUnk);
+                    mtaProxy = (ISldWorks)obj;
+                }
+            }
+            catch (Exception ex) { initError = ex; }
+            finally { if (pUnk != IntPtr.Zero) Marshal.Release(pUnk); }
+        });
+        thread.IsBackground = true;
+        thread.SetApartmentState(ApartmentState.MTA);
+        thread.Start();
+        bool joined = thread.Join(DefaultComTimeoutMs);
+        ReleaseMarshalStream(stm, ref stmConsumed);
+        Need(joined, "COM_MTA_PROXY_INIT_TIMEOUT");
+        if (initError != null) throw new InvalidOperationException("COM_MTA_PROXY_INIT_FAILED: " + initError.Message, initError);
+        Need(mtaProxy != null, "COM_MTA_PROXY_NULL");
+        SwMta = mtaProxy;
+    }
+    static int ResolveComTimeoutMs(string methodName, string context, int defaultMs, bool allowAfterTimeout)
+    {
+        int timeoutMs = defaultMs;
+        if (Job != null && Job.ContainsKey("comTimeouts") && Job["comTimeouts"] != null)
+        {
+            var map = Map(Job["comTimeouts"]);
+            string scopedKey = String.IsNullOrEmpty(context) ? null : context + ":" + methodName;
+            string key = (scopedKey != null && map.ContainsKey(scopedKey) && map[scopedKey] != null) ? scopedKey : (map.ContainsKey(methodName) && map[methodName] != null ? methodName : null);
+            if (key != null)
+            {
+                int configured = Convert.ToInt32(map[key], CultureInfo.InvariantCulture);
+                Need(configured >= 100, "INVALID_COM_TIMEOUT " + key);
+                timeoutMs = allowAfterTimeout ? Math.Min(defaultMs, configured) : configured;
+            }
+        }
+        return timeoutMs;
+    }
+    static int DiagnosticDelayMs(string methodName, string context)
+    {
+        if (Job == null || !Job.ContainsKey("comDiagnosticDelay") || Job["comDiagnosticDelay"] == null) return 0;
+        var spec = Map(Job["comDiagnosticDelay"]);
+        if (spec.ContainsKey("methods") && spec["methods"] != null)
+        {
+            if (!Items(spec["methods"]).Select(v => Convert.ToString(v, CultureInfo.InvariantCulture)).Contains(methodName, StringComparer.Ordinal)) return 0;
+        }
+        else if (!spec.ContainsKey("method") || !String.Equals(Convert.ToString(spec["method"], CultureInfo.InvariantCulture), methodName, StringComparison.Ordinal)) return 0;
+        if (spec.ContainsKey("context") && spec["context"] != null && !String.Equals(Convert.ToString(spec["context"], CultureInfo.InvariantCulture), context ?? "", StringComparison.Ordinal)) return 0;
+        bool once = !spec.ContainsKey("once") || Convert.ToBoolean(spec["once"], CultureInfo.InvariantCulture);
+        if (once && Interlocked.CompareExchange(ref DiagnosticDelayConsumed, 1, 0) != 0) return 0;
+        int delayMs = Convert.ToInt32(spec["delayMs"], CultureInfo.InvariantCulture);
+        Need(delayMs >= 0, "INVALID_COM_DIAGNOSTIC_DELAY");
+        return delayMs;
+    }
+    static bool WaitForComWorkerHandle(IntPtr handle, int timeoutMs)
+    {
+        uint waitTimeout = (uint)timeoutMs;
+        if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
+        {
+            uint index = 0;
+            int hr = CoWaitForMultipleHandles(0, waitTimeout, 1, new[] { handle }, out index);
+            if (hr == 0 && index == 0) return true;
+            if (hr == unchecked((int)0x80010115)) return false;
+            return WaitForSingleObject(handle, 0) == 0;
+        }
+        return WaitForSingleObject(handle, waitTimeout) == 0;
+    }
+    internal static TResult CallComWithTimeout<TCom, TResult>(TCom target, string methodName, Func<TCom, TResult> call, int defaultTimeoutMs, string context = null, bool allowAfterTimeout = false) where TCom : class
+    {
+        return CallComWithArgTimeout<TCom, object, TResult>(target, null, methodName, delegate(TCom t, object unused) { return call(t); }, defaultTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static TResult CallComWithArgTimeout<TCom, TArg, TResult>(TCom target, TArg arg, string methodName, Func<TCom, TArg, TResult> call, int defaultTimeoutMs, string context = null, bool allowAfterTimeout = false)
+        where TCom : class
+        where TArg : class
+    {
+        Need(target != null, "CAD_COM_TARGET_NULL " + methodName);
+        if (ComTimedOut && !allowAfterTimeout)
+            throw new TimeoutException(LastComTimeoutError ?? ("CAD_COM_CALL_TIMEOUT method=" + methodName + " priorTimeout=true"));
+        int timeoutMs = ResolveComTimeoutMs(methodName, context, defaultTimeoutMs, allowAfterTimeout);
+        int delayMs = DiagnosticDelayMs(methodName, context);
+        bool isSwRoot = Sw != null && ReferenceEquals(target, Sw) && SwMta != null;
+        object initialTarget = isSwRoot ? (object)SwMta : (object)target;
+        bool isCom = Marshal.IsComObject(target);
+        bool argIsCom = arg != null && Marshal.IsComObject(arg);
+        bool marshalPerCall = isCom && !isSwRoot;
+        bool useWorker = (!isCom || SwMta != null || marshalPerCall) && (isCom || delayMs > 0 || (Job != null && Job.ContainsKey("comTimeouts")));
+        if (!useWorker) return call((TCom)initialTarget, arg);
+        Guid iid = IidIUnknown;
+        IntPtr stm = IntPtr.Zero;
+        IntPtr argStm = IntPtr.Zero;
+        int stmConsumed = marshalPerCall ? 0 : 1;
+        int argStmConsumed = argIsCom ? 0 : 1;
+        if (marshalPerCall)
+            Marshal.ThrowExceptionForHR(CoMarshalInterThreadInterfaceInStream(ref iid, target, out stm));
+        if (argIsCom)
+        {
+            try { Marshal.ThrowExceptionForHR(CoMarshalInterThreadInterfaceInStream(ref iid, arg, out argStm)); }
+            catch
+            {
+                ReleaseMarshalStream(stm, ref stmConsumed);
+                throw;
+            }
+        }
+        IntPtr handle = CreateEvent(IntPtr.Zero, true, false, null);
+        if (handle == IntPtr.Zero)
+        {
+            ReleaseMarshalStream(argStm, ref argStmConsumed);
+            ReleaseMarshalStream(stm, ref stmConsumed);
+            throw new InvalidOperationException("COM_TIMEOUT_EVENT_CREATE_FAILED");
+        }
+        var state = new ComCallState<TResult> { Handle = handle };
+        Stopwatch timer = Stopwatch.StartNew();
+        try
+        {
+            var worker = new Thread(() =>
+            {
+                IntPtr pUnk = IntPtr.Zero;
+                IntPtr argUnk = IntPtr.Zero;
+                object mtaTemp = null;
+                object mtaArg = null;
+                try
+                {
+                    TCom execTarget;
+                    if (marshalPerCall)
+                    {
+                        if (Interlocked.Exchange(ref stmConsumed, 1) == 0)
+                        {
+                            Marshal.ThrowExceptionForHR(CoGetInterfaceAndReleaseStream(stm, ref iid, out pUnk));
+                            mtaTemp = Marshal.GetUniqueObjectForIUnknown(pUnk);
+                            Marshal.Release(pUnk);
+                            pUnk = IntPtr.Zero;
+                            execTarget = (TCom)mtaTemp;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("COM_STREAM_ALREADY_CONSUMED " + methodName);
+                        }
+                    }
+                    else
+                    {
+                        execTarget = (TCom)initialTarget;
+                    }
+                    TArg execArg = arg;
+                    if (argIsCom)
+                    {
+                        if (Interlocked.Exchange(ref argStmConsumed, 1) == 0)
+                        {
+                            Marshal.ThrowExceptionForHR(CoGetInterfaceAndReleaseStream(argStm, ref iid, out argUnk));
+                            mtaArg = Marshal.GetUniqueObjectForIUnknown(argUnk);
+                            Marshal.Release(argUnk);
+                            argUnk = IntPtr.Zero;
+                            execArg = (TArg)mtaArg;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("COM_ARG_STREAM_ALREADY_CONSUMED " + methodName);
+                        }
+                    }
+                    if (delayMs > 0) Thread.Sleep(delayMs);
+                    state.Result = call(execTarget, execArg);
+                }
+                catch (Exception ex) { state.Error = ex; }
+                finally
+                {
+                    if (argUnk != IntPtr.Zero) { try { Marshal.Release(argUnk); } catch {} }
+                    if (pUnk != IntPtr.Zero) { try { Marshal.Release(pUnk); } catch {} }
+                    if (mtaArg != null) { try { Release(mtaArg); } catch {} }
+                    if (mtaTemp != null) { try { Release(mtaTemp); } catch {} }
+                    Thread.MemoryBarrier();
+                    state.Completed = true;
+                    SetEvent(state.Handle);
+                    ReleaseEventRef(state);
+                }
+            });
+            worker.IsBackground = true;
+            if (isCom || argIsCom) worker.SetApartmentState(ApartmentState.MTA);
+            worker.Start();
+            bool signaled = WaitForComWorkerHandle(handle, timeoutMs);
+            timer.Stop();
+            if (!signaled || !state.Completed)
+            {
+                ReleaseMarshalStream(argStm, ref argStmConsumed);
+                ReleaseMarshalStream(stm, ref stmConsumed);
+                ComTimedOut = true;
+                double? workingSetMb = CurrentCadWorkingSetMb();
+                string message = "CAD_COM_CALL_TIMEOUT method=" + methodName
+                    + (String.IsNullOrEmpty(context) ? "" : " context=" + context)
+                    + " waitedMs=" + timer.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture)
+                    + " timeoutMs=" + timeoutMs.ToString(CultureInfo.InvariantCulture)
+                    + (workingSetMb.HasValue ? " cadWorkingSetMb=" + workingSetMb.Value.ToString("0.0", CultureInfo.InvariantCulture) : "");
+                LastComTimeoutError = LastComTimeoutError ?? message;
+                if (Job != null && !String.IsNullOrEmpty(ResultPath))
+                    Record(new { inspection = "com_call_timeout", method = methodName, context = context, waitedMs = timer.ElapsedMilliseconds, timeoutMs = timeoutMs, allowAfterTimeout = allowAfterTimeout, cadPid = CadPid, cadWorkingSetMb = workingSetMb, error = message });
+                if (ComTimeoutObserver != null)
+                {
+                    try
+                    {
+                        ComTimeoutObserver(new Dictionary<string, object>
+                        {
+                            { "method", methodName },
+                            { "context", context },
+                            { "waitedMs", timer.ElapsedMilliseconds },
+                            { "timeoutMs", timeoutMs },
+                            { "allowAfterTimeout", allowAfterTimeout },
+                            { "cadPid", CadPid },
+                            { "cadWorkingSetMb", workingSetMb },
+                            { "error", message },
+                            { "utc", DateTime.UtcNow.ToString("o") }
+                        });
+                    }
+                    catch {}
+                }
+                throw new TimeoutException(message);
+            }
+            if (state.Error != null) throw state.Error;
+            return state.Result;
+        }
+        finally { ReleaseEventRef(state); }
+    }
+    internal static T CallSwWithTimeout<T>(ISldWorks sw, string methodName, Func<ISldWorks, T> call, int defaultTimeoutMs, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallComWithTimeout<ISldWorks, T>(sw, methodName, call, defaultTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static object[] SwGetDocuments(ISldWorks sw, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallSwWithTimeout(sw, "GetDocuments", s => Items(s.GetDocuments()), allowAfterTimeout ? CleanupComTimeoutMs : DefaultComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static int SwGetDocumentCount(ISldWorks sw, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallSwWithTimeout(sw, "GetDocumentCount", s => s.GetDocumentCount(), allowAfterTimeout ? CleanupComTimeoutMs : DefaultComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static void SwCloseDoc(ISldWorks sw, string title, string context = null, bool allowAfterTimeout = false)
+    {
+        CallSwWithTimeout(sw, "CloseDoc", s => { s.CloseDoc(title); return true; }, allowAfterTimeout ? CleanupComTimeoutMs : DefaultComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static void SwCloseAllDocuments(ISldWorks sw, bool includeUnsaved, string context = null, bool allowAfterTimeout = false)
+    {
+        CallSwWithTimeout(sw, "CloseAllDocuments", s => { s.CloseAllDocuments(includeUnsaved); return true; }, allowAfterTimeout ? CleanupComTimeoutMs : DefaultComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static void SwExitApp(ISldWorks sw, string context = null, bool allowAfterTimeout = false)
+    {
+        CallSwWithTimeout(sw, "ExitApp", s => { s.ExitApp(); return true; }, allowAfterTimeout ? CleanupExitTimeoutMs : DefaultComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static int SwGetProcessID(ISldWorks sw, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallSwWithTimeout(sw, "GetProcessID", s => s.GetProcessID(), allowAfterTimeout ? CleanupComTimeoutMs : DefaultComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static ModelDoc2 SwOpenDoc6(ISldWorks sw, string path, int type, int options, string configuration, out int errors, out int warnings, string context = null, int timeoutMs = IoRebuildComTimeoutMs)
+    {
+        int outErrors = 0, outWarnings = 0;
+        ModelDoc2 doc = CallSwWithTimeout(sw, "OpenDoc6", s =>
+        {
+            int e = 0, w = 0;
+            ModelDoc2 opened = s.OpenDoc6(path, type, options, configuration, ref e, ref w) as ModelDoc2;
+            outErrors = e; outWarnings = w;
+            return opened;
+        }, timeoutMs, context);
+        errors = outErrors; warnings = outWarnings;
+        return doc;
+    }
+    internal static ModelDoc2 SwNewDocument(ISldWorks sw, string template, int paperSize, double width, double height, string context = null)
+    {
+        return CallSwWithTimeout(sw, "NewDocument", s => s.NewDocument(template, paperSize, width, height) as ModelDoc2, DefaultComTimeoutMs, context);
+    }
+    internal static ModelDoc2 SwActivateDoc3(ISldWorks sw, string name, bool useUserPreferences, int option, out int errors, string context = null)
+    {
+        int outErrors = 0;
+        ModelDoc2 activated = CallSwWithTimeout(sw, "ActivateDoc3", s =>
+        {
+            int e = 0;
+            ModelDoc2 doc = s.ActivateDoc3(name, useUserPreferences, option, ref e) as ModelDoc2;
+            outErrors = e;
+            return doc;
+        }, DefaultComTimeoutMs, context);
+        errors = outErrors;
+        return activated;
+    }
+    internal static ModelDoc2 SwActiveDoc(ISldWorks sw, string context = null)
+    {
+        return CallSwWithTimeout(sw, "ActiveDoc", s => s.ActiveDoc as ModelDoc2, ShortComTimeoutMs, context);
+    }
+    internal static bool SwGetUserPreferenceToggle(ISldWorks sw, int userPreferenceValue, string context = null)
+    {
+        return CallSwWithTimeout(sw, "GetUserPreferenceToggle", s => s.GetUserPreferenceToggle(userPreferenceValue), ShortComTimeoutMs, context);
+    }
+    internal static bool SwSetUserPreferenceToggle(ISldWorks sw, int userPreferenceValue, bool onFlag, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallSwWithTimeout(sw, "SetUserPreferenceToggle", s => { s.SetUserPreferenceToggle(userPreferenceValue, onFlag); return true; }, allowAfterTimeout ? CleanupComTimeoutMs : ShortComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static string SwGetUserPreferenceStringValue(ISldWorks sw, int userPreferenceValue, string context = null)
+    {
+        return CallSwWithTimeout(sw, "GetUserPreferenceStringValue", s => s.GetUserPreferenceStringValue(userPreferenceValue), ShortComTimeoutMs, context);
+    }
+    internal static MathUtility SwGetMathUtility(ISldWorks sw, string context = null)
+    {
+        return CallSwWithTimeout(sw, "GetMathUtility", s => s.GetMathUtility() as MathUtility, ShortComTimeoutMs, context);
+    }
+    internal static object[] SwGetDocumentDependencies2(ISldWorks sw, string document, bool traverseflag, bool searchflag, bool addReadOnlyInfo, string context = null)
+    {
+        return CallSwWithTimeout(sw, "GetDocumentDependencies2", s => Items(s.GetDocumentDependencies2(document, traverseflag, searchflag, addReadOnlyInfo)), IoRebuildComTimeoutMs, context);
+    }
+    internal static bool SwReplaceReferencedDocument(ISldWorks sw, string referencingDocument, string referencedDocument, string newReference, string context = null)
+    {
+        return CallSwWithTimeout(sw, "ReplaceReferencedDocument", s => s.ReplaceReferencedDocument(referencingDocument, referencedDocument, newReference), IoRebuildComTimeoutMs, context);
+    }
+    internal static void SwSetVisible(ISldWorks sw, bool visible, string context = null)
+    {
+        CallSwWithTimeout(sw, "Visible", s => { s.Visible = visible; return true; }, ShortComTimeoutMs, context);
+    }
+    internal static void SwSetUserControl(ISldWorks sw, bool userControl, string context = null)
+    {
+        CallSwWithTimeout(sw, "UserControl", s => { s.UserControl = userControl; return true; }, ShortComTimeoutMs, context);
+    }
+    internal static string SwRevisionNumber(ISldWorks sw, string context = null)
+    {
+        return CallSwWithTimeout(sw, "RevisionNumber", s => s.RevisionNumber(), ShortComTimeoutMs, context);
+    }
+    internal static bool ModelForceRebuild3(ModelDoc2 model, bool topOnly, string context = null, int timeoutMs = IoRebuildComTimeoutMs)
+    {
+        return CallComWithTimeout(model, "ForceRebuild3", m => m.ForceRebuild3(topOnly), timeoutMs, context);
+    }
+    internal static bool ModelSave3(ModelDoc2 model, int options, out int errors, out int warnings, string context = null)
+    {
+        int outErrors = 0, outWarnings = 0;
+        bool saved = CallComWithTimeout(model, "Save3", m =>
+        {
+            int e = 0, w = 0;
+            bool ok = m.Save3(options, ref e, ref w);
+            outErrors = e; outWarnings = w;
+            return ok;
+        }, IoRebuildComTimeoutMs, context);
+        errors = outErrors; warnings = outWarnings;
+        return saved;
+    }
+    internal static bool ModelSaveAs(ModelDoc2 model, string path, int version, int options, object exportData, out int errors, out int warnings, string context = null, int timeoutMs = IoRebuildComTimeoutMs)
+    {
+        int outErrors = 0, outWarnings = 0;
+        bool saved = CallComWithArgTimeout(model, exportData, "SaveAs", (m, data) =>
+        {
+            int e = 0, w = 0;
+            ModelDocExtension ext = m.Extension;
+            try { return ext.SaveAs(path, version, options, data, ref e, ref w); }
+            finally { outErrors = e; outWarnings = w; Release(ext); }
+        }, timeoutMs, context);
+        errors = outErrors; warnings = outWarnings;
+        return saved;
+    }
+    internal static void ModelClearSelection2(ModelDoc2 model, bool all, string context = null)
+    {
+        CallComWithTimeout(model, "ClearSelection2", m => { m.ClearSelection2(all); return true; }, ShortComTimeoutMs, context);
+    }
+    internal static bool ModelShowConfiguration2(ModelDoc2 model, string name, string context = null)
+    {
+        return CallComWithTimeout(model, "ShowConfiguration2", m => m.ShowConfiguration2(name), DefaultComTimeoutMs, context);
+    }
+    internal static string ModelGetPathName(ModelDoc2 model, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallComWithTimeout(model, "GetPathName", m => m.GetPathName(), allowAfterTimeout ? CleanupComTimeoutMs : ShortComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static string ModelGetTitle(ModelDoc2 model, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallComWithTimeout(model, "GetTitle", m => m.GetTitle(), allowAfterTimeout ? CleanupComTimeoutMs : ShortComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static bool ModelGetSaveFlag(ModelDoc2 model, string context = null, bool allowAfterTimeout = false)
+    {
+        return CallComWithTimeout(model, "GetSaveFlag", m => m.GetSaveFlag(), allowAfterTimeout ? CleanupComTimeoutMs : ShortComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static bool ModelIsOpenedReadOnly(ModelDoc2 model, string context = null)
+    {
+        return CallComWithTimeout(model, "IsOpenedReadOnly", m => m.IsOpenedReadOnly(), ShortComTimeoutMs, context);
+    }
+    internal static void FeatureUpdateExternalFileReferences(Feature feature, int configOption, string configName, int updateStatus, string context = null)
+    {
+        CallComWithTimeout(feature, "UpdateExternalFileReferences", f => { f.UpdateExternalFileReferences(configOption, configName, updateStatus); return true; }, IoRebuildComTimeoutMs, context);
+    }
+    internal static Component2 AssemblyAddComponent5(AssemblyDoc assembly, string compName, int configOption, string newConfigName, bool useConfigForPartReferences, string existingConfigName, double x, double y, double z, string context = null)
+    {
+        return CallComWithTimeout(assembly, "AddComponent5", a => a.AddComponent5(compName, configOption, newConfigName, useConfigForPartReferences, existingConfigName, x, y, z) as Component2, DefaultComTimeoutMs, context);
+    }
+    internal static object[] AssemblyGetComponents(AssemblyDoc assembly, bool topOnly, string context = null)
+    {
+        return CallComWithTimeout(assembly, "GetComponents", a => Items(a.GetComponents(topOnly)), DefaultComTimeoutMs, context);
+    }
+    internal static void AssemblyUnfixComponent(AssemblyDoc assembly, string context = null)
+    {
+        CallComWithTimeout(assembly, "UnfixComponent", a => { a.UnfixComponent(); return true; }, DefaultComTimeoutMs, context);
+    }
+    internal static void AssemblyFixComponent(AssemblyDoc assembly, string context = null)
+    {
+        CallComWithTimeout(assembly, "FixComponent", a => { a.FixComponent(); return true; }, DefaultComTimeoutMs, context);
+    }
+    internal static void AssemblyResolveAllLightWeightComponents(AssemblyDoc assembly, bool resolveAll, string context = null)
+    {
+        CallComWithTimeout(assembly, "ResolveAllLightWeightComponents", a => { a.ResolveAllLightWeightComponents(resolveAll); return true; }, HeavyAssemblyComTimeoutMs, context);
+    }
+    internal static bool ComponentSelect4(Component2 comp, bool append, SelectData data, bool showCallout, string context = null)
+    {
+        return CallComWithArgTimeout(comp, data, "Select4", (c, d) => c.Select4(append, d, showCallout), ShortComTimeoutMs, context);
+    }
+    internal static bool ComponentIsFixed(Component2 comp, string context = null)
+    {
+        return CallComWithTimeout(comp, "IsFixed", c => c.IsFixed(), ShortComTimeoutMs, context);
+    }
+    internal static string ComponentGetName2(Component2 comp, string context = null)
+    {
+        return CallComWithTimeout(comp, "Component.Name2.Get", c => c.Name2, ShortComTimeoutMs, context);
+    }
+    internal static void ComponentSetName2(Component2 comp, string name, string context = null)
+    {
+        CallComWithTimeout(comp, "Component.Name2.Set", c => { c.Name2 = name; return true; }, ShortComTimeoutMs, context);
+    }
+    internal static string ComponentGetPathName(Component2 comp, string context = null)
+    {
+        return CallComWithTimeout(comp, "Component.GetPathName", c => c.GetPathName(), ShortComTimeoutMs, context);
+    }
+    internal static bool ComponentSetTransformAndSolve2(Component2 comp, MathTransform transform, string context = null)
+    {
+        return CallComWithArgTimeout(comp, transform, "SetTransformAndSolve2", (c, t) => c.SetTransformAndSolve2(t), DefaultComTimeoutMs, context);
+    }
+    internal static object[] InterferenceGetInterferences(InterferenceDetectionMgr manager, string context = null)
+    {
+        return CallComWithTimeout(manager, "GetInterferences", m => Items(m.GetInterferences()), InterferenceComTimeoutMs, context);
+    }
+    internal static int InterferenceGetInterferenceCount(InterferenceDetectionMgr manager, string context = null)
+    {
+        return CallComWithTimeout(manager, "GetInterferenceCount", m => m.GetInterferenceCount(), ShortComTimeoutMs, context);
+    }
+    internal static void InterferenceDone(InterferenceDetectionMgr manager, string context = null)
+    {
+        CallComWithTimeout(manager, "InterferenceDetectionMgr.Done", m => { m.Done(); return true; }, CleanupComTimeoutMs, context, true);
+    }
+    internal static void SwDocumentVisible(ISldWorks sw, bool visible, int type, string context = null, bool allowAfterTimeout = false)
+    {
+        CallSwWithTimeout(sw, "DocumentVisible", s => { s.DocumentVisible(visible, type); return true; }, allowAfterTimeout ? CleanupComTimeoutMs : ShortComTimeoutMs, context, allowAfterTimeout);
+    }
+    internal static object[] SwGetMaterialDatabases(ISldWorks sw, string context = null)
+    {
+        return CallSwWithTimeout(sw, "GetMaterialDatabases", s => Items(s.GetMaterialDatabases()), ShortComTimeoutMs, context);
+    }
+    internal static void ModelSetVisible(ModelDoc2 model, bool visible, string context = null)
+    {
+        CallComWithTimeout(model, "Model.Visible.Set", m => { m.Visible = visible; return true; }, ShortComTimeoutMs, context);
+    }
     static int TypeFor(string path) {return Path.GetExtension(path).Equals(".SLDASM",StringComparison.OrdinalIgnoreCase)?2:Path.GetExtension(path).Equals(".SLDDRW",StringComparison.OrdinalIgnoreCase)?3:1;}
     static ModelDoc2 Open(string path, bool readOnly)
     {
         RuntimeOwnership();
         Local(path); int errors=0,warnings=0;
-        ModelDoc2 model=Sw.OpenDoc6(path,TypeFor(path),1+(readOnly?2:0),"",ref errors,ref warnings) as ModelDoc2;
-        Record(new {inspection="open",path=path,errors=errors,warnings=warnings,actualReadOnly=model==null?(bool?)null:model.IsOpenedReadOnly()});
+        int openTimeoutMs = TypeFor(path) == 2 ? HeavyAssemblyComTimeoutMs : IoRebuildComTimeoutMs;
+        ModelDoc2 model=SwOpenDoc6(Sw,path,TypeFor(path),1+(readOnly?2:0),"",out errors,out warnings,"VariableTrial.Open",openTimeoutMs);
+        bool? actualReadOnly = model == null ? (bool?)null : ModelIsOpenedReadOnly(model, "VariableTrial.Open");
+        Record(new {inspection="open",path=path,errors=errors,warnings=warnings,actualReadOnly=actualReadOnly});
         Need(model!=null && errors==0,"OPEN_FAILED " + path+" "+errors+"/"+warnings);
-        Need(!readOnly || model.IsOpenedReadOnly(),"READONLY_NOT_APPLIED");
+        Need(!readOnly || actualReadOnly == true,"READONLY_NOT_APPLIED");
         AssertLoadedScope(); return model;
     }
     static void AssertLoadedScope()
     {
-        foreach(object value in Items(Sw.GetDocuments())) {ModelDoc2 model=value as ModelDoc2;try {Need(model!=null,"NON_MODEL_DOCUMENT");Need(OwnedDocument(model),"EXTERNAL_LOADED_DOCUMENT "+model.GetPathName());}finally{Release(value);}}
+        foreach(object value in SwGetDocuments(Sw,"AssertLoadedScope")) {ModelDoc2 model=value as ModelDoc2;try {Need(model!=null,"NON_MODEL_DOCUMENT");Need(OwnedDocument(model),"EXTERNAL_LOADED_DOCUMENT "+ModelGetPathName(model,"AssertLoadedScope"));}finally{Release(value);}}
     }
     static bool OwnedDocument(ModelDoc2 model)
     {
-        string path=model.GetPathName();
+        string path=ModelGetPathName(model,"OwnedDocument",ComTimedOut);
         if(String.IsNullOrEmpty(path))return OwnedUnsaved.Any(owned=>{try{return Sw.IsSame(owned,model)==1;}catch{return false;}});
-        try {Local(path);return Full(path).StartsWith(Full(Text("cadDirectory"))+"\\",StringComparison.OrdinalIgnoreCase);} catch{return false;}
+        try {Local(path);string fullPath=Full(path);return fullPath.StartsWith(Full(Text("cadDirectory"))+"\\",StringComparison.OrdinalIgnoreCase)||fullPath.StartsWith(Full(Path.Combine(RunDirectory,"staging"))+"\\",StringComparison.OrdinalIgnoreCase);} catch{return false;}
     }
     static void Rewire(string folder)
     {
@@ -89,7 +725,7 @@ internal static class VariableTrial
         foreach(string file in files)
         {
             RuntimeOwnership();
-            object[] deps=Items(Sw.GetDocumentDependencies2(file,false,false,false));
+            object[] deps=SwGetDocumentDependencies2(Sw,file,false,false,false,"VariableTrial.Rewire");
             for(int i=1;i<deps.Length;i+=2)
             {
                 string old=Convert.ToString(deps[i]),target=null;
@@ -104,12 +740,19 @@ internal static class VariableTrial
                 if(target==null&&byName.TryGetValue(Path.GetFileName(old),out candidates)&&candidates.Length==1)target=candidates[0];
                 Need(target!=null,"MISSING_OR_AMBIGUOUS_COPIED_DEPENDENCY "+file+" -> "+old);
                 if(String.Equals(Full(old),Full(target),StringComparison.OrdinalIgnoreCase))continue;
-                bool ok=Sw.ReplaceReferencedDocument(file,old,target);Record(new {inspection="rewrite_reference",file=file,old=old,target=target,success=ok});Need(ok,"REWRITE_REFERENCE_FAILED");
+                bool ok=SwReplaceReferencedDocument(Sw,file,old,target,"VariableTrial.Rewire");Record(new {inspection="rewrite_reference",file=file,old=old,target=target,success=ok});Need(ok,"REWRITE_REFERENCE_FAILED");
             }
         }
+        VerifyDependencyClosure(folder,files);
+    }
+    static void VerifyDependencyClosure(string folder,string[] files=null)
+    {
+        Local(folder);
+        if(files==null)files=Directory.GetFiles(folder,"*",SearchOption.AllDirectories).Where(p=>new[]{".SLDPRT",".SLDASM",".SLDDRW"}.Contains(Path.GetExtension(p).ToUpperInvariant())).ToArray();
         foreach(string file in files)
         {
-            object[] deps=Items(Sw.GetDocumentDependencies2(file,false,false,false));
+            RuntimeOwnership();
+            object[] deps=SwGetDocumentDependencies2(Sw,file,false,false,false,"VariableTrial.RewireVerify");
             for(int i=1;i<deps.Length;i+=2) {string dependency=Convert.ToString(deps[i]);Local(dependency);Need(Full(dependency).StartsWith(Full(folder)+"\\",StringComparison.OrdinalIgnoreCase),"DEPENDENCY_OUTSIDE_CURRENT_COPY "+dependency);}
         }
         Record(new {inspection="dependency_closure",fileCount=files.Length,pass=true});
@@ -119,7 +762,7 @@ internal static class VariableTrial
         Need(Directory.Exists(OutputRoot),"DOOR_OUTPUTS_REQUIRED");string[] panels=Directory.GetFiles(OutputRoot,"*.SLDPRT",SearchOption.AllDirectories);Need(panels.Length==6,"SIX_DOOR_PARTS_REQUIRED");
         foreach(string panel in panels)
         {
-            Local(panel);var dependencies=new List<string>();object[] values=Items(Sw.GetDocumentDependencies2(panel,false,false,false));
+            Local(panel);var dependencies=new List<string>();object[] values=SwGetDocumentDependencies2(Sw,panel,false,false,false,"ReadOnlyDoorDependencies");
             Need(values.Length%2==0,"DOOR_DEPENDENCY_RECORD_INCOMPLETE");
             for(int i=1;i<values.Length;i+=2){string dependency=Full(Convert.ToString(values[i]));Local(dependency);Need(dependency.StartsWith(Full(Text("cadDirectory"))+"\\",StringComparison.OrdinalIgnoreCase)&&File.Exists(dependency),"DOOR_DEPENDENCY_OUTSIDE_COPY "+dependency);dependencies.Add(dependency);}
             Record(new {inspection="door_readonly_dependencies",path=panel,dependencies=dependencies,rewritten=false,pass=true});
@@ -168,7 +811,7 @@ internal static class VariableTrial
         }
         finally
         {
-            if(ActiveConfiguration(model)!=activeBefore)Need(model.ShowConfiguration2(activeBefore),"PROPERTY_READ_CONFIGURATION_RESTORE_FAILED");
+            if(ActiveConfiguration(model)!=activeBefore)Need(ModelShowConfiguration2(model, activeBefore, "VariableTrial.Properties"),"PROPERTY_READ_CONFIGURATION_RESTORE_FAILED");
             Need(ActiveConfiguration(model)==activeBefore,"PROPERTY_READ_CONFIGURATION_RESTORE_READBACK_FAILED");
         }
         return new {materialName=material,materialDatabase=database,configurationMaterials=materials,custom=properties};
@@ -206,7 +849,7 @@ internal static class VariableTrial
         foreach(object value in Items(Job["targets"]))
         {
             string path=Path.Combine(Text("cadDirectory"),Convert.ToString(value));ModelDoc2 model=Open(path,true);
-            try{Record(new {inspection="model_snapshot",snapshot=Snapshot(model)});}finally{Sw.CloseDoc(model.GetTitle());Release(model);}
+            try{Record(new {inspection="model_snapshot",snapshot=Snapshot(model)});}finally{SwCloseDoc(Sw,model.GetTitle(),"Inspect",true);Release(model);}
         }
     }
     static Dictionary<string,string> CadHashes()
@@ -258,12 +901,12 @@ internal static class VariableTrial
     static void SaveModel(ModelDoc2 model,string stage)
     {
         RuntimeOwnership();AssertLoadedScope();
-        int errors=0,warnings=0;bool saved=model.Save3(1,ref errors,ref warnings);Record(new {inspection="save",stage=stage,saved=saved,errors=errors,warnings=warnings});Need(saved&&errors==0,"SAVE_FAILED");
+        int errors=0,warnings=0;bool saved=ModelSave3(model,1,out errors,out warnings,"VariableTrial.SaveModel."+stage);Record(new {inspection="save",stage=stage,saved=saved,errors=errors,warnings=warnings});Need(saved&&errors==0,"SAVE_FAILED");
     }
     static void DefaultConfiguration(ModelDoc2 model)
     {
         ConfigurationManager manager=model.ConfigurationManager;Configuration config=manager.ActiveConfiguration;string name=config.Name;Release(config);Release(manager);
-        if(name!="Default")model.ShowConfiguration2("Default");
+        if(name!="Default")ModelShowConfiguration2(model,"Default","DefaultConfiguration");
         manager=model.ConfigurationManager;config=manager.ActiveConfiguration;
         try{Need(config.Name=="Default","DEFAULT_CONFIGURATION_REQUIRED");}finally{Release(config);Release(manager);}
     }
@@ -357,7 +1000,7 @@ internal static class VariableTrial
                 try {Need(active.Name=="Default","SAVED_CONFIGURATION_DRIFT");}finally{Release(active);Release(manager);}
                 eq=model.GetEquationMgr() as EquationMgr;Need(eq!=null&&eq.GetCount()==10,"SAVED_EQUATIONS_MISSING");CheckEquations(eq);
                 Record(new {inspection="reopen_panel",path=path,geometry=CheckPanel(model,437,471.25,"independent-reopen"),snapshot=Snapshot(model)});
-            }finally{Release(eq);Sw.CloseDoc(model.GetTitle());Release(model);}
+            }finally{Release(eq);SwCloseDoc(Sw,model.GetTitle(),"ReopenValidation",true);Release(model);}
         }
         var after=CadHashes();Need(before.Count==after.Count&&before.All(p=>after.ContainsKey(p.Key)&&after[p.Key]==p.Value),"READONLY_REOPEN_CHANGED_FILES");
         Record(new {inspection="readonly_hash_comparison",pass=true,files=before});
@@ -385,14 +1028,14 @@ internal static class VariableTrial
             double width=Convert.ToDouble(variables["DOOR_W"]),height=Convert.ToDouble(variables["DOOR_H"]);Need(width>0&&height>0&&width<=537&&height<=1000,"DOOR_TRIAL_SIZE_OUTSIDE_BOUNDS");
             string source=Path.Combine(Text("cadDirectory"),hand=="L"?"door_panel_left_W437_H471p25.SLDPRT":"door_panel_right_W437_H471p25.SLDPRT");
             string folder=Path.Combine(root,hand+(caseIndex++).ToString(CultureInfo.InvariantCulture));Directory.CreateDirectory(folder);
-            ModelDoc2 model=Open(source,true);string materialDb,material=((PartDoc)model).GetMaterialPropertyName2("Default",out materialDb);Sw.CloseDoc(model.GetTitle());Release(model);
+            ModelDoc2 model=Open(source,true);string materialDb,material=((PartDoc)model).GetMaterialPropertyName2("Default",out materialDb);SwCloseDoc(Sw,model.GetTitle(),"OutputCases.ReadMaterial",true);Release(model);
             string materialIdentity=String.IsNullOrEmpty(material)?"UNSPECIFIED":material;
             string filename="door_"+hand+"_W"+width.ToString("0.####",CultureInfo.InvariantCulture).Replace('.','p')+"_H"+height.ToString("0.####",CultureInfo.InvariantCulture).Replace('.','p')+"_t0p8_mat"+Digest(materialIdentity)+"_pv1.SLDPRT";
             string path=Path.Combine(folder,filename);Need(path.Length<255,"WINDOWS_PATH_TOO_LONG");File.Copy(source,path,false);model=Open(path,false);EquationMgr eq=null;
             try
             {
                 DefaultConfiguration(model);eq=model.GetEquationMgr() as EquationMgr;Need(eq!=null&&eq.GetCount()==10,"TEMPLATE_EQUATIONS_MISSING");
-                SetVariable(eq,"DOOR_W",width);SetVariable(eq,"DOOR_H",height);eq.EvaluateAll();CheckEquations(eq);Need(model.ForceRebuild3(false),"OUTPUT_SIZE_REBUILD_FAILED");
+                SetVariable(eq,"DOOR_W",width);SetVariable(eq,"DOOR_H",height);eq.EvaluateAll();CheckEquations(eq);Need(ModelForceRebuild3(model,false,"OutputCases.Size"),"OUTPUT_SIZE_REBUILD_FAILED");
                 object geometry=CheckPanel(model,width,height,"output-"+hand);CheckHandGeometry(geometry,hand,width,height);
                 CustomPropertyManager manager=model.Extension.CustomPropertyManager[""];
                 try
@@ -414,10 +1057,10 @@ internal static class VariableTrial
                 Release(eq);eq=null;
                 Record(new {inspection="output_case_model",path=path,hand=hand,widthMm=width,heightMm=height,materialName=material,materialIdentity=materialIdentity,geometry=geometry});
                 object dxf=TrialOutput.ExportDxf(Sw,model,Path.Combine(folder,"flat.dxf"));Record(new {inspection="output_dxf",path=path,result=dxf});
-                ModelDoc2 refreshed=Sw.ActiveDoc as ModelDoc2;
-                Need(refreshed!=null&&refreshed is PartDoc&&String.Equals(Path.GetFullPath(refreshed.GetPathName()),Path.GetFullPath(path),StringComparison.OrdinalIgnoreCase),"OUTPUT_ACTIVE_PART_CHANGED");
+                ModelDoc2 refreshed=SwActiveDoc(Sw,"OutputCases.AfterDxf");
+                Need(refreshed!=null&&refreshed is PartDoc&&String.Equals(Path.GetFullPath(ModelGetPathName(refreshed,"OutputCases.AfterDxf")),Path.GetFullPath(path),StringComparison.OrdinalIgnoreCase),"OUTPUT_ACTIVE_PART_CHANGED");
                 Release(model);model=refreshed;DefaultConfiguration(model);
-                Need(!model.GetSaveFlag(),"OUTPUT_PART_DIRTY_AFTER_EXPORT_NO_POST_EXPORT_SAVE_ALLOWED");
+                Need(!ModelGetSaveFlag(model,"OutputCases.AfterDxf"),"OUTPUT_PART_DIRTY_AFTER_EXPORT_NO_POST_EXPORT_SAVE_ALLOWED");
                 Dictionary<string,object> drawingMap=null;
                 if(includeDrawings)
                 {
@@ -429,10 +1072,10 @@ internal static class VariableTrial
                 manifestCases.Add(new {folder=Path.GetFileName(folder),part=Path.GetFileName(path),hand=hand,widthMm=width,heightMm=height,partSha256=FileHash(path),properties=Properties(model),configurations=model.GetConfigurationNames(),activeConfiguration=ActiveConfiguration(model),processReadback=processReadback,flatPreparation=flatPreparation,drawing=drawingMap,dxf=dxf});
                 WriteOutputManifest(root,manifestCases,false,includeDrawings);
                 AssertLoadedScope();
-                foreach(object openValue in Items(Sw.GetDocuments()))
+                foreach(object openValue in SwGetDocuments(Sw,"OutputCases.CloseDrawings"))
                 {
                     ModelDoc2 openModel=openValue as ModelDoc2;
-                    try{if(openModel!=null&&openModel is DrawingDoc&&OwnedDocument(openModel))Sw.CloseDoc(openModel.GetTitle());}finally{Release(openValue);}
+                    try{if(openModel!=null&&openModel is DrawingDoc&&OwnedDocument(openModel))SwCloseDoc(Sw,openModel.GetTitle(),"OutputCases.CloseDrawings",true);}finally{Release(openValue);}
                 }
             }
             catch(Exception error){Record(new {inspection="output_case_failure",path=path,error=error.ToString()});throw;}
@@ -516,15 +1159,48 @@ internal static class VariableTrial
     }
     static void AssemblyCases()
     {
-        string root=Path.Combine(Text("cadDirectory"),"assemblies");Local(root);bool resume=Job.ContainsKey("assemblyResume");if(!resume){Need(!Directory.Exists(root),"ASSEMBLY_ROOT_EXISTS");Directory.CreateDirectory(root);}int index=0;
-        foreach(object value in Items(Job["layouts"]))
+        string root=Path.Combine(Text("cadDirectory"),"assemblies");Local(root);bool resume=Job.ContainsKey("assemblyResume");
+        string envelopeMode=Job.ContainsKey("envelopeMode")?Convert.ToString(Job["envelopeMode"]):"pilot";
+        bool allowWidthEnvelope=envelopeMode=="parametric_width";
+        bool allowFullEnvelope=envelopeMode=="parametric_envelope";
+        object[] layouts=Items(Job["layouts"]);
+        bool hasOnlyCase=Job.ContainsKey("onlyCaseIndex");
+        int onlyCaseIndex=hasOnlyCase?Convert.ToInt32(Job["onlyCaseIndex"],CultureInfo.InvariantCulture):0;
+        Need(!hasOnlyCase||(!resume&&onlyCaseIndex>=1&&onlyCaseIndex<=layouts.Length),"ASSEMBLY_ONLY_CASE_INDEX_INVALID");
+        string envelopePhase=Job.ContainsKey("envelopePhase")&&Job["envelopePhase"]!=null?Convert.ToString(Job["envelopePhase"],CultureInfo.InvariantCulture):null;
+        Need(envelopePhase==null||(allowFullEnvelope&&hasOnlyCase&&(envelopePhase=="prepare"||envelopePhase=="build_and_measure")),"ENVELOPE_PHASE_INVALID");
+        if(!resume)
+        {
+            if(envelopePhase==null)Need(!Directory.Exists(root),"ASSEMBLY_ROOT_EXISTS");
+            else if(envelopePhase=="build_and_measure")Need(Directory.Exists(root),"ASSEMBLY_ROOT_PREPARE_REQUIRED");
+            Directory.CreateDirectory(root);
+        }
+        int index=0;
+        foreach(object value in layouts)
         {
             string folder=Path.Combine(root,"case"+(++index));
             if(resume&&index<3){Record(new {inspection="minimum_assembly_reused",index=index,evidencePath=Path.Combine(folder,"assembly-evidence.json"),evidenceSha256=FileHash(Path.Combine(folder,"assembly-evidence.json")),oldFailurePreserved=true,acceptancePass=false,production_release=false});continue;}
-            object result=TrialAssembly.Build(Sw,Text("cadDirectory"),folder,(Dictionary<string,object>)value);
-            Record(new {inspection="minimum_assembly",index=index,result=result});AssertLoadedScope();
+            if(hasOnlyCase&&index!=onlyCaseIndex)continue;
+            if(envelopePhase=="prepare")Need(!Directory.Exists(folder)&&!File.Exists(folder),"FULL_PREPARED_CASE_ALREADY_EXISTS "+folder);
+            object result=allowFullEnvelope
+                ?TrialAssembly.FullCabinetAssembly.FullBuild(Sw,Text("cadDirectory"),folder,(Dictionary<string,object>)value,envelopePhase)
+                :TrialAssembly.Build(Sw,Text("cadDirectory"),folder,(Dictionary<string,object>)value,allowWidthEnvelope);
+            double? cadPrivateMemoryMb=null;
+            try{using(Process p=Process.GetProcessById(CadPid))cadPrivateMemoryMb=Math.Round(p.PrivateMemorySize64/1048576.0,1);}catch{}
+            Record(new {inspection="minimum_assembly",index=index,envelopePhase=envelopePhase,cadPrivateMemoryMb=cadPrivateMemoryMb,result=result});
             var resultMap=Json.Deserialize<Dictionary<string,object>>(Json.Serialize(result));
-            Need(resultMap.ContainsKey("success")&&Convert.ToBoolean(resultMap["success"]),"MINIMUM_ASSEMBLY_GENERATION_FAILED case"+index);
+            bool resultTimedOut = ComTimedOut || (resultMap.ContainsKey("comTimedOut") && Convert.ToBoolean(resultMap["comTimedOut"], CultureInfo.InvariantCulture));
+            if (resultTimedOut)
+            {
+                string timeoutDetail = LastComTimeoutError ?? (resultMap.ContainsKey("error") ? Convert.ToString(resultMap["error"], CultureInfo.InvariantCulture) : "CAD_COM_CALL_TIMEOUT case" + index);
+                throw new TimeoutException(timeoutDetail);
+            }
+            AssertLoadedScope();
+            bool phaseOk=envelopePhase=="prepare"
+                ?(resultMap.ContainsKey("prepared")&&Convert.ToBoolean(resultMap["prepared"]))
+                :(resultMap.ContainsKey("success")&&Convert.ToBoolean(resultMap["success"]));
+            Need(phaseOk,(envelopePhase=="prepare"?"FULL_ENVELOPE_PREPARE_FAILED case":"MINIMUM_ASSEMBLY_GENERATION_FAILED case")+index);
+            ClearOwned();GC.Collect();GC.WaitForPendingFinalizers();GC.Collect();
         }
         if(resume)Need(ResumeRewiredHashes.All(item=>FileHash(item.Key)==item.Value),"RESUME_REUSED_CAD_CHANGED_DURING_CASE3");
     }
@@ -540,8 +1216,8 @@ internal static class VariableTrial
     static void CloseOwnedDocuments()
     {
         AssertLoadedScope();var titles=new List<string>();
-        foreach(object raw in Items(Sw.GetDocuments())) {var model=raw as ModelDoc2;try{Need(model!=null&&OwnedDocument(model),"FOREIGN_DOCUMENT_PRESERVED");titles.Add(model.GetTitle());}finally{Release(raw);}}
-        foreach(string title in titles)Sw.CloseDoc(title);
+        foreach(object raw in SwGetDocuments(Sw,"CloseOwnedDocuments",true)) {var model=raw as ModelDoc2;try{Need(model!=null&&OwnedDocument(model),"FOREIGN_DOCUMENT_PRESERVED");titles.Add(model.GetTitle());}finally{Release(raw);}}
+        foreach(string title in titles)SwCloseDoc(Sw,title,"CloseOwnedDocuments",true);
     }
     static void RelocatedValidation(bool doorsOnly=false)
     {
@@ -614,7 +1290,7 @@ internal static class VariableTrial
             ModelDoc2 model=Open(path,true);var views=new List<object>();
             try
             {
-                model.Visible=true;Need(model.Visible,"RELOCATED_DRAWING_VISIBILITY_REQUIRED");
+                ModelSetVisible(model, true, "RelocatedValidation"); Need(model.Visible,"RELOCATED_DRAWING_VISIBILITY_REQUIRED");
                 object outputReadback=TrialOutput.ReadReopenedDrawing(Sw,model,drawingProof);
                 Need(Convert.ToBoolean(Map(Json.DeserializeObject(Json.Serialize(outputReadback)))["pass"]),"RELOCATED_DRAWING_OUTPUT_READBACK_FAILED");
                 var drawing=(DrawingDoc)model;Need(drawing.GetSheetCount()==1,"RELOCATED_SINGLE_DRAWING_SHEET_REQUIRED");SolidWorks.Interop.sldworks.View view=drawing.GetFirstView() as SolidWorks.Interop.sldworks.View;
@@ -675,7 +1351,7 @@ internal static class VariableTrial
                 AddEquation(eq,"\"D2@草图1\" = \"DOOR_W\"");AddEquation(eq,"\"D1@草图1\" = \"DOOR_H\"");
                 AddEquation(eq,"\"D1@抽壳1\" = \"T\"");AddEquation(eq,"\"D1@凸台-拉伸2\" = \"T\"");
                 AddEquation(eq,"\"D1@钣金1\" = \"BEND_R\"");
-                eq.EvaluateAll();CheckEquations(eq);Need(model.ForceRebuild3(false),"BIND_REBUILD_FAILED");
+                eq.EvaluateAll();CheckEquations(eq);Need(ModelForceRebuild3(model,false,"Variables.Bind"),"BIND_REBUILD_FAILED");
                 Record(new {inspection="panel_after_binding",path=path,geometry=CheckPanel(model,437,471.25,"bound-baseline")});
                 SaveModel(model,"bound-baseline");
                 if(Text("action")=="variables-matrix")
@@ -684,12 +1360,12 @@ internal static class VariableTrial
                     for(int i=0;i<sizes.Length;i++)
                     {
                         DefaultConfiguration(model);SetVariable(eq,"DOOR_W",sizes[i][0]);SetVariable(eq,"DOOR_H",sizes[i][1]);eq.EvaluateAll();CheckEquations(eq);
-                        bool rebuilt=model.ForceRebuild3(false);Record(new {inspection="size_rebuild",path=path,index=i,rebuilt=rebuilt});Need(rebuilt,"SIZE_REBUILD_FAILED");
+                        bool rebuilt=ModelForceRebuild3(model,false,"Variables.Matrix."+i);Record(new {inspection="size_rebuild",path=path,index=i,rebuilt=rebuilt});Need(rebuilt,"SIZE_REBUILD_FAILED");
                         Record(new {inspection="size_geometry",path=path,index=i,geometry=CheckPanel(model,sizes[i][0],sizes[i][1],"matrix-"+i)});SaveModel(model,"matrix-"+i);
                     }
                 }
             }
-            finally{Release(eq);Sw.CloseDoc(model.GetTitle());Release(model);}
+            finally{Release(eq);SwCloseDoc(Sw,model.GetTitle(),"Variables",true);Release(model);}
         }
     }
     static double DoorInputNumber(Dictionary<string,object> input,string key)
@@ -736,15 +1412,19 @@ internal static class VariableTrial
             ValidateDoorJob();RuntimeOwnership();
             Need(Process.GetProcessesByName("SLDWORKS").Length==0,"EXISTING_CAD_FORBIDDEN");
             DateTime activationStarted=DateTime.UtcNow;
+            SwMta=null;ComTimedOut=false;LastComTimeoutError=null;DiagnosticDelayConsumed=0;
             Sw=(ISldWorks)Activator.CreateInstance(Type.GetTypeFromProgID("SldWorks.Application"));
-            CadPid=Sw.GetProcessID();string startedAt;using(Process p=Process.GetProcessById(CadPid)){CadTicks=p.StartTime.ToUniversalTime().Ticks;startedAt=p.StartTime.ToUniversalTime().ToString("o");CadExe=CanonicalExecutable(p.MainModule.FileName);Need(CadTicks>=activationStarted.Ticks,"CAD_PREEXISTS_ACTIVATION_WINDOW");Need(CadExe.Equals(@"D:\soildworks2020\SOLIDWORKS\SLDWORKS.exe",StringComparison.OrdinalIgnoreCase)&&p.MainModule.FileVersionInfo.FileMajorPart==28,"SW2020_PATH_REQUIRED");OwnedSession=true;}
-            Sw.Visible=false;Sw.UserControl=false;Record(new {inspection="cad_owned",pid=CadPid,startTicks=CadTicks,startedAtUtc=startedAt,executable=CadExe,revision=Sw.RevisionNumber()});
+            InitMtaProxy(Sw);
+            CadPid=SwGetProcessID(Sw,"Main.CadPid");string startedAt;using(Process p=Process.GetProcessById(CadPid)){CadTicks=p.StartTime.ToUniversalTime().Ticks;startedAt=p.StartTime.ToUniversalTime().ToString("o");CadExe=CanonicalExecutable(p.MainModule.FileName);Need(CadTicks>=activationStarted.Ticks,"CAD_PREEXISTS_ACTIVATION_WINDOW");Need(CadExe.Equals(@"D:\soildworks2020\SOLIDWORKS\SLDWORKS.exe",StringComparison.OrdinalIgnoreCase)&&p.MainModule.FileVersionInfo.FileMajorPart==28,"SW2020_PATH_REQUIRED");OwnedSession=true;}
+            SwSetVisible(Sw,false,"Main.Init");SwSetUserControl(Sw,false,"Main.Init");Record(new {inspection="cad_owned",pid=CadPid,startTicks=CadTicks,startedAtUtc=startedAt,executable=CadExe,revision=SwRevisionNumber(Sw,"Main.Init")});
             if(Text("action")=="rewire-inspect") {Rewire(Text("cadDirectory"));Inspect();}
             else if(Text("action")=="inspect")Inspect();
             else if(Text("action")=="reopen-validate") {Rewire(Text("cadDirectory"));ReopenValidation();}
             else if(Text("action")=="outputs") {Rewire(Text("cadDirectory"));OutputCases();}
             else if(Text("action")=="outputs-dxf") {Rewire(Text("cadDirectory"));OutputCases(false);}
-            else if(Text("action")=="assembly") {if(Job.ContainsKey("assemblyResume"))AssemblyResumeCopies(true);Rewire(Text("cadDirectory"));if(Job.ContainsKey("assemblyResume"))AssemblyResumeCopies(false);AssemblyCases();}
+            else if(Text("action")=="assembly") {if(Job.ContainsKey("assemblyResume"))AssemblyResumeCopies(true);if(Job.ContainsKey("envelopePhase")&&Convert.ToString(Job["envelopePhase"],CultureInfo.InvariantCulture)=="build_and_measure")VerifyDependencyClosure(Text("cadDirectory"));else Rewire(Text("cadDirectory"));if(Job.ContainsKey("assemblyResume"))AssemblyResumeCopies(false);AssemblyCases();}
+            else if(Text("action")=="assembly-flat-dxf") {object flatReport=TrialOutput.ExportAssemblyFlatDxfs(Sw,Path.Combine(Text("cadDirectory"),"assemblies","case1"),Path.Combine(RunDirectory,"staging","case1"),Path.Combine(RunDirectory,"dxf-diagnostics","case1"),Path.Combine(RunDirectory,"dxf-outputs","case1"));Record(new {inspection="assembly_flat_dxfs",result=flatReport});}
+            else if(Text("action")=="assembly-drawings") {object drawingReport=TrialOutput.ExportAssemblyEngineeringDrawings(Sw,Path.Combine(Text("cadDirectory"),"assemblies","case1"),Path.Combine(RunDirectory,"staging","case1"),Path.Combine(RunDirectory,"drawing-diagnostics","case1"),Path.Combine(RunDirectory,"drawing-outputs","case1"));Record(new {inspection="assembly_engineering_drawings",result=drawingReport});}
             else if(Text("action")=="assembly-measure-diagnostic") {Rewire(Text("cadDirectory"));AssemblyMeasureDiagnostic();}
             else if(Text("action")=="structure-refresh-diagnostic") {Rewire(Text("cadDirectory"));object probe=TrialAssembly.ProbeBottomFrame(Sw,Text("cadDirectory"),Convert.ToBoolean(Job["sourceFirst"]));Record(new {inspection="structure_refresh_probe",result=probe,stageAcceptance=false});Need(Convert.ToBoolean(Map(Json.DeserializeObject(Json.Serialize(probe)))["success"]),"STRUCTURE_REFRESH_PROBE_FAILED");}
             else if(Text("action")=="relocate") {Rewire(Text("cadDirectory"));RelocatedValidation();}
@@ -763,40 +1443,100 @@ internal static class VariableTrial
         {
             if(Sw!=null)
             {
+                Exception cleanupError=null;
                 try
                 {
-                    Need(OwnedSession&&Sw.GetProcessID()==CadPid,"OWNERSHIP_LOST");
+                    if(!OwnedSession)
+                    {
+                        try {SwExitApp(Sw,"Main.Finally.UnownedExit",true);} catch {}
+                        Need(OwnedSession,"OWNERSHIP_LOST");
+                    }
+                    if(!ComTimedOut)Need(SwGetProcessID(Sw,"Main.Finally",true)==CadPid,"OWNERSHIP_LOST");
+                    else try {Need(SwGetProcessID(Sw,"Main.Finally",true)==CadPid,"OWNERSHIP_LOST");} catch(Exception pidErr) {cleanupError=pidErr;}
                     using(Process process=Process.GetProcessById(CadPid))Need(process.StartTime.ToUniversalTime().Ticks==CadTicks&&CanonicalExecutable(process.MainModule.FileName).Equals(CadExe,StringComparison.OrdinalIgnoreCase),"CAD_IDENTITY_LOST");
-                    var ownedTitles=new List<string>();var foreignPaths=new List<string>();
-                    foreach(object value in Items(Sw.GetDocuments())) {ModelDoc2 doc=value as ModelDoc2;try{if(doc!=null&&OwnedDocument(doc))ownedTitles.Add(doc.GetTitle());else foreignPaths.Add(doc==null?"NON_MODEL":doc.GetPathName());}finally{Release(value);}}
-                    foreach(string title in ownedTitles)Sw.CloseDoc(title);
-                    Record(new {inspection="owned_document_cleanup",closed=ownedTitles,foreignDocuments=foreignPaths});
-                    Need(foreignPaths.Count==0,"EXTERNAL_DOCUMENT_SESSION_PRESERVED");
-                    Need(Items(Sw.GetDocuments()).Length==0,"DOCUMENTS_REMAIN_SESSION_PRESERVED");Sw.ExitApp();
+                    try
+                    {
+                        var ownedTitles=new List<string>();var foreignPaths=new List<string>();
+                        foreach(object value in SwGetDocuments(Sw,"Main.Finally.List",true)) {ModelDoc2 doc=value as ModelDoc2;try{if(doc!=null&&OwnedDocument(doc))ownedTitles.Add(doc.GetTitle());else foreignPaths.Add(doc==null?"NON_MODEL":doc.GetPathName());}finally{Release(value);}}
+                        foreach(string title in ownedTitles)SwCloseDoc(Sw,title,"Main.Finally.Close",true);
+                        Record(new {inspection="owned_document_cleanup",closed=ownedTitles,foreignDocuments=foreignPaths});
+                        Need(foreignPaths.Count==0,"EXTERNAL_DOCUMENT_SESSION_PRESERVED");
+                        Need(SwGetDocuments(Sw,"Main.Finally.VerifyEmpty",true).Length==0,"DOCUMENTS_REMAIN_SESSION_PRESERVED");
+                    }
+                    catch(Exception docErr)
+                    {
+                        cleanupError=cleanupError==null?docErr:new InvalidOperationException(cleanupError.Message+" | "+docErr.Message,docErr);
+                    }
+                    try {SwExitApp(Sw,"Main.Finally.ExitApp",true);}
+                    catch(Exception exitErr)
+                    {
+                        cleanupError=cleanupError==null?exitErr:new InvalidOperationException(cleanupError.Message+" | "+exitErr.Message,exitErr);
+                    }
+                    if(cleanupError!=null)throw cleanupError;
                 }catch(Exception e){success=false;failure=(failure==null?"":failure+"\n")+e.ToString();}
-                Release(Sw);Sw=null;GC.Collect();GC.WaitForPendingFinalizers();GC.Collect();
+                ClearOwned();
+                if(!ComTimedOut)
+                {
+                    try {if(SwMta!=null)Release(SwMta);} catch {}
+                    Release(Sw);
+                }
+                SwMta=null;Sw=null;GC.Collect();GC.WaitForPendingFinalizers();GC.Collect();
             }
             bool exited=CadPid==0;
-            if(CadPid!=0)try {using(Process p=Process.GetProcessById(CadPid)){Need(p.StartTime.ToUniversalTime().Ticks==CadTicks,"PID_REUSED");exited=p.WaitForExit(120000);}}catch(ArgumentException){exited=true;}
+            bool monitorsCleaned=CadPid==0;
+            int[] knownMonitors=CadPid!=0?FindOwnedMonitorPids(CadPid,CadTicks):new int[0];
+            int exitWaitMs=ComTimedOut?15000:120000;
+            if(CadPid!=0)try {using(Process p=Process.GetProcessById(CadPid)){Need(p.StartTime.ToUniversalTime().Ticks==CadTicks,"PID_REUSED");exited=p.WaitForExit(exitWaitMs);}}catch(ArgumentException){exited=true;}
             if(!exited)
             {
-                bool cadOwnsLease=false;
-                if(Job!=null&&Job.ContainsKey("sharedLockDirectory"))try
+                if(ComTimedOut)
                 {
-                    var owner=SharedOwner(Text("sharedLockDirectory"));
-                    cadOwnsLease=Convert.ToInt32(owner["pid"])==CadPid&&Convert.ToString(owner["token"])==Text("sharedToken");
-                }catch{}
-                if(!cadOwnsLease)
-                {
-                    Record(new {inspection="native_guard_retained",reason="CAD alive and lock PID handoff not proven",cadPid=CadPid});
-                    for(;;)
+                    try
                     {
-                        try {using(Process p=Process.GetProcessById(CadPid)){if(p.StartTime.ToUniversalTime().Ticks!=CadTicks||p.WaitForExit(1000)){exited=true;break;}}}
-                        catch(ArgumentException){exited=true;break;}
+                        using(Process p=Process.GetProcessById(CadPid))
+                        {
+                            if(p.StartTime.ToUniversalTime().Ticks!=CadTicks)exited=true;
+                            else
+                            {
+                                Need(CanonicalExecutable(p.MainModule.FileName).Equals(CadExe,StringComparison.OrdinalIgnoreCase),"CAD_IDENTITY_LOST");
+                                knownMonitors=knownMonitors.Concat(FindOwnedMonitorPids(CadPid,CadTicks)).Distinct().OrderBy(id=>id).ToArray();
+                                p.Kill();
+                                exited=p.WaitForExit(15000);
+                                bool monitorsExited=exited&&CleanupOwnedMonitors(CadPid,CadTicks,knownMonitors,1500,"com_timeout_cad_kill");
+                                if(exited)monitorsCleaned=true;
+                                Record(new {inspection="cad_terminated_after_com_timeout",cadPid=CadPid,exited=exited,monitorsExited=monitorsExited,cleanedMonitors=knownMonitors});
+                                exited=exited&&monitorsExited;
+                            }
+                        }
+                    }
+                    catch(ArgumentException){exited=true;}
+                    catch(Exception killErr){failure=(failure==null?"":failure+"\n")+killErr.ToString();Record(new {inspection="cad_terminate_after_com_timeout_failed",cadPid=CadPid,error=killErr.ToString()});}
+                }
+                else
+                {
+                    bool cadOwnsLease=false;
+                    if(Job!=null&&Job.ContainsKey("sharedLockDirectory"))try
+                    {
+                        var owner=SharedOwner(Text("sharedLockDirectory"));
+                        cadOwnsLease=Convert.ToInt32(owner["pid"])==CadPid&&Convert.ToString(owner["token"])==Text("sharedToken");
+                    }catch{}
+                    if(!cadOwnsLease)
+                    {
+                        Record(new {inspection="native_guard_retained",reason="CAD alive and lock PID handoff not proven",cadPid=CadPid});
+                        for(;;)
+                        {
+                            try {using(Process p=Process.GetProcessById(CadPid)){if(p.StartTime.ToUniversalTime().Ticks!=CadTicks||p.WaitForExit(1000)){exited=true;break;}}}
+                            catch(ArgumentException){exited=true;break;}
+                        }
                     }
                 }
             }
-            if(Job!=null) Record(new {inspection="finished",success=success&&exited,cadExited=exited,error=failure});
+            if(exited&&!monitorsCleaned)
+            {
+                try {exited=CleanupOwnedMonitors(CadPid,CadTicks,knownMonitors,MonitorExitGraceMs,"after_cad_exit");}
+                catch(Exception monErr){exited=false;failure=(failure==null?"":failure+"\n")+monErr.ToString();Record(new {inspection="residual_monitor_cleanup_failed",cadPid=CadPid,error=monErr.ToString()});}
+            }
+            if(Job!=null) Record(new {inspection="finished",success=success&&exited,cadExited=exited,comTimedOut=ComTimedOut,error=failure});
             success=success&&exited;
         }
         return success?0:1;

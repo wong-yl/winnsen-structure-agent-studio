@@ -14,6 +14,10 @@ internal static class VariableTrial
 {
     internal static bool AllowManagedFixture;
     internal static void RuntimeOwnership() { if (!AllowManagedFixture) throw new InvalidOperationException("OFFLINE_TESTS_MUST_NOT_CALL_NATIVE_RUNTIME"); }
+    internal static object[] SwGetDocuments(ISldWorks sw, string context = null, bool allowAfterTimeout = false) { object value = sw.GetDocuments(); return value == null ? new object[0] : ((IEnumerable)value).Cast<object>().ToArray(); }
+    internal static int SwGetDocumentCount(ISldWorks sw, string context = null, bool allowAfterTimeout = false) { return sw.GetDocumentCount(); }
+    internal static void SwCloseDoc(ISldWorks sw, string title, string context = null, bool allowAfterTimeout = false) { sw.CloseDoc(title); }
+    internal static int SwGetProcessID(ISldWorks sw, string context = null, bool allowAfterTimeout = false) { return sw.GetProcessID(); }
 }
 
 internal static class WeightReadbackOfflineTests

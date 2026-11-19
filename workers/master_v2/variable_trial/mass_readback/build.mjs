@@ -7,7 +7,7 @@ import { archiveSources } from '../build.mjs'
 import { SOURCE, DATA, TOOLCHAIN_SCHEMA, INTEROP_DLLS, inside, directory, hash, write, validateToolchain } from '../common.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const ROOT_SOURCE_NAMES = ['TrialAssembly.cs', 'TrialOutput.cs', 'VariableTrial.cs']
+const ROOT_SOURCE_NAMES = ['TrialAssembly.cs', 'TrialOutput.cs', 'TrialProductionCraft.cs', 'TrialProductionDxfMarks.cs', 'VariableTrial.cs']
 const ADAPTER_MARKER = '// temporary diagnostic adapter; original sources remain frozen; see adapter-provenance.json'
 const digest = value => createHash('sha256').update(value).digest('hex').toUpperCase()
 
@@ -36,23 +36,35 @@ export function adaptWeightMain(original) {
     '            else if(Text("action")=="rewire-inspect") {Rewire(Text("cadDirectory"));Inspect();}',
   ])
   const cleanupAnchor = lines([
-    '                    var ownedTitles=new List<string>();var foreignPaths=new List<string>();',
-    '                    foreach(object value in Items(Sw.GetDocuments())) {ModelDoc2 doc=value as ModelDoc2;try{if(doc!=null&&OwnedDocument(doc))ownedTitles.Add(doc.GetTitle());else foreignPaths.Add(doc==null?"NON_MODEL":doc.GetPathName());}finally{Release(value);}}',
-    '                    foreach(string title in ownedTitles)Sw.CloseDoc(title);',
-    '                    Record(new {inspection="owned_document_cleanup",closed=ownedTitles,foreignDocuments=foreignPaths});',
-    '                    Need(foreignPaths.Count==0,"EXTERNAL_DOCUMENT_SESSION_PRESERVED");',
-    '                    Need(Items(Sw.GetDocuments()).Length==0,"DOCUMENTS_REMAIN_SESSION_PRESERVED");Sw.ExitApp();',
+    '                    try',
+    '                    {',
+    '                        var ownedTitles=new List<string>();var foreignPaths=new List<string>();',
+    '                        foreach(object value in SwGetDocuments(Sw,"Main.Finally.List",true)) {ModelDoc2 doc=value as ModelDoc2;try{if(doc!=null&&OwnedDocument(doc))ownedTitles.Add(doc.GetTitle());else foreignPaths.Add(doc==null?"NON_MODEL":doc.GetPathName());}finally{Release(value);}}',
+    '                        foreach(string title in ownedTitles)SwCloseDoc(Sw,title,"Main.Finally.Close",true);',
+    '                        Record(new {inspection="owned_document_cleanup",closed=ownedTitles,foreignDocuments=foreignPaths});',
+    '                        Need(foreignPaths.Count==0,"EXTERNAL_DOCUMENT_SESSION_PRESERVED");',
+    '                        Need(SwGetDocuments(Sw,"Main.Finally.VerifyEmpty",true).Length==0,"DOCUMENTS_REMAIN_SESSION_PRESERVED");',
+    '                    }',
+    '                    catch(Exception docErr)',
+    '                    {',
+    '                        cleanupError=cleanupError==null?docErr:new InvalidOperationException(cleanupError.Message+" | "+docErr.Message,docErr);',
+    '                    }',
+    '                    try {SwExitApp(Sw,"Main.Finally.ExitApp",true);}',
+    '                    catch(Exception exitErr)',
+    '                    {',
+    '                        cleanupError=cleanupError==null?exitErr:new InvalidOperationException(cleanupError.Message+" | "+exitErr.Message,exitErr);',
+    '                    }',
   ])
   const cleanupReplacement = lines([
     '                    if(Text("action")=="weight-readback-diagnostic")',
     '                    {',
     '                        var remainingPaths=new List<string>();',
-    '                        foreach(object value in Items(Sw.GetDocuments())) {ModelDoc2 doc=value as ModelDoc2;try{remainingPaths.Add(doc==null?"NON_MODEL":doc.GetPathName());}finally{Release(value);}}',
-    '                        int remainingCount=Sw.GetDocumentCount();',
+    '                        foreach(object value in SwGetDocuments(Sw,"WeightReadback.Finally.List",true)) {ModelDoc2 doc=value as ModelDoc2;try{remainingPaths.Add(doc==null?"NON_MODEL":doc.GetPathName());}finally{Release(value);}}',
+    '                        int remainingCount=SwGetDocumentCount(Sw,"WeightReadback.Finally.Count",true);',
     '                        Record(new {inspection="weight_readback_remaining_documents",documents=remainingPaths,observedCount=remainingPaths.Count,declaredCount=remainingCount,closeCalled=false});',
     '                        Need(remainingPaths.Count==remainingCount,"WEIGHT_FINAL_DOCUMENT_COUNT_MISMATCH_SESSION_PRESERVED");',
     '                        Need(remainingPaths.Count==0&&remainingCount==0,"WEIGHT_FINAL_DOCUMENTS_REMAIN_SESSION_PRESERVED");',
-    '                        Sw.ExitApp();',
+    '                        SwExitApp(Sw,"WeightReadback.Finally.ExitApp",true);',
     '                    }',
     '                    else',
     '                    {',

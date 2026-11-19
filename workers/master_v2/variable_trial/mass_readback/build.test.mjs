@@ -9,13 +9,13 @@ import { adaptWeightMain, buildWeightToolchain } from './build.mjs'
 import { SOURCE, DATA, hash, read, validateToolchain } from '../common.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const rootPaths = ['VariableTrial.cs', 'TrialAssembly.cs', 'TrialOutput.cs'].map(name => join(SOURCE, name))
+const rootPaths = ['VariableTrial.cs', 'TrialAssembly.cs', 'TrialOutput.cs', 'TrialProductionCraft.cs', 'TrialProductionDxfMarks.cs'].map(name => join(SOURCE, name))
 const rootBefore = rootPaths.map(path => ({ path, sha256: hash(path) }))
 const original = readFileSync(rootPaths[0], 'utf8')
 const newline = original.includes('\r\n') ? '\r\n' : '\n'
 const actionAnchor = '            if(Text("action")=="rewire-inspect") {Rewire(Text("cadDirectory"));Inspect();}'
-const cleanupStart = '                    var ownedTitles=new List<string>();var foreignPaths=new List<string>();'
-const cleanupEnd = '                    Need(Items(Sw.GetDocuments()).Length==0,"DOCUMENTS_REMAIN_SESSION_PRESERVED");Sw.ExitApp();'
+const cleanupStart = '                    try' + newline + '                    {' + newline + '                        var ownedTitles=new List<string>();var foreignPaths=new List<string>();'
+const cleanupEnd = '                    try {SwExitApp(Sw,"Main.Finally.ExitApp",true);}' + newline + '                    catch(Exception exitErr)' + newline + '                    {' + newline + '                        cleanupError=cleanupError==null?exitErr:new InvalidOperationException(cleanupError.Message+" | "+exitErr.Message,exitErr);' + newline + '                    }'
 const originalCleanup = original.slice(original.indexOf(cleanupStart), original.indexOf(cleanupEnd) + cleanupEnd.length)
 const actionStart = '            if(Text("action")=="weight-readback-diagnostic")'
 const originalElse = '            else if(Text("action")=="rewire-inspect") {Rewire(Text("cadDirectory"));Inspect();}'
@@ -74,8 +74,8 @@ test('weight final cleanup only inventories documents and has no broad closing c
   assert.match(adapted.cleanup, /inspection="weight_readback_remaining_documents"/)
   assert.match(adapted.cleanup, /remainingPaths\.Count==remainingCount/)
   assert.match(adapted.cleanup, /remainingPaths\.Count==0&&remainingCount==0/)
-  assert.equal((adapted.cleanup.match(/Sw\.ExitApp\(\)/g) || []).length, 1)
-  assert.ok(adapted.cleanup.indexOf('WEIGHT_FINAL_DOCUMENTS_REMAIN_SESSION_PRESERVED') < adapted.cleanup.indexOf('Sw.ExitApp()'))
+  assert.equal((adapted.cleanup.match(/SwExitApp\(Sw,/g) || []).length, 1)
+  assert.ok(adapted.cleanup.indexOf('WEIGHT_FINAL_DOCUMENTS_REMAIN_SESSION_PRESERVED') < adapted.cleanup.indexOf('SwExitApp(Sw,'))
 })
 
 test('cold cache baseline precedes every noncached read, explicit activation and rebuild', () => {
@@ -115,6 +115,9 @@ internal static class AdapterBehavior {
     static void Need(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     static void Record(object value){Recorded++;}static void Release(object value){}
     static object[] Items(object value){return ((IEnumerable)value).Cast<object>().ToArray();}
+    static object[] SwGetDocuments(ManagedSw sw,string context=null,bool allowAfterTimeout=false){return Items(sw.GetDocuments());}
+    static int SwGetDocumentCount(ManagedSw sw,string context=null,bool allowAfterTimeout=false){return sw.GetDocumentCount();}
+    static void SwExitApp(ManagedSw sw,string context=null,bool allowAfterTimeout=false){sw.ExitApp();}
     static void RunAction(){
 ` + adapted.action + String.raw`
     }
@@ -151,7 +154,7 @@ test('isolated x64 build validates generated source manifest without changing ro
   const current = join(DATA, 'toolchain-current.json'), currentBefore = existsSync(current) ? readFileSync(current) : null
   const built = buildWeightToolchain()
   assert.equal(validateToolchain(built.manifest, { sourceRoot: built.sourceRoot }), built.manifest)
-  assert.deepEqual(readdirSync(built.sourceRoot).sort(), ['TrialAssembly.cs', 'TrialOutput.cs', 'VariableTrial.cs', 'WeightReadback.cs'])
+  assert.deepEqual(readdirSync(built.sourceRoot).sort(), ['TrialAssembly.cs', 'TrialOutput.cs', 'TrialProductionCraft.cs', 'TrialProductionDxfMarks.cs', 'VariableTrial.cs', 'WeightReadback.cs'])
   assert.equal(dirname(built.sourceRoot), dirname(built.manifest.exe))
   const provenance = read(built.provenancePath)
   assert.equal(provenance.description, 'temporary diagnostic adapter')

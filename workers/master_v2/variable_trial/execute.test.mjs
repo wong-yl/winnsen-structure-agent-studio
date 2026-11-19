@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, realpathSync, rmSync, writeFileSync, existsSync
 import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { DATA, read, hash } from './common.mjs'
-import { execute, preflight } from './execute.mjs'
+import { execute, parseCliArguments, preflight, runParametricEnvelopePhases } from './execute.mjs'
 const spec=read(new URL('./inputs/specification.json',import.meta.url))
 const processInput=read(new URL('./inputs/process.json',import.meta.url))
 test('approved pilot produces six distinct door identities and the three exact layouts',()=>{
@@ -285,4 +285,137 @@ test('doors-reopen rejects changed, incomplete or out-of-scope output artifacts 
     const fixture=doorSourceFixture(t);change(fixture);fixture.json(fixture.manifestPath,fixture.manifest)
     await assert.rejects(fixture.invoke());assert.equal(fixture.calls.length,0)
   })
+})
+
+test('opt-in parametric width envelope accepts 700..1200mm while preserving default pilot restrictions',async t=>{
+  const customSpec=structuredClone(spec)
+  customSpec.assemblyCases[0].cabinet.widthMm=800
+  customSpec.assemblyCases[1].cabinet.widthMm=1100
+  assert.throws(()=>preflight(customSpec,processInput),/PILOT_PROFILE/)
+  for(const optioned of [preflight(customSpec,processInput,{parametricWidth:true}),preflight({...customSpec,envelopeMode:'parametric_width'},processInput)]) {
+    assert.deepEqual(optioned.layouts.map(l=>[l.cabinet.widthMm,l.doorLeafWidthMm]),[[800,337],[1100,487],[900,387]])
+  }
+  for(const [field,value,pattern] of [['widthMm',699,/700–1200 mm/],['widthMm',1201,/700–1200 mm/],['heightMm',2100,/WIDTH_ENVELOPE/],['depthMm',550,/WIDTH_ENVELOPE/]]) {
+    const invalid=structuredClone(customSpec);invalid.assemblyCases[0].cabinet[field]=value
+    assert.throws(()=>preflight(invalid,processInput,{parametricWidth:true}),pattern)
+  }
+  assert.deepEqual(parseCliArguments(['assembly','--parametric-width']),{mode:'assembly',specPath:undefined,processPath:undefined,parametricWidth:true})
+  assert.deepEqual(parseCliArguments(['assembly','a.json','b.json','--parametric-width']),{mode:'assembly',specPath:'a.json',processPath:'b.json',parametricWidth:true})
+  assert.throws(()=>parseCliArguments(['assembly','--unknown-flag']),/UNSUPPORTED_OPTION/)
+
+  const fixture=sourceFixture(t);fixture.add('T1-current.json','variables')
+  const specPath=join(fixture.dataRoot,'custom-width-spec.json')
+  fixture.json(specPath,customSpec)
+  const pilotCall=await execute('assembly',undefined,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v})
+  assert.equal('envelopeMode' in pilotCall.job,false)
+  const optInCall=await execute('assembly',specPath,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,parametricWidth:true})
+  assert.equal(optInCall.job.envelopeMode,'parametric_width')
+  assert.deepEqual(optInCall.job.layouts.map(l=>l.cabinet.widthMm),[800,1100,900])
+})
+
+test('opt-in --case isolates one assembly layout without overwriting assembly-current.json',async t=>{
+  assert.deepEqual(parseCliArguments(['assembly','--case','3']),{mode:'assembly',specPath:undefined,processPath:undefined,parametricWidth:false,caseIndex:3})
+  assert.deepEqual(parseCliArguments(['assembly','custom.json','--parametric-width','--case=2']),{mode:'assembly',specPath:'custom.json',processPath:undefined,parametricWidth:true,caseIndex:2})
+  for(const bad of [['assembly','--case','0'],['assembly','--case=abc'],['assembly','--case'],['assembly','--case','1','--case','2'],['outputs-dxf','--case','1']]) {
+    assert.throws(()=>parseCliArguments(bad))
+  }
+  const fixture=sourceFixture(t);fixture.add('T1-current.json','variables')
+  const call=await execute('assembly',undefined,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,caseIndex:3})
+  assert.equal(call.tag,'T3-assembly-case3')
+  assert.equal(call.currentFile,null)
+  assert.equal(call.job.onlyCaseIndex,3)
+  assert.equal(call.job.layouts.length,3)
+  await assert.rejects(()=>execute('assembly',undefined,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,caseIndex:4}),/INVALID_CASE_INDEX/)
+  await assert.rejects(()=>execute('outputs-dxf',undefined,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,caseIndex:1}),/CASE_OPTION_REQUIRES_ASSEMBLY_MODE/)
+})
+
+test('opt-in parametric envelope accepts arbitrary W/H/D within 700..1200 x 1700..2200 x 250..650',async t=>{
+  const envSpec=structuredClone(spec)
+  envSpec.assemblyCases=[
+    {cabinet:{widthMm:740,heightMm:1700,depthMm:250},columns:[{side:'L',doors:[{heightUnits:1},{heightUnits:1},{heightUnits:1}]},{side:'R',doors:[{heightUnits:1},{heightUnits:1},{heightUnits:1}]}]},
+    {cabinet:{widthMm:1200,heightMm:2200,depthMm:650},columns:[{side:'L',doors:[{heightUnits:1},{heightUnits:2},{heightUnits:1}]},{side:'R',doors:[{heightUnits:2},{heightUnits:1},{heightUnits:1}]}]},
+  ]
+  assert.throws(()=>preflight(envSpec,processInput),/PILOT_PROFILE|HEIGHT|1700/)
+  for(const optioned of [preflight(envSpec,processInput,{parametricEnvelope:true}),preflight({...envSpec,envelopeMode:'parametric_envelope'},processInput)]) {
+    assert.deepEqual(optioned.layouts.map(l=>[l.cabinet.widthMm,l.cabinet.heightMm,l.cabinet.depthMm,l.doorLeafWidthMm]),[[740,1700,250,307],[1200,2200,650,537]])
+  }
+  assert.throws(()=>preflight(envSpec,processInput,{parametricWidth:true,parametricEnvelope:true}),/CONFLICTING_ENVELOPE_MODES/)
+  for(const [field,value] of [['heightMm',1699],['heightMm',2201],['depthMm',249],['depthMm',651],['widthMm',699],['widthMm',1201]]) {
+    const bad=structuredClone(envSpec);bad.assemblyCases[0].cabinet[field]=value
+    assert.throws(()=>preflight(bad,processInput,{parametricEnvelope:true}))
+  }
+  assert.deepEqual(parseCliArguments(['assembly','--parametric-envelope']),{mode:'assembly',specPath:undefined,processPath:undefined,parametricWidth:false,parametricEnvelope:true})
+  assert.deepEqual(parseCliArguments(['assembly','--full-cabinet','--case=2']),{mode:'assembly',specPath:undefined,processPath:undefined,parametricWidth:false,parametricEnvelope:true,caseIndex:2})
+  assert.throws(()=>parseCliArguments(['assembly','--parametric-width','--parametric-envelope']),/CONFLICTING_ENVELOPE_MODES/)
+  assert.throws(()=>parseCliArguments(['outputs','--parametric-envelope']),/PARAMETRIC_ENVELOPE_REQUIRES_ASSEMBLY_MODE/)
+
+  const fixture=sourceFixture(t);fixture.add('T1-current.json','variables')
+  const specPath=join(fixture.dataRoot,'envelope-spec.json')
+  fixture.json(specPath,envSpec)
+  const fullCall=await execute('assembly',specPath,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,parametricEnvelope:true})
+  assert.equal(fullCall.tag,'T3-envelope')
+  assert.equal(fullCall.currentFile,null)
+  assert.equal(fullCall.job.envelopeMode,'parametric_envelope')
+  assert.deepEqual(fullCall.job.layouts.map(l=>[l.cabinet.widthMm,l.cabinet.heightMm,l.cabinet.depthMm]),[[740,1700,250],[1200,2200,650]])
+  const singleCall=await execute('assembly',specPath,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,parametricEnvelope:true,caseIndex:2})
+  assert.equal(singleCall.tag,'T3-envelope-case2')
+  assert.equal(singleCall.currentFile,null)
+  assert.equal(singleCall.job.onlyCaseIndex,2)
+  let capturedPhaseOpts=null
+  await execute('assembly',specPath,undefined,{dataRoot:fixture.dataRoot,runPhase:async (v,opts)=>{capturedPhaseOpts=opts;return v},parametricEnvelope:true,caseIndex:1})
+  assert.equal(capturedPhaseOpts?.executeNative,runParametricEnvelopePhases)
+  await assert.rejects(()=>execute('outputs',specPath,undefined,{dataRoot:fixture.dataRoot,runPhase:async v=>v,parametricEnvelope:true}),/PARAMETRIC_ENVELOPE_REQUIRES_ASSEMBLY_MODE/)
+})
+
+test('runParametricEnvelopePhases isolates per-case prepare and build phases and archives artifacts cleanly', async t => {
+  const dir=mkdtempSync(join(tmpdir(),'env-phases-'))
+  t.after(()=>rmSync(dir,{recursive:true,force:true}))
+  const seen=[]
+  const mockRunNative=async (job,runDir)=>{
+    assert.equal(existsSync(join(runDir,'toolchain.json')),false,'toolchain.json must be cleared before each new phase')
+    seen.push({onlyCaseIndex:job.onlyCaseIndex,envelopePhase:job.envelopePhase})
+    const marker=`case${job.onlyCaseIndex}-${job.envelopePhase}`
+    writeFileSync(join(runDir,'toolchain.json'),JSON.stringify({marker}))
+    writeFileSync(join(runDir,'job.json'),JSON.stringify({onlyCaseIndex:job.onlyCaseIndex,envelopePhase:job.envelopePhase}))
+    writeFileSync(join(runDir,'native-result.json'),JSON.stringify({marker}))
+    writeFileSync(join(runDir,'native.stdout.log'),marker+'\n')
+    writeFileSync(join(runDir,'supervision.json'),JSON.stringify({state:'cad_exited',marker}))
+    return {code:0,cadExited:true,marker}
+  }
+  const singleRes=await runParametricEnvelopePhases({action:'assembly',envelopeMode:'parametric_envelope',onlyCaseIndex:2,layouts:[{},{}]},dir,{runNative:mockRunNative})
+  assert.deepEqual(seen,[{onlyCaseIndex:2,envelopePhase:'prepare'},{onlyCaseIndex:2,envelopePhase:'build_and_measure'}])
+  assert.equal(singleRes.phases.length,2)
+  assert.equal(singleRes.marker,'case2-build_and_measure')
+  assert.equal(read(join(dir,'phases','case2-prepare','job.json')).envelopePhase,'prepare')
+  assert.equal(read(join(dir,'phases','case2-build','job.json')).envelopePhase,'build_and_measure')
+  assert.equal(read(join(dir,'native-result.json')).marker,'case2-build_and_measure')
+
+  const multiDir=mkdtempSync(join(tmpdir(),'env-phases-multi-'))
+  t.after(()=>rmSync(multiDir,{recursive:true,force:true}))
+  seen.length=0
+  const multiRes=await runParametricEnvelopePhases({action:'assembly',envelopeMode:'parametric_envelope',layouts:[{},{}]},multiDir,{runNative:mockRunNative})
+  assert.deepEqual(seen,[
+    {onlyCaseIndex:1,envelopePhase:'prepare'},
+    {onlyCaseIndex:1,envelopePhase:'build_and_measure'},
+    {onlyCaseIndex:2,envelopePhase:'prepare'},
+    {onlyCaseIndex:2,envelopePhase:'build_and_measure'},
+  ])
+  assert.equal(multiRes.phases.length,4)
+  for(const sub of ['case1-prepare','case1-build','case2-prepare','case2-build']) {
+    assert.ok(existsSync(join(multiDir,'phases',sub,'native-result.json')),'missing '+sub)
+  }
+
+  const failDir=mkdtempSync(join(tmpdir(),'env-phases-fail-'))
+  t.after(()=>rmSync(failDir,{recursive:true,force:true}))
+  await assert.rejects(()=>runParametricEnvelopePhases({action:'assembly',envelopeMode:'parametric_envelope',onlyCaseIndex:1,layouts:[{}]},failDir,{
+    runNative:async (job,runDir)=>{
+      writeFileSync(join(runDir,'toolchain.json'),'{}')
+      writeFileSync(join(runDir,'native-result.json'),JSON.stringify({phase:job.envelopePhase}))
+      if(job.envelopePhase==='build_and_measure') throw new Error('INJECTED_BUILD_PHASE_FAILURE')
+      return {code:0,cadExited:true}
+    },
+  }),/INJECTED_BUILD_PHASE_FAILURE/)
+  assert.equal(read(join(failDir,'phases','case1-prepare','native-result.json')).phase,'prepare')
+  assert.equal(read(join(failDir,'phases','case1-build','native-result.json')).phase,'build_and_measure')
+  assert.equal(read(join(failDir,'native-result.json')).phase,'build_and_measure')
 })

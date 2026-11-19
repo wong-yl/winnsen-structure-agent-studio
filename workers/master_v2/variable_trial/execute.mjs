@@ -1,15 +1,20 @@
 import { resolve, join, dirname, basename } from 'node:path'
-import { existsSync, statSync } from 'node:fs'
+import { existsSync, statSync, mkdirSync, copyFileSync, renameSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isDeepStrictEqual } from 'node:util'
 import { SOURCE,DATA,read,hash,inside,files } from './common.mjs'
 import { compileDoor,compileLayout } from './layout.mjs'
-import { runProtectedPhase,trialSource } from './run.mjs'
+import { runProtectedPhase,runNativeJob,trialSource } from './run.mjs'
 
 const need=(v,m)=>{if(!v)throw new Error(m)}
-export function preflight(specification,processInput) {
+const useWidthEnvelope=(specification,options)=>options?.parametricWidth===true||specification?.envelopeMode==='parametric_width'
+const useFullEnvelope=(specification,options)=>options?.parametricEnvelope===true||specification?.envelopeMode==='parametric_envelope'
+export function preflight(specification,processInput,options={}) {
   need(specification&&Array.isArray(specification.doorCases)&&specification.doorCases.length>0,'DOOR_CASES_REQUIRED')
   need(Array.isArray(specification.assemblyCases)&&specification.assemblyCases.length>0,'ASSEMBLY_CASES_REQUIRED')
+  const parametricWidth=useWidthEnvelope(specification,options)
+  const parametricEnvelope=useFullEnvelope(specification,options)
+  need(!(parametricWidth&&parametricEnvelope),'CONFLICTING_ENVELOPE_MODES')
   const doors=specification.doorCases.map(input=>{
     const door=compileDoor(input,processInput)
     need(input.widthMm>=287&&input.widthMm<=537&&input.heightMm>=200&&input.heightMm<=1000,'DOOR_OUTSIDE_PILOT_ENVELOPE')
@@ -20,7 +25,10 @@ export function preflight(specification,processInput) {
   need(new Set(doors.map(d=>d.identity)).size===doors.length,'DUPLICATE_DOOR_IDENTITY')
   const layouts=specification.assemblyCases.map(spec=>{
     const layout=compileLayout(spec)
-    need(layout.cabinet.heightMm===2000&&layout.cabinet.depthMm===500&&[900,1000].includes(layout.cabinet.widthMm),'ASSEMBLY_OUTSIDE_PILOT_PROFILE')
+    const validEnvelope=parametricEnvelope
+      ?layout.cabinet.widthMm>=700&&layout.cabinet.widthMm<=1200&&layout.cabinet.heightMm>=1700&&layout.cabinet.heightMm<=2200&&layout.cabinet.depthMm>=250&&layout.cabinet.depthMm<=650
+      :layout.cabinet.heightMm===2000&&layout.cabinet.depthMm===500&&(parametricWidth?layout.cabinet.widthMm>=700&&layout.cabinet.widthMm<=1200:[900,1000].includes(layout.cabinet.widthMm))
+    need(validEnvelope,parametricEnvelope?'ASSEMBLY_OUTSIDE_PARAMETRIC_ENVELOPE':parametricWidth?'ASSEMBLY_OUTSIDE_WIDTH_ENVELOPE':'ASSEMBLY_OUTSIDE_PILOT_PROFILE')
     return layout
   })
   return {doors,layouts}
@@ -126,17 +134,110 @@ function doorReopenSource(dataRoot,{compiled,specification,processInput,inputVer
   return {sourceDirectory,outputScope:'parts_dxf_only',doorSource:{schema:'16029-variable-door-reopen-source/v1',run,evidence,artifacts,
     fullPlanPass:false,production_release:false}}
 }
-export async function execute(mode,specPath=join(SOURCE,'inputs/specification.json'),processPath=join(SOURCE,'inputs/process.json'),{dataRoot=DATA,runPhase=runProtectedPhase}={}) {
-  need(['outputs','outputs-dxf','doors-reopen','assembly','relocate'].includes(mode),'USAGE: node execute.mjs <outputs|outputs-dxf|doors-reopen|assembly|relocate> [specification.json] [process.json]')
+function parsePositiveIntOption(text, errorCode) {
+  need(/^[1-9]\d*$/.test(String(text || '')), errorCode)
+  const parsed = Number.parseInt(text, 10)
+  need(Number.isSafeInteger(parsed) && parsed >= 1, errorCode)
+  return parsed
+}
+export function parseCliArguments(argv) {
+  let parametricWidth=false, parametricEnvelope=false, caseIndex
+  const positional=[]
+  for(let i=0;i<argv.length;i++) {
+    const arg=argv[i]
+    if(arg==='--parametric-width') { parametricWidth=true; continue }
+    if(arg==='--parametric-envelope'||arg==='--full-cabinet') { parametricEnvelope=true; continue }
+    if(arg==='--case'||arg.startsWith('--case=')) {
+      need(caseIndex===undefined,'DUPLICATE_CASE_OPTION')
+      const raw=arg==='--case'?argv[++i]:arg.slice('--case='.length)
+      caseIndex=parsePositiveIntOption(raw,'INVALID_CASE_OPTION')
+      continue
+    }
+    need(!arg.startsWith('--'),'UNSUPPORTED_OPTION '+arg)
+    positional.push(arg)
+  }
+  need(!(parametricWidth&&parametricEnvelope),'CONFLICTING_ENVELOPE_MODES')
+  need(positional.length<=3,'USAGE: node execute.mjs <outputs|outputs-dxf|doors-reopen|assembly|relocate> [specification.json] [process.json] [--parametric-width|--parametric-envelope|--full-cabinet] [--case <index>]')
+  if(parametricEnvelope)need(positional[0]==='assembly','PARAMETRIC_ENVELOPE_REQUIRES_ASSEMBLY_MODE')
+  if(caseIndex!==undefined)need(positional[0]==='assembly','CASE_OPTION_REQUIRES_ASSEMBLY_MODE')
+  return {mode:positional[0],specPath:positional[1],processPath:positional[2],parametricWidth,...(parametricEnvelope?{parametricEnvelope:true}:{}),...(caseIndex!==undefined?{caseIndex}:{})}
+}
+const ENVELOPE_PHASE_ARTIFACTS = [
+  'job.json',
+  'toolchain.json',
+  'native-result.json',
+  'native.stdout.log',
+  'native.stderr.log',
+  'supervision.json',
+  'cancel.json',
+]
+
+function archiveEnvelopePhaseArtifacts(dir, phaseDir, { removeSource } = {}) {
+  mkdirSync(phaseDir, { recursive: true })
+  for (const name of ENVELOPE_PHASE_ARTIFACTS) {
+    const src = join(dir, name)
+    if (!existsSync(src)) continue
+    const dst = join(phaseDir, name)
+    if (removeSource) renameSync(src, dst)
+    else copyFileSync(src, dst)
+  }
+}
+
+export async function runParametricEnvelopePhases(job, dir, opts = {}) {
+  const runNative = opts.runNative || runNativeJob
+  const caseIndices = job.onlyCaseIndex !== undefined
+    ? [job.onlyCaseIndex]
+    : job.layouts.map((_, index) => index + 1)
+  const phaseResults = []
+  let lastResult = null
+  const phasePlan = [
+    ['prepare', 'prepare'],
+    ['build_and_measure', 'build'],
+  ]
+  for (let i = 0; i < caseIndices.length; i++) {
+    const k = caseIndices[i]
+    for (const [phase, folderSuffix] of phasePlan) {
+      const isLast = i === caseIndices.length - 1 && phase === 'build_and_measure'
+      const phaseDir = join(dir, 'phases', `case${k}-${folderSuffix}`)
+      let succeeded = false
+      try {
+        lastResult = await runNative({ ...job, onlyCaseIndex: k, envelopePhase: phase }, dir, opts)
+        succeeded = true
+        phaseResults.push({ caseIndex: k, phase, phaseDir, ...lastResult })
+      } finally {
+        archiveEnvelopePhaseArtifacts(dir, phaseDir, { removeSource: succeeded && !isLast })
+      }
+    }
+  }
+  return { ...lastResult, phases: phaseResults }
+}
+
+export async function execute(mode,specPath=join(SOURCE,'inputs/specification.json'),processPath=join(SOURCE,'inputs/process.json'),{dataRoot=DATA,runPhase=runProtectedPhase,parametricWidth=false,parametricEnvelope=false,caseIndex,signal=null}={}) {
+  need(['outputs','outputs-dxf','doors-reopen','assembly','relocate'].includes(mode),'USAGE: node execute.mjs <outputs|outputs-dxf|doors-reopen|assembly|relocate> [specification.json] [process.json] [--parametric-width|--parametric-envelope|--full-cabinet] [--case <index>]')
   const specification=read(resolve(specPath)),processInput=read(resolve(processPath))
-  const compiled=preflight(specification,processInput)
+  const wantWidth=useWidthEnvelope(specification,{parametricWidth})
+  const wantEnvelope=useFullEnvelope(specification,{parametricEnvelope})
+  need(!(wantWidth&&wantEnvelope),'CONFLICTING_ENVELOPE_MODES')
+  const envelopeMode=wantEnvelope?'parametric_envelope':wantWidth?'parametric_width':'pilot'
+  if(envelopeMode==='parametric_envelope')need(mode==='assembly','PARAMETRIC_ENVELOPE_REQUIRES_ASSEMBLY_MODE')
+  const compiled=preflight(specification,processInput,{parametricWidth:envelopeMode==='parametric_width',parametricEnvelope:envelopeMode==='parametric_envelope'})
+  if(caseIndex!==undefined) {
+    need(mode==='assembly','CASE_OPTION_REQUIRES_ASSEMBLY_MODE')
+    need(Number.isInteger(caseIndex)&&caseIndex>=1&&caseIndex<=compiled.layouts.length,'INVALID_CASE_INDEX')
+  }
   const inputVersions=[{path:resolve(specPath),sha256:hash(resolve(specPath))},{path:resolve(processPath),sha256:hash(resolve(processPath))}]
   const source=mode==='doors-reopen'?doorReopenSource(dataRoot,{compiled,specification,processInput,inputVersions}):selectSource(mode,dataRoot)
   const outputScope=mode==='outputs'?'parts_dxf_pdf':mode==='outputs-dxf'?'parts_dxf_only':source.outputScope
-  const tag=mode==='outputs'?'T2-outputs':mode==='outputs-dxf'?'T2-outputs-dxf':mode==='doors-reopen'?'T2-doors-reopen':mode==='assembly'?'T3-assembly':'T4-relocate'
-  return await runPhase({tag,sourceDirectory:source.sourceDirectory,job:{action:mode,...(outputScope?{outputScope}:{}),...compiled,specification,process:processInput,inputVersions,
-    ...(source.doorSource?{doorSource:source.doorSource,drawingStatus:'deferred_by_user_20261113',fullPlanPass:false}:{}),production_release:false},currentFile:mode==='doors-reopen'?null:mode+'-current.json'})
+  const tag=envelopeMode==='parametric_envelope'
+    ?(caseIndex!==undefined?'T3-envelope-case'+caseIndex:'T3-envelope')
+    :(mode==='outputs'?'T2-outputs':mode==='outputs-dxf'?'T2-outputs-dxf':mode==='doors-reopen'?'T2-doors-reopen':mode==='assembly'?(caseIndex!==undefined?'T3-assembly-case'+caseIndex:'T3-assembly'):'T4-relocate')
+  const currentFile=envelopeMode==='parametric_envelope'||mode==='doors-reopen'||caseIndex!==undefined?null:mode+'-current.json'
+  const phaseArgs={tag,sourceDirectory:source.sourceDirectory,job:{action:mode,...(outputScope?{outputScope}:{}),...(envelopeMode!=='pilot'?{envelopeMode}:{}),...(caseIndex!==undefined?{onlyCaseIndex:caseIndex}:{}),...compiled,specification,process:processInput,inputVersions,
+    ...(source.doorSource?{doorSource:source.doorSource,drawingStatus:'deferred_by_user_20261113',fullPlanPass:false}:{}),production_release:false},currentFile}
+  if(envelopeMode==='parametric_envelope') return await runPhase(phaseArgs,{executeNative:runParametricEnvelopePhases,...(signal?{signal}:{})})
+  return signal?await runPhase(phaseArgs,{signal}):await runPhase(phaseArgs)
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
-  const result=await execute(...process.argv.slice(2));console.log(JSON.stringify(result))
+  const cli=parseCliArguments(process.argv.slice(2))
+  const result=await execute(cli.mode,cli.specPath,cli.processPath,{parametricWidth:cli.parametricWidth,parametricEnvelope:Boolean(cli.parametricEnvelope),caseIndex:cli.caseIndex});console.log(JSON.stringify(result))
 }

@@ -193,7 +193,7 @@ export function trialSource(pointer, { dataRoot = DATA } = {}) {
   return inside(pointer.cadDirectory, dir)
 }
 
-export async function runProtectedPhase({ tag, sourceDirectory, job, currentFile = null, excludeRelativeDirectories = [] }, { root = ROOT, dataRoot = DATA, seed = SEED, checkIdle = assertIdle, lockFactory = acquireLock, executeNative = runNativeJob, queryProcesses = processState, wait = delay } = {}) {
+export async function runProtectedPhase({ tag, sourceDirectory, job, currentFile = null, excludeRelativeDirectories = [] }, { root = ROOT, dataRoot = DATA, seed = SEED, checkIdle = assertIdle, lockFactory = acquireLock, executeNative = runNativeJob, queryProcesses = processState, wait = delay, signal = null } = {}) {
   if (typeof tag !== 'string' || !/^[A-Za-z0-9-]{1,48}$/.test(tag)) throw new Error('INVALID_TRIAL_TAG')
   if (currentFile !== null && !/^[A-Za-z0-9-]+-current\.json$/.test(currentFile)) throw new Error('INVALID_CURRENT_POINTER')
   const source = inside(sourceDirectory, root)
@@ -211,6 +211,7 @@ export async function runProtectedPhase({ tag, sourceDirectory, job, currentFile
   const lock = lockFactory()
   const cancellation = new AbortController(), interrupt = () => cancellation.abort()
   process.on('SIGINT', interrupt); process.on('SIGTERM', interrupt)
+  if (signal) { if (signal.aborted) interrupt(); else signal.addEventListener('abort', interrupt, { once: true }) }
   let dir, before, result, originalError = null
   const secondaryErrors = []
   const remember = error => { if (!originalError) originalError = error; else if (error !== originalError) secondaryErrors.push(error) }
@@ -253,6 +254,7 @@ export async function runProtectedPhase({ tag, sourceDirectory, job, currentFile
   } catch (error) { remember(error) }
   try { lock.release() } catch (error) { remember(error) }
   process.removeListener('SIGINT', interrupt); process.removeListener('SIGTERM', interrupt)
+  if (signal) signal.removeEventListener('abort', interrupt)
   if (originalError) { originalError.secondaryErrors = [...(originalError.secondaryErrors || []), ...secondaryErrors]; throw originalError }
   return { phase: tag, pass: true, dir }
 }

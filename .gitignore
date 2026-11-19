@@ -208,3 +208,9 @@ workers/native_model_requests/**/assembly_contract.snapshot.json
 *.pdb
 data/master_v2/
 workers/master_v2/cad/bin*/
+!tools/run_16029_variable_trial_portal_worker.mjs
+!tools/start_16029_variable_trial_portal_worker.mjs
+!tools/verify_16029_variable_trial_portal.mjs
+data/variable_trial_portal_tasks/
+workers/master_v2/variable_trial/mass_readback/.offline-docs-*/
+workers/native_model_requests/parametric_v1/repairs/**/tests/.runtime-*/

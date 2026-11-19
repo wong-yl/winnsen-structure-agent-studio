@@ -187,14 +187,14 @@ internal static class WeightReadback
     {
         try { VariableTrial.RuntimeOwnership(); }
         catch (Exception error) { throw new SafetyException("WEIGHT_RUNTIME_OWNERSHIP_LOST", error); }
-        Need(c.Sw.GetProcessID() == c.Pid, "WEIGHT_CAD_PID_CHANGED");
+        Need(VariableTrial.SwGetProcessID(c.Sw, "WeightReadback.Guard") == c.Pid, "WEIGHT_CAD_PID_CHANGED");
         using (Process process = Process.GetProcessById(c.Pid)) Need(process.StartTime.ToUniversalTime().Ticks == c.Ticks && Paths.Equals(Path.GetFullPath(process.MainModule.FileName), c.Executable), "WEIGHT_CAD_PROCESS_IDENTITY_CHANGED");
     }
 
     static void Empty(Context c)
     {
-        Guard(c); object[] documents = Items(c.Sw.GetDocuments());
-        try { Need(documents.Length == 0 && c.Sw.GetDocumentCount() == 0, "WEIGHT_EMPTY_DOCUMENT_SESSION_REQUIRED"); }
+        Guard(c); object[] documents = VariableTrial.SwGetDocuments(c.Sw, "WeightReadback.Empty");
+        try { Need(documents.Length == 0 && VariableTrial.SwGetDocumentCount(c.Sw, "WeightReadback.Empty") == 0, "WEIGHT_EMPTY_DOCUMENT_SESSION_REQUIRED"); }
         finally { foreach (object value in documents) Release(value); }
     }
 
@@ -260,10 +260,10 @@ internal static class WeightReadback
 
     static void EnrollDocuments(Context c)
     {
-        Guard(c); object[] documents = Items(c.Sw.GetDocuments()); var rejections = new List<string>();
+        Guard(c); object[] documents = VariableTrial.SwGetDocuments(c.Sw, "WeightReadback.EnrollDocuments"); var rejections = new List<string>();
         try
         {
-            try { Need(c.Sw.GetDocumentCount() == documents.Length, "WEIGHT_DOCUMENT_INVENTORY_COUNT_MISMATCH"); }
+            try { Need(VariableTrial.SwGetDocumentCount(c.Sw, "WeightReadback.EnrollDocuments") == documents.Length, "WEIGHT_DOCUMENT_INVENTORY_COUNT_MISMATCH"); }
             catch (Exception error) { rejections.Add(error.ToString()); }
             for (int index = 0; index < documents.Length; index++)
             {
@@ -290,11 +290,11 @@ internal static class WeightReadback
         int maximumAttempts = c.Owned.Count + 1;
         for (int attempt = 0; attempt < maximumAttempts; attempt++)
         {
-            object[] documents = Items(c.Sw.GetDocuments()); var candidates = new List<KeyValuePair<OwnedDocument, string>>(); var titles = new Dictionary<string, int>(Paths);
+            object[] documents = VariableTrial.SwGetDocuments(c.Sw, "WeightReadback.CloseOwned"); var candidates = new List<KeyValuePair<OwnedDocument, string>>(); var titles = new Dictionary<string, int>(Paths);
             var present = new HashSet<OwnedDocument>(); bool complete = true;
             try
             {
-                if (documents.Length != c.Sw.GetDocumentCount()) { complete = false; errors.Add("WEIGHT_CLEANUP_DOCUMENT_COUNT_MISMATCH"); }
+                if (documents.Length != VariableTrial.SwGetDocumentCount(c.Sw, "WeightReadback.CloseOwned")) { complete = false; errors.Add("WEIGHT_CLEANUP_DOCUMENT_COUNT_MISMATCH"); }
                 foreach (object value in documents)
                 {
                     try
@@ -321,7 +321,7 @@ internal static class WeightReadback
             var selected = candidates.Where(item => !String.IsNullOrEmpty(item.Value) && titles[item.Value] == 1).OrderByDescending(item => Paths.Equals(item.Key.Path, c.PrimaryDocumentPath)).FirstOrDefault();
             if (selected.Key == null) { errors.Add("WEIGHT_AMBIGUOUS_CLOSE_TITLE_PRESERVED"); break; }
             Guard(c); Need(Paths.Equals(selected.Key.Model.GetPathName(), selected.Key.Path), "WEIGHT_CLEANUP_PATH_CHANGED");
-            c.Sw.CloseDoc(selected.Value); Guard(c);
+            VariableTrial.SwCloseDoc(c.Sw, selected.Value, "WeightReadback.CloseOwned"); Guard(c);
         }
         if (c.Owned.Count == 0) { c.AllowedDocuments = null; c.PrimaryDocumentPath = null; }
         try { Empty(c); } catch (Exception error) { errors.Add(error.ToString()); }
@@ -538,10 +538,10 @@ internal static class WeightReadback
         string path = model.GetPathName(); Need(!String.IsNullOrEmpty(path) && Paths.Equals(path, c.PrimaryDocumentPath), "WEIGHT_CONFIGURATION_DOCUMENT_PATH_CHANGED");
         OwnedDocument owned = c.Owned.SingleOrDefault(item => Paths.Equals(item.Path, path));
         Need(owned != null && c.Sw.IsSame(owned.Model, model) == 1, "WEIGHT_CONFIGURATION_DOCUMENT_IDENTITY_CHANGED");
-        object[] documents = Items(c.Sw.GetDocuments());
+        object[] documents = VariableTrial.SwGetDocuments(c.Sw, "WeightReadback.RequireOwnedTarget");
         try
         {
-            Need(documents.Length == c.Sw.GetDocumentCount(), "WEIGHT_CONFIGURATION_DOCUMENT_COUNT_MISMATCH");
+            Need(documents.Length == VariableTrial.SwGetDocumentCount(c.Sw, "WeightReadback.RequireOwnedTarget"), "WEIGHT_CONFIGURATION_DOCUMENT_COUNT_MISMATCH");
             Need(documents.Count(value => value is ModelDoc2 && c.Sw.IsSame(value, model) == 1) == 1, "WEIGHT_CONFIGURATION_DOCUMENT_IDENTITY_NOT_LIVE");
         }
         finally { foreach (object value in documents) Release(value); }
@@ -668,7 +668,7 @@ internal static class WeightReadback
         }; bool entered = false;
         try
         {
-            c.Plan = ReadPlan(cadRoot, job); Need(sw != null, "WEIGHT_OWNED_CAD_SESSION_REQUIRED"); VariableTrial.RuntimeOwnership(); c.Pid = sw.GetProcessID();
+            c.Plan = ReadPlan(cadRoot, job); Need(sw != null, "WEIGHT_OWNED_CAD_SESSION_REQUIRED"); VariableTrial.RuntimeOwnership(); c.Pid = VariableTrial.SwGetProcessID(sw, "WeightReadback.Run");
             using (Process process = Process.GetProcessById(c.Pid)) { c.Ticks = process.StartTime.ToUniversalTime().Ticks; c.Executable = Path.GetFullPath(process.MainModule.FileName); }
             c.Result["cadRoot"] = c.Plan.Root; c.Result["session"] = new { pid = c.Pid, startTicks = c.Ticks, executable = c.Executable };
             Empty(c); entered = true; Prepare(c); Checkpoint(c, "rewrite_and_closure_complete", null);

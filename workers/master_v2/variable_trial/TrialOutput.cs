@@ -8,12 +8,13 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web.Script.Serialization;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwView = SolidWorks.Interop.sldworks.View;
 
 // Independent trial output only. It never saves a part; reloads close only the verified owned output part.
-internal static class TrialOutput
+internal static partial class TrialOutput
 {
     const string Root = @"D:\Winnsen_Structure_Agent_Studio\data\master_v2\variable_trial_20261112";
     const double Tol = 0.0000001;
@@ -45,8 +46,8 @@ internal static class TrialOutput
     static string InputPath(ModelDoc2 model)
     {
         Need(model != null && model is PartDoc, "SAVED_PART_INPUT_REQUIRED");
-        string path = Local(model.GetPathName());
-        Need(File.Exists(path) && !model.GetSaveFlag(), "SAVE_TRIAL_PART_BEFORE_OUTPUT " + path);
+        string path = Local(VariableTrial.ModelGetPathName(model, "TrialOutput.InputPath"));
+        Need(File.Exists(path) && !VariableTrial.ModelGetSaveFlag(model, "TrialOutput.InputPath"), "SAVE_TRIAL_PART_BEFORE_OUTPUT " + path);
         return path;
     }
     static string OutputPath(ModelDoc2 model, string path)
@@ -64,12 +65,12 @@ internal static class TrialOutput
     static void ActivateConfiguration(ModelDoc2 model, string name, string error, bool newWork = true)
     {
         if (newWork) VariableTrial.RuntimeOwnership();
-        if (Configuration(model) != name) Need(model.ShowConfiguration2(name), error);
+        if (Configuration(model) != name) Need(VariableTrial.ModelShowConfiguration2(model, name, "TrialOutput.ActivateConfiguration"), error);
         Need(Configuration(model) == name, error + "_READBACK");
     }
     static void SameInput(ModelDoc2 model, string path)
     {
-        Need(model != null && String.Equals(Local(model.GetPathName()), path, StringComparison.OrdinalIgnoreCase), "CLEANUP_INPUT_IDENTITY_CHANGED");
+        Need(model != null && String.Equals(Local(VariableTrial.ModelGetPathName(model, "TrialOutput.SameInput")), path, StringComparison.OrdinalIgnoreCase), "CLEANUP_INPUT_IDENTITY_CHANGED");
     }
     sealed class SessionIdentity
     {
@@ -79,14 +80,14 @@ internal static class TrialOutput
     }
     static SessionIdentity CaptureSession(ISldWorks sw)
     {
-        VariableTrial.RuntimeOwnership(); int pid = sw.GetProcessID();
+        VariableTrial.RuntimeOwnership(); int pid = VariableTrial.SwGetProcessID(sw, "TrialOutput.CaptureSession");
         using (Process process = Process.GetProcessById(pid))
             return new SessionIdentity { Pid = pid, StartTicks = process.StartTime.ToUniversalTime().Ticks, Executable = Path.GetFullPath(process.MainModule.FileName) };
     }
     static void SameSession(ISldWorks sw, SessionIdentity identity)
     {
         // A cancelled job may restore its own live session, without starting new work.
-        Need(sw.GetProcessID() == identity.Pid, "CLEANUP_SESSION_PID_CHANGED");
+        Need(VariableTrial.SwGetProcessID(sw, "TrialOutput.SameSession") == identity.Pid, "CLEANUP_SESSION_PID_CHANGED");
         using (Process process = Process.GetProcessById(identity.Pid))
             Need(process.StartTime.ToUniversalTime().Ticks == identity.StartTicks && String.Equals(Path.GetFullPath(process.MainModule.FileName), identity.Executable, StringComparison.OrdinalIgnoreCase), "CLEANUP_SESSION_IDENTITY_CHANGED");
     }
@@ -99,13 +100,13 @@ internal static class TrialOutput
     }
     static readonly Dictionary<string, DxfManifest> Exports = new Dictionary<string, DxfManifest>(StringComparer.OrdinalIgnoreCase);
 
-    sealed class Pair
+    internal sealed class Pair
     {
         internal int Code;
         internal string Value;
         internal Pair(int code, string value) { Code = code; Value = value; }
     }
-    sealed class DxfEntity
+    internal sealed class DxfEntity
     {
         internal int Start, End;
         internal string Type, Key;
@@ -509,8 +510,8 @@ internal static class TrialOutput
     }
     public static object PrepareFlat(ModelDoc2 model, double expectedFlatWidthMm, double expectedFlatHeightMm, double expectedThicknessMm)
     {
-        VariableTrial.RuntimeOwnership(); Need(model is PartDoc && !model.IsOpenedReadOnly(), "WRITABLE_OUTPUT_PART_REQUIRED_FOR_FLAT_PREPARATION");
-        string input = Local(model.GetPathName()), hash = Hash(input), original = Configuration(model);
+        VariableTrial.RuntimeOwnership(); Need(model is PartDoc && !VariableTrial.ModelIsOpenedReadOnly(model, "PrepareFlat"), "WRITABLE_OUTPUT_PART_REQUIRED_FOR_FLAT_PREPARATION");
+        string input = Local(VariableTrial.ModelGetPathName(model, "PrepareFlat")), hash = Hash(input), original = Configuration(model);
         Need(input.StartsWith(Path.GetFullPath(VariableTrial.OutputRoot).TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase), "FLAT_PREPARATION_OUTPUT_COPY_ONLY");
         Need(original == "Default" && expectedThicknessMm > 0 && !Double.IsNaN(expectedThicknessMm) && !Double.IsInfinity(expectedThicknessMm), "FLAT_DEFAULT_AND_FINITE_THICKNESS_REQUIRED");
         Need((Double.IsNaN(expectedFlatWidthMm) || expectedFlatWidthMm > expectedThicknessMm && !Double.IsInfinity(expectedFlatWidthMm)) && (Double.IsNaN(expectedFlatHeightMm) || expectedFlatHeightMm > expectedThicknessMm && !Double.IsInfinity(expectedFlatHeightMm)), "FLAT_EXPECTED_DIMENSIONS_INVALID");
@@ -539,7 +540,7 @@ internal static class TrialOutput
                 }
                 finally { Release(feature); }
             }
-            Need(model.ForceRebuild3(false), "FLAT_PREPARE_REBUILD_FAILED"); var after = FlatFeatures(model, configurations);
+            Need(VariableTrial.ModelForceRebuild3(model, false, "PrepareFlat"), "FLAT_PREPARE_REBUILD_FAILED"); var after = FlatFeatures(model, configurations);
             trace.Record("flat_after_rebuild", new { features = after, configurations = configurations });
             CompareFlatStates(before, after, configurations, flatName, allowedIds);
             Need(after.All(r => r.suppressed || r.error == 0 || r.warning), "FLAT_NATIVE_FEATURE_HEALTH_FAILED");
@@ -555,7 +556,7 @@ internal static class TrialOutput
         {
             try
             {
-                SameInput(model, input); ActivateConfiguration(model, original, "FLAT_PREPARE_DEFAULT_RESTORE_FAILED", false); Need(model.ForceRebuild3(false), "FLAT_PREPARE_DEFAULT_REBUILD_FAILED");
+                SameInput(model, input); ActivateConfiguration(model, original, "FLAT_PREPARE_DEFAULT_RESTORE_FAILED", false); Need(VariableTrial.ModelForceRebuild3(model, false, "PrepareFlat.Restore"), "FLAT_PREPARE_DEFAULT_REBUILD_FAILED");
                 PreparedFlat prepared;
                 if (primary == null && Prepared.TryGetValue(input, out prepared))
                 {
@@ -571,8 +572,8 @@ internal static class TrialOutput
 
     public static object ReadReopenedFlat(ModelDoc2 model, Dictionary<string, object> prior)
     {
-        VariableTrial.RuntimeOwnership(); Need(model is PartDoc && model.IsOpenedReadOnly(), "READONLY_REOPENED_FLAT_PART_REQUIRED");
-        string input = Local(model.GetPathName()), beforeHash = Hash(input), original = Configuration(model);
+        VariableTrial.RuntimeOwnership(); Need(model is PartDoc && VariableTrial.ModelIsOpenedReadOnly(model, "ReadReopenedFlat"), "READONLY_REOPENED_FLAT_PART_REQUIRED");
+        string input = Local(VariableTrial.ModelGetPathName(model, "ReadReopenedFlat")), beforeHash = Hash(input), original = Configuration(model);
         Need(input.StartsWith(Path.GetFullPath(VariableTrial.OutputRoot).TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase) && original == "Default", "REOPENED_FLAT_OUTPUT_COPY_DEFAULT_REQUIRED");
         string[] configurations = Items(model.GetConfigurationNames()).Select(Convert.ToString).ToArray();
         Need(prior != null && prior.ContainsKey("success") && Convert.ToBoolean(prior["success"]) && configurations.SequenceEqual(Items(prior["configurationNames"]).Select(Convert.ToString)), "REOPENED_FLAT_PRIOR_CONFIGURATION_PROOF_REQUIRED");
@@ -583,7 +584,7 @@ internal static class TrialOutput
         var trace = new DxfTrace(Path.Combine(Path.GetDirectoryName(input), "flat-reopen")); var before = FlatFeatures(model, configurations); object geometry = null; Exception primary = null;
         try
         {
-            ActivateConfiguration(model, flatName, "REOPENED_FLAT_CONFIGURATION_FAILED"); Need(model.ForceRebuild3(false), "REOPENED_FLAT_REBUILD_FAILED");
+            ActivateConfiguration(model, flatName, "REOPENED_FLAT_CONFIGURATION_FAILED"); Need(VariableTrial.ModelForceRebuild3(model, false, "ReadReopenedFlat"), "REOPENED_FLAT_REBUILD_FAILED");
             var after = FlatFeatures(model, configurations); CompareFlatStates(before, after, configurations, null, new HashSet<int>());
             FlatFeatureState[] flats = after.Where(v => v.type == "FlatPattern").ToArray();
             Need(flats.Length == 1 && !flats[0].suppressed && after.Count(v => v.type == "UiBend" && v.treeParentId == flats[0].id && !v.suppressed) == 12 && after.All(v => v.suppressed || v.error == 0 || v.warning), "REOPENED_SAVED_FLAT_FEATURES_UNHEALTHY_OR_SUPPRESSED");
@@ -596,7 +597,7 @@ internal static class TrialOutput
             var cleanupErrors = new List<Exception>(); bool restored = false, diskUnchanged = false;
             try
             {
-                ActivateConfiguration(model, original, "REOPENED_FLAT_DEFAULT_RESTORE_FAILED", false); Need(model.ForceRebuild3(false), "REOPENED_FLAT_DEFAULT_REBUILD_FAILED");
+                ActivateConfiguration(model, original, "REOPENED_FLAT_DEFAULT_RESTORE_FAILED", false); Need(VariableTrial.ModelForceRebuild3(model, false, "ReadReopenedFlat.Restore"), "REOPENED_FLAT_DEFAULT_REBUILD_FAILED");
                 CompareFlatStates(before, FlatFeatures(model, configurations), configurations, null, new HashSet<int>()); restored = true;
             }
             catch (Exception error) { cleanupErrors.Add(error); trace.Record("reopened_flat_restore_failure", new { error = error.ToString() }); }
@@ -612,7 +613,7 @@ internal static class TrialOutput
     static ModelDoc2 ActiveInput(ISldWorks sw, SessionIdentity session, string input)
     {
         SameSession(sw, session);
-        ModelDoc2 current = sw.ActiveDoc as ModelDoc2;
+        ModelDoc2 current = VariableTrial.SwActiveDoc(sw, "TrialOutput.ActiveInput");
         try { SameInput(current, input); Need(current is PartDoc, "ACTIVE_TRIAL_PART_REQUIRED"); return current; }
         catch { Release(current); throw; }
     }
@@ -620,18 +621,18 @@ internal static class TrialOutput
     {
         VariableTrial.RuntimeOwnership(); SameSession(sw, session);
         trace.Record(stage + "_get_documents_begin", new { input = input });
-        object[] documents = Items(sw.GetDocuments()); var rows = new List<object>(); string title = null;
+        object[] documents = VariableTrial.SwGetDocuments(sw, stage + ".ReopenSavedInput"); var rows = new List<object>(); string title = null;
         try
         {
-            int count = sw.GetDocumentCount(); trace.Record(stage + "_get_documents_returned", new { nativeDocumentCount = count, arrayLength = documents.Length });
+            int count = VariableTrial.SwGetDocumentCount(sw, stage + ".ReopenSavedInput"); trace.Record(stage + "_get_documents_returned", new { nativeDocumentCount = count, arrayLength = documents.Length });
             Need(count == documents.Length, "DXF_REOPEN_DOCUMENT_COUNT_MISMATCH");
             foreach (object value in documents)
             {
                 ModelDoc2 document = value as ModelDoc2; Need(document is PartDoc, "DXF_REOPEN_UNKNOWN_DOCUMENT_PRESERVED");
-                string path = Local(document.GetPathName());
+                string path = Local(VariableTrial.ModelGetPathName(document, stage + ".ReopenSavedInput"));
                 rows.Add(new { path = path, exactInput = String.Equals(path, input, StringComparison.OrdinalIgnoreCase) });
                 Need(String.Equals(path, input, StringComparison.OrdinalIgnoreCase) && title == null, "DXF_REOPEN_OTHER_DOCUMENT_PRESERVED " + path);
-                title = document.GetTitle();
+                title = VariableTrial.ModelGetTitle(document, stage + ".ReopenSavedInput");
             }
             trace.Record(stage + "_document_paths_verified", new { documents = rows, onlyExactInputOrEmpty = true });
         }
@@ -642,20 +643,20 @@ internal static class TrialOutput
         {
             VariableTrial.RuntimeOwnership(); SameSession(sw, session);
             trace.Record(stage + "_close_exact_input_begin", new { input = input, title = title, saveCalled = false });
-            sw.CloseDoc(title);
+            VariableTrial.SwCloseDoc(sw, title, stage + ".ReopenSavedInput");
         }
-        object[] remaining = Items(sw.GetDocuments());
-        try { Need(sw.GetDocumentCount() == 0 && remaining.Length == 0, "DXF_REOPEN_REQUIRES_CONFIRMED_EMPTY_SESSION"); }
+        object[] remaining = VariableTrial.SwGetDocuments(sw, stage + ".ReopenSavedInputEmpty");
+        try { Need(VariableTrial.SwGetDocumentCount(sw, stage + ".ReopenSavedInputEmpty") == 0 && remaining.Length == 0, "DXF_REOPEN_REQUIRES_CONFIRMED_EMPTY_SESSION"); }
         finally { foreach (object value in remaining) Release(value); }
         VariableTrial.RuntimeOwnership(); SameSession(sw, session); Need(Hash(input) == sourceHash, "DXF_REOPEN_INPUT_DISK_CHANGED");
         int errors = 0, warnings = 0;
         trace.Record(stage + "_open_saved_input_begin", new { input = input, sourceSha256 = sourceHash, options = (int)swOpenDocOptions_e.swOpenDocOptions_Silent, saveCalled = false });
-        ModelDoc2 reopened = sw.OpenDoc6(input, (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errors, ref warnings) as ModelDoc2;
+        ModelDoc2 reopened = VariableTrial.SwOpenDoc6(sw, input, (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", out errors, out warnings, stage + ".ReopenSavedInput");
         trace.Record(stage + "_open_saved_input_returned", new { returned = reopened != null, errors = errors, warnings = warnings });
         try
         {
             Need(reopened is PartDoc && errors == 0, "DXF_SAVED_INPUT_REOPEN_FAILED " + errors + "/" + warnings);
-            SameInput(reopened, input); Need(!reopened.GetSaveFlag() && Configuration(reopened) == savedConfiguration, "DXF_REOPEN_CLEAN_SAVED_CONFIGURATION_REQUIRED");
+            SameInput(reopened, input); Need(!VariableTrial.ModelGetSaveFlag(reopened, stage + ".ReopenSavedInput") && Configuration(reopened) == savedConfiguration, "DXF_REOPEN_CLEAN_SAVED_CONFIGURATION_REQUIRED");
             Need(Hash(input) == sourceHash, "DXF_REOPEN_INPUT_DISK_CHANGED"); VariableTrial.RegisterOwned(reopened);
             trace.Record(stage + "_saved_input_verified", new { path = input, configuration = Configuration(reopened), clean = true, sourceDiskUnchanged = true, errors = errors, warnings = warnings });
             return reopened;
@@ -676,14 +677,14 @@ internal static class TrialOutput
         {
             current = ActiveInput(sw, session, input);
             ActivateConfiguration(current, prepared.Configuration, "DXF_EXISTING_FLAT_CONFIGURATION_REQUIRED");
-            Need(current.ForceRebuild3(false), "DXF_FLAT_CONFIGURATION_REBUILD_FAILED");
+            Need(VariableTrial.ModelForceRebuild3(current, false, "NativeFlatDxf"), "DXF_FLAT_CONFIGURATION_REBUILD_FAILED");
             var states = FlatFeatures(current, prepared.Configurations);
             CompareFlatStates(prepared.Features, states, prepared.Configurations, null, new HashSet<int>());
             trace.Record("native_export_feature_states", new { configuration = Configuration(current), features = states, savedPreparedStateUnchanged = true });
             FlatBodyProof(current, prepared.Width, prepared.Height, prepared.Thickness, trace);
-            current.ClearSelection2(true);
-            attempt["configurationBefore"] = Configuration(current); attempt["modelPathBefore"] = current.GetPathName();
-            attempt["saveFlagBefore"] = current.GetSaveFlag(); attempt["readOnlyBefore"] = current.IsOpenedReadOnly();
+            VariableTrial.ModelClearSelection2(current, true, "NativeFlatDxf");
+            attempt["configurationBefore"] = Configuration(current); attempt["modelPathBefore"] = VariableTrial.ModelGetPathName(current, "NativeFlatDxf");
+            attempt["saveFlagBefore"] = VariableTrial.ModelGetSaveFlag(current, "NativeFlatDxf"); attempt["readOnlyBefore"] = VariableTrial.ModelIsOpenedReadOnly(current, "NativeFlatDxf");
             VariableTrial.RuntimeOwnership(); NewPath(output);
             trace.Record("native_export_api_begin", attempt);
             try { returned = ((PartDoc)current).ExportFlatPatternView(output, options); attempt["returned"] = returned; }
@@ -728,51 +729,19 @@ internal static class TrialOutput
             bool bends = NativeFlatDxf(sw, session, input, prepared, allPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_None, attempts, trace);
             ModelDoc2 fresh = ReopenSavedInput(sw, session, input, sourceHash, originalConfig, trace, "between_native_exports"); Release(fresh);
             bool cut = NativeFlatDxf(sw, session, input, prepared, cutPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_RemoveBends, attempts, trace);
-            var cutPairs = ReadDxf(cutPath); var allPairs = ReadDxf(allPath);
-            var cutEntities = Entities(cutPairs); var allEntities = Entities(allPairs);
-            Need(Units(cutPairs) == Units(allPairs), "NATIVE_DXF_UNIT_MISMATCH");
-            Need(Units(allPairs) == 4, "NATIVE_DXF_MILLIMETRE_UNITS_REQUIRED");
-            var remaining = cutEntities.GroupBy(e => e.Key).ToDictionary(g => g.Key, g => g.Count());
-            var rows = new List<object>(); int bendCount = 0;
-            foreach (DxfEntity entity in allEntities)
-            {
-                VariableTrial.RuntimeOwnership();
-                string sourceLayer = Text(allPairs, entity, 8, "0");
-                int count; bool isCut = remaining.TryGetValue(entity.Key, out count) && count > 0;
-                string layer = isCut ? "CUT" : "BEND";
-                if (isCut) remaining[entity.Key] = count - 1;
-                else { Need(entity.Type == "LINE", "NONLINEAR_DIFFERENTIAL_BEND_UNSUPPORTED " + entity.Type); bendCount++; }
-                bool mapped = false;
-                for (int i = entity.Start + 1; i < entity.End; i++) if (allPairs[i].Code == 8) { allPairs[i].Value = layer; mapped = true; }
-                Need(mapped, "NATIVE_ENTITY_LAYER_TAG_REQUIRED");
-                rows.Add(new { type = entity.Type, sourceLayer = sourceLayer, targetLayer = layer, evidence = isCut ? "same geometry in legacy RemoveBends option 1" : "additional LINE in legacy None option 0" });
-            }
-            Need(remaining.Values.All(v => v == 0), "COMBINED_DXF_LOST_CUT_GEOMETRY");
-            Need(bendCount > 0, "NATIVE_DXF_HAS_NO_DIFFERENTIAL_BEND_LINES");
-            string[] geometryBefore = allEntities.Select(e => e.Key).OrderBy(v => v, StringComparer.Ordinal).ToArray();
-            AddLayers(allPairs);
-            VariableTrial.RuntimeOwnership(); NewPath(output);
-            using (var stream = new FileStream(output, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-            using (var writer = new StreamWriter(stream, Encoding.Default))
-                for (int i = 0; i < allPairs.Count; i++)
-                {
-                    if ((i & 511) == 0) VariableTrial.RuntimeOwnership();
-                    Pair pair = allPairs[i]; writer.WriteLine(pair.Code.ToString(Invariant)); writer.WriteLine(pair.Value);
-                }
-            var written = ReadDxf(output);
-            Need(geometryBefore.SequenceEqual(Entities(written).Select(e => e.Key).OrderBy(v => v, StringComparer.Ordinal)), "LAYER_MAPPING_CHANGED_DXF_GEOMETRY");
+            DifferentialDxfWriteResult writtenDiff = WriteDifferentialFlatDxf(allPath, cutPath, null, output, true, false);
             Need(Hash(input) == sourceHash, "DXF_EXPORT_CHANGED_PART_FILE");
             Need(trace.Errors.Count == 0, "DXF_DIAGNOSTIC_WRITE_FAILED " + String.Join(" | ", trace.Errors));
             NativeCutSnapshot nativeCut; NativeCuts.TryGetValue(input, out nativeCut);
-            Exports[input] = new DxfManifest { Path = output, Sha256 = Hash(output), SourceSha256 = sourceHash, Alignment = (double[])alignment.Clone(), NativeExportMethod = "IPartDoc.ExportFlatPatternView direct file", ApiAlignmentSpecified = false, CutGeometry = nativeCut };
+            Exports[input] = new DxfManifest { Path = output, Sha256 = writtenDiff.OutputSha256, SourceSha256 = sourceHash, Alignment = (double[])alignment.Clone(), NativeExportMethod = "IPartDoc.ExportFlatPatternView direct file", ApiAlignmentSpecified = false, CutGeometry = nativeCut };
             return new
             {
-                success = true, exported = true, path = output, sha256 = Hash(output), modelPath = input,
+                success = true, exported = true, path = output, sha256 = writtenDiff.OutputSha256, modelPath = input,
                 nativeCutPath = cutPath, nativeCutSha256 = Hash(cutPath), nativeBendsPath = allPath, nativeBendsSha256 = Hash(allPath),
                 nativeCutReturned = cut, nativeBendsReturned = bends, nativeErrors = (int?)null, nativeWarnings = (int?)null,
                 errors = new string[0], warnings = new[] { "ExportFlatPatternView returns enablement only; success here also requires actual new native DXF files. No native error/warning codes are exposed.", "The legacy API has no alignment argument. Literal model X/Y is only an endpoint-comparison candidate, not an API-guaranteed export basis.", "Bend directions are UNKNOWN. No BEND_UP/DOWN labels were inferred.", "Contour, duplicate, hole and unit acceptance requires dxf_check.py." },
-                insunits = Units(written), unitsVerified = Units(written) == 4, cutEntityCount = cutEntities.Count, bendEntityCount = bendCount,
-                markEntityCount = 0, declaredLayers = new[] { "CUT", "BEND", "MARK" }, differentialLayerEvidence = rows,
+                insunits = writtenDiff.Insunits, unitsVerified = writtenDiff.Insunits == 4, cutEntityCount = writtenDiff.CutEntityCount, bendEntityCount = writtenDiff.BendEntityCount,
+                markEntityCount = writtenDiff.MarkEntityCount, declaredLayers = new[] { "CUT", "BEND", "MARK" }, differentialLayerEvidence = writtenDiff.Rows,
                 bendDirection = "UNKNOWN", geometryPreserved = true, partDiskUnchanged = true, partSaved = false,
                 systemPreferencesChanged = false, nativeExportMethod = "IPartDoc.ExportFlatPatternView direct file", nativeExportOptions = new[] { 0, 1 },
                 nativeCutOption = 1, nativeBendsOption = 0, nativeExportAttempts = attempts, exportConfiguration = flatConfiguration, manufacturingAccepted = false,
@@ -869,9 +838,9 @@ internal static class TrialOutput
     {
         VariableTrial.RuntimeOwnership();
         Need(drawing is DrawingDoc, "EXACT_OUTPUT_DRAWING_REQUIRED");
-        if (!sw.Visible) sw.Visible = true; if (!drawing.Visible) drawing.Visible = true;
-        int error = 0; ModelDoc2 activated = sw.ActivateDoc3(drawing.GetTitle(), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref error) as ModelDoc2;
-        ModelDoc2 active = sw.ActiveDoc as ModelDoc2;
+        if (!sw.Visible) VariableTrial.SwSetVisible(sw, true, "ActivateOutputDrawing"); if (!drawing.Visible) VariableTrial.ModelSetVisible(drawing, true, "ActivateOutputDrawing");
+        int error = 0; ModelDoc2 activated = VariableTrial.SwActivateDoc3(sw, VariableTrial.ModelGetTitle(drawing, "ActivateOutputDrawing"), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, out error, "ActivateOutputDrawing");
+        ModelDoc2 active = VariableTrial.SwActiveDoc(sw, "ActivateOutputDrawing");
         try { Need(error == 0 && activated != null && active != null && sw.IsSame(activated, drawing) == 1 && sw.IsSame(active, drawing) == 1, "EXACT_OUTPUT_DRAWING_ACTIVATION_FAILED"); }
         finally { Release(active); Release(activated); }
     }
@@ -879,7 +848,7 @@ internal static class TrialOutput
     static object NoteAt(ISldWorks sw, ModelDoc2 drawing, string text, double x, double y, double size)
     {
         ActivateOutputDrawing(sw, drawing); DrawingDoc document = (DrawingDoc)drawing; document.EditSheet();
-        Need(document.ActivateView(""), "SHEET_NOTE_CONTEXT_REQUIRED"); drawing.ClearSelection2(true);
+        Need(document.ActivateView(""), "SHEET_NOTE_CONTEXT_REQUIRED"); VariableTrial.ModelClearSelection2(drawing, true, "NoteAt");
         Note note = drawing.InsertNote(text) as Note;
         Need(note != null, "CHINESE_NOTE_INSERT_FAILED");
         Annotation annotation = note.GetAnnotation() as Annotation; SwView sheetView = null; Sheet sheet = null; object[] members = new object[0];
@@ -894,27 +863,27 @@ internal static class TrialOutput
             return new Dictionary<string, object> { { "text", text }, { "x", x }, { "y", y }, { "font", font }, { "annotationName", annotation.GetName() },
                 { "sheet", sheet.GetName() }, { "sheetView", sheetView.GetName2() }, { "exactDrawingSheetMembershipVerified", true }, { "textReadbackVerified", true }, { "dangling", false }, { "visible", true } };
         }
-        finally { foreach (object member in members) Release(member); Release(sheet); Release(sheetView); Release(annotation); Release(note); drawing.ClearSelection2(true); }
+        finally { foreach (object member in members) Release(member); Release(sheet); Release(sheetView); Release(annotation); Release(note); if (!VariableTrial.ComTimedOut) try { VariableTrial.ModelClearSelection2(drawing, true, "NoteAt.Finally"); } catch { } }
     }
     static object DrawingOutputContext(ISldWorks sw, ModelDoc2 drawing, bool requireReady = false)
     {
-        ModelDoc2 active = sw.ActiveDoc as ModelDoc2; Sheet sheet = ((DrawingDoc)drawing).GetCurrentSheet() as Sheet; SelectionMgr selection = drawing.SelectionManager as SelectionMgr;
+        ModelDoc2 active = VariableTrial.SwActiveDoc(sw, "DrawingOutputContext"); Sheet sheet = ((DrawingDoc)drawing).GetCurrentSheet() as Sheet; SelectionMgr selection = drawing.SelectionManager as SelectionMgr;
         try
         {
             bool exact = active != null && sw.IsSame(active, drawing) == 1;
             int selectedCount = selection == null ? -1 : selection.GetSelectedObjectCount2(-1);
-            bool ready = exact && sw.Visible && drawing.Visible && !drawing.IsOpenedReadOnly() && !drawing.IsOpenedViewOnly() && sheet != null && selectedCount == 0;
+            bool ready = exact && sw.Visible && drawing.Visible && !VariableTrial.ModelIsOpenedReadOnly(drawing, "DrawingOutputContext") && !drawing.IsOpenedViewOnly() && sheet != null && selectedCount == 0;
             if (requireReady) Need(ready, "VISIBLE_WRITABLE_ACTIVE_DRAWING_WITH_EMPTY_SELECTION_REQUIRED");
-            return new { ready = ready, activeDrawingIdentityVerified = exact, title = drawing.GetTitle(), path = drawing.GetPathName(), activeTitle = active == null ? null : active.GetTitle(), activePath = active == null ? null : active.GetPathName(),
-                applicationVisible = sw.Visible, drawingVisible = drawing.Visible, readOnly = drawing.IsOpenedReadOnly(), viewOnly = drawing.IsOpenedViewOnly(), selectedCount = selectedCount,
-                dirtyInMemory = drawing.GetSaveFlag(), sheet = sheet == null ? null : sheet.GetName(), sheetFormatVisible = sheet == null ? (bool?)null : sheet.SheetFormatVisible, sheetFormatTemplate = sheet == null ? null : sheet.GetTemplateName() };
+            return new { ready = ready, activeDrawingIdentityVerified = exact, title = VariableTrial.ModelGetTitle(drawing, "DrawingOutputContext"), path = VariableTrial.ModelGetPathName(drawing, "DrawingOutputContext"), activeTitle = active == null ? null : VariableTrial.ModelGetTitle(active, "DrawingOutputContext"), activePath = active == null ? null : VariableTrial.ModelGetPathName(active, "DrawingOutputContext"),
+                applicationVisible = sw.Visible, drawingVisible = drawing.Visible, readOnly = VariableTrial.ModelIsOpenedReadOnly(drawing, "DrawingOutputContext"), viewOnly = drawing.IsOpenedViewOnly(), selectedCount = selectedCount,
+                dirtyInMemory = VariableTrial.ModelGetSaveFlag(drawing, "DrawingOutputContext"), sheet = sheet == null ? null : sheet.GetName(), sheetFormatVisible = sheet == null ? (bool?)null : sheet.SheetFormatVisible, sheetFormatTemplate = sheet == null ? null : sheet.GetTemplateName() };
         }
         finally { Release(selection); Release(sheet); Release(active); }
     }
     static object PrepareDrawingDisplay(ISldWorks sw, ModelDoc2 drawing, SwView[] views, List<object> expectedNotes, bool prepareDisplayMode, DxfTrace trace)
     {
         ActivateOutputDrawing(sw, drawing); DrawingDoc document = (DrawingDoc)drawing; document.EditSheet();
-        Need(document.ActivateView(""), "OUTPUT_SHEET_CONTEXT_REQUIRED"); drawing.SetPickMode(); drawing.ClearSelection2(true);
+        Need(document.ActivateView(""), "OUTPUT_SHEET_CONTEXT_REQUIRED"); drawing.SetPickMode(); VariableTrial.ModelClearSelection2(drawing, true, "PrepareDrawingDisplay");
         ModelView window = drawing.ActiveView as ModelView; SwView sheetView = null; object[] notes = new object[0]; LayerMgr layers = null;
         try
         {
@@ -922,7 +891,7 @@ internal static class TrialOutput
             Need(window.EnableGraphicsUpdate, "OUTPUT_DRAWING_GRAPHICS_UPDATES_REQUIRED");
             foreach (SwView view in views)
                 if (prepareDisplayMode) Need(view.SetDisplayMode3(false, (int)swDisplayMode_e.swHIDDEN, false, true), "OUTPUT_PRECISE_HLR_VIEW_MODE_REQUIRED");
-            if (prepareDisplayMode) Need(drawing.ForceRebuild3(false), "OUTPUT_DRAWING_DISPLAY_REBUILD_FAILED");
+            if (prepareDisplayMode) Need(VariableTrial.ModelForceRebuild3(drawing, false, "PrepareDrawingDisplay"), "OUTPUT_DRAWING_DISPLAY_REBUILD_FAILED");
             drawing.ViewZoomtofit2();
             foreach (SwView view in views) view.UpdateViewDisplayGeometry();
             drawing.GraphicsRedraw2(); drawing.WindowRedraw();
@@ -1081,14 +1050,14 @@ internal static class TrialOutput
     {
         VariableTrial.RuntimeOwnership();
         string configuration = view.ReferencedConfiguration, viewName = view.GetName2(), axisName = horizontal ? "width" : "height";
-        trace.Record("drawing_dimension_begin", new { view = viewName, flat = view.IsFlatPatternView(), axis = axisName, configuration = configuration, modelPath = model.GetPathName() });
-        int activationError = 0; ModelDoc2 active = sw.ActivateDoc3(drawing.GetTitle(), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref activationError) as ModelDoc2;
+        trace.Record("drawing_dimension_begin", new { view = viewName, flat = view.IsFlatPatternView(), axis = axisName, configuration = configuration, modelPath = VariableTrial.ModelGetPathName(model, "Overall") });
+        int activationError = 0; ModelDoc2 active = VariableTrial.SwActivateDoc3(sw, VariableTrial.ModelGetTitle(drawing, "Overall"), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, out activationError, "Overall");
         try { Need(active != null && activationError == 0 && sw.IsSame(active, drawing) == 1, "EXACT_DIMENSION_DRAWING_ACTIVATION_FAILED"); }
         finally { Release(active); }
         Need(((DrawingDoc)drawing).ActivateView(viewName), "DIMENSION_DRAWING_VIEW_ACTIVATION_FAILED");
         ActivateConfiguration(model, configuration, "DIMENSION_SOURCE_CONFIGURATION_FAILED " + configuration);
-        Need(model.ForceRebuild3(false), "DIMENSION_SOURCE_REBUILD_FAILED");
-        Need(drawing.ForceRebuild3(false), "DIMENSION_DRAWING_VIEW_REBUILD_FAILED");
+        Need(VariableTrial.ModelForceRebuild3(model, false, "Overall.Model"), "DIMENSION_SOURCE_REBUILD_FAILED");
+        Need(VariableTrial.ModelForceRebuild3(drawing, false, "Overall.Drawing"), "DIMENSION_DRAWING_VIEW_REBUILD_FAILED");
         Need(Configuration(model) == configuration, "DIMENSION_SOURCE_CONFIGURATION_DRIFT_AFTER_VIEW_REBUILD");
         trace.Record("drawing_dimension_visible_counts", new { view = viewName, flat = view.IsFlatPatternView(), axis = axisName, configuration = configuration, visible = VisibleViewEntities(model, view, false) });
         var vertices = new List<VertexPoint>();
@@ -1151,8 +1120,8 @@ internal static class TrialOutput
         Need(view.IsFlatPatternView(), "HOLE_COORDINATE_TABLE_REQUIRES_NATIVE_FLAT_VIEW");
         Need(((DrawingDoc)drawing).ActivateView(view.GetName2()), "HOLE_SOURCE_DRAWING_VIEW_ACTIVATION_FAILED");
         ActivateConfiguration(model, view.ReferencedConfiguration, "HOLE_SOURCE_CONFIGURATION_FAILED");
-        Need(model.ForceRebuild3(false), "HOLE_SOURCE_REBUILD_FAILED");
-        Need(drawing.ForceRebuild3(false) && Configuration(model) == view.ReferencedConfiguration, "HOLE_VIEW_REBUILD_OR_CONFIGURATION_FAILED");
+        Need(VariableTrial.ModelForceRebuild3(model, false, "NativeHoles.Model"), "HOLE_SOURCE_REBUILD_FAILED");
+        Need(VariableTrial.ModelForceRebuild3(drawing, false, "NativeHoles.Drawing") && Configuration(model) == view.ReferencedConfiguration, "HOLE_VIEW_REBUILD_OR_CONFIGURATION_FAILED");
         var holes = new List<HolePoint>(); var points = new List<double[]>();
         object[] bodies = Items(((PartDoc)model).GetBodies2(0, false));
         MathTransform transform = view.ModelToViewTransform;
@@ -1505,8 +1474,8 @@ internal static class TrialOutput
                 row["sheetSelection"] = new { returned = selected, which = pdf.GetWhichSheets(), requested = names, readback = actual };
                 Need(selected && pdf.GetWhichSheets() == (int)swExportDataSheetsToExport_e.swExportData_ExportSpecifiedSheets && names.OrderBy(v => v, StringComparer.Ordinal).SequenceEqual(actual.OrderBy(v => v, StringComparer.Ordinal)), "PDF_PROBE_EXACT_SHEET_SELECTION_FAILED");
             }
-            drawing.ClearSelection2(true); row["saveContext"] = DrawingOutputContext(sw, drawing);
-            errors = 0; warnings = 0; returned = drawing.Extension.SaveAs(path, 0, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, pdf, ref errors, ref warnings);
+            VariableTrial.ModelClearSelection2(drawing, true, "PdfProbeExport"); row["saveContext"] = DrawingOutputContext(sw, drawing);
+            errors = 0; warnings = 0; returned = VariableTrial.ModelSaveAs(drawing, path, 0, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, pdf, out errors, out warnings, "PdfProbeExport");
             GC.KeepAlive(wrappers);
             row["after"] = DrawingOutputContext(sw, drawing);
         }
@@ -1798,8 +1767,8 @@ internal static class TrialOutput
         Need(drawingPath.StartsWith(cadDirectory + "\\", StringComparison.OrdinalIgnoreCase) && Path.GetExtension(drawingPath).Equals(".SLDDRW", StringComparison.OrdinalIgnoreCase) && File.Exists(drawingPath), "PDF_PROBE_TRIAL_DRAWING_REQUIRED");
         Need(String.Equals(outputDir, Path.Combine(cadDirectory, "pdf-probe"), StringComparison.OrdinalIgnoreCase), "PDF_PROBE_EXACT_OUTPUT_DIRECTORY_REQUIRED");
         Need(!Directory.Exists(outputDir) || !Directory.EnumerateFileSystemEntries(outputDir).Any(), "PDF_PROBE_FRESH_OUTPUT_DIRECTORY_REQUIRED");
-        object[] initialDocuments = Items(sw.GetDocuments()); try { Need(initialDocuments.Length == 0, "PDF_PROBE_EMPTY_OWNED_SESSION_REQUIRED"); } finally { foreach (object document in initialDocuments) Release(document); }
-        string template = sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplateDrawing);
+        object[] initialDocuments = VariableTrial.SwGetDocuments(sw, "PdfProbe.Initial"); try { Need(initialDocuments.Length == 0, "PDF_PROBE_EMPTY_OWNED_SESSION_REQUIRED"); } finally { foreach (object document in initialDocuments) Release(document); }
+        string template = VariableTrial.SwGetUserPreferenceStringValue(sw, (int)swUserPreferenceStringValue_e.swDefaultTemplateDrawing, "PdfProbe");
         Need(!String.IsNullOrWhiteSpace(template) && Path.IsPathRooted(template) && !template.StartsWith(@"\\", StringComparison.Ordinal) && new DriveInfo(Path.GetPathRoot(template)).DriveType == DriveType.Fixed && File.Exists(template), "PDF_PROBE_EXISTING_LOCAL_TEMPLATE_REQUIRED");
         var nativeFiles = Directory.GetFiles(cadDirectory, "*", SearchOption.AllDirectories).Where(v => new[] { ".SLDDRW", ".SLDPRT", ".SLDASM" }.Contains(Path.GetExtension(v).ToUpperInvariant())).ToDictionary(v => v, Hash, StringComparer.OrdinalIgnoreCase);
         var protectedFiles = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { drawingPath, Hash(drawingPath) }, { template, Hash(template) } };
@@ -1813,12 +1782,12 @@ internal static class TrialOutput
         trace.Record("pdf_probe_begin", new { drawing = drawingPath, drawingSha256 = protectedFiles[drawingPath], originalTemplate = template, templateSha256 = protectedFiles[template], templateCopy = templateCopy, outputDirectory = outputDir, mode = mode, expectedAttemptCount = expectedAttemptCount, stageAcceptance = false });
         try
         {
-            sw.UserControl = true; sw.Visible = true; PdfProbeGuard(sw, session, protectedFiles);
+            VariableTrial.SwSetUserControl(sw, true, "PdfProbe"); VariableTrial.SwSetVisible(sw, true, "PdfProbe"); PdfProbeGuard(sw, session, protectedFiles);
             try
             {
-                int errors = 0, warnings = 0; actual = sw.OpenDoc6(drawingPath, (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref errors, ref warnings) as ModelDoc2;
+                int errors = 0, warnings = 0; actual = VariableTrial.SwOpenDoc6(sw, drawingPath, (int)swDocumentTypes_e.swDocDRAWING, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", out errors, out warnings, "PdfProbe");
                 trace.Record("pdf_probe_cold_open", new { path = drawingPath, returnedDocument = actual != null, errors = errors, warnings = warnings });
-                Need(actual is DrawingDoc && errors == 0 && !actual.IsOpenedViewOnly() && String.Equals(actual.GetPathName(), drawingPath, StringComparison.OrdinalIgnoreCase), "PDF_PROBE_EXACT_COLD_DRAWING_OPEN_FAILED");
+                Need(actual is DrawingDoc && errors == 0 && !actual.IsOpenedViewOnly() && String.Equals(VariableTrial.ModelGetPathName(actual, "PdfProbe"), drawingPath, StringComparison.OrdinalIgnoreCase), "PDF_PROBE_EXACT_COLD_DRAWING_OPEN_FAILED");
                 if (!chineseFontOnly && !chineseNoteIsolation && !localizedFontProbe) foreach (bool explicitSheets in new[] { true, false })
                     foreach (bool shortPath in new[] { false, true })
                     {
@@ -1913,7 +1882,7 @@ internal static class TrialOutput
             catch (Exception error) { PdfProbeGuard(sw, session, protectedFiles); if (PdfProbeProtectionFailure(error)) throw; chineseSequenceCompleted = false; noteIsolationSequenceCompleted = false; localizedFontSequenceCompleted = false; stages.Add(new { stage = "actual-drawing", error = error.ToString() }); trace.Record("pdf_probe_stage_failure", stages.Last()); }
             if (!chineseFontOnly && !chineseNoteIsolation && !localizedFontProbe) try
             {
-                PdfProbeGuard(sw, session, protectedFiles); minimal = sw.NewDocument(templateCopy, (int)swDwgPaperSizes_e.swDwgPaperA3size, 0.420, 0.297) as ModelDoc2; Need(minimal is DrawingDoc, "PDF_PROBE_MINIMAL_DRAWING_REQUIRED");
+                PdfProbeGuard(sw, session, protectedFiles); minimal = VariableTrial.SwNewDocument(sw, templateCopy, (int)swDwgPaperSizes_e.swDwgPaperA3size, 0.420, 0.297, "PdfProbe"); Need(minimal is DrawingDoc, "PDF_PROBE_MINIMAL_DRAWING_REQUIRED");
                 ActivateOutputDrawing(sw, minimal); DrawingDoc document = (DrawingDoc)minimal; Sheet sheet = document.GetCurrentSheet() as Sheet;
                 try { Need(sheet != null, "PDF_PROBE_MINIMAL_SHEET_REQUIRED"); string previousFormat = sheet.GetTemplateName(); bool setup = document.SetupSheet5(sheet.GetName(), (int)swDwgPaperSizes_e.swDwgPaperA3size, (int)swDwgTemplates_e.swDwgTemplateNone, 1, 1, false, "", 0.420, 0.297, "", true); sheet.SheetFormatVisible = false; trace.Record("pdf_probe_remove_minimal_format", new { returned = setup, previousTemplate = previousFormat, requestedTemplate = "", externalTemplateAccessRequested = false }); Need(setup, "PDF_PROBE_BLANK_SHEET_SETUP_FAILED"); }
                 finally { Release(sheet); }
@@ -1957,12 +1926,12 @@ internal static class TrialOutput
         {
             try
             {
-                SameSession(sw, session); sw.UserControl = true; object[] documents = Items(sw.GetDocuments()); var closeNames = new List<string>();
-                try { foreach (ModelDoc2 document in documents.OfType<ModelDoc2>().OrderByDescending(v => v is DrawingDoc)) { string path = document.GetPathName(); Need(String.IsNullOrEmpty(path) && minimal != null && sw.IsSame(document, minimal) == 1 || !String.IsNullOrEmpty(path) && Local(path).StartsWith(cadDirectory + "\\", StringComparison.OrdinalIgnoreCase), "PDF_PROBE_REFUSE_CLOSING_UNOWNED_DOCUMENT"); closeNames.Add(document.GetTitle()); } }
+                SameSession(sw, session); VariableTrial.SwSetUserControl(sw, true, "PdfProbe.Finally"); object[] documents = VariableTrial.SwGetDocuments(sw, "PdfProbe.Finally.List", true); var closeNames = new List<string>();
+                try { foreach (ModelDoc2 document in documents.OfType<ModelDoc2>().OrderByDescending(v => v is DrawingDoc)) { string path = VariableTrial.ModelGetPathName(document, "PdfProbe.Finally", true); Need(String.IsNullOrEmpty(path) && minimal != null && sw.IsSame(document, minimal) == 1 || !String.IsNullOrEmpty(path) && Local(path).StartsWith(cadDirectory + "\\", StringComparison.OrdinalIgnoreCase), "PDF_PROBE_REFUSE_CLOSING_UNOWNED_DOCUMENT"); closeNames.Add(VariableTrial.ModelGetTitle(document, "PdfProbe.Finally", true)); } }
                 finally { foreach (object document in documents) Release(document); }
-                foreach (string name in closeNames) sw.CloseDoc(name);
-                object[] remaining = Items(sw.GetDocuments()); try { Need(remaining.Length == 0, "PDF_PROBE_OWNED_DOCUMENTS_STILL_OPEN"); } finally { foreach (object document in remaining) Release(document); }
-                sw.UserControl = oldUserControl; sw.Visible = oldVisible;
+                foreach (string name in closeNames) VariableTrial.SwCloseDoc(sw, name, "PdfProbe.Finally.Close", true);
+                object[] remaining = VariableTrial.SwGetDocuments(sw, "PdfProbe.Finally.VerifyEmpty", true); try { Need(remaining.Length == 0, "PDF_PROBE_OWNED_DOCUMENTS_STILL_OPEN"); } finally { foreach (object document in remaining) Release(document); }
+                VariableTrial.SwSetUserControl(sw, oldUserControl, "PdfProbe.Finally"); VariableTrial.SwSetVisible(sw, oldVisible, "PdfProbe.Finally");
                 Need(sw.UserControl == oldUserControl && sw.Visible == oldVisible, "PDF_PROBE_APPLICATION_STATE_RESTORE_FAILED");
             }
             catch (Exception error) { cleanupErrors.Add(error); }
@@ -2101,13 +2070,13 @@ internal static class TrialOutput
             trace.Record("drawing_sheet_scale_before_restore", new { phase = stage, properties = before, views = beforeViews });
             foreach (SwView view in views) view.UseSheetScale = 0;
             var independentViews = views.Select(v => new { name = v.GetName2(), useSheetScale = v.UseSheetScale, scale = v.ScaleDecimal, positionMetres = Numbers(v.Position) }).ToArray();
-            bool scaleSet = sheet.SetScale(1, 1, false, false), sheetRebuilt = drawing.ForceRebuild3(false);
+            bool scaleSet = sheet.SetScale(1, 1, false, false), sheetRebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "RestoreTrialSheetScale.Scale");
             double[] afterScale = Numbers(sheet.GetProperties2());
             var afterScaleViews = views.Select(v => new { name = v.GetName2(), useSheetScale = v.UseSheetScale, scale = v.ScaleDecimal, positionMetres = Numbers(v.Position) }).ToArray();
             trace.Record("drawing_sheet_scale_raw_readback", new { phase = stage, beforeProperties = before, afterProperties = afterScale, beforeViews = beforeViews, independentViews = independentViews, afterViews = afterScaleViews, scaleSet = scaleSet, rebuilt = sheetRebuilt });
             Need(scaleSet, "TRIAL_SHEET_SCALE_RESTORE_FAILED"); Need(sheetRebuilt, "TRIAL_SHEET_SCALE_REBUILD_FAILED");
             for (int i = 0; i < views.Length; i++) { views[i].UseSheetScale = 0; views[i].ScaleDecimal = scales[i]; views[i].Position = positions[i]; }
-            bool viewsRebuilt = drawing.ForceRebuild3(false); double[] after = Numbers(sheet.GetProperties2());
+            bool viewsRebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "RestoreTrialSheetScale.Views"); double[] after = Numbers(sheet.GetProperties2());
             var afterViews = views.Select(v => new { name = v.GetName2(), useSheetScale = v.UseSheetScale, scale = v.ScaleDecimal, positionMetres = Numbers(v.Position) }).ToArray();
             trace.Record("drawing_sheet_scale_restored", new { phase = stage, beforeProperties = before, afterSetScaleProperties = afterScale, afterProperties = after, beforeViews = beforeViews, afterSetScaleViews = afterScaleViews,
                 scaleAnnotationPosition = false, scaleAnnotationTextHeight = false, viewScaleAndPositionExplicitlyRestored = true, rebuilt = viewsRebuilt, views = afterViews });
@@ -2163,7 +2132,7 @@ internal static class TrialOutput
     }
     static void PrepareBendDocumentLeaders(ModelDoc2 drawing, DxfTrace trace)
     {
-        Need(drawing is DrawingDoc && String.IsNullOrEmpty(drawing.GetPathName()) && !drawing.IsOpenedReadOnly(), "NEW_UNSAVED_TRIAL_DRAWING_REQUIRED_FOR_BEND_PREFERENCES");
+        Need(drawing is DrawingDoc && String.IsNullOrEmpty(VariableTrial.ModelGetPathName(drawing, "PrepareBendDocumentLeaders")) && !VariableTrial.ModelIsOpenedReadOnly(drawing, "PrepareBendDocumentLeaders"), "NEW_UNSAVED_TRIAL_DRAWING_REQUIRED_FOR_BEND_PREFERENCES");
         int[] preferences = { (int)swUserPreferenceIntegerValue_e.swSheetMetalBendNotesLeaderDisplay, (int)swUserPreferenceIntegerValue_e.swSheetMetalBendNotesLeaderAnchor, (int)swUserPreferenceIntegerValue_e.swBendNoteStyle };
         int[] before = BendDocumentPreferences(drawing), targets = BendDocumentTargets(); int option = (int)swUserPreferenceOption_e.swDetailingNoOptionSpecified;
         trace.Record("drawing_bend_document_preferences_before", new { preferences = preferences, option = option, before = before, targets = targets, scope = "New trial drawing document properties only; no application or template preference setters." });
@@ -2181,7 +2150,7 @@ internal static class TrialOutput
             }
         }
         finally { Release(extension); }
-        bool rebuilt = drawing.ForceRebuild3(false); drawing.GraphicsRedraw2(); drawing.WindowRedraw(); int[] after = BendDocumentPreferences(drawing);
+        bool rebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "PrepareBendDocumentLeaders"); drawing.GraphicsRedraw2(); drawing.WindowRedraw(); int[] after = BendDocumentPreferences(drawing);
         trace.Record("drawing_bend_document_preferences_after", new { rebuilt = rebuilt, preferences = preferences, before = before, targets = targets, after = after });
         Need(rebuilt && after.SequenceEqual(targets), "BEND_DOCUMENT_PREFERENCES_REBUILD_READBACK_FAILED");
     }
@@ -2225,7 +2194,7 @@ internal static class TrialOutput
                 try { leaderResult = note.Annotation.SetLeader3((int)swLeaderStyle_e.swBENT, (int)swLeaderSide_e.swLS_LEFT, true, false, false, false); }
                 finally { trace.Record("drawing_bend_note_leader_raw_readback", new { annotationName = note.Annotation.GetName(), returned = leaderResult, requestedStyle = (int)swLeaderStyle_e.swBENT, requestedSide = (int)swLeaderSide_e.swLS_LEFT, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) }); }
                 Need(leaderResult == 0, "NATIVE_BEND_NOTE_LEADER_REQUEST_FAILED");
-                bool preparedRebuilt = drawing.ForceRebuild3(false); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
+                bool preparedRebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "LayoutNativeBendNotes.Prepared"); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
                 trace.Record("drawing_bend_note_prepared_rebuild_readback", new { returned = preparedRebuilt, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) });
                 Need(preparedRebuilt, "NATIVE_BEND_NOTE_PREPARED_REBUILD_FAILED");
                 double targetLeft = 0.338, targetTop = 0.220 - i * 0.008;
@@ -2236,7 +2205,7 @@ internal static class TrialOutput
                 try { positioned = note.Annotation.SetPosition2(note.TargetPosition[0], note.TargetPosition[1], note.TargetPosition[2]); }
                 finally { trace.Record("drawing_bend_note_position_raw_readback", new { annotationName = note.Annotation.GetName(), returned = positioned, targetPositionMetres = note.TargetPosition, nativeZPreserved = true, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) }); }
                 Need(positioned && SameDrawingNumbers(note.Annotation.GetPosition(), note.TargetPosition), "NATIVE_BEND_NOTE_POSITION_FAILED");
-                bool movedRebuilt = drawing.ForceRebuild3(false); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
+                bool movedRebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "LayoutNativeBendNotes.Moved"); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
                 trace.Record("drawing_bend_note_moved_rebuild_readback", new { returned = movedRebuilt, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) });
                 Need(movedRebuilt, "NATIVE_BEND_NOTE_MOVED_REBUILD_FAILED");
                 leaderResult = -1;
@@ -2244,7 +2213,7 @@ internal static class TrialOutput
                 try { leaderResult = note.Annotation.SetLeader3((int)swLeaderStyle_e.swBENT, (int)swLeaderSide_e.swLS_LEFT, true, false, false, false); }
                 finally { trace.Record("drawing_bend_note_moved_leader_raw_readback", new { annotationName = note.Annotation.GetName(), returned = leaderResult, requestedStyle = (int)swLeaderStyle_e.swBENT, requestedSide = (int)swLeaderSide_e.swLS_LEFT, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) }); }
                 Need(leaderResult == 0, "NATIVE_BEND_NOTE_MOVED_LEADER_REQUEST_FAILED");
-                bool leaderRebuilt = drawing.ForceRebuild3(false); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
+                bool leaderRebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "LayoutNativeBendNotes.Leader"); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
                 trace.Record("drawing_bend_note_moved_leader_rebuild_readback", new { returned = leaderRebuilt, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) });
                 Need(leaderRebuilt && note.Annotation.GetLeaderStyle() == (int)swLeaderStyle_e.swBENT && note.Annotation.GetLeaderCount() > 0, "NATIVE_BEND_NOTE_BENT_LEADER_FAILED_AFTER_MOVE_AND_REBUILD");
                 currentBox = VisibleNoteExtent(note.Note);
@@ -2255,14 +2224,14 @@ internal static class TrialOutput
                     try { positioned = note.Annotation.SetPosition2(note.TargetPosition[0], note.TargetPosition[1], note.TargetPosition[2]); }
                     finally { trace.Record("drawing_bend_note_extent_correction_raw_readback", new { targetLeftMetres = targetLeft, targetTopMetres = targetTop, targetPositionMetres = note.TargetPosition, returned = positioned, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) }); }
                     Need(positioned && SameDrawingNumbers(note.Annotation.GetPosition(), note.TargetPosition), "NATIVE_BEND_NOTE_EXTENT_CORRECTION_POSITION_FAILED");
-                    bool correctionRebuilt = drawing.ForceRebuild3(false); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
+                    bool correctionRebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "LayoutNativeBendNotes.Correction"); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
                     trace.Record("drawing_bend_note_extent_correction_rebuild_readback", new { returned = correctionRebuilt, readback = NativeBendNotePlacementReadback(note.Note, note.Annotation) });
                     Need(correctionRebuilt && note.Annotation.GetLeaderStyle() == (int)swLeaderStyle_e.swBENT && note.Annotation.GetLeaderCount() > 0, "NATIVE_BEND_NOTE_EXTENT_CORRECTION_LEADER_FAILED");
                     currentBox = VisibleNoteExtent(note.Note);
                 }
                 Need(Math.Abs(currentBox[0] - targetLeft) < Tol && Math.Abs(currentBox[4] - targetTop) < Tol, "NATIVE_BEND_NOTE_TEXT_EXTENT_ALIGNMENT_FAILED");
             }
-            bool rebuilt = drawing.ForceRebuild3(false); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
+            bool rebuilt = VariableTrial.ModelForceRebuild3(drawing, false, "LayoutNativeBendNotes.Final"); drawing.GraphicsRedraw2(); drawing.WindowRedraw();
             trace.Record("drawing_bend_note_layout_rebuild_raw_readback", new { returned = rebuilt, notes = notes.Select(v => NativeBendNotePlacementReadback(v.Note, v.Annotation)).ToArray() });
             Need(rebuilt, "NATIVE_BEND_NOTE_LAYOUT_REBUILD_FAILED"); ready = true; return notes;
         }
@@ -2405,9 +2374,9 @@ internal static class TrialOutput
         var failures = new List<string>(); var currentViews = new List<SwView>(); string path = null, beforeHash = null; SwView sheetView = null; object[] sheetNotes = new object[0];
         try
         {
-            VariableTrial.RuntimeOwnership(); Need(sw != null && drawing is DrawingDoc && drawing.IsOpenedReadOnly() && drawing.Visible, "REOPENED_VISIBLE_READONLY_DRAWING_REQUIRED");
-            Need(priorDrawingProof != null, "REOPENED_DRAWING_PRIOR_PROOF_REQUIRED"); path = Local(drawing.GetPathName()); beforeHash = Hash(path);
-            Need(drawing.ForceRebuild3(false), "REOPENED_DRAWING_REBUILD_FAILED"); DrawingDoc document = (DrawingDoc)drawing; var sheet = TrialFrameSheetReadback(sw, drawing); report["sheet"] = sheet;
+            VariableTrial.RuntimeOwnership(); Need(sw != null && drawing is DrawingDoc && VariableTrial.ModelIsOpenedReadOnly(drawing, "ReadReopenedDrawing") && drawing.Visible, "REOPENED_VISIBLE_READONLY_DRAWING_REQUIRED");
+            Need(priorDrawingProof != null, "REOPENED_DRAWING_PRIOR_PROOF_REQUIRED"); path = Local(VariableTrial.ModelGetPathName(drawing, "ReadReopenedDrawing")); beforeHash = Hash(path);
+            Need(VariableTrial.ModelForceRebuild3(drawing, false, "ReadReopenedDrawing"), "REOPENED_DRAWING_REBUILD_FAILED"); DrawingDoc document = (DrawingDoc)drawing; var sheet = TrialFrameSheetReadback(sw, drawing); report["sheet"] = sheet;
             double[] properties = Numbers(sheet["properties"]);
             Need(Convert.ToInt32(sheet["sheetCount"]) == 1 && Convert.ToInt32(sheet["paperSize"]) == (int)swDwgPaperSizes_e.swDwgPaperA3size && Math.Abs(Convert.ToDouble(sheet["widthMetres"], Invariant) - 0.420) < Tol && Math.Abs(Convert.ToDouble(sheet["heightMetres"], Invariant) - 0.297) < Tol && properties[2] == 1 && properties[3] == 1, "REOPENED_A3_SHEET_ONE_TO_ONE_REQUIRED");
             Need(Convert.ToBoolean(sheet["frameFileReferencesEmpty"]) && Convert.ToBoolean(sheet["templateSketchEmpty"]) && Convert.ToBoolean(sheet["ordinaryAndTemplateSketchDistinct"]) && Convert.ToBoolean(sheet["editSheetMode"]), "REOPENED_TRIAL_FRAME_FORMAT_STATE_REQUIRED");
@@ -2505,31 +2474,31 @@ internal static class TrialOutput
         string directory = Local(Path.Combine(outputDir, "path-check")); directory = Path.GetDirectoryName(directory);
         string stem = "door_" + hand;
         string drawingPath = OutputPath(model, Path.Combine(directory, stem + ".SLDDRW")), pdfPath = OutputPath(model, Path.Combine(directory, stem + ".pdf"));
-        string template = sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplateDrawing);
+        string template = VariableTrial.SwGetUserPreferenceStringValue(sw, (int)swUserPreferenceStringValue_e.swDefaultTemplateDrawing, "PdfProbe");
         Need(!String.IsNullOrWhiteSpace(template) && File.Exists(template), "EXISTING_DEFAULT_DRAWING_TEMPLATE_REQUIRED");
         string templateHash = Hash(template); VariableTrial.RuntimeOwnership(); Directory.CreateDirectory(directory);
         SessionIdentity session = CaptureSession(sw);
-        ModelDoc2 previous = sw.ActiveDoc as ModelDoc2, drawing = null;
+        ModelDoc2 previous = VariableTrial.SwActiveDoc(sw, "MakeDrawing"), drawing = null;
         SwView folded = null, flat = null; List<NativeBendNoteState> bendNotes = null;
-        bool oldVisible = sw.Visible, oldUserControl = sw.UserControl, oldInput = sw.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swInputDimValOnCreate);
-        object[] originalDocuments = Items(sw.GetDocuments()); var originalVisibility = new List<KeyValuePair<ModelDoc2, bool>>();
+        bool oldVisible = sw.Visible, oldUserControl = sw.UserControl, oldInput = VariableTrial.SwGetUserPreferenceToggle(sw, (int)swUserPreferenceToggle_e.swInputDimValOnCreate, "MakeDrawing");
+        object[] originalDocuments = VariableTrial.SwGetDocuments(sw, "MakeDrawing.Initial"); var originalVisibility = new List<KeyValuePair<ModelDoc2, bool>>();
         foreach (object value in originalDocuments) { ModelDoc2 document = value as ModelDoc2; Need(document != null, "DRAWING_ORIGINAL_DOCUMENT_IDENTITY_REQUIRED"); originalVisibility.Add(new KeyValuePair<ModelDoc2, bool>(document, document.Visible)); }
         var trace = new DxfTrace(Path.Combine(directory, stem + "-drawing"));
         trace.Record("drawing_begin", new { modelPath = input, modelSha256 = inputHash, hand = hand, originalConfiguration = originalConfig, applicationVisible = oldVisible,
-            userControl = oldUserControl, originalDocuments = originalVisibility.Select(v => new { path = v.Key.GetPathName(), title = v.Key.GetTitle(), visible = v.Value }).ToArray() });
+            userControl = oldUserControl, originalDocuments = originalVisibility.Select(v => new { path = VariableTrial.ModelGetPathName(v.Key, "MakeDrawing"), title = VariableTrial.ModelGetTitle(v.Key, "MakeDrawing"), visible = v.Value }).ToArray() });
         Exception failure = null; var cleanupErrors = new List<Exception>();
         Dictionary<string, object> report = null;
         try
         {
-            sw.Visible = true;
+            VariableTrial.SwSetVisible(sw, true, "MakeDrawing");
             ActivateConfiguration(model, baseConfig, "FOLDED_CONFIGURATION_ACTIVATION_FAILED");
             VariableTrial.RuntimeOwnership();
-            drawing = sw.NewDocument(template, (int)swDwgPaperSizes_e.swDwgPaperA3size, 0.420, 0.297) as ModelDoc2;
+            drawing = VariableTrial.SwNewDocument(sw, template, (int)swDwgPaperSizes_e.swDwgPaperA3size, 0.420, 0.297, "MakeDrawing");
             Need(drawing != null, "NEW_NATIVE_DRAWING_FAILED"); VariableTrial.RegisterOwned(drawing);
             VariableTrial.RuntimeOwnership();
-            Need(drawing is DrawingDoc, "NEW_NATIVE_DRAWING_TYPE_REQUIRED"); drawing.Visible = true;
+            Need(drawing is DrawingDoc, "NEW_NATIVE_DRAWING_TYPE_REQUIRED"); VariableTrial.ModelSetVisible(drawing, true, "MakeDrawing");
             DrawingDoc document = (DrawingDoc)drawing; Dictionary<string, object> trialFrameProof = CreateTrialDrawingFrame(sw, drawing, trace);
-            int activateError = 0; ModelDoc2 activated = sw.ActivateDoc3(drawing.GetTitle(), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref activateError) as ModelDoc2;
+            int activateError = 0; ModelDoc2 activated = VariableTrial.SwActivateDoc3(sw, VariableTrial.ModelGetTitle(drawing, "MakeDrawing"), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, out activateError, "MakeDrawing");
             Need(activated != null && activateError == 0, "NEW_DRAWING_ACTIVATION_FAILED");
             string[] names = Items(model.GetModelViewNames()).Select(Convert.ToString).ToArray();
             string orientation = names.FirstOrDefault(v => v == "*Back" || v == "*后视") ?? names.FirstOrDefault(v => v == "*Front" || v == "*前视");
@@ -2538,14 +2507,14 @@ internal static class TrialOutput
             folded = document.CreateDrawViewFromModelView3(input, orientation, 0.090, 0.168, 0) as SwView;
             Need(folded != null && !folded.IsFlatPatternView() && folded.SetName2("折弯态"), "NATIVE_FOLDED_VIEW_CREATION_FAILED"); folded.ReferencedConfiguration = baseConfig;
             RestoreTrialSheetScale(sw, drawing, new[] { folded }, trace, "after-folded-view-creation");
-            Fit(folded, 0.090, 0.168); Need(drawing.ForceRebuild3(false), "FOLDED_VIEW_REBUILD_FAILED");
+            Fit(folded, 0.090, 0.168); Need(VariableTrial.ModelForceRebuild3(drawing, false, "MakeDrawing.FoldedView"), "FOLDED_VIEW_REBUILD_FAILED");
             var dimensions = new List<object>(); dimensions.Add(Overall(sw, model, drawing, folded, true, trace)); dimensions.Add(Overall(sw, model, drawing, folded, false, trace));
             VariableTrial.RuntimeOwnership();
             flat = document.CreateFlatPatternViewFromModelView3(input, baseConfig, 0.245, 0.168, 0, false, false) as SwView;
             Need(flat != null && flat.IsFlatPatternView() && flat.SetName2("真实展开态"), "NATIVE_FLAT_VIEW_CREATION_FAILED");
             Need(originalConfigurations.Contains(flat.ReferencedConfiguration), "FLAT_VIEW_CREATED_UNSAVED_PART_CONFIGURATION_NO_PART_SAVE_ALLOWED " + flat.ReferencedConfiguration);
             RestoreTrialSheetScale(sw, drawing, new[] { folded, flat }, trace, "after-flat-view-creation");
-            Fit(flat, 0.245, 0.168); flat.ShowSheetMetalBendNotes = true; Need(drawing.ForceRebuild3(false), "FLAT_VIEW_REBUILD_FAILED");
+            Fit(flat, 0.245, 0.168); flat.ShowSheetMetalBendNotes = true; Need(VariableTrial.ModelForceRebuild3(drawing, false, "MakeDrawing.FlatView"), "FLAT_VIEW_REBUILD_FAILED");
             dimensions.Add(Overall(sw, model, drawing, flat, true, trace)); dimensions.Add(Overall(sw, model, drawing, flat, false, trace));
             object bendProof = NativeBends(sw, model, flat, input, hand);
             var notes = new List<object>();
@@ -2560,7 +2529,7 @@ internal static class TrialOutput
             notes.Add(NoteAt(sw, drawing, "Model: " + Path.GetFileName(input), 0.025, 0.020, 0.002));
             notes.Add(NoteAt(sw, drawing, "SHA256: " + inputHash, 0.025, 0.015, 0.002));
             bendNotes = LayoutNativeBendNotes(sw, drawing, flat, trace);
-            Need(drawing.ForceRebuild3(false), "NATIVE_DRAWING_FINAL_REBUILD_FAILED");
+            Need(VariableTrial.ModelForceRebuild3(drawing, false, "MakeDrawing.Final"), "NATIVE_DRAWING_FINAL_REBUILD_FAILED");
             object drawingDisplayProof = PrepareDrawingDisplay(sw, drawing, new[] { folded, flat }, notes, true, trace);
             trace.Record("drawing_native_display_ready", drawingDisplayProof);
             trialFrameProof["beforeNativeSave"] = TrialDrawingFrameFinalReadback(sw, drawing, new[] { folded, flat }, trialFrameProof, trace, "native-save");
@@ -2569,10 +2538,10 @@ internal static class TrialOutput
             int drawingErrors = 0, drawingWarnings = 0;
             VariableTrial.RuntimeOwnership();
             Need(!File.Exists(drawingPath), "PRESERVE_EXISTING_DRAWING");
-            bool saved = drawing.Extension.SaveAs(drawingPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, null, ref drawingErrors, ref drawingWarnings);
+            bool saved = VariableTrial.ModelSaveAs(drawing, drawingPath, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, null, out drawingErrors, out drawingWarnings, "MakeDrawing.Slddrw");
             trace.Record("drawing_native_save_result", new { returned = saved, errors = drawingErrors, warnings = drawingWarnings, path = drawingPath, exists = File.Exists(drawingPath), context = DrawingOutputContext(sw, drawing) });
             VariableTrial.RuntimeOwnership();
-            Need(saved && drawingErrors == 0 && File.Exists(drawingPath) && !drawing.GetSaveFlag(), "NATIVE_SLDDRW_SAVE_FAILED " + drawingErrors + "/" + drawingWarnings);
+            Need(saved && drawingErrors == 0 && File.Exists(drawingPath) && !VariableTrial.ModelGetSaveFlag(drawing, "MakeDrawing.Slddrw"), "NATIVE_SLDDRW_SAVE_FAILED " + drawingErrors + "/" + drawingWarnings);
             foldedProof = ViewProof(folded, input); flatProof = ViewProof(flat, input);
             ExportPdfData pdf = sw.GetExportFileData((int)swExportDataFileType_e.swExportPdfData) as ExportPdfData;
             int pdfErrors = 0, pdfWarnings = 0; bool pdfSaved = false; object pdfSheetProof = null, pdfDisplayProof = null, pdfBendNoteProof = null;
@@ -2605,7 +2574,7 @@ internal static class TrialOutput
                     pdfBendNoteProof = NativeBendNoteLayoutReadback(sw, drawing, flat, bendNotes, notes, trace, "pdf-save");
                     VariableTrial.RuntimeOwnership(); Need(!File.Exists(pdfPath), "PRESERVE_EXISTING_PDF");
                     trace.Record("drawing_pdf_save_begin", new { path = pdfPath, sheetSelection = pdfSheetProof, context = DrawingOutputContext(sw, drawing, true) });
-                    pdfSaved = drawing.Extension.SaveAs(pdfPath, 0, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, pdf, ref pdfErrors, ref pdfWarnings);
+                    pdfSaved = VariableTrial.ModelSaveAs(drawing, pdfPath, 0, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, pdf, out pdfErrors, out pdfWarnings, "MakeDrawing.Pdf");
                     GC.KeepAlive(wrappers);
                     trace.Record("drawing_pdf_save_result", new { returned = pdfSaved, errors = pdfErrors, warnings = pdfWarnings, path = pdfPath, exists = File.Exists(pdfPath), length = File.Exists(pdfPath) ? new FileInfo(pdfPath).Length : 0, context = DrawingOutputContext(sw, drawing) });
                     VariableTrial.RuntimeOwnership();
@@ -2635,22 +2604,22 @@ internal static class TrialOutput
         catch (Exception error) { failure = error; trace.Record("drawing_primary_failure", new { error = error.ToString() }); }
         try { SameSession(sw, session); SameInput(model, input); ActivateConfiguration(model, originalConfig, "DRAWING_MODEL_CONFIGURATION_RESTORE_FAILED", false); }
         catch (Exception error) { cleanupErrors.Add(error); }
-        try { SameSession(sw, session); if (previous != null) { int error = 0; Need(sw.ActivateDoc3(previous.GetTitle(), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref error) != null && error == 0, "PREVIOUS_DOCUMENT_ACTIVATION_RESTORE_FAILED"); } }
+        try { SameSession(sw, session); if (previous != null) { int error = 0; Need(VariableTrial.SwActivateDoc3(sw, VariableTrial.ModelGetTitle(previous, "MakeDrawing.Restore", true), false, (int)swRebuildOnActivation_e.swDontRebuildActiveDoc, out error, "MakeDrawing.Restore") != null && error == 0, "PREVIOUS_DOCUMENT_ACTIVATION_RESTORE_FAILED"); } }
         catch (Exception error) { cleanupErrors.Add(error); }
         bool userControlChangedDuringDrawing = false, applicationVisibilityRestored = false;
         try
         {
-            SameSession(sw, session); Need(sw.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swInputDimValOnCreate) == oldInput, "DIMENSION_INPUT_PREFERENCE_CHANGED");
+            SameSession(sw, session); Need(VariableTrial.SwGetUserPreferenceToggle(sw, (int)swUserPreferenceToggle_e.swInputDimValOnCreate, "MakeDrawing.Restore") == oldInput, "DIMENSION_INPUT_PREFERENCE_CHANGED");
             userControlChangedDuringDrawing = sw.UserControl != oldUserControl;
             trace.Record("drawing_user_control_before_restore", new { original = oldUserControl, actual = sw.UserControl, changedDuringDrawing = userControlChangedDuringDrawing });
-            if (userControlChangedDuringDrawing) sw.UserControl = oldUserControl;
+            if (userControlChangedDuringDrawing) VariableTrial.SwSetUserControl(sw, oldUserControl, "MakeDrawing.Restore");
             // ISldWorks.Visible can hide the application only after all visible documents are hidden.
-            if (drawing != null) { drawing.Visible = false; Need(!drawing.Visible, "NEW_DRAWING_VISIBILITY_RESTORE_FAILED"); }
-            foreach (var item in originalVisibility) { item.Key.Visible = item.Value; Need(item.Key.Visible == item.Value, "ORIGINAL_DOCUMENT_VISIBILITY_RESTORE_FAILED " + item.Key.GetTitle()); }
+            if (drawing != null) { VariableTrial.ModelSetVisible(drawing, false, "MakeDrawing.Restore"); Need(!drawing.Visible, "NEW_DRAWING_VISIBILITY_RESTORE_FAILED"); }
+            foreach (var item in originalVisibility) { VariableTrial.ModelSetVisible(item.Key, item.Value, "MakeDrawing.Restore"); Need(item.Key.Visible == item.Value, "ORIGINAL_DOCUMENT_VISIBILITY_RESTORE_FAILED " + VariableTrial.ModelGetTitle(item.Key, "MakeDrawing.Restore", true)); }
             trace.Record("drawing_visibility_before_application_restore", new { applicationVisible = sw.Visible, expectedApplicationVisible = oldVisible, userControl = sw.UserControl,
-                originalDocuments = originalVisibility.Select(v => new { path = v.Key.GetPathName(), title = v.Key.GetTitle(), expectedVisible = v.Value, actualVisible = v.Key.Visible }).ToArray(), newDrawingVisible = drawing == null ? (bool?)null : drawing.Visible });
+                originalDocuments = originalVisibility.Select(v => new { path = VariableTrial.ModelGetPathName(v.Key, "MakeDrawing.Restore", true), title = VariableTrial.ModelGetTitle(v.Key, "MakeDrawing.Restore", true), expectedVisible = v.Value, actualVisible = v.Key.Visible }).ToArray(), newDrawingVisible = drawing == null ? (bool?)null : drawing.Visible });
             bool visibleDocuments = originalVisibility.Any(v => v.Key.Visible) || drawing != null && drawing.Visible;
-            if (oldVisible || !sw.UserControl && !visibleDocuments) { sw.Visible = oldVisible; Need(sw.Visible == oldVisible, "APPLICATION_VISIBILITY_RESTORE_FAILED"); applicationVisibilityRestored = true; }
+            if (oldVisible || !sw.UserControl && !visibleDocuments) { VariableTrial.SwSetVisible(sw, oldVisible, "MakeDrawing.Restore"); Need(sw.Visible == oldVisible, "APPLICATION_VISIBILITY_RESTORE_FAILED"); applicationVisibilityRestored = true; }
             trace.Record("drawing_visibility_restored", new { applicationVisible = sw.Visible, expectedApplicationVisible = oldVisible, applicationVisibilityRestored = applicationVisibilityRestored,
                 userControl = sw.UserControl, expectedUserControl = oldUserControl, userControlRestored = sw.UserControl == oldUserControl,
                 deferredToOwnedSessionExit = !applicationVisibilityRestored || sw.UserControl != oldUserControl });
@@ -2667,5 +2636,669 @@ internal static class TrialOutput
             originalUserControl = oldUserControl, actualUserControl = sw.UserControl, userControlChangedDuringDrawing = userControlChangedDuringDrawing,
             userControlRestored = sw.UserControl == oldUserControl, deferredToOwnedSessionExit = !applicationVisibilityRestored || sw.UserControl != oldUserControl };
         return report;
+    }
+
+    /// <summary>Reassigns differential CUT entities absent from a forming-tool-suppressed pure-cut export to the MARK layer.</summary>
+    internal static int MapDifferentialEntitiesToMark(List<Pair> targetPairs, IEnumerable<DxfEntity> targetEntities, IEnumerable<DxfEntity> pureCutEntities)
+    {
+        if (targetPairs == null || targetEntities == null || pureCutEntities == null) return 0;
+        var remaining = pureCutEntities.GroupBy(e => e.Key).ToDictionary(g => g.Key, g => g.Count(), StringComparer.Ordinal);
+        var toMark = new List<DxfEntity>();
+        foreach (DxfEntity entity in targetEntities)
+        {
+            if (!String.Equals(Text(targetPairs, entity, 8, "0"), "CUT", StringComparison.OrdinalIgnoreCase)) continue;
+            int count;
+            if (remaining.TryGetValue(entity.Key, out count) && count > 0)
+            {
+                remaining[entity.Key] = count - 1;
+                continue;
+            }
+            toMark.Add(entity);
+        }
+        for (int idx = toMark.Count - 1; idx >= 0; idx--)
+        {
+            DxfEntity entity = toMark[idx];
+            bool hasLayer = false;
+            for (int i = entity.Start + 1; i < entity.End; i++)
+            {
+                if (targetPairs[i].Code == 8) { targetPairs[i].Value = "MARK"; hasLayer = true; }
+                else if (targetPairs[i].Code == 62) targetPairs[i].Value = "5";
+            }
+            if (!hasLayer) targetPairs.Insert(entity.End, new Pair(8, "MARK"));
+        }
+        return toMark.Count;
+    }
+
+    /// <summary>Strips inner concentric self-clinching nut/standoff bore circles on CUT while retaining the outer laser pre-hole.</summary>
+    internal static int FilterConcentricFastenerBores(List<Pair> pairs, double centerToleranceMm = 0.05, double minRadiusDeltaMm = 0.05)
+    {
+        if (pairs == null || pairs.Count == 0) return 0;
+        var circles = Entities(pairs)
+            .Where(e => e.Type == "CIRCLE" && String.Equals(Text(pairs, e, 8, "0"), "CUT", StringComparison.OrdinalIgnoreCase))
+            .Select(e => new { Entity = e, Cx = Number(pairs, e, 10), Cy = Number(pairs, e, 20), R = Number(pairs, e, 40) })
+            .ToArray();
+        var toRemove = new List<DxfEntity>();
+        for (int i = 0; i < circles.Length; i++)
+        {
+            var inner = circles[i];
+            for (int j = 0; j < circles.Length; j++)
+            {
+                if (i == j) continue;
+                var outer = circles[j];
+                if (inner.R >= outer.R - minRadiusDeltaMm) continue;
+                double dx = inner.Cx - outer.Cx, dy = inner.Cy - outer.Cy;
+                if (Math.Sqrt(dx * dx + dy * dy) <= centerToleranceMm)
+                {
+                    toRemove.Add(inner.Entity);
+                    break;
+                }
+            }
+        }
+        foreach (DxfEntity entity in toRemove.OrderByDescending(e => e.Start))
+            pairs.RemoveRange(entity.Start, entity.End - entity.Start);
+        return toRemove.Count;
+    }
+
+    sealed class DifferentialDxfWriteResult
+    {
+        internal string OutputSha256;
+        internal int Insunits, CutEntityCount, BendEntityCount, MarkEntityCount, ProductionMarkEntityCount, RemovedFastenerBoreCount;
+        internal List<object> Rows;
+    }
+
+    static DifferentialDxfWriteResult WriteDifferentialFlatDxf(string allPath, string cutPath, string pureCutPath, string outputPath, bool requirePositiveBends, bool applyConcentricFastenerFilter, ProdMarkPartCapture productionMarks = null)
+    {
+        var cutPairs = ReadDxf(cutPath);
+        var allPairs = ReadDxf(allPath);
+        var cutEntities = Entities(cutPairs);
+        var allEntities = Entities(allPairs);
+        Need(Units(cutPairs) == Units(allPairs), "NATIVE_DXF_UNIT_MISMATCH");
+        Need(Units(allPairs) == 4, "NATIVE_DXF_MILLIMETRE_UNITS_REQUIRED");
+        var remaining = cutEntities.GroupBy(e => e.Key).ToDictionary(g => g.Key, g => g.Count());
+        var rows = new List<object>();
+        int bendCount = 0;
+        foreach (DxfEntity entity in allEntities)
+        {
+            VariableTrial.RuntimeOwnership();
+            string sourceLayer = Text(allPairs, entity, 8, "0");
+            int count;
+            bool isCut = remaining.TryGetValue(entity.Key, out count) && count > 0;
+            string layer = isCut ? "CUT" : "BEND";
+            if (isCut) remaining[entity.Key] = count - 1;
+            else { Need(entity.Type == "LINE", "NONLINEAR_DIFFERENTIAL_BEND_UNSUPPORTED " + entity.Type); bendCount++; }
+            bool mapped = false;
+            for (int i = entity.Start + 1; i < entity.End; i++)
+            {
+                if (allPairs[i].Code == 8) { allPairs[i].Value = layer; mapped = true; }
+            }
+            Need(mapped, "NATIVE_ENTITY_LAYER_TAG_REQUIRED");
+            rows.Add(new { type = entity.Type, sourceLayer = sourceLayer, targetLayer = layer, evidence = isCut ? "same geometry in legacy RemoveBends option 1" : "additional LINE in legacy None option 0" });
+        }
+        Need(remaining.Values.All(v => v == 0), "COMBINED_DXF_LOST_CUT_GEOMETRY");
+        if (requirePositiveBends) Need(bendCount > 0, "NATIVE_DXF_HAS_NO_DIFFERENTIAL_BEND_LINES");
+        int markCount = 0;
+        if (!String.IsNullOrEmpty(pureCutPath))
+        {
+            var pureCutEntities = Entities(ReadDxf(pureCutPath));
+            markCount = MapDifferentialEntitiesToMark(allPairs, allEntities, pureCutEntities);
+        }
+        int prodMarkCount = AppendProductionMarksToDxf(allPairs, allEntities, productionMarks);
+        markCount += prodMarkCount;
+        string[] geometryBefore = allEntities.Select(e => e.Key).OrderBy(v => v, StringComparer.Ordinal).ToArray();
+        AddLayers(allPairs);
+        int removedFastenerBores = applyConcentricFastenerFilter ? FilterConcentricFastenerBores(allPairs) : 0;
+        VariableTrial.RuntimeOwnership();
+        NewPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+        using (var stream = new FileStream(outputPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+        using (var writer = new StreamWriter(stream, Encoding.Default))
+        {
+            for (int i = 0; i < allPairs.Count; i++)
+            {
+                if ((i & 511) == 0) VariableTrial.RuntimeOwnership();
+                Pair pair = allPairs[i];
+                writer.WriteLine(pair.Code.ToString(Invariant));
+                writer.WriteLine(pair.Value);
+            }
+        }
+        var written = ReadDxf(outputPath);
+        if (removedFastenerBores == 0 && prodMarkCount == 0)
+        {
+            Need(geometryBefore.SequenceEqual(Entities(written).Select(e => e.Key).OrderBy(v => v, StringComparer.Ordinal)), "LAYER_MAPPING_CHANGED_DXF_GEOMETRY");
+        }
+        return new DifferentialDxfWriteResult
+        {
+            OutputSha256 = Hash(outputPath),
+            Insunits = Units(written),
+            CutEntityCount = cutEntities.Count - removedFastenerBores - (markCount - prodMarkCount),
+            BendEntityCount = bendCount,
+            MarkEntityCount = markCount,
+            ProductionMarkEntityCount = prodMarkCount,
+            RemovedFastenerBoreCount = removedFastenerBores,
+            Rows = rows
+        };
+    }
+
+    sealed class SimpleFeatureInfo
+    {
+        internal int Id;
+        internal string Name, Type;
+        internal bool Suppressed;
+    }
+
+    static void WalkSimpleFeatures(Feature feature, bool top, int depth, HashSet<int> seen, List<SimpleFeatureInfo> rows)
+    {
+        int count = 0;
+        while (feature != null)
+        {
+            Feature next = null;
+            try
+            {
+                VariableTrial.RuntimeOwnership();
+                Need(++count < 10000 && depth <= 16, "ASSEMBLY_DXF_FEATURE_TRAVERSAL_LIMIT");
+                next = top ? feature.GetNextFeature() as Feature : feature.GetNextSubFeature() as Feature;
+                int id = feature.GetID();
+                if (seen.Add(id))
+                {
+                    rows.Add(new SimpleFeatureInfo
+                    {
+                        Id = id,
+                        Name = feature.Name ?? "",
+                        Type = feature.GetTypeName2() ?? "",
+                        Suppressed = feature.IsSuppressed()
+                    });
+                    WalkSimpleFeatures(feature.GetFirstSubFeature() as Feature, false, depth + 1, seen, rows);
+                }
+            }
+            catch { Release(next); throw; }
+            finally { Release(feature); }
+            feature = next;
+        }
+    }
+
+    static Dictionary<string, string> DirectorySha256Map(string rootDir)
+    {
+        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        string prefix = Path.GetFullPath(rootDir).TrimEnd('\\') + "\\";
+        foreach (string path in Directory.GetFiles(prefix, "*", SearchOption.AllDirectories).OrderBy(v => v, StringComparer.OrdinalIgnoreCase))
+        {
+            VariableTrial.RuntimeOwnership();
+            map[path.Substring(prefix.Length)] = Hash(path);
+        }
+        return map;
+    }
+
+    static void CopyDirectoryNormal(string sourceDir, string destDir)
+    {
+        string srcPrefix = Path.GetFullPath(sourceDir).TrimEnd('\\') + "\\";
+        foreach (string src in Directory.GetFiles(srcPrefix, "*", SearchOption.AllDirectories))
+        {
+            VariableTrial.RuntimeOwnership();
+            string dst = Local(Path.Combine(destDir, src.Substring(srcPrefix.Length)));
+            Directory.CreateDirectory(Path.GetDirectoryName(dst));
+            File.Copy(src, dst, false);
+            File.SetAttributes(dst, FileAttributes.Normal);
+        }
+    }
+
+    static string PickFoldedConfig(ModelDoc2 model)
+    {
+        string[] configs = Items(model.GetConfigurationNames()).Select(Convert.ToString).ToArray();
+        string chosen = configs.FirstOrDefault(v => String.Equals(v, "Default", StringComparison.OrdinalIgnoreCase))
+            ?? configs.FirstOrDefault(v => String.Equals(v, "默认", StringComparison.OrdinalIgnoreCase))
+            ?? configs.FirstOrDefault(v => v.IndexOf("FLAT-PATTERN", StringComparison.OrdinalIgnoreCase) < 0);
+        Need(!String.IsNullOrEmpty(chosen), "FOLDED_CONFIGURATION_REQUIRED");
+        return chosen;
+    }
+
+    static void DeleteDerivedFlatConfigsAndPrepare(ModelDoc2 model, string context, out string foldedConfig, out List<string> deletedConfigs)
+    {
+        foldedConfig = PickFoldedConfig(model);
+        ActivateConfiguration(model, foldedConfig, context + ".ActivateFolded", false);
+        deletedConfigs = new List<string>();
+        string[] configs = Items(model.GetConfigurationNames()).Select(Convert.ToString).ToArray();
+        foreach (string cfg in configs)
+        {
+            if (cfg.IndexOf("FLAT-PATTERN", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                bool deleted = model.DeleteConfiguration2(cfg);
+                Need(deleted, context + ".DELETE_FLAT_CONFIG_FAILED " + cfg);
+                deletedConfigs.Add(cfg);
+            }
+        }
+    }
+
+    static void SetFeaturesSuppressionByIds(ModelDoc2 model, IEnumerable<int> ids, bool suppress, string context)
+    {
+        int action = suppress ? (int)swFeatureSuppressionAction_e.swSuppressFeature : (int)swFeatureSuppressionAction_e.swUnSuppressFeature;
+        foreach (int id in ids)
+        {
+            VariableTrial.RuntimeOwnership();
+            Feature feature = FlatFeatureById(model.FirstFeature() as Feature, true, id, new HashSet<int>(), 0);
+            try
+            {
+                Need(feature != null, context + ".FEATURE_MISSING " + id);
+                if (feature.IsSuppressed() != suppress)
+                {
+                    bool ok = feature.SetSuppression2(action, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                    Need(ok && feature.IsSuppressed() == suppress, context + ".SET_SUPPRESSION_FAILED " + id + ":" + feature.Name);
+                }
+            }
+            finally { Release(feature); }
+        }
+    }
+
+    static bool HasAnySheetMetalBody(ModelDoc2 model)
+    {
+        object[] bodies = Items(((PartDoc)model).GetBodies2((int)swBodyType_e.swSolidBody, false));
+        try
+        {
+            foreach (object item in bodies)
+            {
+                Body2 body = item as Body2;
+                if (body != null && body.IsSheetMetal()) return true;
+            }
+            return false;
+        }
+        finally { foreach (object item in bodies) Release(item); }
+    }
+
+    static void ExportFlatDxfFromOpenPart(ISldWorks sw, ModelDoc2 model, string targetDxfPath, int option, string context)
+    {
+        VariableTrial.RuntimeOwnership();
+        NewPath(targetDxfPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(targetDxfPath));
+        VariableTrial.ModelClearSelection2(model, true, context + ".ClearSelection");
+        bool exported = VariableTrial.CallComWithTimeout((PartDoc)model, "PartDoc.ExportFlatPatternView", doc => doc.ExportFlatPatternView(targetDxfPath, option), VariableTrial.IoRebuildComTimeoutMs * 2, context);
+        Need(exported && File.Exists(targetDxfPath) && new FileInfo(targetDxfPath).Length > 100, context + ".EXPORT_FAILED " + targetDxfPath);
+    }
+
+    sealed class StagedPartDxfRecord
+    {
+        internal string RelPath, FullPath, AllPath, CutPath, PureCutPath;
+        internal bool SheetMetal, CutExportedInline, Installed;
+        internal List<string> DeletedConfigs = new List<string>();
+        internal List<int> FormToolIds = new List<int>();
+        internal List<string> FormToolNames = new List<string>();
+        internal ProdMarkPartCapture ProductionMarks;
+    }
+
+    static string ResolveInstalledRelPath(string rawPath, Dictionary<string, string> stagedByRel)
+    {
+        if (String.IsNullOrWhiteSpace(rawPath)) return null;
+        string normalized = rawPath.Replace('/', '\\').Trim();
+        int asmIdx = normalized.IndexOf("\\assemblies\\", StringComparison.OrdinalIgnoreCase);
+        if (asmIdx >= 0)
+        {
+            string afterAsm = normalized.Substring(asmIdx + "\\assemblies\\".Length);
+            int nextSep = afterAsm.IndexOf('\\');
+            if (nextSep >= 0)
+            {
+                string candidate = afterAsm.Substring(nextSep + 1);
+                string canonical;
+                if (stagedByRel.TryGetValue(candidate, out canonical)) return canonical;
+            }
+        }
+        foreach (string marker in new[] { "\\parts\\", "\\structure\\" })
+        {
+            int idx = normalized.LastIndexOf(marker, StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0)
+            {
+                string candidate = normalized.Substring(idx + 1);
+                string canonical;
+                if (stagedByRel.TryGetValue(candidate, out canonical)) return canonical;
+            }
+        }
+        string directCanonical;
+        if (stagedByRel.TryGetValue(normalized, out directCanonical)) return directCanonical;
+        return null;
+    }
+
+    static HashSet<string> LoadInstalledPartRelSet(string evidencePath, string stagePrefix, string[] stagedParts)
+    {
+        var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (String.IsNullOrEmpty(evidencePath) || !File.Exists(evidencePath)) return result;
+
+        var stagedByRel = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (string partFile in stagedParts)
+        {
+            string rel = partFile.Substring(stagePrefix.Length);
+            if (!stagedByRel.ContainsKey(rel)) stagedByRel[rel] = rel;
+        }
+
+        string text;
+        using (var fs = new FileStream(evidencePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+        using (var sr = new StreamReader(fs, Encoding.UTF8)) text = sr.ReadToEnd();
+        if (String.IsNullOrWhiteSpace(text)) return result;
+
+        var js = new JavaScriptSerializer { MaxJsonLength = int.MaxValue, RecursionLimit = 120 };
+        var root = js.Deserialize<Dictionary<string, object>>(text);
+        object manifestObj;
+        if (root == null || !root.TryGetValue("expectedManifest", out manifestObj) || manifestObj == null) return result;
+        var manifestList = manifestObj as IEnumerable;
+        if (manifestList == null) return result;
+
+        foreach (object itemObj in manifestList)
+        {
+            var dict = itemObj as IDictionary<string, object>;
+            if (dict == null) continue;
+            object pathObj;
+            if (!dict.TryGetValue("path", out pathObj)) continue;
+            string rel = ResolveInstalledRelPath(Convert.ToString(pathObj, Invariant), stagedByRel);
+            if (!String.IsNullOrEmpty(rel)) result.Add(rel);
+        }
+        return result;
+    }
+
+    public static object ExportAssemblyFlatDxfs(ISldWorks sw, string cadAssemblyDir, string stageDir, string diagDir, string outputDxfDir)
+    {
+        VariableTrial.RuntimeOwnership();
+        Need(sw != null, "OWNED_CAD_SESSION_REQUIRED");
+        string cadDir = Local(cadAssemblyDir);
+        Need(Directory.Exists(cadDir), "ASSEMBLY_DXF_CAD_DIR_MISSING " + cadDir);
+        string runRoot = Path.GetFullPath(VariableTrial.RunDirectory).TrimEnd('\\') + "\\";
+        string stage = Local(stageDir);
+        string diag = Local(diagDir);
+        string outRoot = Local(outputDxfDir);
+        Need(stage.StartsWith(runRoot, StringComparison.OrdinalIgnoreCase) && !stage.StartsWith(Path.GetFullPath(cadDir).TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase), "STAGE_MUST_BE_IN_RUN_DIR");
+        Need(diag.StartsWith(runRoot, StringComparison.OrdinalIgnoreCase), "DIAG_MUST_BE_IN_RUN_DIR");
+        Need(outRoot.StartsWith(runRoot, StringComparison.OrdinalIgnoreCase), "OUTPUT_DXF_MUST_BE_IN_RUN_DIR");
+
+        var beforeHashes = DirectorySha256Map(cadDir);
+        CopyDirectoryNormal(cadDir, stage);
+        VariableTrial.RewireCopy(stage);
+        VariableTrial.SwCloseAllDocuments(sw, true, "ExportAssemblyFlatDxfs.PreClean");
+
+        string stagePrefix = Path.GetFullPath(stage).TrimEnd('\\') + "\\";
+        string[] stagedParts = Directory.GetFiles(stagePrefix, "*.sldprt", SearchOption.AllDirectories)
+            .OrderBy(v => v.Substring(stagePrefix.Length), StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var directDeps = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (string partFile in stagedParts)
+        {
+            string rel = partFile.Substring(stagePrefix.Length);
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            object[] deps = VariableTrial.SwGetDocumentDependencies2(sw, partFile, true, false, false, "ExportAssemblyFlatDxfs.Deps");
+            for (int i = 1; i < deps.Length; i += 2)
+            {
+                string depFull = Path.GetFullPath(Convert.ToString(deps[i], Invariant));
+                if (depFull.StartsWith(stagePrefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    string depRel = depFull.Substring(stagePrefix.Length);
+                    if (!String.Equals(depRel, rel, StringComparison.OrdinalIgnoreCase)) set.Add(depRel);
+                }
+            }
+            directDeps[rel] = set;
+        }
+
+        var installedRelSet = LoadInstalledPartRelSet(Path.Combine(cadDir, "assembly-evidence.json"), stagePrefix, stagedParts);
+        bool filterByInstalled = installedRelSet.Count > 0;
+        var activePartSet = new HashSet<string>(
+            filterByInstalled ? (IEnumerable<string>)installedRelSet : directDeps.Keys,
+            StringComparer.OrdinalIgnoreCase);
+        if (filterByInstalled)
+        {
+            bool grew = true;
+            while (grew)
+            {
+                grew = false;
+                foreach (string rel in activePartSet.ToArray())
+                {
+                    HashSet<string> deps;
+                    if (directDeps.TryGetValue(rel, out deps))
+                    {
+                        foreach (string dep in deps)
+                        {
+                            if (directDeps.ContainsKey(dep) && activePartSet.Add(dep)) grew = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        var records = new List<StagedPartDxfRecord>();
+        var recordByRel = new Dictionary<string, StagedPartDxfRecord>(StringComparer.OrdinalIgnoreCase);
+        int skippedUninstalledCount = 0;
+
+        foreach (string partFile in stagedParts)
+        {
+            VariableTrial.RuntimeOwnership();
+            string rel = partFile.Substring(stagePrefix.Length);
+            bool isInstalled = !filterByInstalled || installedRelSet.Contains(rel);
+            if (!isInstalled) skippedUninstalledCount++;
+            if (filterByInstalled && !activePartSet.Contains(rel)) continue;
+
+            string relNoExt = Path.Combine(Path.GetDirectoryName(rel) ?? "", Path.GetFileNameWithoutExtension(rel));
+            var rec = new StagedPartDxfRecord { RelPath = rel, FullPath = partFile, Installed = isInstalled };
+            recordByRel[rel] = rec;
+            records.Add(rec);
+
+            int errs = 0, warns = 0;
+            ModelDoc2 model = VariableTrial.SwOpenDoc6(sw, partFile, (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", out errs, out warns, "ExportAssemblyFlatDxfs.Open1");
+            try
+            {
+                Need(model != null, "ASSEMBLY_PART_OPEN_FAILED " + rel);
+                string foldedConfig;
+                DeleteDerivedFlatConfigsAndPrepare(model, "ExportAssemblyFlatDxfs.Open1." + rel, out foldedConfig, out rec.DeletedConfigs);
+                rec.SheetMetal = HasAnySheetMetalBody(model);
+                if (!rec.SheetMetal) continue;
+
+                var features = new List<SimpleFeatureInfo>();
+                WalkSimpleFeatures(model.FirstFeature() as Feature, true, 0, new HashSet<int>(), features);
+                var flatIds = features
+                    .Where(f => f.Type == "FlatPattern" || f.Type == "UiBend")
+                    .OrderBy(f => f.Type == "FlatPattern" ? 0 : 1)
+                    .Select(f => f.Id)
+                    .ToList();
+                Need(features.Any(f => f.Type == "FlatPattern"), "SHEET_METAL_FLAT_PATTERN_FEATURE_REQUIRED " + rel);
+                foreach (SimpleFeatureInfo ft in features.Where(f => f.Type == "FormToolInstance"))
+                {
+                    rec.FormToolIds.Add(ft.Id);
+                    rec.FormToolNames.Add(ft.Name);
+                }
+
+                // Driver/parent parts outside expectedManifest only provide in-context references; skip writing unused DXFs for them.
+                if (!rec.Installed) continue;
+
+                rec.ProductionMarks = CaptureProductionMarksFromFoldedPart(sw, model, rel);
+                SuppressProductionMarkSketchesInMemory(model, "ExportAssemblyFlatDxfs.SuppressProdMarks1." + rel);
+                rec.AllPath = Local(Path.Combine(diag, relNoExt + ".native-bends.dxf"));
+                rec.CutPath = Local(Path.Combine(diag, relNoExt + ".native-cut.dxf"));
+                SetFeaturesSuppressionByIds(model, flatIds, false, "ExportAssemblyFlatDxfs.Unsuppress1." + rel);
+                Need(VariableTrial.ModelForceRebuild3(model, false, "ExportAssemblyFlatDxfs.RebuildAll." + rel), "FLAT_REBUILD_FAILED " + rel);
+                ExportFlatDxfFromOpenPart(sw, model, rec.AllPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_None, "ExportAssemblyFlatDxfs.ExportAll." + rel);
+
+                // Reuse the already-flattened active doc when possible to avoid a redundant full rebuild.
+                bool exportedCutInline = false;
+                try
+                {
+                    ModelDoc2 reusedCut = VariableTrial.SwActiveDoc(sw, "ExportAssemblyFlatDxfs.ReuseCut." + rel);
+                    try
+                    {
+                        if (reusedCut != null && String.Equals(Path.GetFullPath(VariableTrial.ModelGetPathName(reusedCut, "ExportAssemblyFlatDxfs.ReusePath." + rel)), Path.GetFullPath(partFile), StringComparison.OrdinalIgnoreCase))
+                        {
+                            ExportFlatDxfFromOpenPart(sw, reusedCut, rec.CutPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_RemoveBends, "ExportAssemblyFlatDxfs.ExportCutInline." + rel);
+                            exportedCutInline = true;
+                        }
+                    }
+                    finally { Release(reusedCut); }
+                }
+                catch { if (File.Exists(rec.CutPath)) File.Delete(rec.CutPath); }
+                rec.CutExportedInline = exportedCutInline;
+            }
+            finally
+            {
+                Release(model);
+                VariableTrial.SwCloseAllDocuments(sw, true, "ExportAssemblyFlatDxfs.Close1." + rel);
+            }
+
+            if (rec.SheetMetal && rec.Installed && !rec.CutExportedInline)
+            {
+                ModelDoc2 cutModel = VariableTrial.SwOpenDoc6(sw, partFile, (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", out errs, out warns, "ExportAssemblyFlatDxfs.OpenCut");
+                try
+                {
+                    Need(cutModel != null, "ASSEMBLY_PART_REOPEN_CUT_FAILED " + rel);
+                    string foldedCut;
+                    List<string> delCut;
+                    DeleteDerivedFlatConfigsAndPrepare(cutModel, "ExportAssemblyFlatDxfs.CutPrep." + rel, out foldedCut, out delCut);
+                    var cutFeatures = new List<SimpleFeatureInfo>();
+                    WalkSimpleFeatures(cutModel.FirstFeature() as Feature, true, 0, new HashSet<int>(), cutFeatures);
+                    var flatIds = cutFeatures
+                        .Where(f => f.Type == "FlatPattern" || f.Type == "UiBend")
+                        .OrderBy(f => f.Type == "FlatPattern" ? 0 : 1)
+                        .Select(f => f.Id)
+                        .ToList();
+                    SetFeaturesSuppressionByIds(cutModel, flatIds, false, "ExportAssemblyFlatDxfs.UnsuppressCut." + rel);
+                    SuppressProductionMarkSketchesInMemory(cutModel, "ExportAssemblyFlatDxfs.SuppressProdMarksCut." + rel);
+                    Need(VariableTrial.ModelForceRebuild3(cutModel, false, "ExportAssemblyFlatDxfs.RebuildCut." + rel), "FLAT_CUT_REBUILD_FAILED " + rel);
+                    ExportFlatDxfFromOpenPart(sw, cutModel, rec.CutPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_RemoveBends, "ExportAssemblyFlatDxfs.ExportCut." + rel);
+                }
+                finally
+                {
+                    Release(cutModel);
+                    VariableTrial.SwCloseAllDocuments(sw, true, "ExportAssemblyFlatDxfs.CloseCut." + rel);
+                }
+            }
+        }
+
+        var formToolSet = new HashSet<string>(records.Where(r => r.SheetMetal && r.FormToolIds.Count > 0).Select(r => r.RelPath), StringComparer.OrdinalIgnoreCase);
+        var pureCutSet = new HashSet<string>(formToolSet, StringComparer.OrdinalIgnoreCase);
+        bool addedDep = true;
+        while (addedDep)
+        {
+            addedDep = false;
+            foreach (StagedPartDxfRecord r in records.Where(x => x.SheetMetal && !pureCutSet.Contains(x.RelPath)))
+            {
+                HashSet<string> deps;
+                if (directDeps.TryGetValue(r.RelPath, out deps) && deps.Any(d => pureCutSet.Contains(d)))
+                {
+                    pureCutSet.Add(r.RelPath);
+                    addedDep = true;
+                }
+            }
+        }
+
+        foreach (StagedPartDxfRecord rec in records.Where(r => formToolSet.Contains(r.RelPath)))
+        {
+            VariableTrial.RuntimeOwnership();
+            string relNoExt = Path.Combine(Path.GetDirectoryName(rec.RelPath) ?? "", Path.GetFileNameWithoutExtension(rec.RelPath));
+            int errs = 0, warns = 0;
+            ModelDoc2 ftModel = VariableTrial.SwOpenDoc6(sw, rec.FullPath, (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", out errs, out warns, "ExportAssemblyFlatDxfs.FormToolOpen");
+            try
+            {
+                Need(ftModel != null, "FORMTOOL_PART_OPEN_FAILED " + rec.RelPath);
+                string foldedFt;
+                List<string> delFt;
+                DeleteDerivedFlatConfigsAndPrepare(ftModel, "ExportAssemblyFlatDxfs.FormToolPrep." + rec.RelPath, out foldedFt, out delFt);
+                var ftFeatures = new List<SimpleFeatureInfo>();
+                WalkSimpleFeatures(ftModel.FirstFeature() as Feature, true, 0, new HashSet<int>(), ftFeatures);
+                var flatIds = ftFeatures.Where(f => f.Type == "FlatPattern" || f.Type == "UiBend").Select(f => f.Id).ToList();
+                var flatParentIds = ftFeatures.Where(f => f.Type == "FlatPattern").Select(f => f.Id).ToList();
+                SetFeaturesSuppressionByIds(ftModel, rec.FormToolIds, true, "ExportAssemblyFlatDxfs.SuppressFormTool." + rec.RelPath);
+                SuppressProductionMarkSketchesInMemory(ftModel, "ExportAssemblyFlatDxfs.SuppressProdMarksFT." + rec.RelPath);
+                SetFeaturesSuppressionByIds(ftModel, flatParentIds, true, "ExportAssemblyFlatDxfs.KeepFlatSuppressed." + rec.RelPath);
+                Need(VariableTrial.ModelForceRebuild3(ftModel, false, "ExportAssemblyFlatDxfs.RebuildFormToolFolded." + rec.RelPath), "FORMTOOL_FOLDED_REBUILD_FAILED " + rec.RelPath);
+                int saveErrs = 0, saveWarns = 0;
+                Need(VariableTrial.ModelSave3(ftModel, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, out saveErrs, out saveWarns, "ExportAssemblyFlatDxfs.SaveStageFormTool." + rec.RelPath) && saveErrs == 0, "FORMTOOL_STAGE_SAVE_FAILED " + rec.RelPath);
+
+                if (rec.Installed)
+                {
+                    rec.PureCutPath = Local(Path.Combine(diag, relNoExt + ".no-formtool.native-cut.dxf"));
+                    SetFeaturesSuppressionByIds(ftModel, flatIds, false, "ExportAssemblyFlatDxfs.UnsuppressFormToolPureCut." + rec.RelPath);
+                    Need(VariableTrial.ModelForceRebuild3(ftModel, false, "ExportAssemblyFlatDxfs.RebuildPureCut." + rec.RelPath), "FORMTOOL_PURECUT_REBUILD_FAILED " + rec.RelPath);
+                    ExportFlatDxfFromOpenPart(sw, ftModel, rec.PureCutPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_RemoveBends, "ExportAssemblyFlatDxfs.ExportPureCut." + rec.RelPath);
+                }
+            }
+            finally
+            {
+                Release(ftModel);
+                VariableTrial.SwCloseAllDocuments(sw, true, "ExportAssemblyFlatDxfs.CloseFormTool." + rec.RelPath);
+            }
+        }
+
+        foreach (StagedPartDxfRecord rec in records.Where(r => r.Installed && pureCutSet.Contains(r.RelPath) && !formToolSet.Contains(r.RelPath)))
+        {
+            VariableTrial.RuntimeOwnership();
+            string relNoExt = Path.Combine(Path.GetDirectoryName(rec.RelPath) ?? "", Path.GetFileNameWithoutExtension(rec.RelPath));
+            int errs = 0, warns = 0;
+            ModelDoc2 depModel = VariableTrial.SwOpenDoc6(sw, rec.FullPath, (int)swDocumentTypes_e.swDocPART, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", out errs, out warns, "ExportAssemblyFlatDxfs.DepOpen");
+            try
+            {
+                Need(depModel != null, "DEP_PURECUT_OPEN_FAILED " + rec.RelPath);
+                string foldedDep;
+                List<string> delDep;
+                DeleteDerivedFlatConfigsAndPrepare(depModel, "ExportAssemblyFlatDxfs.DepPrep." + rec.RelPath, out foldedDep, out delDep);
+                Need(VariableTrial.ModelForceRebuild3(depModel, false, "ExportAssemblyFlatDxfs.DepPullParent." + rec.RelPath), "DEP_PULL_PARENT_FAILED " + rec.RelPath);
+                var depFeatures = new List<SimpleFeatureInfo>();
+                WalkSimpleFeatures(depModel.FirstFeature() as Feature, true, 0, new HashSet<int>(), depFeatures);
+                var flatIds = depFeatures.Where(f => f.Type == "FlatPattern" || f.Type == "UiBend").Select(f => f.Id).ToList();
+                rec.PureCutPath = Local(Path.Combine(diag, relNoExt + ".no-formtool.native-cut.dxf"));
+                SuppressProductionMarkSketchesInMemory(depModel, "ExportAssemblyFlatDxfs.SuppressProdMarksDep." + rec.RelPath);
+                SetFeaturesSuppressionByIds(depModel, flatIds, false, "ExportAssemblyFlatDxfs.DepUnsuppress." + rec.RelPath);
+                Need(VariableTrial.ModelForceRebuild3(depModel, false, "ExportAssemblyFlatDxfs.DepRebuildPureCut." + rec.RelPath), "DEP_PURECUT_REBUILD_FAILED " + rec.RelPath);
+                ExportFlatDxfFromOpenPart(sw, depModel, rec.PureCutPath, (int)swExportFlatPatternViewOptions_e.swExportFlatPatternOption_RemoveBends, "ExportAssemblyFlatDxfs.DepExportPureCut." + rec.RelPath);
+            }
+            finally
+            {
+                Release(depModel);
+                VariableTrial.SwCloseAllDocuments(sw, true, "ExportAssemblyFlatDxfs.CloseDep." + rec.RelPath);
+            }
+        }
+
+        var partReports = new List<object>();
+        int sheetMetalCount = 0, nonSheetMetalCount = 0, formToolMarkParts = 0, totalMarkEntities = 0, totalRemovedBores = 0;
+        foreach (StagedPartDxfRecord rec in records.Where(r => r.Installed))
+        {
+            if (!rec.SheetMetal)
+            {
+                nonSheetMetalCount++;
+                partReports.Add(new { relPath = rec.RelPath, classification = "non_sheet_metal" });
+                continue;
+            }
+            sheetMetalCount++;
+            string relNoExt = Path.Combine(Path.GetDirectoryName(rec.RelPath) ?? "", Path.GetFileNameWithoutExtension(rec.RelPath));
+            string flatPath = Local(Path.Combine(outRoot, relNoExt + ".flat.dxf"));
+            DifferentialDxfWriteResult written = WriteDifferentialFlatDxf(rec.AllPath, rec.CutPath, rec.PureCutPath, flatPath, false, true, rec.ProductionMarks);
+            if (written.MarkEntityCount > 0) formToolMarkParts++;
+            totalMarkEntities += written.MarkEntityCount;
+            totalRemovedBores += written.RemovedFastenerBoreCount;
+            partReports.Add(new
+            {
+                relPath = rec.RelPath,
+                classification = "sheet_metal",
+                flatPath = flatPath,
+                sha256 = written.OutputSha256,
+                insunits = written.Insunits,
+                cutEntityCount = written.CutEntityCount,
+                bendEntityCount = written.BendEntityCount,
+                markEntityCount = written.MarkEntityCount,
+                productionMarkEntityCount = written.ProductionMarkEntityCount,
+                removedFastenerBoresCount = written.RemovedFastenerBoreCount,
+                formTools = rec.FormToolNames.ToArray(),
+                pureCutDerived = !String.IsNullOrEmpty(rec.PureCutPath),
+                deletedConfigs = rec.DeletedConfigs.ToArray()
+            });
+        }
+
+        var afterHashes = DirectorySha256Map(cadDir);
+        bool hashesUnchanged = beforeHashes.Count == afterHashes.Count && beforeHashes.All(kv => afterHashes.ContainsKey(kv.Key) && afterHashes[kv.Key] == kv.Value);
+        Need(hashesUnchanged, "INPUT_CAD_CHANGED_DURING_ASSEMBLY_DXF_EXPORT");
+        return new
+        {
+            cadAssemblyDir = cadDir,
+            stageDir = stage,
+            diagnosticDir = diag,
+            dxfOutputDir = outRoot,
+            filterByInstalled = filterByInstalled,
+            skippedUninstalledCount = skippedUninstalledCount,
+            sheetMetalCount = sheetMetalCount,
+            nonSheetMetalCount = nonSheetMetalCount,
+            formToolMarkPartCount = formToolMarkParts,
+            totalMarkEntities = totalMarkEntities,
+            totalRemovedFastenerBores = totalRemovedBores,
+            inputHashesUnchanged = true,
+            parts = partReports
+        };
     }
 }
